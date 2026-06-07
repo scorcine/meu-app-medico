@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Painel • MedHub</title>
+  <link rel="stylesheet" href="style.css">
+  <script defer src="app.js"></script>
+  <script defer src="auth.js"></script>
+</head>
+<body onload="initDashboard()">
+  <header class="app-header">
+    <h1>MedHub</h1>
+    <div class="header-actions">
+      <span id="user-name"></span>
+      <button type="button" class="btn-outline" onclick="logout()">Sair</button>
+    </div>
+  </header>
+
+  <main>
+    <div class="card dashboard-card">
+      <h2>Painel</h2>
+      <p id="user-greeting"></p>
+      <p class="muted">
+        Em breve você poderá gerenciar pacientes e consultas por aqui.
+      </p>
+    </div>
+  </main>
+
+  <footer>
+    &copy; 2026 MedHub
+  </footer>
+</body>
+</html>

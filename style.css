@@ -153,3 +153,50 @@ footer {
   color: #7a8a9a;
   font-size: 0.875rem;
 }
+
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 0.95rem;
+}
+
+.btn-outline {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  color: white;
+  padding: 0.45rem 0.9rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: background 0.2s;
+}
+
+.btn-outline:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.dashboard-card {
+  width: min(640px, calc(100% - 2rem));
+  margin: 0 auto;
+  text-align: left;
+}
+
+.dashboard-card h2 {
+  margin-bottom: 0.75rem;
+}
+
+.dashboard-card p {
+  margin-bottom: 0.75rem;
+}
+
+.muted {
+  color: #5a6a7a;
+}

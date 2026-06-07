@@ -6,9 +6,10 @@
   <title>Cadastro • MedHub</title>
 
   <link rel="stylesheet" href="style.css">
+  <script defer src="app.js"></script>
   <script defer src="auth.js"></script>
 </head>
-<body>
+<body onload="redirectIfLogged()">
   <header>MedHub</header>
 
   <form class="card" onsubmit="handleRegister(event)">

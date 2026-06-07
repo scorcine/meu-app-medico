@@ -13,7 +13,7 @@ function saveUsers (arr) {
   localStorage.setItem('users', JSON.stringify(arr));
 }
 function redirectIfLogged () {
-  if (localStorage.getItem('session')) window.location.href = 'index.html';
+  if (getSession()) window.location.href = 'dashboard.html';
 }
 
 /* ---------- cadastro ---------- */
@@ -27,6 +27,7 @@ function handleRegister (e) {
   if (users.find(u => u.email === email)) return alert('Usuário já existe!');
   users.push({ name, email, pass });
   saveUsers(users);
+  localStorage.removeItem('session');
   alert('Cadastro realizado! Faça login.');
   window.location.href = 'login.html';
 }
@@ -39,7 +40,7 @@ function handleLogin (e) {
   const user  = getUsers().find(u => u.email === email && u.pass === pass);
   if (!user) return alert('Credenciais inválidas!');
   localStorage.setItem('session', JSON.stringify(user));
-  window.location.href = 'index.html';
+  window.location.href = 'dashboard.html';
 }
 
 /* ---------- logout ---------- */
