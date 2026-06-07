@@ -129,8 +129,8 @@ const CALC_AREAS = [
     id: 'nefrologia',
     icon: '💧',
     name: 'Nefrologia',
-    calculators: ['creatinina'],
-    comingSoon: ['MDRD', 'Déficit de sódio', 'Taxa de correção do Na⁺', 'Água livre']
+    calculators: ['cockcroft', 'egfr', 'fena', 'rifle-kdigo', 'anion-osm', 'fst'],
+    comingSoon: []
   },
   {
     id: 'hepatologia',
@@ -339,6 +339,10 @@ if (typeof CALC_PNEUMO !== 'undefined') {
   Object.assign(CALC_FORMS, CALC_PNEUMO);
 }
 
+if (typeof CALC_NEFRO !== 'undefined') {
+  Object.assign(CALC_FORMS, CALC_NEFRO);
+}
+
 let currentCalcAreaId = null;
 
 const CALC_META = {
@@ -372,6 +376,12 @@ const CALC_META = {
   vef1: { icon: '📏' },
   'aa-pafi': { icon: '💨' },
   rox: { icon: '🔥' },
+  cockcroft: { icon: '💧' },
+  egfr: { icon: '📊' },
+  fena: { icon: '🧂' },
+  'rifle-kdigo': { icon: '🏥' },
+  'anion-osm': { icon: '🧪' },
+  fst: { icon: '💉' },
   'dose-peso': { icon: '💊' },
   imc: { icon: '⚖️' },
   pam: { icon: '❤️' },
