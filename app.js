@@ -143,8 +143,8 @@ const CALC_AREAS = [
     id: 'endocrino',
     icon: '🩸',
     name: 'Endócrino & Metabólico',
-    calculators: [],
-    comingSoon: ['Correção de sódio pela glicemia', 'Osmolaridade sérica', 'Anion gap osmótico']
+    calculators: ['homa', 'frax', 'dka', 'ukpds-ascvd', 'hba1c', 'osm-efetiva'],
+    comingSoon: []
   },
   {
     id: 'oncologia',
@@ -347,6 +347,10 @@ if (typeof CALC_HEPATO !== 'undefined') {
   Object.assign(CALC_FORMS, CALC_HEPATO);
 }
 
+if (typeof CALC_ENDOCRINO !== 'undefined') {
+  Object.assign(CALC_FORMS, CALC_ENDOCRINO);
+}
+
 let currentCalcAreaId = null;
 
 const CALC_META = {
@@ -392,6 +396,12 @@ const CALC_META = {
   'gb-rockall': { icon: '🩸' },
   deritis: { icon: '📈' },
   'apri-fib4': { icon: '🔬' },
+  homa: { icon: '📉' },
+  frax: { icon: '🦴' },
+  dka: { icon: '⚠️' },
+  'ukpds-ascvd': { icon: '❤️' },
+  hba1c: { icon: '🔄' },
+  'osm-efetiva': { icon: '💧' },
   'dose-peso': { icon: '💊' },
   imc: { icon: '⚖️' },
   pam: { icon: '❤️' },
