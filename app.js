@@ -89,6 +89,92 @@ function calcPediatrica (e) {
   resultEl.hidden = false;
 }
 
+function showCalcResult (id, html) {
+  const el = document.getElementById(id);
+  el.innerHTML = html;
+  el.hidden = false;
+}
+
+function calcDosePeso (e) {
+  e.preventDefault();
+  const peso = parseFloat(document.getElementById('dose-peso').value);
+  const doseKg = parseFloat(document.getElementById('dose-mgkg').value);
+  const conc = parseFloat(document.getElementById('dose-conc').value);
+
+  if (!peso || !doseKg) return alert('Informe peso e dose mg/kg.');
+
+  const totalMg = peso * doseKg;
+  let html = `<p><strong>Dose total:</strong> ${totalMg.toFixed(2)} mg</p>`;
+  if (conc > 0) html += `<p><strong>Volume:</strong> ${(totalMg / conc).toFixed(2)} mL</p>`;
+
+  showCalcResult('dose-resultado', html);
+}
+
+function calcImc (e) {
+  e.preventDefault();
+  const peso = parseFloat(document.getElementById('imc-peso').value);
+  const alturaCm = parseFloat(document.getElementById('imc-altura').value);
+
+  if (!peso || !alturaCm) return alert('Informe peso e altura.');
+
+  const alturaM = alturaCm / 100;
+  const imc = peso / (alturaM * alturaM);
+  let classificacao = 'Obesidade';
+
+  if (imc < 18.5) classificacao = 'Baixo peso';
+  else if (imc < 25) classificacao = 'Peso normal';
+  else if (imc < 30) classificacao = 'Sobrepeso';
+
+  showCalcResult('imc-resultado',
+    `<p><strong>IMC:</strong> ${imc.toFixed(1)} kg/m²</p>
+     <p><strong>Classificação:</strong> ${classificacao}</p>`);
+}
+
+function calcPam (e) {
+  e.preventDefault();
+  const pas = parseFloat(document.getElementById('pam-pas').value);
+  const pad = parseFloat(document.getElementById('pam-pad').value);
+
+  if (!pas || pad === undefined || pad < 0) return alert('Informe PAS e PAD.');
+
+  const pam = (pas + 2 * pad) / 3;
+
+  showCalcResult('pam-resultado',
+    `<p><strong>PAM:</strong> ${pam.toFixed(1)} mmHg</p>`);
+}
+
+function calcCreatinina (e) {
+  e.preventDefault();
+  const idade = parseFloat(document.getElementById('cr-idade').value);
+  const peso = parseFloat(document.getElementById('cr-peso').value);
+  const creat = parseFloat(document.getElementById('cr-valor').value);
+  const sexo = document.getElementById('cr-sexo').value;
+
+  if (!idade || !peso || !creat) return alert('Preencha todos os campos.');
+
+  let clcr = ((140 - idade) * peso) / (72 * creat);
+  if (sexo === 'F') clcr *= 0.85;
+
+  showCalcResult('cr-resultado',
+    `<p><strong>Clearance (Cockcroft-Gault):</strong> ${clcr.toFixed(1)} mL/min</p>`);
+}
+
+function calcAnionGap (e) {
+  e.preventDefault();
+  const na = parseFloat(document.getElementById('ag-na').value);
+  const cl = parseFloat(document.getElementById('ag-cl').value);
+  const hco3 = parseFloat(document.getElementById('ag-hco3').value);
+
+  if (!na || !cl || !hco3) return alert('Preencha todos os eletrólitos.');
+
+  const gap = na - (cl + hco3);
+  let interpretacao = gap > 12 ? 'Elevado — investigar acidose metabólica com AG aumentado' : 'Dentro do esperado (≤ 12 mEq/L)';
+
+  showCalcResult('ag-resultado',
+    `<p><strong>Anion gap:</strong> ${gap.toFixed(1)} mEq/L</p>
+     <p><strong>Interpretação:</strong> ${interpretacao}</p>`);
+}
+
 function redirectLoggedFromHome () {
   if (getSession()) window.location.href = 'dashboard.html';
 }

@@ -31,6 +31,7 @@
         <button type="button" class="sidebar-link" data-section="interpretacao-exame">Interpretação do exame</button>
         <button type="button" class="sidebar-link" data-section="guia-emergencia">Guia rápido de emergência</button>
         <button type="button" class="sidebar-link" data-section="calc-pediatrica">Calculadora pediátrica</button>
+        <button type="button" class="sidebar-link" data-section="calc-essenciais">Calculadoras essenciais</button>
         <button type="button" class="sidebar-link" data-section="pacientes">Pacientes</button>
         <button type="button" class="sidebar-link" data-section="consultas">Consultas</button>
         <button type="button" class="sidebar-link" data-section="ferramentas">Ferramentas</button>
@@ -121,6 +122,86 @@
           </form>
 
           <div id="ped-resultado" class="calc-result" hidden></div>
+        </div>
+      </section>
+
+      <section id="section-calc-essenciais" class="content-panel">
+        <div class="card dashboard-card">
+          <h2>Calculadoras essenciais</h2>
+          <p class="muted">Ferramentas rápidas de cálculo para o plantão.</p>
+
+          <div class="calc-grid">
+            <div class="calc-block">
+              <h3>Dose por peso</h3>
+              <form class="calc-form" onsubmit="calcDosePeso(event)">
+                <label for="dose-peso">Peso (kg)</label>
+                <input id="dose-peso" type="number" step="0.1" min="0.1" required>
+                <label for="dose-mgkg">Dose (mg/kg)</label>
+                <input id="dose-mgkg" type="number" step="0.01" min="0.01" required>
+                <label for="dose-conc">Concentração (mg/mL) — opcional</label>
+                <input id="dose-conc" type="number" step="0.1" min="0">
+                <button type="submit">Calcular</button>
+              </form>
+              <div id="dose-resultado" class="calc-result" hidden></div>
+            </div>
+
+            <div class="calc-block">
+              <h3>IMC</h3>
+              <form class="calc-form" onsubmit="calcImc(event)">
+                <label for="imc-peso">Peso (kg)</label>
+                <input id="imc-peso" type="number" step="0.1" min="0.1" required>
+                <label for="imc-altura">Altura (cm)</label>
+                <input id="imc-altura" type="number" step="0.1" min="30" required>
+                <button type="submit">Calcular</button>
+              </form>
+              <div id="imc-resultado" class="calc-result" hidden></div>
+            </div>
+
+            <div class="calc-block">
+              <h3>Pressão arterial média (PAM)</h3>
+              <form class="calc-form" onsubmit="calcPam(event)">
+                <label for="pam-pas">PAS (mmHg)</label>
+                <input id="pam-pas" type="number" step="1" min="1" required>
+                <label for="pam-pad">PAD (mmHg)</label>
+                <input id="pam-pad" type="number" step="1" min="0" required>
+                <button type="submit">Calcular</button>
+              </form>
+              <div id="pam-resultado" class="calc-result" hidden></div>
+            </div>
+
+            <div class="calc-block">
+              <h3>Clearance de creatinina</h3>
+              <form class="calc-form" onsubmit="calcCreatinina(event)">
+                <label for="cr-idade">Idade (anos)</label>
+                <input id="cr-idade" type="number" step="1" min="1" required>
+                <label for="cr-peso">Peso (kg)</label>
+                <input id="cr-peso" type="number" step="0.1" min="0.1" required>
+                <label for="cr-valor">Creatinina (mg/dL)</label>
+                <input id="cr-valor" type="number" step="0.01" min="0.01" required>
+                <label for="cr-sexo">Sexo</label>
+                <select id="cr-sexo" required>
+                  <option value="M">Masculino</option>
+                  <option value="F">Feminino</option>
+                </select>
+                <button type="submit">Calcular</button>
+              </form>
+              <div id="cr-resultado" class="calc-result" hidden></div>
+            </div>
+
+            <div class="calc-block">
+              <h3>Anion gap</h3>
+              <form class="calc-form" onsubmit="calcAnionGap(event)">
+                <label for="ag-na">Sódio (mEq/L)</label>
+                <input id="ag-na" type="number" step="0.1" required>
+                <label for="ag-cl">Cloro (mEq/L)</label>
+                <input id="ag-cl" type="number" step="0.1" required>
+                <label for="ag-hco3">Bicarbonato (mEq/L)</label>
+                <input id="ag-hco3" type="number" step="0.1" required>
+                <button type="submit">Calcular</button>
+              </form>
+              <div id="ag-resultado" class="calc-result" hidden></div>
+            </div>
+          </div>
         </div>
       </section>
 
