@@ -459,6 +459,55 @@ body.app-page {
   cursor: pointer;
 }
 
+.calc-block-wide {
+  grid-column: 1 / -1;
+}
+
+.calc-fieldset {
+  border: 1px solid #dce4ec;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  margin: 0.25rem 0;
+}
+
+.calc-fieldset legend {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #5a6a7a;
+  padding: 0 0.35rem;
+}
+
+.calc-check {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 400 !important;
+  font-size: 0.88rem !important;
+  margin-bottom: 0.35rem;
+  cursor: pointer;
+}
+
+.calc-check input {
+  width: auto;
+}
+
+.calc-note {
+  font-size: 0.8rem;
+  color: #7a8a9a;
+  margin-top: 0.5rem;
+  line-height: 1.4;
+}
+
+.calc-result .calc-note {
+  margin-top: 0.75rem;
+}
+
+@media (min-width: 900px) {
+  .calc-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
 .calc-form button {
   margin-top: 0.25rem;
   padding: 0.75rem 1.5rem;

@@ -104,8 +104,8 @@ const CALC_AREAS = [
     id: 'avaliacao-geral',
     icon: '⚙️',
     name: 'Avaliação geral & estratificação de risco',
-    calculators: ['imc', 'pam'],
-    comingSoon: ['qSOFA', 'NEWS2', 'CURB-65', 'Escala de Wells']
+    calculators: ['charlson', 'news2', 'qsofa', 'sofa', 'apache2', 'saps3', 'lactate-clearance'],
+    comingSoon: ['CURB-65', 'Escala de Wells', 'MEWS']
   },
   {
     id: 'cardiologia',
@@ -210,7 +210,7 @@ const CALC_AREAS = [
     id: 'extras',
     icon: '📐',
     name: 'Extras de conveniência',
-    calculators: ['imc'],
+    calculators: ['imc', 'pam'],
     comingSoon: ['Conversor cm/pol', 'Conversor kg/lb', 'Calculadora de datas']
   }
 ];
@@ -323,6 +323,10 @@ const CALC_FORMS = {
   }
 };
 
+if (typeof CALC_RISCO !== 'undefined') {
+  Object.assign(CALC_FORMS, CALC_RISCO);
+}
+
 function initCalcEssenciais () {
   const grid = document.getElementById('calc-category-grid');
   if (!grid) return;
@@ -369,7 +373,7 @@ function showCalcArea (areaId) {
       const calc = CALC_FORMS[calcId];
       if (!calc) return;
       html += `
-        <div class="calc-block">
+        <div class="calc-block${calc.wide ? ' calc-block-wide' : ''}">
           <h3>${calc.title}</h3>
           <form class="calc-form" data-calc="${calcId}">
             ${calc.html}
