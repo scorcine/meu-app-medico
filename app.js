@@ -150,8 +150,8 @@ const CALC_AREAS = [
     id: 'oncologia',
     icon: '🎗️',
     name: 'Oncologia',
-    calculators: [],
-    comingSoon: ['IPI', 'ECOG', 'Karnofsky']
+    calculators: ['mascc', 'kps-ecog', 'apgar-cx', 'capra'],
+    comingSoon: []
   },
   {
     id: 'obstetricia',
@@ -351,6 +351,10 @@ if (typeof CALC_ENDOCRINO !== 'undefined') {
   Object.assign(CALC_FORMS, CALC_ENDOCRINO);
 }
 
+if (typeof CALC_ONCO !== 'undefined') {
+  Object.assign(CALC_FORMS, CALC_ONCO);
+}
+
 let currentCalcAreaId = null;
 
 const CALC_META = {
@@ -402,6 +406,10 @@ const CALC_META = {
   'ukpds-ascvd': { icon: '❤️' },
   hba1c: { icon: '🔄' },
   'osm-efetiva': { icon: '💧' },
+  mascc: { icon: '🌡️' },
+  'kps-ecog': { icon: '🏃' },
+  'apgar-cx': { icon: '🔪' },
+  capra: { icon: '🎯' },
   'dose-peso': { icon: '💊' },
   imc: { icon: '⚖️' },
   pam: { icon: '❤️' },
