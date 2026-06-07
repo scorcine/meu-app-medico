@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Login • Meu App Médico</title>
+
+  <!-- folha de estilos global -->
+  <link rel="stylesheet" href="style.css">
+
+  <!-- funções de autenticação -->
+  <script defer src="auth.js"></script>
+</head>
+<body onload="redirectIfLogged()">
+  <header>Meu App Médico</header>
+
+  <form class="card" onsubmit="handleLogin(event)">
+    <h1>Entrar</h1>
+
+    <label for="email">E-mail</label>
+    <input id="email" name="email" type="email" required>
+
+    <label for="password">Senha</label>
+    <input id="password" name="password" type="password" required>
+
+    <button type="submit">Login</button>
+
+    <a href="register.html">Não tem conta? Cadastre-se</a>
+  </form>
+</body>
+</html>
