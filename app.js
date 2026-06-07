@@ -111,8 +111,12 @@ const CALC_AREAS = [
     id: 'cardiologia',
     icon: '❤️',
     name: 'Cardiologia',
-    calculators: [],
-    comingSoon: ['GRACE', 'CHA₂DS₂-VASc', 'HAS-BLED', 'TIMI', 'Killip']
+    calculators: [
+      'chads-vasc', 'has-bled', 'grace', 'timi-ua', 'timi-stemi', 'killip',
+      'score2', 'framingham', 'wells-tvp', 'wells', 'perc', 'heart',
+      'nyha', 'qtc', 'ict'
+    ],
+    comingSoon: []
   },
   {
     id: 'pneumologia',
@@ -327,6 +331,10 @@ if (typeof CALC_RISCO !== 'undefined') {
   Object.assign(CALC_FORMS, CALC_RISCO);
 }
 
+if (typeof CALC_CARDIO !== 'undefined') {
+  Object.assign(CALC_FORMS, CALC_CARDIO);
+}
+
 let currentCalcAreaId = null;
 
 const CALC_META = {
@@ -340,6 +348,20 @@ const CALC_META = {
   curb65: { icon: '🫁' },
   wells: { icon: '🩸' },
   mews: { icon: '📈' },
+  'chads-vasc': { icon: '💊' },
+  'has-bled': { icon: '🩸' },
+  grace: { icon: '📉' },
+  'timi-ua': { icon: '💔' },
+  'timi-stemi': { icon: '🚨' },
+  killip: { icon: '🫁' },
+  score2: { icon: '📊' },
+  framingham: { icon: '❤️' },
+  'wells-tvp': { icon: '🦵' },
+  perc: { icon: '✅' },
+  heart: { icon: '🩺' },
+  nyha: { icon: '🏃' },
+  qtc: { icon: '⚡' },
+  ict: { icon: '🩻' },
   'dose-peso': { icon: '💊' },
   imc: { icon: '⚖️' },
   pam: { icon: '❤️' },
