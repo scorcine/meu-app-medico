@@ -136,8 +136,8 @@ const CALC_AREAS = [
     id: 'hepatologia',
     icon: '🧪',
     name: 'Hepatologia & Gastro',
-    calculators: [],
-    comingSoon: ['MELD', 'Child-Pugh', 'Glasgow-Blatchford', 'Ranson']
+    calculators: ['child-pugh', 'meld', 'maddrey', 'gb-rockall', 'deritis', 'apri-fib4'],
+    comingSoon: []
   },
   {
     id: 'endocrino',
@@ -343,6 +343,10 @@ if (typeof CALC_NEFRO !== 'undefined') {
   Object.assign(CALC_FORMS, CALC_NEFRO);
 }
 
+if (typeof CALC_HEPATO !== 'undefined') {
+  Object.assign(CALC_FORMS, CALC_HEPATO);
+}
+
 let currentCalcAreaId = null;
 
 const CALC_META = {
@@ -382,6 +386,12 @@ const CALC_META = {
   'rifle-kdigo': { icon: '🏥' },
   'anion-osm': { icon: '🧪' },
   fst: { icon: '💉' },
+  'child-pugh': { icon: '📋' },
+  meld: { icon: '🫀' },
+  maddrey: { icon: '🍺' },
+  'gb-rockall': { icon: '🩸' },
+  deritis: { icon: '📈' },
+  'apri-fib4': { icon: '🔬' },
   'dose-peso': { icon: '💊' },
   imc: { icon: '⚖️' },
   pam: { icon: '❤️' },
