@@ -27,7 +27,7 @@ function initDashboard () {
   if (nameEl) nameEl.textContent = user.name;
 
   const greetingEl = document.getElementById('user-greeting');
-  if (greetingEl) greetingEl.textContent = `Olá, ${user.name}!`;
+  if (greetingEl) greetingEl.textContent = `Olá, ${user.name}`;
 }
 
 function redirectLoggedFromHome () {
