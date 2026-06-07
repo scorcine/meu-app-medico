@@ -37,9 +37,12 @@ form.card {
   background: white;
   border-radius: 12px;
   padding: 2.5rem;
-  max-width: 480px;
-  width: 100%;
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+}
+
+main .card {
+  width: min(480px, calc(100% - 2rem));
+  margin: 0 auto;
 }
 
 form.card {
