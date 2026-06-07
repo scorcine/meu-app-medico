@@ -44,6 +44,8 @@ function initApp () {
     link.addEventListener('click', () => showSection(link.dataset.section));
   });
 
+  initCalcEssenciais();
+
   const hash = window.location.hash.replace('#', '');
   if (hash) showSection(hash);
 }
@@ -56,6 +58,8 @@ function showSection (sectionId) {
   document.querySelectorAll('.content-panel').forEach(panel => {
     panel.classList.toggle('active', panel.id === `section-${sectionId}`);
   });
+
+  if (sectionId !== 'calc-essenciais') showCalcCategories();
 }
 
 function calcPediatrica (e) {
@@ -89,90 +93,330 @@ function calcPediatrica (e) {
   resultEl.hidden = false;
 }
 
-function showCalcResult (id, html) {
-  const el = document.getElementById(id);
-  el.innerHTML = html;
-  el.hidden = false;
+function showCalcResultInBlock (form, html) {
+  const resultEl = form.parentElement.querySelector('.calc-result');
+  resultEl.innerHTML = html;
+  resultEl.hidden = false;
 }
 
-function calcDosePeso (e) {
-  e.preventDefault();
-  const peso = parseFloat(document.getElementById('dose-peso').value);
-  const doseKg = parseFloat(document.getElementById('dose-mgkg').value);
-  const conc = parseFloat(document.getElementById('dose-conc').value);
+const CALC_AREAS = [
+  {
+    id: 'avaliacao-geral',
+    icon: '⚙️',
+    name: 'Avaliação geral & estratificação de risco',
+    calculators: ['imc', 'pam'],
+    comingSoon: ['qSOFA', 'NEWS2', 'CURB-65', 'Escala de Wells']
+  },
+  {
+    id: 'cardiologia',
+    icon: '❤️',
+    name: 'Cardiologia',
+    calculators: [],
+    comingSoon: ['GRACE', 'CHA₂DS₂-VASc', 'HAS-BLED', 'TIMI', 'Killip']
+  },
+  {
+    id: 'pneumologia',
+    icon: '🌬️',
+    name: 'Pneumologia & Gasometrias',
+    calculators: ['anion-gap'],
+    comingSoon: ['Gradiente A-a', 'Relação P/F', 'Fórmula de Winter', 'BEF']
+  },
+  {
+    id: 'nefrologia',
+    icon: '💧',
+    name: 'Nefrologia',
+    calculators: ['creatinina'],
+    comingSoon: ['MDRD', 'Déficit de sódio', 'Taxa de correção do Na⁺', 'Água livre']
+  },
+  {
+    id: 'hepatologia',
+    icon: '🧪',
+    name: 'Hepatologia & Gastro',
+    calculators: [],
+    comingSoon: ['MELD', 'Child-Pugh', 'Glasgow-Blatchford', 'Ranson']
+  },
+  {
+    id: 'endocrino',
+    icon: '🩸',
+    name: 'Endócrino & Metabólico',
+    calculators: [],
+    comingSoon: ['Correção de sódio pela glicemia', 'Osmolaridade sérica', 'Anion gap osmótico']
+  },
+  {
+    id: 'oncologia',
+    icon: '🎗️',
+    name: 'Oncologia',
+    calculators: [],
+    comingSoon: ['IPI', 'ECOG', 'Karnofsky']
+  },
+  {
+    id: 'obstetricia',
+    icon: '🤰',
+    name: 'Obstetrícia & Ginecologia',
+    calculators: [],
+    comingSoon: ['Idade gestacional (DUM)', 'Escore de Bishop', 'Apgar']
+  },
+  {
+    id: 'pediatria',
+    icon: '👶',
+    name: 'Pediatria',
+    calculators: [],
+    comingSoon: ['Dose pediátrica', 'Holliday-Segar', 'Superfície corporal'],
+    linkSection: 'calc-pediatrica'
+  },
+  {
+    id: 'urgencia',
+    icon: '🆘',
+    name: 'Urgência & Trauma',
+    calculators: [],
+    comingSoon: ['Glasgow', 'RTS', 'ISS', 'qSOFA']
+  },
+  {
+    id: 'hematologia',
+    icon: '🩸',
+    name: 'Hematologia & Trombose',
+    calculators: [],
+    comingSoon: ['Wells (TVP)', 'Wells (TEP)', 'Padua (risco TVP)']
+  },
+  {
+    id: 'farmacologia',
+    icon: '💊',
+    name: 'Farmacologia & Dose',
+    calculators: ['dose-peso'],
+    comingSoon: ['Ajuste renal de dose', 'Conversor de unidades']
+  },
+  {
+    id: 'neurologia',
+    icon: '🧠',
+    name: 'Neurologia',
+    calculators: [],
+    comingSoon: ['NIHSS', 'Glasgow', 'Fisher (HSA)']
+  },
+  {
+    id: 'dermatologia',
+    icon: '🩹',
+    name: 'Dermatologia & Queimaduras',
+    calculators: [],
+    comingSoon: ['Parkland', 'Regra dos 9', 'Área queimada (Lund-Browder)']
+  },
+  {
+    id: 'ortopedia',
+    icon: '🦴',
+    name: 'Ortopedia & Reumatologia',
+    calculators: [],
+    comingSoon: ['FRAX', 'DAS28', 'Critérios ACR']
+  },
+  {
+    id: 'extras',
+    icon: '📐',
+    name: 'Extras de conveniência',
+    calculators: ['imc'],
+    comingSoon: ['Conversor cm/pol', 'Conversor kg/lb', 'Calculadora de datas']
+  }
+];
 
-  if (!peso || !doseKg) return alert('Informe peso e dose mg/kg.');
+const CALC_FORMS = {
+  'dose-peso': {
+    title: 'Dose por peso',
+    html: `
+      <label>Peso (kg)</label>
+      <input name="peso" type="number" step="0.1" min="0.1" required>
+      <label>Dose (mg/kg)</label>
+      <input name="doseKg" type="number" step="0.01" min="0.01" required>
+      <label>Concentração (mg/mL) — opcional</label>
+      <input name="conc" type="number" step="0.1" min="0">
+    `,
+    calculate (form) {
+      const peso = parseFloat(form.peso.value);
+      const doseKg = parseFloat(form.doseKg.value);
+      const conc = parseFloat(form.conc.value);
+      if (!peso || !doseKg) return alert('Informe peso e dose mg/kg.');
+      const totalMg = peso * doseKg;
+      let html = `<p><strong>Dose total:</strong> ${totalMg.toFixed(2)} mg</p>`;
+      if (conc > 0) html += `<p><strong>Volume:</strong> ${(totalMg / conc).toFixed(2)} mL</p>`;
+      return html;
+    }
+  },
+  imc: {
+    title: 'IMC',
+    html: `
+      <label>Peso (kg)</label>
+      <input name="peso" type="number" step="0.1" min="0.1" required>
+      <label>Altura (cm)</label>
+      <input name="altura" type="number" step="0.1" min="30" required>
+    `,
+    calculate (form) {
+      const peso = parseFloat(form.peso.value);
+      const alturaCm = parseFloat(form.altura.value);
+      if (!peso || !alturaCm) return alert('Informe peso e altura.');
+      const imc = peso / Math.pow(alturaCm / 100, 2);
+      let classificacao = 'Obesidade';
+      if (imc < 18.5) classificacao = 'Baixo peso';
+      else if (imc < 25) classificacao = 'Peso normal';
+      else if (imc < 30) classificacao = 'Sobrepeso';
+      return `<p><strong>IMC:</strong> ${imc.toFixed(1)} kg/m²</p>
+              <p><strong>Classificação:</strong> ${classificacao}</p>`;
+    }
+  },
+  pam: {
+    title: 'Pressão arterial média (PAM)',
+    html: `
+      <label>PAS (mmHg)</label>
+      <input name="pas" type="number" step="1" min="1" required>
+      <label>PAD (mmHg)</label>
+      <input name="pad" type="number" step="1" min="0" required>
+    `,
+    calculate (form) {
+      const pas = parseFloat(form.pas.value);
+      const pad = parseFloat(form.pad.value);
+      if (!pas || pad < 0) return alert('Informe PAS e PAD.');
+      return `<p><strong>PAM:</strong> ${((pas + 2 * pad) / 3).toFixed(1)} mmHg</p>`;
+    }
+  },
+  creatinina: {
+    title: 'Clearance de creatinina (Cockcroft-Gault)',
+    html: `
+      <label>Idade (anos)</label>
+      <input name="idade" type="number" step="1" min="1" required>
+      <label>Peso (kg)</label>
+      <input name="peso" type="number" step="0.1" min="0.1" required>
+      <label>Creatinina (mg/dL)</label>
+      <input name="creat" type="number" step="0.01" min="0.01" required>
+      <label>Sexo</label>
+      <select name="sexo" required>
+        <option value="M">Masculino</option>
+        <option value="F">Feminino</option>
+      </select>
+    `,
+    calculate (form) {
+      const idade = parseFloat(form.idade.value);
+      const peso = parseFloat(form.peso.value);
+      const creat = parseFloat(form.creat.value);
+      if (!idade || !peso || !creat) return alert('Preencha todos os campos.');
+      let clcr = ((140 - idade) * peso) / (72 * creat);
+      if (form.sexo.value === 'F') clcr *= 0.85;
+      return `<p><strong>Clearance:</strong> ${clcr.toFixed(1)} mL/min</p>`;
+    }
+  },
+  'anion-gap': {
+    title: 'Anion gap',
+    html: `
+      <label>Sódio (mEq/L)</label>
+      <input name="na" type="number" step="0.1" required>
+      <label>Cloro (mEq/L)</label>
+      <input name="cl" type="number" step="0.1" required>
+      <label>Bicarbonato (mEq/L)</label>
+      <input name="hco3" type="number" step="0.1" required>
+    `,
+    calculate (form) {
+      const na = parseFloat(form.na.value);
+      const cl = parseFloat(form.cl.value);
+      const hco3 = parseFloat(form.hco3.value);
+      if (!na || !cl || !hco3) return alert('Preencha todos os eletrólitos.');
+      const gap = na - (cl + hco3);
+      const interp = gap > 12
+        ? 'Elevado — investigar acidose metabólica com AG aumentado'
+        : 'Dentro do esperado (≤ 12 mEq/L)';
+      return `<p><strong>Anion gap:</strong> ${gap.toFixed(1)} mEq/L</p>
+              <p><strong>Interpretação:</strong> ${interp}</p>`;
+    }
+  }
+};
 
-  const totalMg = peso * doseKg;
-  let html = `<p><strong>Dose total:</strong> ${totalMg.toFixed(2)} mg</p>`;
-  if (conc > 0) html += `<p><strong>Volume:</strong> ${(totalMg / conc).toFixed(2)} mL</p>`;
+function initCalcEssenciais () {
+  const grid = document.getElementById('calc-category-grid');
+  if (!grid) return;
 
-  showCalcResult('dose-resultado', html);
+  grid.innerHTML = CALC_AREAS.map(area => `
+    <button type="button" class="calc-category-btn" data-area="${area.id}">
+      <span class="calc-category-icon">${area.icon}</span>
+      <span class="calc-category-name">${area.name}</span>
+    </button>
+  `).join('');
+
+  grid.querySelectorAll('.calc-category-btn').forEach(btn => {
+    btn.addEventListener('click', () => showCalcArea(btn.dataset.area));
+  });
+
+  const content = document.getElementById('calc-area-content');
+  if (content) {
+    content.addEventListener('submit', handleCalcFormSubmit);
+  }
 }
 
-function calcImc (e) {
-  e.preventDefault();
-  const peso = parseFloat(document.getElementById('imc-peso').value);
-  const alturaCm = parseFloat(document.getElementById('imc-altura').value);
+function showCalcCategories () {
+  const categoriesView = document.getElementById('calc-categories-view');
+  const areaView = document.getElementById('calc-area-view');
+  if (!categoriesView || !areaView) return;
 
-  if (!peso || !alturaCm) return alert('Informe peso e altura.');
-
-  const alturaM = alturaCm / 100;
-  const imc = peso / (alturaM * alturaM);
-  let classificacao = 'Obesidade';
-
-  if (imc < 18.5) classificacao = 'Baixo peso';
-  else if (imc < 25) classificacao = 'Peso normal';
-  else if (imc < 30) classificacao = 'Sobrepeso';
-
-  showCalcResult('imc-resultado',
-    `<p><strong>IMC:</strong> ${imc.toFixed(1)} kg/m²</p>
-     <p><strong>Classificação:</strong> ${classificacao}</p>`);
+  categoriesView.hidden = false;
+  areaView.hidden = true;
 }
 
-function calcPam (e) {
-  e.preventDefault();
-  const pas = parseFloat(document.getElementById('pam-pas').value);
-  const pad = parseFloat(document.getElementById('pam-pad').value);
+function showCalcArea (areaId) {
+  const area = CALC_AREAS.find(a => a.id === areaId);
+  if (!area) return;
 
-  if (!pas || pad === undefined || pad < 0) return alert('Informe PAS e PAD.');
+  document.getElementById('calc-categories-view').hidden = true;
+  document.getElementById('calc-area-view').hidden = false;
+  document.getElementById('calc-area-title').textContent = `${area.icon} ${area.name}`;
 
-  const pam = (pas + 2 * pad) / 3;
+  let html = '';
 
-  showCalcResult('pam-resultado',
-    `<p><strong>PAM:</strong> ${pam.toFixed(1)} mmHg</p>`);
+  if (area.calculators.length) {
+    html += '<div class="calc-grid">';
+    area.calculators.forEach(calcId => {
+      const calc = CALC_FORMS[calcId];
+      if (!calc) return;
+      html += `
+        <div class="calc-block">
+          <h3>${calc.title}</h3>
+          <form class="calc-form" data-calc="${calcId}">
+            ${calc.html}
+            <button type="submit">Calcular</button>
+          </form>
+          <div class="calc-result" hidden></div>
+        </div>`;
+    });
+    html += '</div>';
+  }
+
+  if (area.linkSection) {
+    html += `
+      <div class="calc-link-box">
+        <p class="muted">Ferramenta disponível no menu lateral:</p>
+        <button type="button" class="btn" onclick="showSection('${area.linkSection}')">Abrir calculadora pediátrica</button>
+      </div>`;
+  }
+
+  if (area.comingSoon.length) {
+    html += `
+      <div class="calc-soon-block">
+        <h3>Em breve</h3>
+        <ul class="calc-soon-list">
+          ${area.comingSoon.map(item => `<li>${item}</li>`).join('')}
+        </ul>
+      </div>`;
+  }
+
+  if (!area.calculators.length && !area.linkSection && !area.comingSoon.length) {
+    html += '<p class="coming-soon">Calculadoras desta área em construção.</p>';
+  }
+
+  document.getElementById('calc-area-content').innerHTML = html;
 }
 
-function calcCreatinina (e) {
+function handleCalcFormSubmit (e) {
+  const form = e.target;
+  if (!form.classList.contains('calc-form')) return;
   e.preventDefault();
-  const idade = parseFloat(document.getElementById('cr-idade').value);
-  const peso = parseFloat(document.getElementById('cr-peso').value);
-  const creat = parseFloat(document.getElementById('cr-valor').value);
-  const sexo = document.getElementById('cr-sexo').value;
 
-  if (!idade || !peso || !creat) return alert('Preencha todos os campos.');
+  const calcId = form.dataset.calc;
+  const calc = CALC_FORMS[calcId];
+  if (!calc) return;
 
-  let clcr = ((140 - idade) * peso) / (72 * creat);
-  if (sexo === 'F') clcr *= 0.85;
-
-  showCalcResult('cr-resultado',
-    `<p><strong>Clearance (Cockcroft-Gault):</strong> ${clcr.toFixed(1)} mL/min</p>`);
-}
-
-function calcAnionGap (e) {
-  e.preventDefault();
-  const na = parseFloat(document.getElementById('ag-na').value);
-  const cl = parseFloat(document.getElementById('ag-cl').value);
-  const hco3 = parseFloat(document.getElementById('ag-hco3').value);
-
-  if (!na || !cl || !hco3) return alert('Preencha todos os eletrólitos.');
-
-  const gap = na - (cl + hco3);
-  let interpretacao = gap > 12 ? 'Elevado — investigar acidose metabólica com AG aumentado' : 'Dentro do esperado (≤ 12 mEq/L)';
-
-  showCalcResult('ag-resultado',
-    `<p><strong>Anion gap:</strong> ${gap.toFixed(1)} mEq/L</p>
-     <p><strong>Interpretação:</strong> ${interpretacao}</p>`);
+  const html = calc.calculate(form);
+  if (typeof html === 'string') showCalcResultInBlock(form, html);
 }
 
 function redirectLoggedFromHome () {
