@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Painel • MedHub</title>
+  <title>Menu • MedHub</title>
   <link rel="stylesheet" href="style.css">
   <script defer src="app.js"></script>
   <script defer src="auth.js"></script>
 </head>
-<body onload="initDashboard()">
+<body onload="initApp()">
   <header class="app-header">
     <h1>MedHub</h1>
     <div class="header-actions">
@@ -19,12 +19,12 @@
 
   <main>
     <div class="card dashboard-card">
-      <h2>Painel</h2>
-      <p id="user-greeting"></p>
-      <p class="muted">
-        Aqui nesse aplicativo você irá conseguir tudo que precisa para dar um plantão tranquilo e com segurança.
-      </p>
-      <a href="app.html" class="btn dashboard-btn">Entrar</a>
+      <h2>Menu principal</h2>
+      <p class="muted">Escolha uma opção para começar seu plantão.</p>
+      <div class="menu-grid">
+        <a href="#" class="menu-item">Pacientes</a>
+        <a href="#" class="menu-item">Consultas</a>
+      </div>
     </div>
   </main>
 

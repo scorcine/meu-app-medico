@@ -30,6 +30,14 @@ function initDashboard () {
   if (greetingEl) greetingEl.textContent = `Olá, ${user.name}`;
 }
 
+function initApp () {
+  const user = requireAuth();
+  if (!user) return;
+
+  const nameEl = document.getElementById('user-name');
+  if (nameEl) nameEl.textContent = user.name;
+}
+
 function redirectLoggedFromHome () {
   if (getSession()) window.location.href = 'dashboard.html';
 }
