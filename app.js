@@ -39,6 +39,23 @@ function initApp () {
 
   const greetingEl = document.getElementById('user-greeting');
   if (greetingEl) greetingEl.textContent = `Olá, ${user.name}`;
+
+  document.querySelectorAll('.sidebar-link').forEach(link => {
+    link.addEventListener('click', () => showSection(link.dataset.section));
+  });
+
+  const hash = window.location.hash.replace('#', '');
+  if (hash) showSection(hash);
+}
+
+function showSection (sectionId) {
+  document.querySelectorAll('.sidebar-link').forEach(link => {
+    link.classList.toggle('active', link.dataset.section === sectionId);
+  });
+
+  document.querySelectorAll('.content-panel').forEach(panel => {
+    panel.classList.toggle('active', panel.id === `section-${sectionId}`);
+  });
 }
 
 function redirectLoggedFromHome () {

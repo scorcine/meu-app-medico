@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard • MedHub</title>
+  <title>MedHub</title>
   <link rel="stylesheet" href="style.css">
   <script defer src="app.js"></script>
   <script defer src="auth.js"></script>
 </head>
-<body onload="initApp()">
+<body class="app-page" onload="initApp()">
   <header class="app-header">
     <h1>MedHub</h1>
     <div class="header-actions">
@@ -17,16 +17,56 @@
     </div>
   </header>
 
-  <main>
-    <div class="card dashboard-card">
-      <h2>Dashboard</h2>
-      <p id="user-greeting"></p>
-      <p class="muted">Seu plantão está pronto. Em breve: pacientes, consultas e ferramentas clínicas.</p>
-    </div>
-  </main>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <p class="sidebar-title">Menu</p>
+      <nav class="sidebar-nav">
+        <button type="button" class="sidebar-link active" data-section="inicio">Início</button>
+        <button type="button" class="sidebar-link" data-section="medicacoes-vo">Medicações VO</button>
+        <button type="button" class="sidebar-link" data-section="pacientes">Pacientes</button>
+        <button type="button" class="sidebar-link" data-section="consultas">Consultas</button>
+        <button type="button" class="sidebar-link" data-section="ferramentas">Ferramentas</button>
+      </nav>
+    </aside>
 
-  <footer>
-    &copy; 2026 MedHub
-  </footer>
+    <main class="app-content">
+      <section id="section-inicio" class="content-panel active">
+        <div class="card dashboard-card">
+          <h2>Dashboard</h2>
+          <p id="user-greeting"></p>
+          <p class="muted">Seu plantão está pronto. Use o menu ao lado para acessar as ferramentas.</p>
+        </div>
+      </section>
+
+      <section id="section-medicacoes-vo" class="content-panel">
+        <div class="card dashboard-card">
+          <h2>Medicações VO</h2>
+          <p class="muted">Referência rápida de medicações via oral para o plantão.</p>
+          <p class="coming-soon">Conteúdo em construção — em breve você poderá consultar doses e protocolos aqui.</p>
+        </div>
+      </section>
+
+      <section id="section-pacientes" class="content-panel">
+        <div class="card dashboard-card">
+          <h2>Pacientes</h2>
+          <p class="coming-soon">Em breve: cadastro e lista de pacientes.</p>
+        </div>
+      </section>
+
+      <section id="section-consultas" class="content-panel">
+        <div class="card dashboard-card">
+          <h2>Consultas</h2>
+          <p class="coming-soon">Em breve: agenda e registro de consultas.</p>
+        </div>
+      </section>
+
+      <section id="section-ferramentas" class="content-panel">
+        <div class="card dashboard-card">
+          <h2>Ferramentas</h2>
+          <p class="coming-soon">Em breve: calculadoras e checklists clínicos.</p>
+        </div>
+      </section>
+    </main>
+  </div>
 </body>
 </html>
