@@ -654,5 +654,140 @@ const CALC_RISCO = {
               <p><strong>Interpretação:</strong> ${meta}</p>
               <p class="calc-note">Metas usuais: ≥10% em 2h ou ≥20% em 6h após ressuscitação inicial.</p>`;
     }
+  },
+
+  curb65: {
+    title: 'CURB-65',
+    html: `
+      <label class="calc-check"><input type="checkbox" name="c_conf"> Confusão (desorientação nova)</label>
+      <label class="calc-check"><input type="checkbox" name="c_ureia"> Ureia &gt;7 mmol/L (&gt;19 mg/dL)</label>
+      <label class="calc-check"><input type="checkbox" name="c_fr"> Frequência respiratória ≥30 irpm</label>
+      <label class="calc-check"><input type="checkbox" name="c_pa"> PAS &lt;90 ou PAD ≤60 mmHg</label>
+      <label class="calc-check"><input type="checkbox" name="c_idade"> Idade ≥65 anos</label>
+    `,
+    calculate (form) {
+      let score = 0;
+      if (chk(form, 'c_conf')) score++;
+      if (chk(form, 'c_ureia')) score++;
+      if (chk(form, 'c_fr')) score++;
+      if (chk(form, 'c_pa')) score++;
+      if (chk(form, 'c_idade')) score++;
+
+      const mortTable = { 0: 0.6, 1: 2.7, 2: 6.8, 3: 14, 4: 27.8, 5: 57 };
+      const mort = mortTable[score] ?? 57;
+
+      let conduta = 'Tratamento ambulatorial (considerar)';
+      if (score === 2) conduta = 'Internação hospitalar';
+      else if (score === 3) conduta = 'Internação + considerar UTI';
+      else if (score >= 4) conduta = 'Internação em UTI / alto risco';
+
+      return `<p><strong>CURB-65:</strong> ${score}/5</p>
+              <p><strong>Mortalidade estimada:</strong> ${mort}%</p>
+              <p><strong>Conduta sugerida:</strong> ${conduta}</p>
+              <p class="calc-note">Lim et al., 2003. Pneumonia adquirida na comunidade.</p>`;
+    }
+  },
+
+  wells: {
+    title: 'Escala de Wells (TEP)',
+    html: `
+      <label class="calc-check"><input type="checkbox" name="w_dvt"> Sinais clínicos de TVP (+3)</label>
+      <label class="calc-check"><input type="checkbox" name="w_alt"> TEP mais provável que diagnóstico alternativo (+3)</label>
+      <label class="calc-check"><input type="checkbox" name="w_fc"> FC &gt;100 bpm (+1,5)</label>
+      <label class="calc-check"><input type="checkbox" name="w_imob"> Imobilização ≥3 dias ou cirurgia nas últimas 4 semanas (+1,5)</label>
+      <label class="calc-check"><input type="checkbox" name="w_prev"> TEP ou TVP prévios objetivados (+1,5)</label>
+      <label class="calc-check"><input type="checkbox" name="w_hemo"> Hemoptise (+1)</label>
+      <label class="calc-check"><input type="checkbox" name="w_malig"> Malignidade em atividade (+1)</label>
+    `,
+    calculate (form) {
+      let score = 0;
+      if (chk(form, 'w_dvt')) score += 3;
+      if (chk(form, 'w_alt')) score += 3;
+      if (chk(form, 'w_fc')) score += 1.5;
+      if (chk(form, 'w_imob')) score += 1.5;
+      if (chk(form, 'w_prev')) score += 1.5;
+      if (chk(form, 'w_hemo')) score += 1;
+      if (chk(form, 'w_malig')) score += 1;
+
+      let doisTier = score <= 4
+        ? 'TEP improvável — considerar D-dímero'
+        : 'TEP provável — considerar angioTC';
+
+      let tresTier = 'Risco baixo (~12%)';
+      if (score > 6) tresTier = 'Risco alto (~41%)';
+      else if (score > 4) tresTier = 'Risco moderado (~28%)';
+
+      return `<p><strong>Wells TEP:</strong> ${score} pontos</p>
+              <p><strong>2 categorias:</strong> ${doisTier}</p>
+              <p><strong>3 categorias:</strong> ${tresTier}</p>
+              <p class="calc-note">Wells et al., 2001. Versão para embolia pulmonar.</p>`;
+    }
+  },
+
+  mews: {
+    title: 'MEWS (Modified Early Warning Score)',
+    html: `
+      <label>PAS (mmHg)</label>
+      <input name="pas" type="number" min="0" required>
+      <label>Frequência cardíaca (bpm)</label>
+      <input name="fc" type="number" min="0" required>
+      <label>Frequência respiratória (irpm)</label>
+      <input name="fr" type="number" min="0" required>
+      <label>Temperatura (°C)</label>
+      <input name="temp" type="number" step="0.1" required>
+      <label>Consciência</label>
+      <select name="consc" required>
+        <option value="0">Alerta</option>
+        <option value="3">Voz, Dor ou Não responde</option>
+      </select>
+    `,
+    calculate (form) {
+      const pas = num(form, 'pas');
+      const fc = num(form, 'fc');
+      const fr = num(form, 'fr');
+      const temp = num(form, 'temp');
+      const consc = parseInt(form.consc.value, 10);
+
+      let pasPts = 0;
+      if (pas >= 160) pasPts = 2;
+      else if (pas >= 140) pasPts = 1;
+      else if (pas >= 110) pasPts = 0;
+      else if (pas >= 100) pasPts = 1;
+      else if (pas >= 91) pasPts = 2;
+      else pasPts = 3;
+
+      let fcPts = 0;
+      if (fc >= 130) fcPts = 3;
+      else if (fc >= 111) fcPts = 2;
+      else if (fc >= 101) fcPts = 1;
+      else if (fc >= 61) fcPts = 0;
+      else if (fc >= 51) fcPts = 1;
+      else if (fc >= 41) fcPts = 2;
+      else fcPts = 3;
+
+      let frPts = 0;
+      if (fr >= 30) frPts = 3;
+      else if (fr >= 21) frPts = 2;
+      else if (fr >= 15) frPts = 0;
+      else if (fr >= 11) frPts = 1;
+      else frPts = 3;
+
+      let tempPts = 0;
+      if (temp >= 38.5) tempPts = 2;
+      else if (temp >= 35.1) tempPts = 0;
+      else tempPts = 2;
+
+      const total = pasPts + fcPts + frPts + tempPts + consc;
+
+      let acao = 'Monitorização de rotina';
+      if (total >= 5) acao = 'MEWS ≥5 — avaliação urgente, considerar UTI';
+      else if (total >= 4) acao = 'MEWS ≥4 — revisão médica imediata';
+      else if (total >= 3) acao = 'MEWS ≥3 — aumentar frequência de monitorização';
+
+      return `<p><strong>MEWS:</strong> ${total} pontos</p>
+              <p>PAS: ${pasPts} | FC: ${fcPts} | FR: ${frPts} | Temp: ${tempPts} | Consciência: ${consc}</p>
+              <p><strong>Conduta sugerida:</strong> ${acao}</p>
+              <p class="calc-note">Modified Early Warning Score — deterioração clínica precoce.</p>`;
+    }
   }
 };

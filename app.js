@@ -104,8 +104,8 @@ const CALC_AREAS = [
     id: 'avaliacao-geral',
     icon: '⚙️',
     name: 'Avaliação geral & estratificação de risco',
-    calculators: ['charlson', 'news2', 'qsofa', 'sofa', 'apache2', 'saps3', 'lactate-clearance'],
-    comingSoon: ['CURB-65', 'Escala de Wells', 'MEWS']
+    calculators: ['charlson', 'news2', 'qsofa', 'sofa', 'apache2', 'saps3', 'lactate-clearance', 'curb65', 'wells', 'mews'],
+    comingSoon: []
   },
   {
     id: 'cardiologia',
@@ -337,6 +337,9 @@ const CALC_META = {
   apache2: { icon: '🏥' },
   saps3: { icon: '📊' },
   'lactate-clearance': { icon: '🧪' },
+  curb65: { icon: '🫁' },
+  wells: { icon: '🩸' },
+  mews: { icon: '📈' },
   'dose-peso': { icon: '💊' },
   imc: { icon: '⚖️' },
   pam: { icon: '❤️' },
