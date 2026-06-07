@@ -102,7 +102,7 @@ const CALC_CARDIO = {
         <option value="4">IV — choque cardiogênico</option>
       </select>
       <label class="calc-check"><input type="checkbox" name="parada"> Parada cardíaca na admissão</label>
-      <label class="calc-check"><input type="checkbox" name="st"> Desvio de ST ao ECG</label>
+      <label class="calc-check"><input type="checkbox" name="st"> Desvio do segmento ST (elevação ou depressão)</label>
       <label class="calc-check"><input type="checkbox" name="enzimas"> Marcadores cardíacos elevados</label>
     `,
     calculate (form) {
@@ -152,16 +152,22 @@ const CALC_CARDIO = {
 
       let total = agePts + fcPts + pasPts + crPts + killipPts;
       if (cChk(form, 'parada')) total += 39;
-      if (cChk(form, 'st')) total += 28;
+      const stDesvio = cChk(form, 'st');
+      if (stDesvio) total += 28;
       if (cChk(form, 'enzimas')) total += 14;
 
       let risco = 'Baixo (<3%)';
       if (total > 140) risco = 'Alto (>8%)';
       else if (total > 108) risco = 'Intermediário (3–8%)';
 
+      const stInfo = stDesvio
+        ? 'Desvio de ST: <strong>sim</strong> (+28 pts) — inclui supra <strong>ou</strong> infra de ST'
+        : 'Desvio de ST: <strong>não</strong> (+0 pts)';
+
       return `<p><strong>GRACE score:</strong> ${total} pontos</p>
               <p><strong>Risco de mortalidade hospitalar (referência):</strong> ${risco}</p>
-              <p class="calc-note">GRACE 2.0 — SCA sem supradesnivelamento de ST. Consulte curva nomograma para mortalidade em 6 meses.</p>`;
+              <p>${stInfo}</p>
+              <p class="calc-note">O GRACE 2.0 é mais usado na SCA sem supradesnivelamento (NSTEMI/AI), mas o critério “desvio de ST” vale para <strong>elevação ou depressão</strong>. Marcar esse item não contradiz a presença de supra de ST — apenas soma +28 pontos. Consulte nomograma para mortalidade em 6 meses.</p>`;
     }
   },
 
