@@ -122,8 +122,8 @@ const CALC_AREAS = [
     id: 'pneumologia',
     icon: '🌬️',
     name: 'Pneumologia & Gasometrias',
-    calculators: ['anion-gap'],
-    comingSoon: ['Gradiente A-a', 'Relação P/F', 'Fórmula de Winter', 'BEF']
+    calculators: ['psi', 'curb65', 'mallampati', 'agem-pram', 'vef1', 'aa-pafi', 'rox'],
+    comingSoon: []
   },
   {
     id: 'nefrologia',
@@ -335,6 +335,10 @@ if (typeof CALC_CARDIO !== 'undefined') {
   Object.assign(CALC_FORMS, CALC_CARDIO);
 }
 
+if (typeof CALC_PNEUMO !== 'undefined') {
+  Object.assign(CALC_FORMS, CALC_PNEUMO);
+}
+
 let currentCalcAreaId = null;
 
 const CALC_META = {
@@ -362,6 +366,12 @@ const CALC_META = {
   nyha: { icon: '🏃' },
   qtc: { icon: '⚡' },
   ict: { icon: '🩻' },
+  psi: { icon: '🫁' },
+  mallampati: { icon: '👅' },
+  'agem-pram': { icon: '🌬️' },
+  vef1: { icon: '📏' },
+  'aa-pafi': { icon: '💨' },
+  rox: { icon: '🔥' },
   'dose-peso': { icon: '💊' },
   imc: { icon: '⚖️' },
   pam: { icon: '❤️' },
@@ -487,6 +497,11 @@ function showCalcTool (calcId) {
       </form>
       <div class="calc-result" hidden></div>
     </div>`;
+
+  if (typeof calc.onRender === 'function') {
+    const form = document.querySelector(`#calc-area-content form[data-calc="${calcId}"]`);
+    calc.onRender(form);
+  }
 }
 
 function handleCalcFormSubmit (e) {
