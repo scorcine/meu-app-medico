@@ -459,8 +459,13 @@ body.app-page {
   cursor: pointer;
 }
 
-.calc-block-wide {
-  grid-column: 1 / -1;
+.calc-block-single {
+  max-width: 480px;
+  margin-top: 0.5rem;
+}
+
+.calc-block-single .calc-form {
+  max-width: none;
 }
 
 .calc-fieldset {

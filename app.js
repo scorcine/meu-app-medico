@@ -327,6 +327,27 @@ if (typeof CALC_RISCO !== 'undefined') {
   Object.assign(CALC_FORMS, CALC_RISCO);
 }
 
+let currentCalcAreaId = null;
+
+const CALC_META = {
+  charlson: { icon: '📋' },
+  news2: { icon: '🔔' },
+  qsofa: { icon: '🦠' },
+  sofa: { icon: '🫀' },
+  apache2: { icon: '🏥' },
+  saps3: { icon: '📊' },
+  'lactate-clearance': { icon: '🧪' },
+  'dose-peso': { icon: '💊' },
+  imc: { icon: '⚖️' },
+  pam: { icon: '❤️' },
+  creatinina: { icon: '💧' },
+  'anion-gap': { icon: '🧪' }
+};
+
+function getCalcIcon (calcId) {
+  return CALC_META[calcId]?.icon || '🔢';
+}
+
 function initCalcEssenciais () {
   const grid = document.getElementById('calc-category-grid');
   if (!grid) return;
@@ -353,6 +374,7 @@ function showCalcCategories () {
   const areaView = document.getElementById('calc-area-view');
   if (!categoriesView || !areaView) return;
 
+  currentCalcAreaId = null;
   categoriesView.hidden = false;
   areaView.hidden = true;
 }
@@ -361,26 +383,28 @@ function showCalcArea (areaId) {
   const area = CALC_AREAS.find(a => a.id === areaId);
   if (!area) return;
 
+  currentCalcAreaId = areaId;
   document.getElementById('calc-categories-view').hidden = true;
   document.getElementById('calc-area-view').hidden = false;
   document.getElementById('calc-area-title').textContent = `${area.icon} ${area.name}`;
 
+  const backBtn = document.getElementById('calc-area-back');
+  backBtn.textContent = '← Voltar às áreas';
+  backBtn.onclick = showCalcCategories;
+
   let html = '';
 
   if (area.calculators.length) {
-    html += '<div class="calc-grid">';
+    html += '<p class="muted">Escolha a calculadora que deseja usar:</p>';
+    html += '<div class="calc-category-grid">';
     area.calculators.forEach(calcId => {
       const calc = CALC_FORMS[calcId];
       if (!calc) return;
       html += `
-        <div class="calc-block${calc.wide ? ' calc-block-wide' : ''}">
-          <h3>${calc.title}</h3>
-          <form class="calc-form" data-calc="${calcId}">
-            ${calc.html}
-            <button type="submit">Calcular</button>
-          </form>
-          <div class="calc-result" hidden></div>
-        </div>`;
+        <button type="button" class="calc-category-btn" data-calc-tool="${calcId}">
+          <span class="calc-category-icon">${getCalcIcon(calcId)}</span>
+          <span class="calc-category-name">${calc.title}</span>
+        </button>`;
     });
     html += '</div>';
   }
@@ -389,7 +413,7 @@ function showCalcArea (areaId) {
     html += `
       <div class="calc-link-box">
         <p class="muted">Ferramenta disponível no menu lateral:</p>
-        <button type="button" class="btn" onclick="showSection('${area.linkSection}')">Abrir calculadora pediátrica</button>
+        <button type="button" class="btn" data-link-section="${area.linkSection}">Abrir calculadora pediátrica</button>
       </div>`;
   }
 
@@ -407,7 +431,37 @@ function showCalcArea (areaId) {
     html += '<p class="coming-soon">Calculadoras desta área em construção.</p>';
   }
 
-  document.getElementById('calc-area-content').innerHTML = html;
+  const content = document.getElementById('calc-area-content');
+  content.innerHTML = html;
+
+  content.querySelectorAll('[data-calc-tool]').forEach(btn => {
+    btn.addEventListener('click', () => showCalcTool(btn.dataset.calcTool));
+  });
+
+  content.querySelectorAll('[data-link-section]').forEach(btn => {
+    btn.addEventListener('click', () => showSection(btn.dataset.linkSection));
+  });
+}
+
+function showCalcTool (calcId) {
+  const calc = CALC_FORMS[calcId];
+  if (!calc) return;
+
+  const backBtn = document.getElementById('calc-area-back');
+  backBtn.textContent = '← Voltar às calculadoras';
+  backBtn.onclick = () => showCalcArea(currentCalcAreaId);
+
+  document.getElementById('calc-area-title').textContent =
+    `${getCalcIcon(calcId)} ${calc.title}`;
+
+  document.getElementById('calc-area-content').innerHTML = `
+    <div class="calc-block calc-block-single">
+      <form class="calc-form" data-calc="${calcId}">
+        ${calc.html}
+        <button type="submit">Calcular</button>
+      </form>
+      <div class="calc-result" hidden></div>
+    </div>`;
 }
 
 function handleCalcFormSubmit (e) {
