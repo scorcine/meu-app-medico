@@ -29,6 +29,7 @@
         <button type="button" class="sidebar-link" data-section="exames">Exames</button>
         <button type="button" class="sidebar-link" data-section="interpretacao-exame">Interpretação do exame</button>
         <button type="button" class="sidebar-link" data-section="guia-emergencia">Guia rápido de emergência</button>
+        <button type="button" class="sidebar-link" data-section="calc-pediatrica">Calculadora pediátrica</button>
         <button type="button" class="sidebar-link" data-section="pacientes">Pacientes</button>
         <button type="button" class="sidebar-link" data-section="consultas">Consultas</button>
         <button type="button" class="sidebar-link" data-section="ferramentas">Ferramentas</button>
@@ -97,6 +98,28 @@
           <h2>Guia rápido de emergência</h2>
           <p class="muted">Protocolos e condutas imediatas para situações de emergência no plantão.</p>
           <p class="coming-soon">Conteúdo em construção — em breve você poderá consultar fluxogramas e condutas aqui.</p>
+        </div>
+      </section>
+
+      <section id="section-calc-pediatrica" class="content-panel">
+        <div class="card dashboard-card">
+          <h2>Calculadora pediátrica</h2>
+          <p class="muted">Cálculo rápido de dose por peso e hidratação de manutenção (Holliday-Segar).</p>
+
+          <form class="calc-form" onsubmit="calcPediatrica(event)">
+            <label for="ped-peso">Peso (kg)</label>
+            <input id="ped-peso" type="number" step="0.1" min="0.1" placeholder="Ex.: 12.5" required>
+
+            <label for="ped-dose-kg">Dose (mg/kg)</label>
+            <input id="ped-dose-kg" type="number" step="0.01" min="0" placeholder="Ex.: 10">
+
+            <label for="ped-conc">Concentração (mg/mL) — opcional</label>
+            <input id="ped-conc" type="number" step="0.1" min="0" placeholder="Ex.: 50">
+
+            <button type="submit">Calcular</button>
+          </form>
+
+          <div id="ped-resultado" class="calc-result" hidden></div>
         </div>
       </section>
 
