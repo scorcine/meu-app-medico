@@ -664,10 +664,10 @@ const AVC_PROTOCOLS = [
       <table class="emerg-table">
         <tr><th>NIHSS</th><th>Classificação</th><th>Implicação clínica</th></tr>
         <tr><td>0</td><td>Sem déficit</td><td>Investigar mimics; repetir avaliação</td></tr>
-        <tr><td>1 – 4</td><td>AVC leve</td><td>Prognóstico favorável; avaliar elegibilidade à lise</td></tr>
-        <tr><td>5 – 15</td><td>Moderado</td><td>Maioria dos candidatos à reperfusão</td></tr>
-        <tr><td>16 – 20</td><td>Moderado-grave</td><td>Alto risco; monitorização intensiva</td></tr>
-        <tr><td>21 – 42</td><td>Grave</td><td>NIHSS &gt; 25 = exclusão na janela 3–4,5 h para lise</td></tr>
+        <tr><td>1 – 4</td><td>AVC leve</td><td>Prognóstico favorável; avaliar elegibilidade à <strong>trombólise IV</strong> (janela ≤ 4 h 30)</td></tr>
+        <tr><td>5 – 15</td><td>Moderado</td><td>Maioria dos candidatos à reperfusão (trombólise e/ou trombectomia se LVO)</td></tr>
+        <tr><td>16 – 20</td><td>Moderado-grave</td><td>Alto risco; monitorização intensiva; reperfusão individualizada</td></tr>
+        <tr><td>21 – 42</td><td>Grave</td><td>Déficit extenso; reperfusão conforme janela e imagem. <strong>NIHSS &gt; 25</strong> = contraindicação relativa adicional só na janela <strong>3–4,5 h</strong> para trombólise IV</td></tr>
       </table>
 
       <h4>Quando aplicar</h4>
