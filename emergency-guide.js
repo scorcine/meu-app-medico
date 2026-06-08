@@ -827,6 +827,182 @@ const SEPSE_PROTOCOLS = [
   }
 ];
 
+const TRAUMA_PROTOCOLS = [
+  {
+    id: 'atls-abcde',
+    icon: '🅰️',
+    name: 'ATLS — ABCDE',
+    html: `
+      <p>Abordagem sistemática do politraumatizado — <strong>primary survey</strong> identifica o que mata primeiro. Tratar cada letra antes de avançar; reavaliar continuamente.</p>
+
+      <div class="emerg-flow-v">
+        <span class="emerg-flow-step emerg-flow-shock"><strong>A — Airway (+ controle cervical)</strong></span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">Via aérea pérvia? Fala, estridor, sangue/vômito, queimadura inalatória</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">Manobra de elevação mandibular / chin-lift · colar cervical manual + colar rígido</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step emerg-flow-shock"><strong>B — Breathing</strong></span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">FR, SpO₂, expansibilidade, murmúrio, crepitação, tórax instável / pneumotórax</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">O₂ · descompressão imediata se pneumotórax hipertensivo · drenagem torácica</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step emerg-flow-shock"><strong>C — Circulation</strong></span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">Pulso, PA, perfusão, sangramento externo — <strong>controlar hemorragia</strong></span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">2 acessos calibrosos · cristaloide restrito · hemostasia · MTP se choque hemorrágico</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step emerg-flow-shock"><strong>D — Disability</strong></span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">GCS · pupilas · glicemia · déficit focal · analgesia adequada</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step emerg-flow-shock"><strong>E — Exposure / Environment</strong></span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">Retirar roupas · buscar lesões ocultas · prevenir hipotermia (cobertores, fluidos aquecidos)</span>
+      </div>
+
+      <h4>Lesões que matam primeiro (lembrete)</h4>
+      <ul>
+        <li><strong>A:</strong> obstrução, trauma maxilofacial, queimadura inalatória</li>
+        <li><strong>B:</strong> pneumotórax hipertensivo, hemotórax maciço, contusão grave</li>
+        <li><strong>C:</strong> hemorragia externa, choque hipovolêmico, tamponamento</li>
+        <li><strong>D:</strong> TCE grave, intoxicação, hipoglicemia</li>
+      </ul>
+      <p class="emerg-note">Após estabilização → <strong>secondary survey</strong> (exame head-to-toe). Use calculadoras <strong>GCS</strong>, <strong>RTS</strong> e <strong>ISS</strong> em Calculadoras essenciais → Urgência.</p>
+    `
+  },
+  {
+    id: 'via-aerea-vortex',
+    icon: '🌬️',
+    name: 'Via Aérea Difícil (Vortex)',
+    html: `
+      <p>Abordagem <strong>Vortex</strong> — três grupos de dispositivos/técnicas. Após <strong>3 tentativas falhas</strong> em um grupo, passar ao próximo. Falha total → <strong>cricotireoidostomia</strong>.</p>
+
+      <div class="emerg-rhythm-grid emerg-rhythm-grid-2">
+        <div class="emerg-rhythm-card">
+          <span class="emerg-rhythm-tag emerg-rhythm-tag-shock">Grupo 1 — Supraglótico</span>
+          <p><strong>Máscara laríngea / SGA</strong> (i-gel, LMA, etc.)</p>
+          <p>Melhor chance rápida se IOT falhou · oxigenação temporária</p>
+        </div>
+        <div class="emerg-rhythm-card">
+          <span class="emerg-rhythm-tag emerg-rhythm-tag-shock">Grupo 2 — Glótico</span>
+          <p><strong>Intubação orotraqueal</strong> + bougie / videolaringoscópio</p>
+          <p>Máximo <strong>3 tentativas</strong> por operador · otimizar posição (HELP, ramp)</p>
+        </div>
+        <div class="emerg-rhythm-card emerg-rhythm-card-shock">
+          <span class="emerg-rhythm-tag emerg-rhythm-tag-shock">Grupo 3 — Infraglótico</span>
+          <p><strong>Cricotireoidostomia cirúrgica</strong> ou punção por agulha (ponte)</p>
+          <p>Via aérea definitiva de resgate — <strong>CICO</strong> (Can't Intubate, Can't Oxygenate)</p>
+        </div>
+      </div>
+
+      <div class="emerg-flow-v">
+        <span class="emerg-flow-step">Pré-oxigenação 100% O₂ · posicionamento · aspiração</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">Tentativa grupo atual (máx. <strong>3</strong> por técnica/operador)</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step emerg-flow-decision">Oxigenação/ventilação OK?</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">Não → próximo grupo do Vortex (não repetir mesma técnica &gt; 3×)</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step emerg-flow-shock"><strong>CICO</strong> — cricotireoidostomia imediata</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step emerg-flow-loop">Confirmar capnografia · Rx tórax · analgesia/sedação pós-via aérea</span>
+      </div>
+
+      <h4>Regras práticas</h4>
+      <ul>
+        <li>Anunciar <strong>“via aérea difícil”</strong> e chamar ajuda cedo</li>
+        <li>Limitar tentativas de laringoscópia — hipóxia mata mais que IOT atrasada</li>
+        <li>Manter saturação com máscara + SGA enquanto prepara cricotireoidostomia</li>
+        <li>Controle cervical: colar + movimentação mínima</li>
+      </ul>
+      <p class="emerg-note">Vortex Approach (Higgs et al.). Em crianças &lt; 10–12 anos preferir traqueostomia de emergência ou punção conforme expertise local.</p>
+    `
+  },
+  {
+    id: 'mtp-transfusao',
+    icon: '🩸',
+    name: 'MTP — Transfusão maciça',
+    html: `
+      <p>Protocolo de transfusão maciça no trauma hemorrágico — proporção balanceada <strong>1:1:1</strong> (CH : PFC : plaquetas) + <strong>ácido tranexâmico (TXA)</strong> ≤ 3 h do trauma.</p>
+
+      <div class="emerg-flow-v">
+        <span class="emerg-flow-step">Reconhecer choque hemorrágico / sangramento maciço</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step emerg-flow-shock"><strong>TXA 1 g IV</strong> em 10 min — se trauma ≤ <strong>3 horas</strong></span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">Segunda dose 1 g em infusão 8 h (protocolo CRASH-2 / institucional)</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">Acionar banco de sangue — <strong>MTP 1:1:1</strong></span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">Controle de hemorragia paralelo (compressão, torniquete, cirurgia, REBOA conforme centro)</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">Monitorizar Ca²⁺, K⁺, temperatura, coagulograma, fibrinogênio</span>
+      </div>
+
+      <table class="emerg-table">
+        <tr><th>Componente</th><th>Proporção / meta</th></tr>
+        <tr><td>Concentrado de hemácias</td><td>Parte do ratio <strong>1:1:1</strong></td></tr>
+        <tr><td>Plasma fresco congelado</td><td>Parte do ratio <strong>1:1:1</strong></td></tr>
+        <tr><td>Plaquetas</td><td>Parte do ratio <strong>1:1:1</strong> (1 pool = ~6 unidades)</td></tr>
+        <tr><td><strong>TXA</strong></td><td>1 g bolus + 1 g/8 h se ≤ <strong>3 h</strong> do trauma</td></tr>
+        <tr><td>Crioprecipitado</td><td>Se fibrinogênio &lt; 1,5 g/L (ou &lt; 2 com sangramento ativo)</td></tr>
+      </table>
+
+      <h4>Quando acionar MTP (exemplos)</h4>
+      <ul>
+        <li>PAS &lt; 90 + lactato ↑ ou BE &lt; −6</li>
+        <li>SBC score ≥ 2 ou ABC score ≥ 2</li>
+        <li>Sangramento visível maciço / pelve instável / tórax/abdome com instabilidade</li>
+        <li>≥ 4 CH em 1 h ou ≥ 10 CH em 24 h</li>
+      </ul>
+
+      <h4>Adjuntos essenciais</h4>
+      <ul>
+        <li><strong>Ácido tranexâmico:</strong> não iniciar se &gt; 3 h do trauma (sem benefício — CRASH-2)</li>
+        <li><strong>Cloreto de cálcio:</strong> após cada 4 CH (hipocalcemia citratada)</li>
+        <li><strong>Aquecer</strong> paciente e hemocomponentes — evitar tríade letal</li>
+        <li>Restringir cristaloide após MTP — evitar diluição/coagulopatia</li>
+      </ul>
+      <p class="emerg-note">Propper et al. / TCCC / CRASH-2. Adaptar ao protocolo do banco de sangue e centro de trauma local.</p>
+    `
+  },
+  {
+    id: 'pecarn-tce',
+    icon: '👶',
+    name: 'PECARN — TCE pediátrico',
+    html: `
+      <p>Regra clínica para decidir <strong>TC de crânio vs observação</strong> em TCE leve (GCS 14–15) em crianças &lt; 18 anos — reduz exposição desnecessária à radiação.</p>
+
+      <div class="calc-block calc-block-single emerg-calc-block emerg-calc-wide">
+        <form class="calc-form" data-emerg-calc="pecarn" data-emerg-calc-inject>
+          <button type="submit">Avaliar PECARN</button>
+        </form>
+        <div class="calc-result" hidden></div>
+      </div>
+
+      <h4>Interpretação rápida</h4>
+      <table class="emerg-table">
+        <tr><th>Risco</th><th>Conduta</th></tr>
+        <tr><td><strong>Alto</strong> (GCS &lt;15, alteração consciência, fratura/base de crânio)</td><td><strong>TC de crânio</strong></td></tr>
+        <tr><td><strong>Intermediário</strong> (critérios específicos por idade)</td><td>Decisão compartilhada — observação vs TC</td></tr>
+        <tr><td><strong>Baixo</strong></td><td>TC <strong>não indicada</strong> — observação ambulatorial/hospitalar conforme clínica</td></tr>
+      </table>
+
+      <h4>Observação segura (baixo risco)</h4>
+      <ul>
+        <li>Orientar sinais de alarme: vômitos repetidos, sonolência, convulsão, cefaleia progressiva</li>
+        <li>Retorno se piora neurológica</li>
+        <li>GCS 14–15 no momento da avaliação — se GCS &lt; 14, não aplicar PECARN</li>
+      </ul>
+      <p class="emerg-note">Kuppermann et al., Lancet 2009 (PECARN). Não substitui julgamento clínico em mecanismo grave ou coagulopatia.</p>
+    `
+  }
+];
+
 const EMERGENCY_TOPICS = [
   {
     id: 'parada-cardio',
@@ -856,7 +1032,7 @@ const EMERGENCY_TOPICS = [
     id: 'trauma',
     icon: '🆘',
     name: 'Trauma & Suporte Avançado',
-    protocols: []
+    protocols: TRAUMA_PROTOCOLS
   },
   {
     id: 'via-aerea',
@@ -970,15 +1146,30 @@ function initEmergCalcForms (container) {
 
   container.querySelectorAll('form[data-emerg-calc]').forEach(form => {
     if (form.dataset.emergCalcBound) return;
+
+    const calcId = form.dataset.emergCalc;
+    const calc = typeof CALC_FORMS !== 'undefined'
+      ? CALC_FORMS[calcId]
+      : null;
+
+    if (calc && form.dataset.emergCalcInject && !form.dataset.emergCalcInjected) {
+      const submitBtn = form.querySelector('button[type="submit"]');
+      const tmp = document.createElement('div');
+      tmp.innerHTML = calc.html;
+      while (tmp.firstChild) {
+        form.insertBefore(tmp.firstChild, submitBtn);
+      }
+      form.dataset.emergCalcInjected = '1';
+    }
+
+    if (calc && typeof calc.onRender === 'function') {
+      calc.onRender(form);
+    }
+
     form.dataset.emergCalcBound = '1';
 
     form.addEventListener('submit', e => {
       e.preventDefault();
-      const calcId = form.dataset.emergCalc;
-      const calc = typeof CALC_FORMS !== 'undefined'
-        ? CALC_FORMS[calcId]
-        : (typeof CALC_NEURO !== 'undefined' ? CALC_NEURO[calcId] : null);
-
       if (!calc) return;
 
       const html = calc.calculate(form);
@@ -1060,7 +1251,7 @@ function showEmergenciaTopic (topicId) {
     return;
   }
 
-  const expectedProtocols = { 'parada-cardio': 6, 'sca': 4, 'avc': 4, 'sepse': 3 };
+  const expectedProtocols = { 'parada-cardio': 6, 'sca': 4, 'avc': 4, 'sepse': 3, 'trauma': 4 };
   if (expectedProtocols[topicId]) {
     contentEl.innerHTML = `
       <p class="coming-soon"><strong>Arquivo desatualizado no navegador.</strong> Os protocolos de <em>${topic.name}</em> já existem no projeto, mas o navegador carregou uma versão antiga de <code>emergency-guide.js</code>.</p>
