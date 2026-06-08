@@ -197,11 +197,13 @@ const CALC_PEDIATRIA = {
       const amioMg = 5 * peso;
       const amioDose = Math.min(amioMg, 300);
 
-      return `<p><strong>Adrenalina (${via === 'iv' ? 'IV/IO' : 'ET'}):</strong> ${epiMg.toFixed(2)} mg = ${epiMl.toFixed(1)} mL (${epiConc})</p>
-              <p>Repetir a cada 3–5 min na PCR</p>
+      return `<p><strong>Adrenalina (${via === 'iv' ? 'IV/IO' : 'ET'}):</strong> ${epiMg.toFixed(2)} mg (${(epiMg * 1000).toFixed(0)} mcg) = ${epiMl.toFixed(1)} mL (${epiConc})</p>
+              <p>Repetir a cada 3–5 min na PCR · dose <strong>10 mcg/kg</strong> (0,01 mg/kg)</p>
+              <p><strong>1º choque:</strong> ${(2 * peso).toFixed(0)} J (2 J/kg)</p>
+              <p><strong>2º choque e seguintes:</strong> ${(4 * peso).toFixed(0)} J (4 J/kg) — máx. 10 J/kg ou dose adulta</p>
               <p><strong>Amiodarona (1ª dose):</strong> ${amioDose.toFixed(0)} mg (5 mg/kg; máx. 300 mg)</p>
               <p><strong>Amiodarona (2ª dose):</strong> ${amioDose.toFixed(0)} mg — dose cumulativa máx. 15 mg/kg</p>
-              <p class="calc-note">PALS/AHA 2020. Adrenalina IV: 0,01 mg/kg. Amiodarona: 5 mg/kg IV/IO para FV/TVSP refratária. Verificar diluição institucional.</p>`;
+              <p class="calc-note">PALS/AHA 2020. Adrenalina IV: 0,01 mg/kg (10 mcg/kg). Amiodarona: 5 mg/kg IV/IO para FV/TVSP refratária.</p>`;
     }
   },
 
@@ -294,5 +296,175 @@ const CALC_PEDIATRIA = {
               <p><strong>YOS:</strong> ${yos}/30 — ${yosTxt}</p>
               <p class="calc-note">Rochester et al., 1985 (29–60 dias). YOS: McCarthy et al. Lactentes 3–36 meses com febre sem foco. &lt;28 dias = sempre investigar.</p>`;
     }
+  },
+
+  'bronquiolite-score': {
+    title: 'Score de bronquiolite — O₂ e alta',
+    wide: true,
+    html: `
+      <label>SpO₂ em ar ambiente (%)</label>
+      <select name="spo2" required>
+        <option value="0">≥ 94%</option>
+        <option value="1">90 – 93%</option>
+        <option value="2">&lt; 90%</option>
+      </select>
+      <label>Frequência respiratória / esforço</label>
+      <select name="fr" required>
+        <option value="0">Normal ou levemente aumentada</option>
+        <option value="1">Taquipneia moderada, tiragem leve</option>
+        <option value="2">Taquipneia marcada, tiragem moderada-grave</option>
+      </select>
+      <label>Sibilos / entrada de ar</label>
+      <select name="sibil" required>
+        <option value="0">Sibilos leves, MV presente</option>
+        <option value="1">Sibilos difusos</option>
+        <option value="2">MV diminuído / tórax silencioso</option>
+      </select>
+      <label>Alimentação / hidratação</label>
+      <select name="alim" required>
+        <option value="0">Normal</option>
+        <option value="1">Reduzida (&gt;50% da usual)</option>
+        <option value="2">Recusa / desidratação</option>
+      </select>
+      <label>Idade</label>
+      <select name="idade" required>
+        <option value="0">≥ 3 meses</option>
+        <option value="1">&lt; 3 meses</option>
+      </select>
+    `,
+    calculate (form) {
+      const total = ['spo2', 'fr', 'sibil', 'alim', 'idade']
+        .reduce((s, k) => s + parseInt(pSel(form, k), 10), 0);
+
+      let gravidade;
+      let conduta;
+      let oxigenio;
+
+      if (total <= 2) {
+        gravidade = 'Leve';
+        conduta = 'Alta com orientação — hidratação, lavagem nasal, sinais de retorno';
+        oxigenio = 'Sem O₂ se SpO₂ ≥ 94% e confortável';
+      } else if (total <= 5) {
+        gravidade = 'Moderada';
+        conduta = 'Observação 4–6 h · considerar internação se piora ou idade &lt; 3 meses';
+        oxigenio = 'O₂ se SpO₂ &lt; 90% — meta ≥ 90% (≥ 94% se disponível sem desconforto)';
+      } else {
+        gravidade = 'Grave';
+        conduta = 'Internação · considerar UTI se apneia, fadiga, SpO₂ persistente &lt; 90%';
+        oxigenio = 'O₂ contínuo · CNAF se insuficiente · IOT se falha ou apneia';
+      }
+
+      return `<p class="emerg-calc-score"><strong>Score:</strong> ${total}/9 — ${gravidade}</p>
+              <p><strong>Oxigenoterapia:</strong> ${oxigenio}</p>
+              <p><strong>Conduta:</strong> ${conduta}</p>
+              <ul class="emerg-calc-alerts">
+                <li>Reavaliar após broncodilatador só se história de sibilância prévia (asma) — bronquiolite viral geralmente não responde.</li>
+                <li>Evitar radiografia de rotina · não usar antibiótico ou corticoide sistêmico de rotina.</li>
+              </ul>
+              <p class="calc-note">Score clínico composto para triagem (SpO₂, esforço, alimentação, idade). AAP / SBP — individualizar com exame e saturação seriada.</p>`;
+    }
+  },
+
+  'broselow-doses': {
+    title: 'Broselow — doses rápidas por faixa',
+    wide: true,
+    html: `
+      <label>Peso (kg) ou escolha a faixa colorida</label>
+      <input name="peso" type="number" step="0.1" min="3" max="40" placeholder="Ex.: 12">
+      <label>Faixa Broselow (opcional se souber a cor)</label>
+      <select name="zona">
+        <option value="">Calcular pelo peso</option>
+        <option value="grey">Cinza — 3–5 kg</option>
+        <option value="pink">Rosa — 6–7 kg</option>
+        <option value="red">Vermelho — 8–9 kg</option>
+        <option value="purple">Roxo — 10–11 kg</option>
+        <option value="yellow">Amarelo — 12–14 kg</option>
+        <option value="white">Branco — 15–18 kg</option>
+        <option value="blue">Azul — 19–23 kg</option>
+        <option value="orange">Laranja — 24–29 kg</option>
+        <option value="green">Verde — 30–36 kg</option>
+      </select>
+    `,
+    calculate (form) {
+      const pesoInput = pNum(form, 'peso');
+      const zonaSel = pSel(form, 'zona');
+      let zone = zonaSel ? BROSELOW_ZONES.find(z => z.id === zonaSel) : null;
+      let peso = pesoInput;
+
+      if (!zone && Number.isFinite(pesoInput)) {
+        zone = broselowZoneFromWeight(pesoInput);
+      } else if (zone && !Number.isFinite(pesoInput)) {
+        peso = zone.kgRef;
+      } else if (zone && Number.isFinite(pesoInput)) {
+        peso = pesoInput;
+      } else {
+        return alert('Informe o peso ou selecione a faixa colorida.');
+      }
+
+      if (!zone) return alert('Peso fora das faixas Broselow (3–36 kg) ou faixa inválida.');
+
+      const d = broselowDrugDoses(peso);
+      const zoneBar = `<div class="broselow-zone-bar" style="background:${zone.hex};color:${zone.textColor}"><strong>${zone.label}</strong> · ${zone.kgRange} kg · ref. ${zone.kgRef} kg</div>`;
+
+      const rows = d.map(row => `<tr>
+        <td><strong>${row.name}</strong></td>
+        <td>${row.dosePerKg}</td>
+        <td><strong>${row.total}</strong></td>
+        <td>${row.note}</td>
+      </tr>`).join('');
+
+      return `${zoneBar}
+              <p class="rsi-patient-summary"><strong>Peso usado:</strong> ${broselowFmt(peso, 1)} kg</p>
+              <table class="emerg-table broselow-drug-table">
+                <tr><th>Fármaco</th><th>Dose/kg</th><th>Dose total</th><th>Observação</th></tr>
+                ${rows}
+              </table>
+              <p class="calc-note">Broselow / PALS — doses por peso real quando disponível. Acima de 36 kg usar doses adultas. Confirmar apresentação e diluição institucional.</p>`;
+    }
   }
 };
+
+const BROSELOW_ZONES = [
+  { id: 'grey', label: 'Cinza', hex: '#bdbdbd', textColor: '#212529', kgRange: '3–5', kgRef: 4, kgMin: 3, kgMax: 5.5 },
+  { id: 'pink', label: 'Rosa', hex: '#f48fb1', textColor: '#212529', kgRange: '6–7', kgRef: 6.5, kgMin: 6, kgMax: 7.5 },
+  { id: 'red', label: 'Vermelho', hex: '#ef5350', textColor: '#fff', kgRange: '8–9', kgRef: 8.5, kgMin: 8, kgMax: 9.5 },
+  { id: 'purple', label: 'Roxo', hex: '#ab47bc', textColor: '#fff', kgRange: '10–11', kgRef: 10.5, kgMin: 10, kgMax: 11.5 },
+  { id: 'yellow', label: 'Amarelo', hex: '#ffca28', textColor: '#212529', kgRange: '12–14', kgRef: 13, kgMin: 12, kgMax: 14.5 },
+  { id: 'white', label: 'Branco', hex: '#eceff1', textColor: '#212529', kgRange: '15–18', kgRef: 16.5, kgMin: 15, kgMax: 18.5 },
+  { id: 'blue', label: 'Azul', hex: '#42a5f5', textColor: '#fff', kgRange: '19–23', kgRef: 21, kgMin: 19, kgMax: 23.5 },
+  { id: 'orange', label: 'Laranja', hex: '#ff9800', textColor: '#212529', kgRange: '24–29', kgRef: 26.5, kgMin: 24, kgMax: 29.5 },
+  { id: 'green', label: 'Verde', hex: '#66bb6a', textColor: '#fff', kgRange: '30–36', kgRef: 33, kgMin: 30, kgMax: 36 }
+];
+
+function broselowZoneFromWeight (kg) {
+  return BROSELOW_ZONES.find(z => kg >= z.kgMin && kg <= z.kgMax) || null;
+}
+
+function broselowFmt (n, dec) {
+  return Number(n.toFixed(dec)).toString().replace('.', ',');
+}
+
+function broselowDrugDoses (peso) {
+  const epiMg = 0.01 * peso;
+  const epiMl = 0.1 * peso;
+  const amio = Math.min(5 * peso, 300);
+  const adeno1 = 0.1 * peso;
+  const adeno2 = 0.2 * peso;
+  const atrop = Math.min(Math.max(0.02 * peso, 0.1), 0.5);
+  const midaz = 0.1 * peso;
+  const glu10 = 0.5 * peso;
+  const choque2 = 2 * peso;
+  const choque4 = 4 * peso;
+
+  return [
+    { name: 'Adrenalina (PCR)', dosePerKg: '10 mcg/kg (0,01 mg/kg)', total: `${broselowFmt(epiMg, 2)} mg = ${broselowFmt(epiMl, 1)} mL (1:10.000)`, note: 'IV/IO q3–5 min' },
+    { name: 'Amiodarona', dosePerKg: '5 mg/kg', total: `${broselowFmt(amio, 0)} mg`, note: 'FV/TVSP refratária · máx. 300 mg/dose' },
+    { name: 'Adenosina 1ª dose', dosePerKg: '0,1 mg/kg', total: `${broselowFmt(adeno1, 2)} mg`, note: 'Rápido IV · flush' },
+    { name: 'Adenosina 2ª dose', dosePerKg: '0,2 mg/kg', total: `${broselowFmt(adeno2, 2)} mg`, note: 'Se TVS refratária' },
+    { name: 'Atropina', dosePerKg: '0,02 mg/kg', total: `${broselowFmt(atrop, 2)} mg`, note: 'Mín. 0,1 mg · máx. 0,5 mg (criança)' },
+    { name: 'Midazolam', dosePerKg: '0,1 mg/kg', total: `${broselowFmt(midaz, 2)} mg`, note: 'Sedação / convulsão' },
+    { name: 'Glicose 10%', dosePerKg: '5 mL/kg', total: `${broselowFmt(glu10, 0)} mL`, note: 'Hipoglicemia' },
+    { name: 'Desfibrilação 1º choque', dosePerKg: '2 J/kg', total: `${broselowFmt(choque2, 0)} J`, note: 'Ritmo chocável' },
+    { name: 'Desfibrilação 2º+ choque', dosePerKg: '4 J/kg', total: `${broselowFmt(choque4, 0)} J`, note: 'Subsequentes · máx. 10 J/kg' }
+  ];
+}

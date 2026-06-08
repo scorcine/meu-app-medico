@@ -1,6 +1,6 @@
 /* Guia rápido de emergência — tópicos e conteúdo — build 98041d1 */
 
-const MEDHUB_EMERG_BUILD = 'obstetricia-v1';
+const MEDHUB_EMERG_BUILD = 'pediatrica-v1';
 
 const PARADA_PROTOCOLS = [
   {
@@ -1536,6 +1536,112 @@ const OBSTETRICIA_PROTOCOLS = [
   }
 ];
 
+const PEDIATRIC_PROTOCOLS = [
+  {
+    id: 'pcr-pediatrico',
+    icon: '🫀',
+    name: 'Parada Cardiorrespiratória Pediátrica',
+    html: `
+      <p>PCR pediátrica — priorizar ventilação e oxigenação. Doses por peso: <strong>adrenalina 10 mcg/kg</strong> (0,01 mg/kg) · <strong>2º choque 4 J/kg</strong>.</p>
+
+      <div class="emerg-flow-v">
+        <span class="emerg-flow-step">Segurança · chamar ajuda · monitor/cardioversor pediátrico · O₂ · acesso IV/IO</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step emerg-flow-shock"><strong>RCP imediata</strong> — 1 socorrista 30:2 · 2 socorristas 15:2 · 100–120/min · profundidade ~1/3 tórax</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step emerg-flow-decision">Ritmo chocável (FV / TV sem pulso)?</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step emerg-flow-shock"><strong>Sim</strong> — 1º choque <strong>2 J/kg</strong> → RCP 2 min → <strong>2º choque 4 J/kg</strong> → subsequentes ≥ 4 J/kg (máx. 10 J/kg)</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step"><strong>Adrenalina 10 mcg/kg</strong> IV/IO após 2º choque (ou logo no não chocável) — q3–5 min</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">Refratário → <strong>amiodarona 5 mg/kg</strong> IV/IO (máx. 300 mg/dose)</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step emerg-flow-loop">Tratar causas reversíveis · capnografia · não hiperventilar</span>
+      </div>
+
+      <h4>Calculadora — doses por peso</h4>
+      <div class="calc-block calc-block-single emerg-calc-block emerg-calc-wide">
+        <form class="calc-form" data-emerg-calc="pcr-ped" data-emerg-calc-inject="1">
+          <button type="submit">Calcular adrenalina e choques</button>
+        </form>
+        <div class="calc-result" hidden></div>
+      </div>
+
+      <table class="emerg-table">
+        <tr><th>Intervenção</th><th>Dose pediátrica</th></tr>
+        <tr><td><strong>Adrenalina</strong></td><td><strong>10 mcg/kg</strong> (0,01 mg/kg) IV/IO — 0,1 mL/kg de 1:10.000</td></tr>
+        <tr><td><strong>1º choque</strong></td><td>2 J/kg</td></tr>
+        <tr><td><strong>2º choque e seguintes</strong></td><td><strong>4 J/kg</strong> (máx. 10 J/kg ou dose adulta)</td></tr>
+        <tr><td><strong>Amiodarona</strong></td><td>5 mg/kg IV/IO — repetir até 2 doses (máx. 15 mg/kg total)</td></tr>
+      </table>
+      <p class="emerg-note">PALS/AHA 2020 · Ver também Parada Cardiorrespiratória → Pediátrico PALS. Bradicardia sintomática: atropina 0,02 mg/kg antes de marcapasso.</p>
+    `
+  },
+  {
+    id: 'bronquiolite',
+    icon: '🌬️',
+    name: 'Bronquiolite — Score e O₂',
+    html: `
+      <p>Bronquiolite viral aguda — avaliar gravidade para decidir <strong>alta</strong>, <strong>observação com O₂</strong> ou <strong>internação</strong>.</p>
+
+      <div class="calc-block calc-block-single emerg-calc-block emerg-calc-wide">
+        <form class="calc-form" data-emerg-calc="bronquiolite-score" data-emerg-calc-inject="1">
+          <button type="submit">Calcular score e conduta</button>
+        </form>
+        <div class="calc-result" hidden></div>
+      </div>
+
+      <h4>Referência rápida — oxigenoterapia</h4>
+      <table class="emerg-table">
+        <tr><th>SpO₂</th><th>Conduta</th></tr>
+        <tr><td><strong>≥ 94%</strong></td><td>Sem O₂ se confortável — alta possível se score leve</td></tr>
+        <tr><td><strong>90 – 93%</strong></td><td>O₂ baixo fluxo · reavaliar em 1 h · observação</td></tr>
+        <tr><td><strong>&lt; 90%</strong></td><td>O₂ contínuo · considerar CNAF · internação se persistente</td></tr>
+      </table>
+
+      <h4>Evitar de rotina</h4>
+      <ul>
+        <li>Antibiótico · corticoide sistêmico · radiografia de tórax</li>
+        <li>Broncodilatador só se história prévia de sibilância/asma</li>
+        <li>&lt; 3 meses, apneia, desidratação ou SpO₂ persistente &lt; 90% → internar</li>
+      </ul>
+      <p class="emerg-note">AAP 2014 / SBP — lavagem nasal e hidratação são pilares. Score acima é ferramenta de triagem, não substitui exame clínico.</p>
+    `
+  },
+  {
+    id: 'broselow-doses',
+    icon: '🎨',
+    name: 'Doses Rápidas — Broselow',
+    html: `
+      <p>Tabela de emergência pediátrica por <strong>faixa de cor Broselow</strong> (3–36 kg). Informe o peso ou selecione a cor do serviço.</p>
+
+      <div class="broselow-legend" aria-label="Faixas Broselow">
+        <div class="broselow-legend-item" style="background:#bdbdbd;color:#212529"><span>Cinza</span><small>3–5 kg</small></div>
+        <div class="broselow-legend-item" style="background:#f48fb1;color:#212529"><span>Rosa</span><small>6–7 kg</small></div>
+        <div class="broselow-legend-item" style="background:#ef5350;color:#fff"><span>Vermelho</span><small>8–9 kg</small></div>
+        <div class="broselow-legend-item" style="background:#ab47bc;color:#fff"><span>Roxo</span><small>10–11 kg</small></div>
+        <div class="broselow-legend-item" style="background:#ffca28;color:#212529"><span>Amarelo</span><small>12–14 kg</small></div>
+        <div class="broselow-legend-item" style="background:#eceff1;color:#212529"><span>Branco</span><small>15–18 kg</small></div>
+        <div class="broselow-legend-item" style="background:#42a5f5;color:#fff"><span>Azul</span><small>19–23 kg</small></div>
+        <div class="broselow-legend-item" style="background:#ff9800;color:#212529"><span>Laranja</span><small>24–29 kg</small></div>
+        <div class="broselow-legend-item" style="background:#66bb6a;color:#fff"><span>Verde</span><small>30–36 kg</small></div>
+      </div>
+
+      <div class="calc-block calc-block-single emerg-calc-block emerg-calc-wide">
+        <form class="calc-form" data-emerg-calc="broselow-doses" data-emerg-calc-inject="1">
+          <button type="submit">Gerar doses da faixa</button>
+        </form>
+        <div class="calc-result" hidden></div>
+      </div>
+
+      <h4>Fármacos incluídos no cálculo</h4>
+      <p class="muted">Adrenalina · amiodarona · adenosina · atropina · midazolam · glicose 10% · energia de choque (2 e 4 J/kg).</p>
+      <p class="emerg-note">Acima de 36 kg usar doses adultas. Tape Broselow / cartão de emergência pediátrica do serviço prevalece sobre estimativas.</p>
+    `
+  }
+];
+
 const EMERGENCY_TOPICS = [
   {
     id: 'parada-cardio',
@@ -1589,7 +1695,7 @@ const EMERGENCY_TOPICS = [
     id: 'pediatrica',
     icon: '👶',
     name: 'Emergências Pediátricas',
-    protocols: []
+    protocols: PEDIATRIC_PROTOCOLS
   },
   {
     id: 'toxicologia',
@@ -1784,7 +1890,7 @@ function showEmergenciaTopic (topicId) {
     return;
   }
 
-  const expectedProtocols = { 'parada-cardio': 6, 'sca': 4, 'avc': 4, 'sepse': 3, 'trauma': 4, 'via-aerea': 3, 'reacoes-metabolicas': 4, 'obstetricia': 3 };
+  const expectedProtocols = { 'parada-cardio': 6, 'sca': 4, 'avc': 4, 'sepse': 3, 'trauma': 4, 'via-aerea': 3, 'reacoes-metabolicas': 4, 'obstetricia': 3, 'pediatrica': 3 };
   if (expectedProtocols[topicId]) {
     contentEl.innerHTML = `
       <p class="coming-soon"><strong>Arquivo desatualizado no navegador.</strong> Os protocolos de <em>${topic.name}</em> já existem no projeto, mas o navegador carregou uma versão antiga de <code>emergency-guide.js</code>.</p>
