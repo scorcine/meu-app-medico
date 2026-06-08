@@ -1,6 +1,6 @@
 /* Prescrições de Pronto Socorro — condições e navegação */
 
-const MEDHUB_PS_BUILD = 'ps-opcoes-v1';
+const MEDHUB_PS_BUILD = 'ps-diverticulite-v1';
 
 const PS_CONTENT = Object.assign(
   {},
@@ -53,6 +53,7 @@ const PS_CONDITIONS = [
   { id: 'diabetes-insulina-hipo', name: 'Diabetes: insulinoterapia hospitalar & hipoglicemia', icon: '💉', emerg: { topic: 'reacoes-metabolicas', protocol: 'hipoglicemia-grave' } },
   { id: 'diarreia-gastroenterite', name: 'Diarreia aguda / gastroenterite', icon: '🚽' },
   { id: 'dispepsia-drge', name: 'Dispepsia, gastrite aguda, DRGE', icon: '🫃' },
+  { id: 'diverticulite', name: 'Diverticulite aguda (classificação Hinchey)', icon: '🩹' },
   { id: 'disturbios-eletroliticos', name: 'Distúrbios hidroeletrolíticos (hipo/hiper-natremia, ‑calemia, ‑calcemia)', icon: '⚗️', emerg: { topic: 'reacoes-metabolicas', protocol: 'hipercalemia' } },
   { id: 'dpoc-exacerbada', name: 'DPOC exacerbada', icon: '🫁' },
   { id: 'edema-agudo-pulmao', name: 'Edema agudo de pulmão', icon: '🫁' },

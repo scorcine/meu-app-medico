@@ -216,6 +216,66 @@ const PS_CONTENT_5 = {
     </ul>
     <p class="emerg-note">Tokyo Guidelines 2018 · MS. Conteúdo educacional.</p>`,
 
+  'diverticulite': `
+    <p class="muted">Diverticulite aguda — inflamação/perforação de divertículo colônico (geralmente sigmoide). Classificar gravidade (Hinchey / WSES) para definir ATB, drenagem ou cirurgia.</p>
+    <ul class="ps-med-options">
+      <li><strong>Sem complicação (leve):</strong> ambulatorial possível — dieta líquida + ATB VO 7–10 dias se comorbidade/febre/leucocitose.</li>
+      <li><strong>Complicada Hinchey I–II:</strong> internação + ATB IV ± drenagem percutânea de abscesso ≥ 3–4 cm.</li>
+      <li><strong>Hinchey III–IV:</strong> cirurgia de urgência (peritonite purulenta/fecal) + ATB de amplo espectro.</li>
+    </ul>
+    <h4>Classificação de Hinchey (complicada)</h4>
+    <ul>
+      <li><strong>Hinchey I</strong> — abscesso/flegmão pericólico ou mesentérico (confinado)</li>
+      <li><strong>Hinchey II</strong> — abscesso pélvico ou à distância (retroperitoneal/intra-abdominal)</li>
+      <li><strong>Hinchey III</strong> — peritonite purulenta generalizada</li>
+      <li><strong>Hinchey IV</strong> — peritonite fecal generalizada</li>
+    </ul>
+    <p class="muted">Critérios de internação: idade &gt; 70 anos, comorbidades, imunossupressão, dor intensa, febre, leucocitose marcada, intolerância oral, falha ambulatorial, suspeita de complicação.</p>
+    <h4>Prescrições de pronto-socorro</h4>
+    <ol class="emerg-steps">
+      <li><strong>ABC + jejum</strong> — acesso venoso; analgesia precoce:
+        <ul class="ps-med-options">
+          <li><strong>1ª linha:</strong> dipirona 1 g EV/IM 6/6 h</li>
+          <li><strong>Alternativa:</strong> tramadol 50–100 mg EV lento se dor moderada-grave</li>
+          <li><strong>Alérgico / contraindicação:</strong> paracetamol 1 g EV/VO 6/6 h; morfina 2–5 mg EV titulada se dor intensa</li>
+        </ul>
+      </li>
+      <li><strong>Diagnóstico</strong> — TC abdome com contraste IV (exame de escolha): espessamento de parede, inflamação pericólica, abscesso, ar livre. USG se gestante/jovem. Hemograma, PCR, creatinina.</li>
+      <li><strong>Diverticulite não complicada (ambulatorial)</strong> — ATB VO 7–10 dias + dieta líquida progressiva:
+        <ul class="ps-med-options">
+          <li><strong>1ª linha:</strong> amoxicilina-clavulanato 875/125 mg VO 12/12 h (Clavulin®)</li>
+          <li><strong>Alternativa / resistência:</strong> ciprofloxacino 500 mg VO 12/12 h + metronidazol 500 mg VO 8/8 h</li>
+          <li><strong>Alérgico à penicilina:</strong> ciprofloxacino 500 mg VO 12/12 h + metronidazol 500 mg VO 8/8 h · 7–10 dias</li>
+          <li><strong>Refractário:</strong> internar e migrar para ATB IV (ver abaixo)</li>
+        </ul>
+      </li>
+      <li><strong>Diverticulite complicada — internação + ATB IV</strong> (mínimo 7–10 dias, estender conforme resposta):
+        <ul class="ps-med-options">
+          <li><strong>1ª linha:</strong> ceftriaxona 1 g IV 24/24 h + metronidazol 500 mg IV 8/8 h</li>
+          <li><strong>Alternativa:</strong> amoxicilina-clavulanato 875/125 mg VO 12/12 h se estável e tolerando VO (casos leves complicados)</li>
+          <li><strong>Alérgico:</strong> ciprofloxacino 400 mg IV 12/12 h + metronidazol 500 mg IV 8/8 h</li>
+          <li><strong>Refractário / grave (Hinchey III–IV, sepse):</strong> piperacilina-tazobactam 4,5 g IV 6/6 h ou meropenem 1 g IV 8/8 h + metronidazol; cirurgia urgente se peritonite</li>
+        </ul>
+      </li>
+      <li><strong>Hinchey I–II (abscesso)</strong> — ATB IV; drenagem percutânea guiada por TC se abscesso ≥ 3–4 cm ou falha clínica em 48–72 h; colonoscopia eletiva após 6–8 semanas (excluir neoplasia).</li>
+      <li><strong>Hinchey III–IV</strong> — laparotomia/laparoscopia (retossigmoidectomia com anastomose ou Hartmann conforme contaminação); ATB de amplo espectro; UTI se choque séptico.</li>
+      <li><strong>Evitar</strong> — laxantes, enema, colonoscopia na fase aguda; AAS/AINE não contraindicam ATB agudo mas preferir analgesia sem AINE se possível.</li>
+    </ol>
+    <h4>Alta / ambulatorial</h4>
+    <ul>
+      <li>Dieta rica em fibras após resolução aguda (progressiva); hidratação; atividade física.</li>
+      <li>Colonoscopia 6–8 semanas após primeiro episício ou complicado (rastreio de CCR).</li>
+      <li>Profilaxia de recorrência: mesalazina 2–4 g/dia (evidência moderada) ou rifaximina 400 mg 12/12 h por 7 dias/mês — discutir com gastroenterologia.</li>
+      <li>Retorno imediato se febre, piora da dor, distensão, vômitos ou sangramento.</li>
+    </ul>
+    <h4>Exames / investigação</h4>
+    <ul>
+      <li>TC abdome com contraste — sensibilidade alta para diverticulite e complicações</li>
+      <li>Hemograma · PCR/VHS · creatinina · lactato se sepse</li>
+      <li>Hemoculturas se febre alta ou instabilidade</li>
+    </ul>
+    <p class="emerg-note">WSES diverticulitis 2020 · ACG · SBCP. Hinchey orienta drenagem/cirurgia. Conteúdo educacional — não substitui julgamento clínico.</p>`,
+
   'chikungunya': `
     <p class="muted">Arbovirose — febre súbita, poliartralgia intensa simétrica, rash. Sem antiviral específico; manejo sintomático (evitar AINE precoce se dengue não descartada).</p>
     <h4>Prescrições de pronto-socorro</h4>
