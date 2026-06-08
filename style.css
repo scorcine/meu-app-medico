@@ -463,6 +463,35 @@ body.app-page {
 
 .emerg-algo-block.emerg-algo-single {
   margin-bottom: 0;
+  max-width: 900px;
+}
+
+.emerg-calc-block {
+  margin: 1rem 0 1.25rem;
+}
+
+.emerg-calc-wide {
+  max-width: 720px;
+}
+
+.emerg-calc-wide .calc-form {
+  max-width: none;
+}
+
+.emerg-calc-score {
+  font-size: 1.15rem;
+  color: #0d6efd;
+}
+
+.emerg-calc-alerts {
+  margin: 0.75rem 0 0;
+  padding-left: 1.25rem;
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+
+.emerg-calc-alerts li {
+  margin-bottom: 0.35rem;
 }
 
 .emerg-algo-block h3 {

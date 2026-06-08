@@ -650,26 +650,17 @@ const AVC_PROTOCOLS = [
     icon: '📋',
     name: 'NIHSS',
     html: `
-      <p><strong>NIH Stroke Scale</strong> — padroniza gravidade do déficit neurológico (0–42). Obrigatório na admissão, pré/pós trombólise e trombectomia.</p>
+      <p><strong>NIH Stroke Scale</strong> — padroniza gravidade do déficit neurológico (0–42). Preencha cada item e calcule para ver classificação e conduta sugerida.</p>
 
-      <table class="emerg-table">
-        <tr><th>Item</th><th>Avalia</th><th>Pontos</th></tr>
-        <tr><td>1a</td><td>Nível de consciência</td><td>0–3</td></tr>
-        <tr><td>1b</td><td>Perguntas (mês, idade)</td><td>0–2</td></tr>
-        <tr><td>1c</td><td>Comandos (piscar, apertar mão)</td><td>0–2</td></tr>
-        <tr><td>2</td><td>Olhar conjugado / desvio</td><td>0–2</td></tr>
-        <tr><td>3</td><td>Campos visuais</td><td>0–3</td></tr>
-        <tr><td>4</td><td>Paresia facial</td><td>0–3</td></tr>
-        <tr><td>5a / 5b</td><td>Motor — braço E / D</td><td>0–4 cada</td></tr>
-        <tr><td>6a / 6b</td><td>Motor — perna E / D</td><td>0–4 cada</td></tr>
-        <tr><td>7</td><td>Ataxia de membros</td><td>0–2</td></tr>
-        <tr><td>8</td><td>Sensibilidade</td><td>0–2</td></tr>
-        <tr><td>9</td><td>Linguagem (afasia)</td><td>0–3</td></tr>
-        <tr><td>10</td><td>Disartria</td><td>0–2</td></tr>
-        <tr><td>11</td><td>Extinção / negligência</td><td>0–2</td></tr>
-      </table>
+      <div class="calc-block calc-block-single emerg-calc-block emerg-calc-wide">
+        <form class="calc-form" data-emerg-calc="nihss">
+          ${typeof NIHSS_FORM_HTML !== 'undefined' ? NIHSS_FORM_HTML : '<p class="muted">Recarregue a página para carregar a calculadora.</p>'}
+          <button type="submit">Calcular NIHSS</button>
+        </form>
+        <div class="calc-result" hidden></div>
+      </div>
 
-      <h4>Interpretação da gravidade</h4>
+      <h4>Tabela de referência — interpretação</h4>
       <table class="emerg-table">
         <tr><th>NIHSS</th><th>Classificação</th><th>Implicação clínica</th></tr>
         <tr><td>0</td><td>Sem déficit</td><td>Investigar mimics; repetir avaliação</td></tr>
@@ -686,14 +677,6 @@ const AVC_PROTOCOLS = [
         <li><strong>Pré e pós trombectomia</strong> — documentar resposta (Δ NIHSS)</li>
         <li>Reavaliar se deterioração ou suspeita de transformação hemorrágica</li>
       </ul>
-
-      <h4>NIHSS e reperfusão</h4>
-      <ul>
-        <li><strong>Trombólise 3–4,5 h:</strong> NIHSS &gt; 25 = contraindicação relativa adicional</li>
-        <li><strong>Trombectomia 0–6 h:</strong> NIHSS ≥ 6 frequentemente usado com LVO + ASPECTS ≥ 6</li>
-        <li>NIHSS baixo com LVO (ex.: afasia isolada) — ainda pode ser candidato à MT</li>
-      </ul>
-      <p class="emerg-note">Use a calculadora <strong>NIHSS</strong> em Calculadoras essenciais → Neurologia para pontuação interativa item a item.</p>
     `
   }
 ];
@@ -836,6 +819,33 @@ function initEmergEcgLightbox (container) {
   });
 }
 
+function initEmergCalcForms (container) {
+  if (!container) return;
+
+  container.querySelectorAll('form[data-emerg-calc]').forEach(form => {
+    if (form.dataset.emergCalcBound) return;
+    form.dataset.emergCalcBound = '1';
+
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      const calcId = form.dataset.emergCalc;
+      const calc = typeof CALC_FORMS !== 'undefined'
+        ? CALC_FORMS[calcId]
+        : (typeof CALC_NEURO !== 'undefined' ? CALC_NEURO[calcId] : null);
+
+      if (!calc) return;
+
+      const html = calc.calculate(form);
+      const resultEl = form.parentElement.querySelector('.calc-result');
+      if (resultEl && typeof html === 'string') {
+        resultEl.innerHTML = html;
+        resultEl.hidden = false;
+        resultEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    });
+  });
+}
+
 function initGuiaEmergencia () {
   const grid = document.getElementById('emerg-topic-grid');
   if (!grid) return;
@@ -941,4 +951,5 @@ function showEmergenciaProtocol (protocolId) {
       ${protocol.html}
     </div>`;
   initEmergEcgLightbox(contentEl);
+  initEmergCalcForms(contentEl);
 }
