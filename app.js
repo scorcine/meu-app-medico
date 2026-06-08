@@ -47,13 +47,13 @@ function patchEmergenciaCacheGuard () {
     if (!contentEl) return;
 
     contentEl.innerHTML = `
-      <p class="coming-soon"><strong>Arquivo desatualizado no navegador.</strong> Os protocolos de <em>${topic?.name || topicId}</em> já existem no projeto, mas o navegador carregou uma versão antiga de <code>emergency-guide.js</code>.</p>
+      <p class="coming-soon"><strong>Arquivo desatualizado no navegador.</strong> Os protocolos de <em>${topic?.name || topicId}</em> já existem no projeto, mas o navegador carregou uma versão antiga de <code>guia-emergencia.js</code>.</p>
       <ul>
         <li>Feche esta aba e abra de novo: <code>C:\\Users\\User\\Desktop\\meu-app-medico\\app.html</code></li>
         <li>Pressione <strong>Ctrl+F5</strong> (ou abra em aba anônima)</li>
-        <li>No menu lateral deve aparecer: <strong>Build 2026.06.08 · AVC</strong></li>
+        <li>No menu lateral deve aparecer: <strong>Build 2026.06.08 · AVC ✓</strong></li>
       </ul>
-      <p class="emerg-note">Build esperado do guia: <strong>98041d1</strong></p>`;
+      <p class="emerg-note">Build esperado do guia: <strong>avc-fix-2</strong> (arquivo <code>guia-emergencia.js</code>)</p>`;
   };
 
   showEmergenciaTopic._cacheGuard = true;
