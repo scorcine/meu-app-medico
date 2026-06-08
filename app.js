@@ -164,8 +164,8 @@ const CALC_AREAS = [
     id: 'pediatria',
     icon: '👶',
     name: 'Pediatria',
-    calculators: [],
-    comingSoon: ['Dose pediátrica', 'Holliday-Segar', 'Superfície corporal'],
+    calculators: ['silverman', 'downes', 'parkland-ped', 'pcr-ped', 'who-bmi', 'rochester-yos'],
+    comingSoon: [],
     linkSection: 'calc-pediatrica'
   },
   {
@@ -359,6 +359,10 @@ if (typeof CALC_OBSTETRICIA !== 'undefined') {
   Object.assign(CALC_FORMS, CALC_OBSTETRICIA);
 }
 
+if (typeof CALC_PEDIATRIA !== 'undefined') {
+  Object.assign(CALC_FORMS, CALC_PEDIATRIA);
+}
+
 let currentCalcAreaId = null;
 
 const CALC_META = {
@@ -420,6 +424,12 @@ const CALC_META = {
   naegele: { icon: '📅' },
   'rcog-vte': { icon: '🦵' },
   vbac: { icon: '👶' },
+  silverman: { icon: '🫁' },
+  downes: { icon: '💨' },
+  'parkland-ped': { icon: '🔥' },
+  'pcr-ped': { icon: '💉' },
+  'who-bmi': { icon: '📊' },
+  'rochester-yos': { icon: '🌡️' },
   'dose-peso': { icon: '💊' },
   imc: { icon: '⚖️' },
   pam: { icon: '❤️' },
