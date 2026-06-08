@@ -22,6 +22,7 @@
   <script defer src="calculators-derma.js"></script>
   <script defer src="calculators-orto.js"></script>
   <script defer src="calculators-extras.js"></script>
+  <script defer src="emergency-guide.js"></script>
   <script defer src="app.js"></script>
   <script defer src="auth.js"></script>
 </head>
@@ -112,10 +113,17 @@
       </section>
 
       <section id="section-guia-emergencia" class="content-panel">
-        <div class="card dashboard-card">
-          <h2>Guia rápido de emergência</h2>
-          <p class="muted">Protocolos e condutas imediatas para situações de emergência no plantão.</p>
-          <p class="coming-soon">Conteúdo em construção — em breve você poderá consultar fluxogramas e condutas aqui.</p>
+        <div class="card dashboard-card emerg-wrap">
+          <div id="emerg-categories-view">
+            <h2>Guia rápido de emergência</h2>
+            <p class="muted">Protocolos e condutas imediatas para situações de emergência no plantão.</p>
+            <div id="emerg-topic-grid" class="calc-category-grid"></div>
+          </div>
+          <div id="emerg-topic-view" hidden>
+            <button type="button" class="btn-back" id="emerg-topic-back">← Voltar aos protocolos</button>
+            <h2 id="emerg-topic-title"></h2>
+            <div id="emerg-topic-content" class="emerg-content"></div>
+          </div>
         </div>
       </section>
 

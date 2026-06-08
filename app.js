@@ -45,6 +45,7 @@ function initApp () {
   });
 
   initCalcEssenciais();
+  initGuiaEmergencia();
 
   const hash = window.location.hash.replace('#', '');
   if (hash) showSection(hash);
@@ -59,7 +60,8 @@ function showSection (sectionId) {
     panel.classList.toggle('active', panel.id === `section-${sectionId}`);
   });
 
-  if (sectionId !== 'calc-essenciais') showCalcCategories();
+  showCalcCategories();
+  if (typeof showEmergenciaCategories === 'function') showEmergenciaCategories();
 }
 
 function calcPediatrica (e) {
