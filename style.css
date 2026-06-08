@@ -302,6 +302,26 @@ body.app-page {
   line-height: 1.6;
 }
 
+.ps-wrap {
+  max-width: 900px;
+}
+
+.ps-content {
+  margin-top: 1rem;
+}
+
+.ps-placeholder {
+  margin: 0;
+  padding: 1.25rem 1rem;
+  border: 1px dashed #c5d3e0;
+  border-radius: 10px;
+  background: #f8fafc;
+  color: #5a6a7a;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  text-align: center;
+}
+
 .calc-form {
   display: flex;
   flex-direction: column;

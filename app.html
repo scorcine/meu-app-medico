@@ -8,7 +8,7 @@
   <meta http-equiv="Expires" content="0">
   <title>MedHub</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="style.css?v=rsi-patient">
+  <link rel="stylesheet" href="style.css?v=pronto-socorro">
   <script defer src="calculators-risco.js"></script>
   <script defer src="calculators-cardio.js"></script>
   <script defer src="calculators-pneumo.js?v=rsi-patient"></script>
@@ -50,13 +50,14 @@
         <button type="button" class="sidebar-link" data-section="exames">Exames</button>
         <button type="button" class="sidebar-link" data-section="interpretacao-exame">Interpretação do exame</button>
         <button type="button" class="sidebar-link" data-section="guia-emergencia">Guia rápido de emergência</button>
+        <button type="button" class="sidebar-link" data-section="pronto-socorro">Pronto Socorro</button>
         <button type="button" class="sidebar-link" data-section="calc-pediatrica">Calculadora pediátrica</button>
         <button type="button" class="sidebar-link" data-section="calc-essenciais">Calculadoras essenciais</button>
         <button type="button" class="sidebar-link" data-section="pacientes">Pacientes</button>
         <button type="button" class="sidebar-link" data-section="consultas">Consultas</button>
         <button type="button" class="sidebar-link" data-section="ferramentas">Ferramentas</button>
       </nav>
-      <p class="sidebar-build" id="app-build" title="Confira se esta versão bate com a última atualização do projeto">Build 2026.06.08 · Procedimentos ✓ · Guia completo</p>
+      <p class="sidebar-build" id="app-build" title="Confira se esta versão bate com a última atualização do projeto">Build 2026.06.08 · Pronto Socorro ✓</p>
     </aside>
 
     <main class="app-content">
@@ -127,6 +128,16 @@
             <button type="button" class="btn-back" id="emerg-topic-back">← Voltar aos protocolos</button>
             <h2 id="emerg-topic-title"></h2>
             <div id="emerg-topic-content" class="emerg-content"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="section-pronto-socorro" class="content-panel">
+        <div class="card dashboard-card ps-wrap">
+          <h2>Pronto Socorro</h2>
+          <p class="muted">Materiais rápidos para o plantonista — fluxos, checklists, doses e referências do PS.</p>
+          <div id="ps-content" class="ps-content">
+            <p class="ps-placeholder">Conteúdo em construção — em breve você poderá consultar aqui os materiais do pronto-socorro.</p>
           </div>
         </div>
       </section>
