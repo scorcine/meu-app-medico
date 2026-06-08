@@ -1161,6 +1161,178 @@ const VIA_AEREA_PROTOCOLS = [
   }
 ];
 
+const REACOES_METABOLICAS_PROTOCOLS = [
+  {
+    id: 'anafilaxia',
+    icon: '🐝',
+    name: 'Anafilaxia',
+    html: `
+      <p>Reação alérgica sistêmica potencialmente fatal — <strong>adrenalina IM é a 1ª linha</strong>, sem substituir por anti-histamínico ou corticoide isolados.</p>
+
+      <div class="emerg-flow-v">
+        <span class="emerg-flow-step">Reconhecer: urticária + comprometimento respiratório ou cardiovascular (ou exposição + hipotensão)</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">Decúbito dorsal + elevar MMII · O₂ · acesso venoso</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step emerg-flow-shock"><strong>Adrenalina IM 0,5 mg</strong> (1:1000 = 0,5 mL) — face lateral da coxa</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">Sem resposta em <strong>5–15 min</strong> → repetir adrenalina IM</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">Cristaloide se hipotensão · nebulização β₂ se broncoespasmo</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">Observação ≥ 4–6 h (reação bifásica) · prescrever autoinjetor</span>
+      </div>
+
+      <table class="emerg-table">
+        <tr><th>Fármaco</th><th>Dose (adulto)</th><th>Observação</th></tr>
+        <tr><td><strong>Adrenalina IM</strong></td><td><strong>0,5 mg</strong> (0,5 mL 1:1000)</td><td>Repetir q5–15 min · IV só se choque refratário e monitorizado</td></tr>
+        <tr><td>Anti-H1</td><td>Prometazina ou difenidramina IV/IM</td><td>Adjuvante — <strong>não substitui</strong> adrenalina</td></tr>
+        <tr><td>Corticoide</td><td>Hidrocortisona 200 mg IV ou prednisona VO</td><td>Previne reação tardia; efeito lento</td></tr>
+        <tr><td>Glucagon</td><td>1–2 mg IV se β-bloqueador + anafilaxia refratária</td><td>Paciente em uso de β-bloqueador</td></tr>
+      </table>
+
+      <h4>Evitar / alertas</h4>
+      <ul>
+        <li>Não atrasar adrenalina · não usar apenas H1/corticoide na fase aguda</li>
+        <li>Posição sentada se dispneia extrema; deitar se hipotenso</li>
+        <li>Investigar gatilho (alimento, droga, veneno) — evitar reexposição</li>
+      </ul>
+      <p class="emerg-note">WAO / Resolução CFM anafilaxia. Crianças: 0,01 mg/kg IM (máx. 0,5 mg). Autoinjetor epinefrina na alta.</p>
+    `
+  },
+  {
+    id: 'hipoglicemia-grave',
+    icon: '🍬',
+    name: 'Hipoglicemia grave',
+    html: `
+      <p>Glicemia &lt; 54 mg/dL com alteração de consciência, convulsão ou incapacidade de ingerir — tratar <strong>imediato</strong>.</p>
+
+      <div class="emerg-flow-v">
+        <span class="emerg-flow-step">Confirmar glicemia capilar · ABC · via aérea se rebaixado</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step emerg-flow-decision">Acesso venoso disponível?</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step emerg-flow-shock"><strong>Sim → Glicose EV 25 g</strong> (SG 50% — 50 mL ou equivalente)</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step"><strong>Não → Glucagon 1 mg</strong> IM/SC (eficaz se estoques hepáticos OK)</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">Repetir glicemia em <strong>15 min</strong> — nova dose se persiste &lt; 54</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">Consciente → carboidrato oral + refeição · investigar causa</span>
+      </div>
+
+      <table class="emerg-table">
+        <tr><th>Via</th><th>Conduta</th></tr>
+        <tr><td><strong>EV</strong></td><td><strong>25 g glicose</strong> — SG 50% 50 mL (ou SG 10% 250 mL)</td></tr>
+        <tr><td><strong>IM/SC</strong></td><td><strong>Glucagon 1 mg</strong> — se sem acesso ou falha EV</td></tr>
+        <tr><td>Oral</td><td>15–20 g carboidrato rápido — só se alerta e deglute</td></tr>
+      </table>
+
+      <h4>Causas e condutas especiais</h4>
+      <ul>
+        <li><strong>Sulfonilureia:</strong> octreotide 50 µg SC q6h — glucagon pode ser insuficiente</li>
+        <li>Insulinoma, etanol, insuficiência adrenal, sepse, IR avançada</li>
+        <li>Internar se recorrente, sem causa clara ou incapaz de autogestão</li>
+      </ul>
+      <p class="emerg-note">ADA / Endocrine Society. Hipoglicemia mimetiza AVC — sempre dosar glicemia no plantão neurológico.</p>
+    `
+  },
+  {
+    id: 'hipercalemia',
+    icon: '⚡',
+    name: 'Hipercalemia ≥ 6,5',
+    html: `
+      <p>Hipercalemia com risco cardíaco — correlacionar <strong>ECG</strong> (ondas T altas, QRS largo, bradicardia, ritmo sinusoidal). K ≥ <strong>6,5 mEq/L</strong> ou alteração ECG = emergência.</p>
+
+      <div class="emerg-flow-v">
+        <span class="emerg-flow-step">Monitor cardíaco · ECG 12 derivações · repetir K+ sérico</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step emerg-flow-shock"><strong>1. Cálcio IV</strong> — estabiliza membrana cardíaca (não baixa K+)</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">Gluconato de cálcio 10% 10 mL EV em 2–3 min (ou Cloreto 10% 5 mL) — repetir se ECG persistente</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step emerg-flow-shock"><strong>2. Insulina + Glicose</strong> — shift intracelular</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">Insulina regular <strong>10 U EV</strong> + SG 50% <strong>25 g</strong> (monitorar glicemia q1h)</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">β₂-agonista inalatório (salbutamol 10–20 mg nebulização) — adjuvante</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step emerg-flow-shock"><strong>3. Eliminação</strong> — resina ou diálise</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">Poliestirenossulfonato (resina) VO/reto · patiromer conforme disponibilidade</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step emerg-flow-loop"><strong>Diálise</strong> se K+ refratário, IRA, ECG grave ou sobrecarga volêmica</span>
+      </div>
+
+      <table class="emerg-table">
+        <tr><th>Medida</th><th>Início de ação</th><th>Efeito</th></tr>
+        <tr><td>Cálcio IV</td><td>1–3 min</td><td>Proteção cardíaca — não reduz K+</td></tr>
+        <tr><td>Insulina + glicose</td><td>15–30 min</td><td>↓ K+ 0,6–1,0 mEq/L</td></tr>
+        <tr><td>Salbutamol nebul</td><td>30 min</td><td>↓ K+ leve a moderado</td></tr>
+        <tr><td>Resina / diurético</td><td>Horas</td><td>Eliminação — diálise se urgente</td></tr>
+      </table>
+
+      <h4>Causas frequentes</h4>
+      <ul>
+        <li>IRA, IECA/BRA, espironolactona, AINE, hemólise, rabdomiólise, acidose</li>
+        <li>Suspender fontes de K+ · tratar acidose metabólica se presente</li>
+      </ul>
+      <p class="emerg-note">KDIGO / nefrologia. Bicarbonato só se acidose + hipercalemia; eficácia limitada isoladamente.</p>
+    `
+  },
+  {
+    id: 'dka-hhs',
+    icon: '🩸',
+    name: 'DKA / HHS',
+    html: `
+      <p>Cetoacidose diabética (DKA) e estado hiperglicêmico hiperosmolar (HHS) — fluido + insulina + <strong>reposição de K⁺</strong> guiada por níveis seriados.</p>
+
+      <div class="emerg-flow-v">
+        <span class="emerg-flow-step">ABC · glicemia · gasometria · eletrólitos · cetonas (β-hidroxibutirato) · osmolaridade</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step emerg-flow-shock"><strong>1. Fluidos</strong> — SF 0,9% 15–20 mL/kg na 1ª hora (1–1,5 L/h adulto se choque)</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">Reavaliar Na+ · trocar para SF 0,45% se hipernatremia · manter SF se choque</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step emerg-flow-decision">K+ antes de insulina?</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">K &lt; 3,3 → repor K+ e <strong>adiar insulina</strong> · K 3,3–5,2 → insulina + K+ manutenção</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step emerg-flow-shock"><strong>2. Insulina regular 0,1 U/kg/h EV</strong> (sem bolus ou bolus 0,1 U/kg conforme protocolo)</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">Meta: queda glicemia 50–70 mg/dL/h · não normalizar glicemia na 1ª hora</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">Glicemia &lt; 200–250 → adicionar SG 5–10% + manter insulina até clearance de cetonas</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step emerg-flow-loop">Critérios de resolução → transição SC · tratar precipitante</span>
+      </div>
+
+      <table class="emerg-table">
+        <tr><th>K+ sérico</th><th>Conduta</th></tr>
+        <tr><td><strong>&lt; 3,3 mEq/L</strong></td><td>Repor K+ · <strong>adiar insulina</strong> até K ≥ 3,3</td></tr>
+        <tr><td><strong>3,3 – 5,2</strong></td><td>Insulina + K+ 20–30 mEq/L de fluido (ajustar diurese)</td></tr>
+        <tr><td><strong>&gt; 5,2</strong></td><td>Insulina sem K+ inicial · monitorar q2–4 h</td></tr>
+      </table>
+
+      <h4>DKA vs HHS (resumo)</h4>
+      <table class="emerg-table">
+        <tr><th></th><th>DKA</th><th>HHS</th></tr>
+        <tr><td>Glicemia</td><td>≥ 250 mg/dL (geralmente)</td><td>≥ 600 mg/dL frequentemente</td></tr>
+        <tr><td>pH / HCO₃</td><td>&lt; 7,3 / &lt; 18</td><td>&gt; 7,3 / &gt; 18</td></tr>
+        <tr><td>Cetonas</td><td>Presentes</td><td>Ausentes ou leves</td></tr>
+        <tr><td>Osmolaridade</td><td>Variable</td><td>&gt; 320 mOsm/kg</td></tr>
+      </table>
+
+      <h4>Resolução DKA (todos)</h4>
+      <ul>
+        <li>pH &gt; 7,3 · HCO₃ &gt; 15 · glicemia &lt; 200 · cetonas negativas/traço</li>
+        <li>Buscar infecção, IAM, suspensão de insulina, SGLT2 (euglicemic DKA)</li>
+      </ul>
+      <p class="emerg-note">ADA 2024 · calculadora DKA em Calculadoras essenciais → Endocrinologia. HHS: hidratação mais prolongada; insulina em dose menor se indicada.</p>
+    `
+  }
+];
+
 const EMERGENCY_TOPICS = [
   {
     id: 'parada-cardio',
@@ -1202,7 +1374,7 @@ const EMERGENCY_TOPICS = [
     id: 'reacoes-metabolicas',
     icon: '💊',
     name: 'Reações Agudas & Metabólicas',
-    protocols: []
+    protocols: REACOES_METABOLICAS_PROTOCOLS
   },
   {
     id: 'obstetricia',
@@ -1409,7 +1581,7 @@ function showEmergenciaTopic (topicId) {
     return;
   }
 
-  const expectedProtocols = { 'parada-cardio': 6, 'sca': 4, 'avc': 4, 'sepse': 3, 'trauma': 4, 'via-aerea': 3 };
+  const expectedProtocols = { 'parada-cardio': 6, 'sca': 4, 'avc': 4, 'sepse': 3, 'trauma': 4, 'via-aerea': 3, 'reacoes-metabolicas': 4 };
   if (expectedProtocols[topicId]) {
     contentEl.innerHTML = `
       <p class="coming-soon"><strong>Arquivo desatualizado no navegador.</strong> Os protocolos de <em>${topic.name}</em> já existem no projeto, mas o navegador carregou uma versão antiga de <code>emergency-guide.js</code>.</p>
