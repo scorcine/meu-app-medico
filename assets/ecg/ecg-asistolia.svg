@@ -1,20 +1,22 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 110" role="img" aria-label="ECG de assistolia">
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 130" role="img" aria-label="Assistolia">
   <title>Assistolia</title>
-  <rect width="360" height="110" fill="#0f1620"/>
-  <g stroke="#1e2d3d" stroke-width="0.5">
-    <line x1="0" y1="27.5" x2="360" y2="27.5"/>
-    <line x1="0" y1="55" x2="360" y2="55"/>
-    <line x1="0" y1="82.5" x2="360" y2="82.5"/>
-    <line x1="45" y1="0" x2="45" y2="110"/>
-    <line x1="90" y1="0" x2="90" y2="110"/>
-    <line x1="135" y1="0" x2="135" y2="110"/>
-    <line x1="180" y1="0" x2="180" y2="110"/>
-    <line x1="225" y1="0" x2="225" y2="110"/>
-    <line x1="270" y1="0" x2="270" y2="110"/>
-    <line x1="315" y1="0" x2="315" y2="110"/>
-  </g>
-  <path fill="none" stroke="#22d36b" stroke-width="2" stroke-linecap="round"
-    d="M0,55 L360,55"/>
-  <path fill="none" stroke="#22d36b" stroke-width="1.5" opacity="0.5"
-    d="M120,54 L122,56 L124,54"/>
+  <defs>
+    <pattern id="gridMinor" width="8" height="8" patternUnits="userSpaceOnUse">
+      <path d="M 8 0 L 0 0 0 8" fill="none" stroke="#fde8e8" stroke-width="0.4"/>
+    </pattern>
+    <pattern id="gridMajor" width="40" height="40" patternUnits="userSpaceOnUse">
+      <rect width="40" height="40" fill="url(#gridMinor)"/>
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#f5b8b8" stroke-width="0.8"/>
+    </pattern>
+  </defs>
+  <rect width="400" height="130" fill="#fffcfc"/>
+  <rect width="400" height="130" fill="url(#gridMajor)"/>
+  <rect x="0" y="0" width="400" height="18" fill="#1a2b3c" opacity="0.92"/>
+  <text x="10" y="13" fill="#fff" font-family="Segoe UI, Arial, sans-serif" font-size="10" font-weight="600">Assistolia</text>
+  <text x="330" y="13" fill="#a8c4e0" font-family="Segoe UI, Arial, sans-serif" font-size="9">linha isoeletrica</text>
+  <path fill="none" stroke="#c62828" stroke-width="2" stroke-linecap="round"
+    d="M0,68 L400,68"/>
+  <path fill="none" stroke="#c62828" stroke-width="1.2" stroke-linecap="round" opacity="0.35"
+    d="M158,67 L160,69 L162,67"/>
 </svg>

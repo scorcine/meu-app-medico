@@ -1,18 +1,20 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 110" role="img" aria-label="ECG de taquicardia ventricular sem pulso">
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 130" role="img" aria-label="Taquicardia ventricular sem pulso">
   <title>Taquicardia ventricular sem pulso</title>
-  <rect width="360" height="110" fill="#0f1620"/>
-  <g stroke="#1e2d3d" stroke-width="0.5">
-    <line x1="0" y1="27.5" x2="360" y2="27.5"/>
-    <line x1="0" y1="55" x2="360" y2="55"/>
-    <line x1="0" y1="82.5" x2="360" y2="82.5"/>
-    <line x1="45" y1="0" x2="45" y2="110"/>
-    <line x1="90" y1="0" x2="90" y2="110"/>
-    <line x1="135" y1="0" x2="135" y2="110"/>
-    <line x1="180" y1="0" x2="180" y2="110"/>
-    <line x1="225" y1="0" x2="225" y2="110"/>
-    <line x1="270" y1="0" x2="270" y2="110"/>
-    <line x1="315" y1="0" x2="315" y2="110"/>
-  </g>
-  <path fill="none" stroke="#22d36b" stroke-width="2.2" stroke-linejoin="round"
-    d="M0,55 L18,55 L22,55 L26,18 L30,92 L34,55 L38,55 L42,55 L46,55 L50,18 L54,92 L58,55 L62,55 L66,55 L70,55 L74,18 L78,92 L82,55 L86,55 L90,55 L94,55 L98,18 L102,92 L106,55 L110,55 L114,55 L118,55 L122,18 L126,92 L130,55 L134,55 L138,55 L142,55 L146,18 L150,92 L154,55 L158,55 L162,55 L166,55 L170,18 L174,92 L178,55 L182,55 L186,55 L190,55 L194,18 L198,92 L202,55 L206,55 L210,55 L214,55 L218,18 L222,92 L226,55 L230,55 L234,55 L238,55 L242,18 L246,92 L250,55 L254,55 L258,55 L262,55 L266,18 L270,92 L274,55 L278,55 L282,55 L286,55 L290,18 L294,92 L298,55 L302,55 L306,55 L310,55 L314,18 L318,92 L322,55 L326,55 L330,55 L334,55 L338,18 L342,92 L346,55 L350,55 L354,55 L360,55"/>
+  <defs>
+    <pattern id="gridMinor" width="8" height="8" patternUnits="userSpaceOnUse">
+      <path d="M 8 0 L 0 0 0 8" fill="none" stroke="#fde8e8" stroke-width="0.4"/>
+    </pattern>
+    <pattern id="gridMajor" width="40" height="40" patternUnits="userSpaceOnUse">
+      <rect width="40" height="40" fill="url(#gridMinor)"/>
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#f5b8b8" stroke-width="0.8"/>
+    </pattern>
+  </defs>
+  <rect width="400" height="130" fill="#fffcfc"/>
+  <rect width="400" height="130" fill="url(#gridMajor)"/>
+  <rect x="0" y="0" width="400" height="18" fill="#1a2b3c" opacity="0.92"/>
+  <text x="10" y="13" fill="#fff" font-family="Segoe UI, Arial, sans-serif" font-size="10" font-weight="600">TV sem pulso — monomorfica</text>
+  <text x="310" y="13" fill="#a8c4e0" font-family="Segoe UI, Arial, sans-serif" font-size="9">QRS &gt; 120 ms · regular</text>
+  <path fill="none" stroke="#c62828" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+    d="M0,68 L6,68 L8,66 L11,66 L14,28 L17,108 L20,72 L23,68 L29,68 L31,66 L34,66 L37,28 L40,108 L43,72 L46,68 L52,68 L54,66 L57,66 L60,28 L63,108 L66,72 L69,68 L75,68 L77,66 L80,66 L83,28 L86,108 L89,72 L92,68 L98,68 L100,66 L103,66 L106,28 L109,108 L112,72 L115,68 L121,68 L123,66 L126,66 L129,28 L132,108 L135,72 L138,68 L144,68 L146,66 L149,66 L152,28 L155,108 L158,72 L161,68 L167,68 L169,66 L172,66 L175,28 L178,108 L181,72 L184,68 L190,68 L192,66 L195,66 L198,28 L201,108 L204,72 L207,68 L213,68 L215,66 L218,66 L221,28 L224,108 L227,72 L230,68 L236,68 L238,66 L241,66 L244,28 L247,108 L250,72 L253,68 L259,68 L261,66 L264,66 L267,28 L270,108 L273,72 L276,68 L282,68 L284,66 L287,66 L290,28 L293,108 L296,72 L299,68 L305,68 L307,66 L310,66 L313,28 L316,108 L319,72 L322,68 L328,68 L330,66 L333,66 L336,28 L339,108 L342,72 L345,68 L351,68 L353,66 L356,66 L359,28 L362,108 L365,72 L368,68 L374,68 L376,66 L379,66 L382,28 L385,108 L388,72 L391,68 L400,68"/>
 </svg>

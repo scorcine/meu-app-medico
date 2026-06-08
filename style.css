@@ -622,8 +622,9 @@ body.app-page {
   width: 100%;
   height: auto;
   border-radius: 6px;
-  border: 1px solid #1e2d3d;
-  background: #0f1620;
+  border: 1px solid #dce4ec;
+  background: #fffcfc;
+  box-shadow: 0 1px 4px rgba(26, 43, 60, 0.08);
 }
 
 .emerg-ecg-figure figcaption {

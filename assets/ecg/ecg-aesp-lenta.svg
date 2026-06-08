@@ -1,18 +1,20 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 110" role="img" aria-label="ECG de AESP bradicardica com QRS largo">
-  <title>AESP  bradicardia / idioventricular</title>
-  <rect width="360" height="110" fill="#0f1620"/>
-  <g stroke="#1e2d3d" stroke-width="0.5">
-    <line x1="0" y1="27.5" x2="360" y2="27.5"/>
-    <line x1="0" y1="55" x2="360" y2="55"/>
-    <line x1="0" y1="82.5" x2="360" y2="82.5"/>
-    <line x1="45" y1="0" x2="45" y2="110"/>
-    <line x1="90" y1="0" x2="90" y2="110"/>
-    <line x1="135" y1="0" x2="135" y2="110"/>
-    <line x1="180" y1="0" x2="180" y2="110"/>
-    <line x1="225" y1="0" x2="225" y2="110"/>
-    <line x1="270" y1="0" x2="270" y2="110"/>
-    <line x1="315" y1="0" x2="315" y2="110"/>
-  </g>
-  <path fill="none" stroke="#22d36b" stroke-width="2.2" stroke-linejoin="round"
-    d="M0,55 L55,55 L58,55 L62,55 L66,22 L70,88 L74,55 L78,55 L82,55 L86,55 L90,55 L145,55 L148,55 L152,55 L156,22 L160,88 L164,55 L168,55 L172,55 L176,55 L180,55 L235,55 L238,55 L242,55 L246,22 L250,88 L254,55 L258,55 L262,55 L266,55 L270,55 L325,55 L328,55 L332,55 L336,22 L340,88 L344,55 L348,55 L352,55 L360,55"/>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 130" role="img" aria-label="AESP bradicardia idioventricular">
+  <title>AESP bradicardia idioventricular</title>
+  <defs>
+    <pattern id="gridMinor" width="8" height="8" patternUnits="userSpaceOnUse">
+      <path d="M 8 0 L 0 0 0 8" fill="none" stroke="#fde8e8" stroke-width="0.4"/>
+    </pattern>
+    <pattern id="gridMajor" width="40" height="40" patternUnits="userSpaceOnUse">
+      <rect width="40" height="40" fill="url(#gridMinor)"/>
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#f5b8b8" stroke-width="0.8"/>
+    </pattern>
+  </defs>
+  <rect width="400" height="130" fill="#fffcfc"/>
+  <rect width="400" height="130" fill="url(#gridMajor)"/>
+  <rect x="0" y="0" width="400" height="18" fill="#1a2b3c" opacity="0.92"/>
+  <text x="10" y="13" fill="#fff" font-family="Segoe UI, Arial, sans-serif" font-size="10" font-weight="600">AESP — bradicardia / idioventricular</text>
+  <text x="300" y="13" fill="#a8c4e0" font-family="Segoe UI, Arial, sans-serif" font-size="9">QRS largo · lento</text>
+  <path fill="none" stroke="#c62828" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+    d="M0,68 L55,68 L58,66 L62,66 L66,32 L70,102 L74,70 L78,68 L82,68 L86,68 L140,68 L143,66 L147,66 L151,32 L155,102 L159,70 L163,68 L167,68 L171,68 L225,68 L228,66 L232,66 L236,32 L240,102 L244,70 L248,68 L252,68 L256,68 L310,68 L313,66 L317,66 L321,32 L325,102 L329,70 L333,68 L337,68 L341,68 L395,68 L400,68"/>
 </svg>
