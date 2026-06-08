@@ -1,4 +1,4 @@
-/* Pronto Socorro — condições e navegação */
+/* Prescrições de Pronto Socorro — condições e navegação */
 
 const MEDHUB_PS_BUILD = 'ps-opcoes-v1';
 
@@ -133,7 +133,7 @@ function psEmergBtnHtml (condition) {
 function getPsConditionHtml (condition) {
   const body = PS_CONTENT[condition.id] || `
     <p class="coming-soon">Conteúdo de <strong>${condition.name}</strong> em construção — adicione em <code>pronto-socorro-content-*.js</code>.</p>
-    <p class="emerg-note">Build Pronto Socorro: <strong>${MEDHUB_PS_BUILD}</strong></p>`;
+    <p class="emerg-note">Build Prescrições PS: <strong>${MEDHUB_PS_BUILD}</strong></p>`;
   return body + psEmergBtnHtml(condition);
 }
 

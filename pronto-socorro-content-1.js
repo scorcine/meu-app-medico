@@ -2,7 +2,7 @@
 const PS_CONTENT_1 = {
   'abdome-agudo': `
       <p class="muted">Dor abdominal aguda com possível causa cirúrgica ou médica — priorizar ABC, analgesia escalonada, acesso venoso e investigação dirigida (Rx, labs, imagem).</p>
-      <h4>Pronto-socorro</h4>
+      <h4>Prescrições de pronto-socorro</h4>
       <ol class="emerg-steps">
         <li><strong>ABC</strong> — monitorização, O₂ se necessário, 2 acessos venosos calibrosos se instável ou suspeita de abdome cirúrgico.</li>
         <li><strong>Analgesia escalonada</strong> — reavaliar após cada degrau; evitar mascarar sinais de peritonite:
@@ -41,7 +41,7 @@ const PS_CONTENT_1 = {
 
   'avc': `
       <p class="muted">Déficit neurológico focal súbito — tratar como AVC até prova em contrário. Janela terapêutica depende de TC sem sangramento (isquêmico) vs hemorragia.</p>
-      <h4>Pronto-socorro</h4>
+      <h4>Prescrições de pronto-socorro</h4>
       <ol class="emerg-steps">
         <li><strong>ABC</strong> — via aérea, O₂ alvo SpO₂ &gt; 94%, 2 acessos venosos, monitor cardíaco.</li>
         <li><strong>Glicemia capilar imediata</strong> — hipoglicemia mimetiza AVC; corrigir se &lt; 60 mg/dL:
@@ -92,7 +92,7 @@ const PS_CONTENT_1 = {
 
   'afta-estomatite': `
       <p class="muted">Úlceras aftosas orais ou estomatite dolorosa — maioria viral ou idiopática; excluir herpes, candidíase e reações medicamentosas.</p>
-      <h4>Pronto-socorro</h4>
+      <h4>Prescrições de pronto-socorro</h4>
       <ol class="emerg-steps">
         <li><strong>Avaliar gravidade</strong> — hidratação, deglutição, febre alta, imunossupressão, lesões extensas ou sangramento.</li>
         <li><strong>Analgesia tópica/sistêmica</strong> — antes das refeições:
@@ -132,7 +132,7 @@ const PS_CONTENT_1 = {
 
   'alergia-anafilaxia': `
       <p class="muted">Reação alérgica sistêmica potencialmente fatal — <strong>epinefrina IM é 1ª linha</strong>, antes de anti-H1, corticoide ou expansão volêmica.</p>
-      <h4>Pronto-socorro</h4>
+      <h4>Prescrições de pronto-socorro</h4>
       <ol class="emerg-steps">
         <li><strong>Reconhecer anafilaxia</strong> — urticária/angioedema + comprometimento respiratório, cardiovascular ou gastrointestinal rápido; ou exposição conhecida + hipotensão.</li>
         <li><strong>Epinefrina IM imediata</strong> — <strong>1ª linha absoluta</strong>:
@@ -174,7 +174,7 @@ const PS_CONTENT_1 = {
 
   'alcoolismo-intox-abstinencia': `
       <p class="muted">Intoxicação aguda por álcool (depressão do SNC) vs abstinência (tremor, sudorese, risco de delirium tremens/convulsão) — abordagens distintas.</p>
-      <h4>Pronto-socorro</h4>
+      <h4>Prescrições de pronto-socorro</h4>
       <ol class="emerg-steps">
         <li><strong>Intoxicação aguda</strong> — ABC; monitorar rebaixamento e aspiração; não induzir vômito:
           <ul class="ps-med-options">
@@ -220,7 +220,7 @@ const PS_CONTENT_1 = {
 
   'ameaca-aborto': `
       <p class="muted">Sangramento vaginal na 1ª metade da gestação com colo fechado e feto viável — estabilizar, confirmar idade gestacional e excluir gravidez ectópica.</p>
-      <h4>Pronto-socorro</h4>
+      <h4>Prescrições de pronto-socorro</h4>
       <ol class="emerg-steps">
         <li><strong>ABC</strong> — avaliar instabilidade hemodinâmica; 2 acessos venosos se sangramento intenso; tipagem e reserva de hemácias se necessário.</li>
         <li><strong>β-hCG quantitativo</strong> — correlacionar com USG transvaginal (prioritário).</li>
@@ -250,7 +250,7 @@ const PS_CONTENT_1 = {
 
   'amigdalite-bacteriana': `
       <p class="muted">Faringoamigdalite bacteriana (Streptococcus β-hemolítico grupo A) — Centor/McIsaac orientam teste e ATB; evitar AINE excessivo em crianças.</p>
-      <h4>Pronto-socorro</h4>
+      <h4>Prescrições de pronto-socorro</h4>
       <ol class="emerg-steps">
         <li><strong>Avaliar complicações</strong> — abscesso peritonsilar, edema de via aérea, desidratação, febre &gt; 39 °C &gt; 3 dias.</li>
         <li><strong>Teste rápido estreptocócico ou cultura de orofaringe</strong> — tratar se positivo ou alta suspeita clínica (exsudato + linfonodos + ausência de tosse).</li>
@@ -287,7 +287,7 @@ const PS_CONTENT_1 = {
 
   'anemia-ferropriva': `
       <p class="muted">Anemia microcítica hipocrômica por deficiência de ferro — investigar sangramento oculto no adulto; reposição oral na maioria dos casos.</p>
-      <h4>Pronto-socorro</h4>
+      <h4>Prescrições de pronto-socorro</h4>
       <ol class="emerg-steps">
         <li><strong>Gravidade</strong> — Hb &lt; 7 g/dL ou instabilidade hemodinâmica:
           <ul class="ps-med-options">
@@ -320,7 +320,7 @@ const PS_CONTENT_1 = {
 
   'anemia-falciforme': `
       <p class="muted">Crise álgica vaso-oclusiva na anemia falciforme — analgesia agressiva precoce, hidratação e exclusão de complicações (síndrome torácica aguda, sequestro esplênico, AVC).</p>
-      <h4>Pronto-socorro</h4>
+      <h4>Prescrições de pronto-socorro</h4>
       <ol class="emerg-steps">
         <li><strong>ABC e oxigênio</strong> — SpO₂ alvo ≥ 95%; acesso venoso.</li>
         <li><strong>Analgesia imediata</strong> — iniciar precocemente:
@@ -357,7 +357,7 @@ const PS_CONTENT_1 = {
 
   'ansiedade-crise': `
       <p class="muted">Crise de ansiedade/pânico — excluir causas orgânicas (SCA, TEP, hipoglicemia, hipertireoidismo) antes de tratar como transtorno de ansiedade.</p>
-      <h4>Pronto-socorro</h4>
+      <h4>Prescrições de pronto-socorro</h4>
       <ol class="emerg-steps">
         <li><strong>Triagem orgânica</strong> — ECG, glicemia capilar, SpO₂, PA; história de início súbito com palpitação, dispneia, parestesia, medo de morte.</li>
         <li><strong>Ambiente calmo</strong> — verbalização tranquilizadora; evitar excesso de exames se baixa suspeita orgânica e exame normal.</li>
@@ -387,7 +387,7 @@ const PS_CONTENT_1 = {
 
   'antiparasitarios': `
       <p class="muted">Terapia e profilaxia de helmintíases comuns no Brasil — escolher fármaco conforme parasita e idade; verificar gravidez e interações.</p>
-      <h4>Pronto-socorro</h4>
+      <h4>Prescrições de pronto-socorro</h4>
       <ol class="emerg-steps">
         <li><strong>Ascaridíase/enterobíase/ankilostomíase</strong>:
           <ul class="ps-med-options">
@@ -434,7 +434,7 @@ const PS_CONTENT_1 = {
 
   'arritmias': `
       <p class="muted">Taquiarritmias e bradiarritmias instáveis — priorizar cardioversão/estimulação se instabilidade; estável → manobra vagal, fármaco ou anticoagulação conforme ritmo.</p>
-      <h4>Pronto-socorro</h4>
+      <h4>Prescrições de pronto-socorro</h4>
       <ol class="emerg-steps">
         <li><strong>Instabilidade (hipotensão, dor torácica, dispneia, rebaixamento)</strong> — cardioversão elétrica sincronizada imediata (ver cardioversao-eletrica). Sedação:
           <ul class="ps-med-options">
@@ -482,7 +482,7 @@ const PS_CONTENT_1 = {
 
   'artralgia-dor-msk': `
       <p class="muted">Dor musculoesquelética aguda sem sinais de alarme — analgesia, proteção articular e investigação dirigida se artrite inflamatória ou trauma.</p>
-      <h4>Pronto-socorro</h4>
+      <h4>Prescrições de pronto-socorro</h4>
       <ol class="emerg-steps">
         <li><strong>Sinais de alarme</strong> — febre, articulação quente/eritematosa monoarticular (artrocentese para excluir séptica), trauma com deformidade, déficit neurovascular.</li>
         <li><strong>Analgesia</strong> — escalonada:
@@ -512,7 +512,7 @@ const PS_CONTENT_1 = {
 
   'ascaridiase': `
       <p class="muted">Infestação por <em>Ascaris lumbricoides</em> — frequentemente assintomática; tratar com anti-helmíntico e investigar complicações (obstrução intestinal, via biliar).</p>
-      <h4>Pronto-socorro</h4>
+      <h4>Prescrições de pronto-socorro</h4>
       <ol class="emerg-steps">
         <li><strong>Forma não complicada</strong>:
           <ul class="ps-med-options">
@@ -552,7 +552,7 @@ const PS_CONTENT_1 = {
 
   'asma-broncoespasmo': `
       <p class="muted">Crise asmática ou broncoespasmo agudo — broncodilatador inalatório repetido + corticoide sistêmico precoce; sulfato de magnésio se crise grave refratária.</p>
-      <h4>Pronto-socorro</h4>
+      <h4>Prescrições de pronto-socorro</h4>
       <ol class="emerg-steps">
         <li><strong>Classificar gravidade</strong> — fala entrecortada, SpO₂ &lt; 90%, PEF &lt; 50%, silêncio auscultatório = grave.</li>
         <li><strong>O₂</strong> — alvo SpO₂ 94–98%; monitorizar.</li>
@@ -582,7 +582,7 @@ const PS_CONTENT_1 = {
 
   'balanopostite': `
       <p class="muted">Inflamação de glande e prepúcio — candidíase, bacteriana, irritativa ou DST; higiene e tratamento dirigido à etiologia.</p>
-      <h4>Pronto-socorro</h4>
+      <h4>Prescrições de pronto-socorro</h4>
       <ol class="emerg-steps">
         <li><strong>Excluir urgência</strong> — parafimose (redução manual urgente), gangrena de Fournier (dor desproporcional, crepitação, sepse).</li>
         <li><strong>Higiene local</strong> — banho com água morna, evitar sabonetes irritantes; secar bem.</li>
@@ -618,7 +618,7 @@ const PS_CONTENT_1 = {
 
   'bronquite-aguda': `
       <p class="muted">Inflamação traqueobrônquica aguda, geralmente viral — suporte, broncodilatador se hiper-reatividade e ATB só se suspeita bacteriana (ex.: pertussis, COPD).</p>
-      <h4>Pronto-socorro</h4>
+      <h4>Prescrições de pronto-socorro</h4>
       <ol class="emerg-steps">
         <li><strong>Excluir pneumonia/asma</strong> — Rx tórax se febre alta, taquipneia, crepitações localizadas, SpO₂ baixa.</li>
         <li><strong>Sintomáticos</strong> — analgesia e suporte:
@@ -662,7 +662,7 @@ const PS_CONTENT_1 = {
 
   'candidiase': `
       <p class="muted">Infecção por <em>Candida</em> (oral, vaginal, cutânea/balanite) — antifúngico tópico ou sistêmico conforme extensão e imunidade.</p>
-      <h4>Pronto-socorro</h4>
+      <h4>Prescrições de pronto-socorro</h4>
       <ol class="emerg-steps">
         <li><strong>Candidíase oral leve</strong>:
           <ul class="ps-med-options">
@@ -703,7 +703,7 @@ const PS_CONTENT_1 = {
 
   'cardioversao-eletrica': `
       <p class="muted">Cardioversão elétrica sincronizada (CVES) para taquiarritmias instáveis ou eletivas — sedação, sincronismo no QRS e cargas escalonadas.</p>
-      <h4>Pronto-socorro</h4>
+      <h4>Prescrições de pronto-socorro</h4>
       <ol class="emerg-steps">
         <li><strong>Indicação imediata</strong> — FA/flutter/TSV/TV com instabilidade (PAS &lt; 90, dor isquêmica, edema agudo de pulmão, rebaixamento).</li>
         <li><strong>Preparo</strong> — O₂, monitor, acesso IV, aspirador; <strong>sincronizar</strong> no QRS (botão SYNC); anticoagulação se FA &gt; 48 h ou tempo desconhecido (ou eco TE previamente).</li>
@@ -732,7 +732,7 @@ const PS_CONTENT_1 = {
 
   'cefaleias': `
       <p class="muted">Cefaleia aguda — distinguir tensional, enxaqueca e cefaleia em salvas; excluir subaracnoideia, meningite e cefaleia secundária de alarme.</p>
-      <h4>Pronto-socorro</h4>
+      <h4>Prescrições de pronto-socorro</h4>
       <ol class="emerg-steps">
         <li><strong>Sinais de alarme (SNOOP4)</strong> — início súbito (“pior da vida”), febre, rigidez de nuca, déficit focal, papiledema, gestação/puerpério, imunossupressão, trauma → TC crânio ± punção lombar.</li>
         <li><strong>Cefaleia tensional</strong> — analgesia:
@@ -767,7 +767,7 @@ const PS_CONTENT_1 = {
 
   'celulite': `
       <p class="muted">Infecção bacteriana da derme/subcutâneo — eritema, calor, dor com bordas mal definidas; tratar ATB e avaliar extensão/necrotizante.</p>
-      <h4>Pronto-socorro</h4>
+      <h4>Prescrições de pronto-socorro</h4>
       <ol class="emerg-steps">
         <li><strong>Excluir urgência</strong> — fascite necrotizante (dor desproporcional, crepitação, bolhas, sepse) → cirurgia + ATB:
           <ul class="ps-med-options">
@@ -815,7 +815,7 @@ const PS_CONTENT_1 = {
 
   'cetoacidose-diabetica': `
       <p class="muted">Emergência metabólica — hiperglicemia, acidose e cetose; tratamento: fluidos, insulina EV e reposição de K⁺ guiada por níveis seriados. Evitar bicarbonato de rotina.</p>
-      <h4>Pronto-socorro</h4>
+      <h4>Prescrições de pronto-socorro</h4>
       <ol class="emerg-steps">
         <li><strong>ABC</strong> — 2 acessos venosos; monitor; glicemia, gasometria, Na⁺, K⁺, creatinina, β-hidroxibutirato.</li>
         <li><strong>Fluidos 1ª hora</strong> — reidratação:
@@ -852,7 +852,7 @@ const PS_CONTENT_1 = {
 
   'lombalgia-ciatalgia': `
       <p class="muted">Lombalgia aguda e ciatalgia/radiculopatia lombar — maioria resolve com conservador; excluir cauda equina, fratura, infecção e neoplasia.</p>
-      <h4>Pronto-socorro</h4>
+      <h4>Prescrições de pronto-socorro</h4>
       <ol class="emerg-steps">
         <li><strong>Sinais de alarme</strong> — anestesia em sela, retenção urinária/incontinência (cauda equina → RM urgente + neurocirurgia), febre, trauma de alta energia, câncer prévio, uso crônico de corticoide.</li>
         <li><strong>Analgesia</strong> — escalonada:

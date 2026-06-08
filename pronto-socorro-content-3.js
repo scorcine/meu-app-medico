@@ -3,7 +3,7 @@
 const PS_CONTENT_3 = {
   'flebite': `
     <p class="muted">Tromboflebite superficial de veia periférica — dor, cordão endurecido e eritema ao longo do trajeto venoso. Diferenciar de TVP profunda e celulite adjacente.</p>
-    <h4>Pronto-socorro</h4>
+    <h4>Prescrições de pronto-socorro</h4>
     <ol class="emerg-steps">
       <li><strong>Exame clínico</strong> — cordão palpável, calor local; medir circunferência do membro; avaliar sinais de TVP (Homans não confiável — preferir Wells + USG se dúvida).</li>
       <li><strong>Analgesia</strong> —
@@ -37,7 +37,7 @@ const PS_CONTENT_3 = {
 
   'frieira': `
     <p class="muted">Tinea pedis (frieira) — dermatofitose interdigital ou plantar; prurido, maceração e descamação. Comum após umidade e calçado fechado.</p>
-    <h4>Pronto-socorro</h4>
+    <h4>Prescrições de pronto-socorro</h4>
     <ol class="emerg-steps">
       <li><strong>Forma interdigital (mais comum)</strong> —
         <ul class="ps-med-options">
@@ -81,7 +81,7 @@ const PS_CONTENT_3 = {
 
   'furunculose': `
     <p class="muted">Infecção profunda do folículo piloso por <em>S. aureus</em> — nódulo doloroso com pústula central. Carbúnculo = múltiplos furúnculos confluentes.</p>
-    <h4>Pronto-socorro</h4>
+    <h4>Prescrições de pronto-socorro</h4>
     <ol class="emerg-steps">
       <li><strong>Flutuante e &gt; 1 cm</strong> — incisão e drenagem (I&amp;D) após anestesia local; não fechar; curativo oclusivo.</li>
       <li><strong>Sem celulite extensa</strong> — após I&amp;D, pode dispensar ATB se imunocompetente e drenagem adequada.</li>
@@ -121,7 +121,7 @@ const PS_CONTENT_3 = {
 
   'gonorreia-clamidia': `
     <p class="muted">Uretrite/cervicite não complicada por <em>Neisseria gonorrhoeae</em> e/ou <em>Chlamydia trachomatis</em>. Tratar ambos empiricamente até exclusão.</p>
-    <h4>Pronto-socorro</h4>
+    <h4>Prescrições de pronto-socorro</h4>
     <ol class="emerg-steps">
       <li><strong>Esquema não complicado (adulto)</strong> —
         <ul class="ps-med-options">
@@ -155,7 +155,7 @@ const PS_CONTENT_3 = {
 
   'gota': `
     <p class="muted">Artrite inflamatória por cristais de urato — monoartrite aguda (1º MTP clássico), muito dolorosa. <strong>Não iniciar alopurinol na crise aguda.</strong></p>
-    <h4>Pronto-socorro</h4>
+    <h4>Prescrições de pronto-socorro</h4>
     <ol class="emerg-steps">
       <li><strong>Confirmar diagnóstico</strong> — artrite mono/oligoarticular; excluir sepse articular (artrocentese se dúvida ou febre).</li>
       <li><strong>Anti-inflamatório (escolher conforme contraindicações)</strong> —
@@ -184,7 +184,7 @@ const PS_CONTENT_3 = {
 
   'gripe-influenza': `
     <p class="muted">Síndrome gripal viral — febre, mialgia, tosse seca, cefaleia. Influenza (H1N1, H3N2) pode evoluir com pneumonia; diferenciar de resfriado comum (sintomas mais leves, coriza predominante).</p>
-    <h4>Pronto-socorro</h4>
+    <h4>Prescrições de pronto-socorro</h4>
     <ol class="emerg-steps">
       <li><strong>Estabilização</strong> — oximetria; O₂ se SatO₂ &lt; 94%; acesso venoso se desidratação ou hipotensão.</li>
       <li><strong>Antiviral (iniciar &lt; 48 h dos sintomas, ou até 5 dias se grave)</strong> —
@@ -218,7 +218,7 @@ const PS_CONTENT_3 = {
 
   'hda': `
     <p class="muted">Hemorragia digestiva alta — hematêmese ou melena. Priorizar estabilização hemodinâmica, estratificação de risco (Glasgow-Blatchford/Rockall) e endoscopia precoce.</p>
-    <h4>Pronto-socorro</h4>
+    <h4>Prescrições de pronto-socorro</h4>
     <ol class="emerg-steps">
       <li><strong>ABC</strong> — 2 acessos venosos calibrosos; monitor; tipagem e reserva de hemácias.</li>
       <li><strong>Reposição volêmica</strong> — SF 0,9% ou Ringer lactato; transfusão se Hb &lt; 7 g/dL (ou &lt; 9 se coronariopata/instável).</li>
@@ -255,7 +255,7 @@ const PS_CONTENT_3 = {
 
   'hemorroidas': `
     <p class="muted">Dilatação de plexos hemorroidários — sangramento vivo indolor (internas) ou dor e trombose (externas). Excluir fissura, abscesso e neoplasia.</p>
-    <h4>Pronto-socorro</h4>
+    <h4>Prescrições de pronto-socorro</h4>
     <ol class="emerg-steps">
       <li><strong>Trombose hemorroidária externa aguda</strong> —
         <ul class="ps-med-options">
@@ -290,7 +290,7 @@ const PS_CONTENT_3 = {
 
   'herpes-zoster': `
     <p class="muted">Reativação do VZV — erupção vesicular unilateral em dermátomo, dor neuropática. Imunossuprimidos e idosos têm maior risco de complicações.</p>
-    <h4>Pronto-socorro</h4>
+    <h4>Prescrições de pronto-socorro</h4>
     <ol class="emerg-steps">
       <li><strong>Antiviral (iniciar &lt; 72 h do rash)</strong> —
         <ul class="ps-med-options">
@@ -326,7 +326,7 @@ const PS_CONTENT_3 = {
 
   'crise-hipertensiva': `
     <p class="muted">PA severamente elevada — distinguir <strong>urgência</strong> (sem lesão aguda de órgão-alvo) de <strong>emergência</strong> (lesão aguda: encefalopatia, EAP, AVC, dissecção, eclâmpsia). SCA tratado em protocolo específico (lote 4).</p>
-    <h4>Pronto-socorro</h4>
+    <h4>Prescrições de pronto-socorro</h4>
     <ol class="emerg-steps">
       <li><strong>Avaliação inicial</strong> — PA ambos braços, FC, exame neurológico, ausculta pulmonar, ECG, creatinina; fundo de olho se cefaleia intensa.</li>
       <li><strong>Urgência hipertensiva</strong> (PA elevada, assintomático ou cefaleia leve, sem LOA) —
@@ -361,7 +361,7 @@ const PS_CONTENT_3 = {
 
   'hipoglicemia-grave': `
     <p class="muted">Glicemia &lt; 54 mg/dL com alteração de consciência, convulsão ou incapacidade de ingerir — tratar imediatamente. Mimetiza AVC.</p>
-    <h4>Pronto-socorro</h4>
+    <h4>Prescrições de pronto-socorro</h4>
     <ol class="emerg-steps">
       <li><strong>ABC</strong> — glicemia capilar imediata; via aérea se rebaixamento; acesso venoso.</li>
       <li><strong>Tratamento conforme via e consciência</strong> —
@@ -390,7 +390,7 @@ const PS_CONTENT_3 = {
 
   'hordeolo': `
     <p class="muted">Hordéolo (terçol) — abscesso agudo da glândula de Zeis ou Moll; pápula dolorosa na margem palpebral. Calázio é crônico (granuloma) — conduta diferente.</p>
-    <h4>Pronto-socorro</h4>
+    <h4>Prescrições de pronto-socorro</h4>
     <ol class="emerg-steps">
       <li><strong>Compressas mornas</strong> — 4–6×/dia por 10–15 min; promove drenagem espontânea.</li>
       <li><strong>Higiene palpebral</strong> — limpeza com shampoo neutro diluído ou compressas; não espremer.</li>
@@ -428,7 +428,7 @@ const PS_CONTENT_3 = {
 
   'impetigo': `
     <p class="muted">Infecção superficial da pele por <em>S. aureus</em> ou <em>S. pyogenes</em> — crostas melicéricas (não bolhoso) ou bolhas flácidas (bolhoso). Comum em crianças.</p>
-    <h4>Pronto-socorro</h4>
+    <h4>Prescrições de pronto-socorro</h4>
     <ol class="emerg-steps">
       <li><strong>Forma localizada (≤ 3 lesões)</strong> —
         <ul class="ps-med-options">
@@ -468,7 +468,7 @@ const PS_CONTENT_3 = {
 
   'insolacao': `
     <p class="muted">Exposição solar excessiva — eritema, dor, eventual bolhas (queimadura 1º–2º grau). Diferenciar de insolação/heat stroke (hipertermia &gt; 40 °C com disfunção SNC) — emergência distinta.</p>
-    <h4>Pronto-socorro</h4>
+    <h4>Prescrições de pronto-socorro</h4>
     <ol class="emerg-steps">
       <li><strong>Classificar gravidade</strong> — queimadura solar leve vs. insolação/heat exhaustion (confusão, temperatura &gt; 40 °C = heat stroke — resfriamento agressivo e UTI).</li>
       <li><strong>Medidas gerais</strong> — sombra, roupas leves, compressas frias; hidratação oral (SRO) se consciente.</li>
@@ -502,7 +502,7 @@ const PS_CONTENT_3 = {
 
   'intoxicacoes-exogenas': `
     <p class="muted">Abordagem sindrômica da intoxicação — toxíndrome (anticolinérgica, colinérgica, sedativa, simpatomimética, opioide) orienta antídoto. Sempre: ABC, glicemia, ECG.</p>
-    <h4>Pronto-socorro</h4>
+    <h4>Prescrições de pronto-socorro</h4>
     <ol class="emerg-steps">
       <li><strong>Estabilização</strong> — via aérea (intubar se rebaixamento/GCS ≤ 8); O₂; acesso venoso; glicemia capilar; ECG 12 derivações.</li>
       <li><strong>Descontaminação</strong> — carvão ativado 50 g VO/SNG se ingestão recente (&lt; 1–2 h) e via aérea protegida; <strong>não</strong> em corrosivos ou hidrocarbonetos.</li>
@@ -533,7 +533,7 @@ const PS_CONTENT_3 = {
 
   'pielonefrite': `
     <p class="muted">ITU alta — infecção do parênquima renal. Febre, dor lombar, náuseas; diferenciar de cistite (lote 2). Risco de sepse em gestantes, idosos e diabéticos.</p>
-    <h4>Pronto-socorro</h4>
+    <h4>Prescrições de pronto-socorro</h4>
     <ol class="emerg-steps">
       <li><strong>Estabilização</strong> — hemoculturas antes do ATB se possível; hidratação EV se sepse ou vômitos.</li>
       <li><strong>ATB empírico (adulto, comunidade)</strong> —
@@ -564,7 +564,7 @@ const PS_CONTENT_3 = {
 
   'leptospirose': `
     <p class="muted">Zoonose por <em>Leptospira</em> — exposição a água/urina de roedores. Fase aguda: febre, mialgia (especialmente panturrilha), cefaleia. Forma grave: Weil (icterícia, IRA, hemorragia).</p>
-    <h4>Pronto-socorro</h4>
+    <h4>Prescrições de pronto-socorro</h4>
     <ol class="emerg-steps">
       <li><strong>Forma leve/anictérica</strong> —
         <ul class="ps-med-options">
@@ -599,7 +599,7 @@ const PS_CONTENT_3 = {
 
   'micoses-superficiais': `
     <p class="muted">Dermatofitoses (tinea corporis, crural, pedis) e pitiríase versicolor — lesões circinadas, descamativas ou hipocrômicas. Onicomicose requer tratamento prolongado.</p>
-    <h4>Pronto-socorro</h4>
+    <h4>Prescrições de pronto-socorro</h4>
     <ol class="emerg-steps">
       <li><strong>Tinea corporis/crural (lesão limitada)</strong> —
         <ul class="ps-med-options">
@@ -647,7 +647,7 @@ const PS_CONTENT_3 = {
 
   'mononucleose': `
     <p class="muted">Mononucleose infecciosa por EBV — febre, faringite, linfadenopatia, fadiga. Rash após amoxicilina é clássico. Complicações: esplenomegalia (risco ruptura), hepatitis.</p>
-    <h4>Pronto-socorro</h4>
+    <h4>Prescrições de pronto-socorro</h4>
     <ol class="emerg-steps">
       <li><strong>Tratamento de suporte</strong> —
         <ul class="ps-med-options">
@@ -686,7 +686,7 @@ const PS_CONTENT_3 = {
 
   'otite-externa': `
     <p class="muted">Infecção do conduto auditivo externo — otalgia intensa, tragalgesia, edema do CAE. Predisponentes: natação, trauma local, umidade.</p>
-    <h4>Pronto-socorro</h4>
+    <h4>Prescrições de pronto-socorro</h4>
     <ol class="emerg-steps">
       <li><strong>Forma não complicada</strong> —
         <ul class="ps-med-options">
@@ -725,7 +725,7 @@ const PS_CONTENT_3 = {
 
   'otite-media': `
     <p class="muted">Otite média aguda — infecção do ouvido médio, comum em crianças; em adultos considerar etiologia viral ou obstrução tubária. Otalgia, febre, abaulamento timpânico.</p>
-    <h4>Pronto-socorro</h4>
+    <h4>Prescrições de pronto-socorro</h4>
     <ol class="emerg-steps">
       <li><strong>Analgesia</strong> — dipirona ou ibuprofeno; essencial em todos os casos.</li>
       <li><strong>ATB indicado</strong> — &lt; 6 meses; bilateral; otorreia; febre ≥ 39 °C; otalgia ≥ 48 h; imunossupressão; falha observação 48–72 h.</li>
@@ -754,7 +754,7 @@ const PS_CONTENT_3 = {
 
   'parasitoses-intestinais': `
     <p class="muted">Helmintíases e protozooses intestinais — giardíase, amebíase, oxiurose, ancilostomíase. Diagnóstico por clínica e exame de fezes; tratar conforme agente.</p>
-    <h4>Pronto-socorro</h4>
+    <h4>Prescrições de pronto-socorro</h4>
     <ol class="emerg-steps">
       <li><strong>Giardíase</strong> —
         <ul class="ps-med-options">
@@ -797,7 +797,7 @@ const PS_CONTENT_3 = {
 
   'pediculose': `
     <p class="muted">Infestação por <em>Pediculus humanus capitis</em> (piolho de cabeça) — prurido occipital, lêndeas aderidas aos fios. Diferenciar de caspa e dermatite seborreica.</p>
-    <h4>Pronto-socorro</h4>
+    <h4>Prescrições de pronto-socorro</h4>
     <ol class="emerg-steps">
       <li><strong>Tratamento tópico</strong> —
         <ul class="ps-med-options">

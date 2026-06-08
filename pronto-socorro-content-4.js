@@ -2,7 +2,7 @@
 const PS_CONTENT_4 = {
   'pneumonia-comunitaria': `
     <p class="muted">Infecção aguda do parênquima pulmonar adquirida fora do hospital. Estratificar gravidade com <strong>CURB-65</strong> (confusão, ureia &gt; 50 mg/dl, FR ≥ 30, PAS &lt; 90 ou PAD ≤ 60, idade ≥ 65) e definir ambiente de tratamento.</p>
-    <h4>Pronto-socorro</h4>
+    <h4>Prescrições de pronto-socorro</h4>
     <ol class="emerg-steps">
       <li><strong>ABC</strong> — SpO₂, FR, PA; O₂ suplementar se SpO₂ &lt; 92% (alvo 94–98%).</li>
       <li><strong>CURB-65</strong> — 0–1: ambulatorial; 2: considerar internação; ≥ 3: internação/UCI.</li>
@@ -49,7 +49,7 @@ const PS_CONTENT_4 = {
 
   'trauma-atls': `
     <p class="muted">Abordagem sistemática do trauma politraumatizado conforme <strong>ATLS</strong> — tratar ameaças à vida na ordem de prioridade antes de investigações definitivas.</p>
-    <h4>Pronto-socorro</h4>
+    <h4>Prescrições de pronto-socorro</h4>
     <ol class="emerg-steps">
       <li><strong>A — Via aérea + coluna cervical</strong> — proteção cervical; aspirar secreções; intubação se GCS ≤ 8, obstrução ou insuficiência respiratória.</li>
       <li><strong>B — Respiração</strong> — inspecionar tórax (equimoses, MV abolido, crepitação); O₂ 15 L/min; drenagem de pneumotórax hipertensivo imediata (2º EIC linha hemiclavicular).</li>
@@ -88,7 +88,7 @@ const PS_CONTENT_4 = {
 
   'queilite': `
     <p class="muted">Inflamação dos lábios por ressecamento, exposição solar, alergia de contato, infecção (Candida, herpes) ou deficiência nutricional. Tratar causa e barreira cutânea.</p>
-    <h4>Pronto-socorro</h4>
+    <h4>Prescrições de pronto-socorro</h4>
     <ol class="emerg-steps">
       <li><strong>Higiene</strong> — evitar lambedura; hidratação oral adequada; protetor labial sem fragrância.</li>
       <li><strong>Barreira</strong> — vaselina, lanolina ou pomada de óxido de zinco 2–3×/dia.</li>
@@ -140,7 +140,7 @@ const PS_CONTENT_4 = {
 
   'queimaduras': `
     <p class="muted">Lesão térmica, química ou elétrica da pele e tecidos profundos. Classificar profundidade (1º–3º grau) e <strong>superfície corporal queimada (SCQ)</strong> para definir destino.</p>
-    <h4>Pronto-socorro</h4>
+    <h4>Prescrições de pronto-socorro</h4>
     <ol class="emerg-steps">
       <li><strong>Segurança</strong> — cessar agente causador; remover roupas/jóias; irrigar abundante se química (20 min água corrente).</li>
       <li><strong>ABC</strong> — via aérea se queimadura face/pescoço/inalação (fuligem nasal, rouquidão) — intubação precoce.</li>
@@ -178,7 +178,7 @@ const PS_CONTENT_4 = {
 
   'rinite-alergica': `
     <p class="muted">Inflamação nasal mediada por IgE com prurido, espirros em salva, rinorreia aquosa e obstrução. Diferenciar de resfriado e sinusite bacteriana.</p>
-    <h4>Pronto-socorro</h4>
+    <h4>Prescrições de pronto-socorro</h4>
     <ol class="emerg-steps">
       <li><strong>Medidas ambientais</strong> — evitar alérgenos (pólen, ácaros, fumaça); lavagem nasal com SF 0,9%.</li>
       <li><strong>Anti-H1 de 2ª geração</strong>
@@ -228,7 +228,7 @@ const PS_CONTENT_4 = {
 
   'sangramento-uterino': `
     <p class="muted">Sangramento anormal do trato genital fora do ciclo esperado ou com volume/duração excessivos. Estabilizar hemodinamicamente e classificar (PALM-COEIN).</p>
-    <h4>Pronto-socorro</h4>
+    <h4>Prescrições de pronto-socorro</h4>
     <ol class="emerg-steps">
       <li><strong>ABC</strong> — PA, FC, Hb; acesso venoso se instável; tipagem e reserva se sangramento intenso.</li>
       <li><strong>Gestação</strong> — β-hCG em toda mulher em idade fértil com sangramento — descartar aborto/ectópica.</li>
@@ -280,7 +280,7 @@ const PS_CONTENT_4 = {
 
   'sca-iam': `
     <p class="muted">Síndrome coronariana aguda (angina instável, NSTEMI, STEMI). Tratar como isquemia miocárdica até prova em contrário — <strong>ECG em ≤ 10 min</strong>.</p>
-    <h4>Pronto-socorro</h4>
+    <h4>Prescrições de pronto-socorro</h4>
     <ol class="emerg-steps">
       <li><strong>Monitor + O₂</strong> — apenas se SpO₂ &lt; 90%; acesso venoso calibroso.</li>
       <li><strong>ECG 12 derivações</strong> em ≤ 10 min; repetir se dor recorrer.</li>
@@ -318,7 +318,7 @@ const PS_CONTENT_4 = {
 
   'sinusite-aguda': `
     <p class="muted">Inflamação dos seios paranasais, geralmente pós-viral. Antibiótico apenas se sintomas persistentes (&gt; 10 dias), piora após melhora inicial ou quadro grave.</p>
-    <h4>Pronto-socorro</h4>
+    <h4>Prescrições de pronto-socorro</h4>
     <ol class="emerg-steps">
       <li><strong>Suporte</strong> — lavagem nasal com SF 0,9%; analgesia (dipirona, paracetamol); hidratação.</li>
       <li><strong>Congestão</strong> — budesonida nasal ou oximetazolina ≤ 3 dias.</li>
@@ -353,7 +353,7 @@ const PS_CONTENT_4 = {
 
   'abstinencia-alcoolica': `
     <p class="muted">Síndrome de abstinência alcoólica (tremor, sudorese, ansiedade, agitação) 6–24 h após última ingestão. Risco de <strong>delirium tremens</strong> e convulsões — prevenir com benzodiazepínico.</p>
-    <h4>Pronto-socorro</h4>
+    <h4>Prescrições de pronto-socorro</h4>
     <ol class="emerg-steps">
       <li><strong>ABC</strong> — glicemia capilar; eletrólitos (K⁺, Mg²⁺); acesso venoso.</li>
       <li><strong>Tiamina</strong> — 300 mg EV/IM antes de glicose (prevenir Wernicke).</li>
@@ -397,7 +397,7 @@ const PS_CONTENT_4 = {
 
   'sepse-choque-septico': `
     <p class="muted">Resposta desregulada à infecção com disfunção orgânica (Sepsis-3). Choque séptico = necessidade de vasopressor para PAM ≥ 65 + lactato &gt; 2 mmol/L apesar de volume.</p>
-    <h4>Pronto-socorro</h4>
+    <h4>Prescrições de pronto-socorro</h4>
     <ol class="emerg-steps">
       <li><strong>Reconhecer</strong> — qSOFA ≥ 2 ou suspeita clínica de infecção + hipotensão/hipoperfusão.</li>
       <li><strong>Bundle hora-1</strong> (iniciar imediatamente):
@@ -440,7 +440,7 @@ const PS_CONTENT_4 = {
 
   'sindrome-vestibular': `
     <p class="muted">Tontura/vertigem aguda por disfunção periférica (VPPB, neurite vestibular, labirintite) ou central (AVC posterior — sempre descartar). Avaliar HINTS se agudo contínuo.</p>
-    <h4>Pronto-socorro</h4>
+    <h4>Prescrições de pronto-socorro</h4>
     <ol class="emerg-steps">
       <li><strong>ABC</strong> — glicemia capilar; PA; exame neurológico (HINTS se vertigem aguda contínua).</li>
       <li><strong>Sinais centrais</strong> — diplopia, disartria, ataxia truncal, cefaleia intensa, déficit focal → TC crânio urgente.</li>
@@ -477,7 +477,7 @@ const PS_CONTENT_4 = {
 
   'soluco-persistente': `
     <p class="muted">Contrações diafragmáticas involuntárias &gt; 48 h. Investigar causas secundárias (eletrólitos, infecção, medicamentos, irritação diafragmática).</p>
-    <h4>Pronto-socorro</h4>
+    <h4>Prescrições de pronto-socorro</h4>
     <ol class="emerg-steps">
       <li><strong>Causas tratáveis</strong> — corrigir hiponatremia, hipocalemia, hipercalcemia; suspender opioides, benzodiazepínicos, corticoides se possível.</li>
       <li><strong>Medidas físicas</strong> — Valsalva, retenção de CO₂ (saco de papel), massagem do seio carotídeo (cautela em idosos/aterosclerose).</li>
@@ -505,7 +505,7 @@ const PS_CONTENT_4 = {
 
   'tinea': `
     <p class="muted">Dermatofitose superficial (<em>T. pedis, cruris, corporis</em>). Lesões anulares com borda ativa e centro clareando; prurido variável.</p>
-    <h4>Pronto-socorro</h4>
+    <h4>Prescrições de pronto-socorro</h4>
     <ol class="emerg-steps">
       <li><strong>Higiene</strong> — manter área seca; trocar meias diariamente; não compartilhar toalhas.</li>
       <li><strong>Tinea pedis/cruris leve</strong>
@@ -555,7 +555,7 @@ const PS_CONTENT_4 = {
 
   'tosse': `
     <p class="muted">Reflexo de defesa das vias aéreas. Tosse &lt; 3 semanas geralmente pós-infecciosa; investigar se &gt; 3 semanas (asma, DRGE, medicamentos, TB).</p>
-    <h4>Pronto-socorro</h4>
+    <h4>Prescrições de pronto-socorro</h4>
     <ol class="emerg-steps">
       <li><strong>Gravidade</strong> — SpO₂, FR; dispneia, hemoptise, estridor → priorizar via aérea e investigação urgente.</li>
       <li><strong>Hemoptise</strong> — estabilizar; Rx tórax; considerar TB, bronquiectasia, TEP — internar se maciça.</li>
@@ -600,7 +600,7 @@ const PS_CONTENT_4 = {
 
   'trauma-ocular': `
     <p class="muted">Lesão mecânica ou química do olho e anexos. <strong>Emergência oftalmológica</strong> se penetração, perda de conteúdo, química grave ou hematoma hiposfagma com suspeita de ruptura.</p>
-    <h4>Pronto-socorro</h4>
+    <h4>Prescrições de pronto-socorro</h4>
     <ol class="emerg-steps">
       <li><strong>Não manipular</strong> — escudo rígido sem pressão; não remover corpo estranho aderido; não avaliar PIO digital se suspeita de ruptura.</li>
       <li><strong>Química</strong> — irrigar imediatamente com SF 0,9% ou Ringer lactato ≥ 1–2 L (mín. 30 min); pH conjuntival entre irrigações.</li>
@@ -637,7 +637,7 @@ const PS_CONTENT_4 = {
 
   'tuberculose': `
     <p class="muted">Infecção por <em>M. tuberculosis</em>, geralmente pulmonar. Iniciar esquema padronizado do MS após confirmação ou forte suspeita clínico-radiológica.</p>
-    <h4>Pronto-socorro</h4>
+    <h4>Prescrições de pronto-socorro</h4>
     <ol class="emerg-steps">
       <li><strong>Isolamento</strong> — máscara cirúrgica no paciente; N95 para equipe se suspeita de TB pulmonar bacilífera.</li>
       <li><strong>Diagnóstico</strong> — escarro (BAAR + GeneXpert/tríplice amostra); Rx tórax PA.</li>
@@ -676,7 +676,7 @@ const PS_CONTENT_4 = {
 
   'ulcera-varicosa': `
     <p class="muted">Úlcera de perna por hipertensão venosa crônica. Tratar edema, infecção e ferida; compressão é pilar do tratamento.</p>
-    <h4>Pronto-socorro</h4>
+    <h4>Prescrições de pronto-socorro</h4>
     <ol class="emerg-steps">
       <li><strong>Avaliar</strong> — bordas, exsudato, odor, celulite perilesional; palpar pulsos (descartar componente arterial).</li>
       <li><strong>Curativo</strong> — limpeza com SF 0,9%; desbridamento de tecido necrótico solto; cobertura: hidrogel (leito limpo) ou carvão ativado (exsudato).</li>
@@ -706,7 +706,7 @@ const PS_CONTENT_4 = {
 
   'ulceras-genitais': `
     <p class="muted">Úlceras infecciosas do trato genital: sífilis, herpes, cancro mole, donovanose, LGV. Diagnóstico clínico + sorologias; tratar empiricamente conforme epidemiologia BR.</p>
-    <h4>Pronto-socorro</h4>
+    <h4>Prescrições de pronto-socorro</h4>
     <ol class="emerg-steps">
       <li><strong>Higiene</strong> — lavar com água e sabão; evitar relações até diagnóstico; notificar parceiros.</li>
       <li><strong>Sífilis (úlcera indolor, borda dura)</strong>
@@ -766,7 +766,7 @@ const PS_CONTENT_4 = {
 
   'varizes-mmi': `
     <p class="muted">Insuficiência venosa crônica dos membros inferiores com veias dilatadas, dor, edema e desconforto. Classificar CEAP; tratar com medidas conservadoras na maioria.</p>
-    <h4>Pronto-socorro</h4>
+    <h4>Prescrições de pronto-socorro</h4>
     <ol class="emerg-steps">
       <li><strong>Avaliar complicações</strong> — úlcera ativa, tromboflebite superficial, sangramento varicoso (compressão imediata + elevação).</li>
       <li><strong>Sangramento de variz</strong> — compressão direta 10 min; elevar membro; curativo compressivo; investigar coagulopatia se recorrente.</li>
@@ -795,7 +795,7 @@ const PS_CONTENT_4 = {
 
   'violencia-sexual-pep': `
     <p class="muted">Profilaxias pós-exposição (PEP) após violência sexual conforme protocolo MS. Janelas: contracepção de emergência até 5 dias; IST bacterianas imediato; HIV até 72 h.</p>
-    <h4>Pronto-socorro</h4>
+    <h4>Prescrições de pronto-socorro</h4>
     <ol class="emerg-steps">
       <li><strong>Acolhimento</strong> — privacidade, equipe treinada, consentimento; registro de lesões (corpo de delito se desejado, sem bloquear assistência).</li>
       <li><strong>Contracepção de emergência</strong> — <strong>levonorgestrel</strong> 1,5 mg VO dose única (até 72 h, eficácia decrescente até 5 dias) ou DIU de cobre (até 5 dias, mais eficaz).</li>
@@ -833,7 +833,7 @@ const PS_CONTENT_4 = {
 
   'vomitos-agudos': `
     <p class="muted">Vômitos de início recente por gastroenterite, intoxicação, gravidez, obstrução ou causa metabólica. Priorizar hidratação e tratar causa base.</p>
-    <h4>Pronto-socorro</h4>
+    <h4>Prescrições de pronto-socorro</h4>
     <ol class="emerg-steps">
       <li><strong>ABC</strong> — avaliar desidratação (turgor, PA, diurese); glicemia capilar; β-hCG em mulher fértil.</li>
       <li><strong>Hidratação</strong> — leve: SRO 200 ml após cada vômito; moderada/grave: SF 0,9% 500–1000 ml EV bolus, reavaliar.</li>
@@ -864,7 +864,7 @@ const PS_CONTENT_4 = {
 
   'vulvovaginites': `
     <p class="muted">Inflamação vulvovaginal por vaginose bacteriana (VB), candidíase ou tricomoníase. Diagnóstico clínico (corrimento, pH, Whiff, microscopia) orienta tratamento específico.</p>
-    <h4>Pronto-socorro</h4>
+    <h4>Prescrições de pronto-socorro</h4>
     <ol class="emerg-steps">
       <li><strong>Avaliar</strong> — corrimento (cor, odor, prurido), pH vaginal, sinais de PID (dor pélvica, febre) → encaminhar ginecologia.</li>
       <li><strong>Vaginose bacteriana</strong> (corrimento cinza, odor de peixe, pH &gt; 4,5, Whiff+)

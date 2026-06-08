@@ -3,7 +3,7 @@
 const PS_CONTENT_5 = {
   'acidente-ofidico': `
     <p class="muted">Envenenamento por serpente — classificar gravidade (local, sistêmica, grave); soro antiofídico específico conforme espécie (Bothrops, Crotalus, Lachesis, Micrurus). Não fazer torniquete, incisão ou sucção.</p>
-    <h4>Pronto-socorro</h4>
+    <h4>Prescrições de pronto-socorro</h4>
     <ol class="emerg-steps">
       <li><strong>ABC</strong> — imobilizar membro abaixo do coração; remover anéis/pulseiras; marcar borda do edema a cada 30 min.</li>
       <li><strong>Classificação</strong> — leve (sem progressão sistêmica): observação 6–12 h; moderada/grave (edema progressivo, sangramento, hipotensão, neurotoxicidade, rabdomiólise): internar + soro.</li>
@@ -36,7 +36,7 @@ const PS_CONTENT_5 = {
 
   'meningite-bacteriana': `
     <p class="muted">Meningite/meningoencefite bacteriana aguda — emergência infecciosa. ATB empírico em ≤ 30 min após punção lombar (ou imediato se PL contraindicada/atrasada).</p>
-    <h4>Pronto-socorro</h4>
+    <h4>Prescrições de pronto-socorro</h4>
     <ol class="emerg-steps">
       <li><strong>ABC + isolamento</strong> — O₂, acesso venoso; profilaxia de contactantes (rifampicina, ciprofloxacino ou ceftriaxona conforme agente).</li>
       <li><strong>ATB empírico adulto (&gt; 18 anos)</strong>
@@ -75,7 +75,7 @@ const PS_CONTENT_5 = {
 
   'tep': `
     <p class="muted">Tromboembolismo pulmonar — dispneia súbita, dor pleurítica, taquicardia, hipoxemia. Estratificar risco (PESI/sPESI) e tratar anticoagulação ± reperfusão se instabilidade.</p>
-    <h4>Pronto-socorro</h4>
+    <h4>Prescrições de pronto-socorro</h4>
     <ol class="emerg-steps">
       <li><strong>ABC</strong> — O₂ alvo SpO₂ &gt; 90%; acesso venoso; monitor.</li>
       <li><strong>Diagnóstico</strong> — angioTC tórax (1ª linha) ou escintilografia V/Q se contraindicação ao contraste; D-dímero se baixa probabilidade (Wells).</li>
@@ -111,7 +111,7 @@ const PS_CONTENT_5 = {
 
   'tvp': `
     <p class="muted">Trombose venosa profunda — membro edemaciado, dor, empastamento de panturrilha (sinal de Homans inespecífico). Anticoagular se confirmada; excluir flegmasia cerúlea dolens.</p>
-    <h4>Pronto-socorro</h4>
+    <h4>Prescrições de pronto-socorro</h4>
     <ol class="emerg-steps">
       <li><strong>Probabilidade clínica</strong> — escore de Wells; D-dímero se baixa/intermediária probabilidade (exclui se normal e baixa).</li>
       <li><strong>Diagnóstico</strong> — USG Doppler venoso de MMII (exame de escolha); se indisponível e alta suspeita → anticoagular empiricamente e repetir USG.</li>
@@ -136,7 +136,7 @@ const PS_CONTENT_5 = {
 
   'pancreatite-aguda': `
     <p class="muted">Pancreatite aguda — dor epigástrica intensa irradiada para dorso, lipase/amilase ≥ 3× LSN. Estratificar gravidade (BISAP, APACHE) e hidratar agressivamente.</p>
-    <h4>Pronto-socorro</h4>
+    <h4>Prescrições de pronto-socorro</h4>
     <ol class="emerg-steps">
       <li><strong>ABC</strong> — jejum inicial; SNG se vômitos incoercíveis.
         <ul class="ps-med-options">
@@ -169,7 +169,7 @@ const PS_CONTENT_5 = {
 
   'apendicite-aguda': `
     <p class="muted">Apendicite aguda — dor periumbilical migrando para FID, McBurney, defesa. Escore de Alvarado/APP auxilia; cirurgia ou ATB + apendicectomia.</p>
-    <h4>Pronto-socorro</h4>
+    <h4>Prescrições de pronto-socorro</h4>
     <ol class="emerg-steps">
       <li><strong>Diagnóstico</strong> — exame físico + USG (pediatria/gestante) ou TC abdome com contraste (adulto) se dúvida.</li>
       <li><strong>Jejum + acesso venoso</strong> — analgesia precoce (dipirona ± tramadol) — não atrasa diagnóstico.</li>
@@ -194,7 +194,7 @@ const PS_CONTENT_5 = {
 
   'colecistite-aguda': `
     <p class="muted">Colecistite aguda — dor HCD, Murphy+, febre, leucocitose. Tokyo Guidelines: leve, moderada ou grave (disfunção orgânica).</p>
-    <h4>Pronto-socorro</h4>
+    <h4>Prescrições de pronto-socorro</h4>
     <ol class="emerg-steps">
       <li><strong>Diagnóstico</strong> — USG: espessamento parietal, líquido perivesicular, cálculo impactado, Murphy ultrassonográfico.</li>
       <li><strong>Jejum + analgesia</strong> — dipirona; tramadol se necessário; antiemético (ondansetrona 4 mg EV).</li>
@@ -218,7 +218,7 @@ const PS_CONTENT_5 = {
 
   'chikungunya': `
     <p class="muted">Arbovirose — febre súbita, poliartralgia intensa simétrica, rash. Sem antiviral específico; manejo sintomático (evitar AINE precoce se dengue não descartada).</p>
-    <h4>Pronto-socorro</h4>
+    <h4>Prescrições de pronto-socorro</h4>
     <ol class="emerg-steps">
       <li><strong>Excluir dengue grave</strong> — prova do laço, plaquetas, hematócrito; se dengue possível → paracetamol apenas nas primeiras 48 h.</li>
       <li><strong>Analgesia</strong>
@@ -249,7 +249,7 @@ const PS_CONTENT_5 = {
 
   'malaria': `
     <p class="muted">Malária — febre periódica, calafrios, sudorese em área endêmica ou viagem. Diagnóstico: gota espessa/Giemsa; tratar conforme espécie (<em>P. falciparum</em> = emergência).</p>
-    <h4>Pronto-socorro</h4>
+    <h4>Prescrições de pronto-socorro</h4>
     <ol class="emerg-steps">
       <li><strong>Diagnóstico urgente</strong> — gota espessa ou esfregaço: identificar espécie e parasitemia.</li>
       <li><strong>P. vivax / P. ovale / P. malariae (não complicada)</strong>
@@ -294,7 +294,7 @@ const PS_CONTENT_5 = {
 
   'epistaxe': `
     <p class="muted">Sangramento nasal — maioria anterior (plexo de Kiesselbach); posterior em idosos/hipertensos = maior gravidade.</p>
-    <h4>Pronto-socorro</h4>
+    <h4>Prescrições de pronto-socorro</h4>
     <ol class="emerg-steps">
       <li><strong>Medidas iniciais</strong> — sentar, inclinar levemente para frente, compressão digital das narinas 10–15 min contínuos.</li>
       <li><strong>Epistaxe anterior persistente</strong>
@@ -319,7 +319,7 @@ const PS_CONTENT_5 = {
 
   'sincope': `
     <p class="muted">Perda transitória de consciência por hipoperfusão cerebral — excluir arritmia, SCA, TEP, hemorragia e causa neurológica antes de alta.</p>
-    <h4>Pronto-socorro</h4>
+    <h4>Prescrições de pronto-socorro</h4>
     <ol class="emerg-steps">
       <li><strong>ABC pós-recuperação</strong> — glicemia capilar; PA ortostática (deitado vs 3 min em pé); FC, SpO₂.</li>
       <li><strong>ECG obrigatório</strong> — BAV, QT longo, Brugada, HCM, FA, TVNS.</li>
@@ -344,7 +344,7 @@ const PS_CONTENT_5 = {
 
   'abscesso-cutaneo': `
     <p class="muted">Abscesso cutâneo — coleção purulenta drenável; tratamento = incisão e drenagem (I&amp;D) + ATB se extensão/celulite/sistêmico.</p>
-    <h4>Pronto-socorro</h4>
+    <h4>Prescrições de pronto-socorro</h4>
     <ol class="emerg-steps">
       <li><strong>Indicação de I&amp;D</strong> — abscesso fluctuante &gt; 2 cm; não usar ATB isolado sem drenagem.</li>
       <li><strong>Técnica</strong> — analgesia local (lidocaína 1–2%); incisão em cruz no ponto mais fluctuante; quebrar loculações com pinça; irrigar com SF; curativo absortivo; não fechar primariamente.</li>
@@ -368,7 +368,7 @@ const PS_CONTENT_5 = {
 
   'profilaxia-antirrabica': `
     <p class="muted">Exposição a mamífero potencialmente rabioso — lavagem imediata do ferimento + profilaxia pós-exposição (PEP) conforme categoria MS.</p>
-    <h4>Pronto-socorro</h4>
+    <h4>Prescrições de pronto-socorro</h4>
     <ol class="emerg-steps">
       <li><strong>Lavagem abundante</strong> — água e sabão 15 min + aplicar povidine ou álcool 70% (não fechar ferimento).</li>
       <li><strong>Categorizar exposição (MS)</strong> — I: toque/ lambedura pele íntegra → nada; II: pele leve sem sangue → vacina; III: sangramento/mucosa/lambedura pele lesada → vacina + soro.</li>
@@ -400,7 +400,7 @@ const PS_CONTENT_5 = {
 
   'eclampsia-pre-eclampsia': `
     <p class="muted">Pré-eclâmpsia — PA ≥ 140/90 após 20 sem + proteinúria ou sinais de gravidade. Eclâmpsia = convulsão na gestação/puerpério — emergência obstétrica.</p>
-    <h4>Pronto-socorro</h4>
+    <h4>Prescrições de pronto-socorro</h4>
     <ol class="emerg-steps">
       <li><strong>Eclâmpsia (convulsão)</strong>
         <ul class="ps-med-options">
