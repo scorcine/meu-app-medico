@@ -344,6 +344,30 @@ body.app-page {
   text-align: left;
 }
 
+.ps-med-options {
+  margin: 0.35rem 0 0.5rem;
+  padding-left: 1.1rem;
+  list-style: disc;
+}
+
+.ps-med-options li {
+  margin-bottom: 0.35rem;
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+
+.emerg-steps .ps-med-options {
+  margin-top: 0.4rem;
+}
+
+.emerg-content > .ps-med-options {
+  margin: 0.5rem 0 1rem;
+  padding: 0.65rem 0.85rem 0.65rem 1.75rem;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+}
+
 .ps-emerg-link-wrap {
   margin: 1rem 0 0;
 }

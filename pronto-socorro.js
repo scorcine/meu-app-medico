@@ -1,6 +1,6 @@
 /* Pronto Socorro — condições e navegação */
 
-const MEDHUB_PS_BUILD = 'ps-revisao-v2';
+const MEDHUB_PS_BUILD = 'ps-opcoes-v1';
 
 const PS_CONTENT = Object.assign(
   {},

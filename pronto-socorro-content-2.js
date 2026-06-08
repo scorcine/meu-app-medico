@@ -3,6 +3,11 @@
 const PS_CONTENT_2 = {
   'cistite-itu-baixa': `
     <p class="muted">Infecção urinária limitada à bexiga (disúria, polaciúria, urgência) em mulher não grávida, sem febre, sem dor lombar ou sinais sistêmicos — tratar ambulatorialmente após exclusão de pielonefrite.</p>
+    <ul class="ps-med-options">
+      <li><strong>1ª linha:</strong> nitrofurantoína 100 mg VO 12/12 h · 5 dias (Macrodantina®).</li>
+      <li><strong>Alternativa:</strong> fosfomicina trometamol 3 g VO dose única (Monuril®).</li>
+      <li><strong>Alérgico / contraindicação:</strong> levofloxacino 250 mg VO 24/24 h · 3 dias — reservar se alergia ou falha; evitar se TFG &lt; 30 mL/min. <strong>Pielonefrite</strong> (febre, dor lombar) → ver lote 3 (<em>pielonefrite</em>).</li>
+    </ul>
     <h4>Pronto-socorro</h4>
     <ol class="emerg-steps">
       <li><strong>Triagem:</strong> temperatura, dor lombar/costovertebral, gravidez, imunossupressão, cateter vesical, ITU recente (&lt; 4 semanas) ou falha terapêutica.</li>
@@ -34,6 +39,11 @@ const PS_CONTENT_2 = {
 
   'colica-renal': `
     <p class="muted">Dor lombar ou flanco de início súbito, em cólica, irradiando para virilha — suspeitar de litíase urinária; excluir infecção associada (pielonefrite obstrutiva = emergência).</p>
+    <ul class="ps-med-options">
+      <li><strong>1ª linha:</strong> dipirona 1 g EV/IM + cetoprofeno 100 mg EV (se função renal OK).</li>
+      <li><strong>Alternativa:</strong> tramadol 50–100 mg EV/IM + escopolamina 20 mg IM se componente espasmódico.</li>
+      <li><strong>Alérgico / contraindicação:</strong> paracetamol 1 g VO/EV ± morfina 2,5–5 mg EV se dor refratária; evitar AINE se IRA ou gestante. Tamsulosina 0,4 mg VO 24/24 h na alta se cálculo distal &lt; 10 mm.</li>
+    </ul>
     <h4>Pronto-socorro</h4>
     <ol class="emerg-steps">
       <li><strong>ABC</strong> · analgesia imediata · acesso venoso se vômitos.</li>
@@ -67,6 +77,11 @@ const PS_CONTENT_2 = {
 
   'conjuntivite': `
     <p class="muted">Conjuntivite viral (mais comum), bacteriana ou alérgica — diferenciar pela história, exame e ausência de dor ocular profunda ou perda visual (red flags de ceratite/uveíte/glaucoma).</p>
+    <ul class="ps-med-options">
+      <li><strong>1ª linha (bacteriana):</strong> tobramicina 0,3% colírio 1 gota 4/4 h · 5–7 dias (Tobrex®).</li>
+      <li><strong>Alternativa:</strong> ciprofloxacino 0,3% colírio 1 gota 4/4 h · 5–7 dias (Ciloxan®) <em>ou</em> moxifloxacino 0,5% 1 gota 8/8 h (Vigamox®).</li>
+      <li><strong>Alérgico / contraindicação:</strong> viral — lágrimas artificiais e compressas frias (sem ATB); alérgica — loratadina 10 mg/dia + olopatadina 0,1% colírio 12/12 h. Dor, fotofobia ou visão turva → oftalmologia.</li>
+    </ul>
     <h4>Pronto-socorro</h4>
     <ol class="emerg-steps">
       <li><strong>Excluir emergência ocular:</strong> dor intensa, fotofobia marcada, visão turva, pupila irregular, trauma, corpo estranho, uso de CL → oftalmologia.</li>
@@ -98,6 +113,11 @@ const PS_CONTENT_2 = {
 
   'constipacao': `
     <p class="muted">Evacuação infrequente ou fezes endurecidas — na urgência, tratar impactação fecal e causas secundárias (medicações, desidratação, obstrução).</p>
+    <ul class="ps-med-options">
+      <li><strong>1ª linha:</strong> polietilenoglicol (PEG) 17 g VO 1–2×/dia dissolvido em água (Muvinlax®).</li>
+      <li><strong>Alternativa:</strong> lactulose 15–30 mL VO 12/12 h (Lactulona®).</li>
+      <li><strong>Alérgico / contraindicação:</strong> impactação retal — desimpactação manual + enema de glicerina ou fosfato de sódio; bisacodil 5–10 mg VO/supositório (Dulcolax®) uso curto após desimpactação. Evitar estimulante crônico sem investigação.</li>
+    </ul>
     <h4>Pronto-socorro</h4>
     <ol class="emerg-steps">
       <li><strong>Excluir abdome agudo</strong> — dor intensa, distensão progressiva, vômitos biliosos, sangue, perda ponderal, idade &gt; 50 anos sem colonoscopia recente.</li>
@@ -129,6 +149,11 @@ const PS_CONTENT_2 = {
 
   'corpo-estranho-ocular': `
     <p class="muted">Corpo estranho superficial (palpebral/conjuntival) vs intraocular/penetrante — não manipular suspeita de perfuração; remover CE superficial após anestesia tópica.</p>
+    <ul class="ps-med-options">
+      <li><strong>1ª linha:</strong> tobramicina 0,3% colírio 1 gota 6/6 h · 5 dias (Tobrex®) pós-remoção.</li>
+      <li><strong>Alternativa:</strong> ciprofloxacino 0,3% colírio 1 gota 6/6 h · 5 dias (Ciloxan®).</li>
+      <li><strong>Alérgico / contraindicação:</strong> eritromicina 0,5% pomada oftálmica 6/6 h se alergia a aminoglicosídeos/quinolonas; perfuração suspeita → proteger olho, jejum, oftalmologia (ATB sistêmico).</li>
+    </ul>
     <h4>Pronto-socorro</h4>
     <ol class="emerg-steps">
       <li><strong>Não remover</strong> CE incrustado, projétil metálico ou suspeita de perfuração — proteger olho (escudo rígido), jejum, oftalmologia/cirurgia.</li>
@@ -155,6 +180,11 @@ const PS_CONTENT_2 = {
 
   'crise-convulsiva-em': `
     <p class="muted">Crise convulsiva tônico-clônica &gt; 5 min ou crises repetidas sem recuperação = estado de mal epiléptico (EM) — benzodiazepínico imediato, ABC e correção de glicemia.</p>
+    <ul class="ps-med-options">
+      <li><strong>1ª linha:</strong> lorazepam 4 mg EV lento — repetir 4 mg em 5 min (máx. 8 mg) <em>ou</em> diazepam 10 mg EV q10 min (máx. 30 mg).</li>
+      <li><strong>Alternativa:</strong> midazolam 10 mg IM/IN <em>ou</em> diazepam 20 mg retal se sem acesso venoso.</li>
+      <li><strong>Alérgico / contraindicação:</strong> fenitoína 20 mg/kg EV (máx. 1500 mg) se persistência após 2 doses de BZD; ácido valproico 20–40 mg/kg EV se hepatopatia/gravidez excluídas. Corrigir hipoglicemia: SG 50% 50 mL EV.</li>
+    </ul>
     <h4>Pronto-socorro</h4>
     <ol class="emerg-steps">
       <li><strong>ABC</strong> · posicionar lateralmente · oxigênio · monitor · acesso venoso · <strong>glicemia capilar</strong> (corrigir hipoglicemia se &lt; 60 mg/dL: SG 50% 50 mL EV).</li>
@@ -187,6 +217,11 @@ const PS_CONTENT_2 = {
 
   'crise-tireotoxica': `
     <p class="muted">Tempestade tireotóxica — febre, taquicardia, alteração mental, ICC ou instabilidade em hipertireoidismo — mortalidade alta; tratamento multimodal imediato.</p>
+    <ul class="ps-med-options">
+      <li><strong>1ª linha:</strong> propiltiouracil (PTU) 200–250 mg VO/NG 4/4 h + propranolol 40–80 mg VO 6/6 h (ou 1–2 mg EV lento).</li>
+      <li><strong>Alternativa:</strong> metimazol 20 mg VO/NG 4/6 h (Tapazol®) + esmolol EV titulado se asma/broncoespasmo.</li>
+      <li><strong>Alérgico / contraindicação:</strong> lugol 5–10 gotas VO 8/8 h (≥ 1 h após tionamida) + hidrocortisona 100 mg EV 8/8 h; evitar AAS e salicilatos. Internação UTI até estabilização.</li>
+    </ul>
     <h4>Pronto-socorro</h4>
     <ol class="emerg-steps">
       <li><strong>ABC</strong> · monitor · UTI se instável · score Burch-Wartofsky (≥ 45 = tempestade provável).</li>
@@ -213,6 +248,11 @@ const PS_CONTENT_2 = {
 
   'dengue': `
     <p class="muted">Dengue — classificação MS 2024 (grupos A a D) com prova do laço, hidratação guiada por risco e <strong>proibição de AAS/AINE</strong>; monitorar sinais de alarme e choque.</p>
+    <ul class="ps-med-options">
+      <li><strong>1ª linha:</strong> paracetamol 500–750 mg VO 6/6 h (máx. 3 g/dia) — único antitérmico/analgésico permitido.</li>
+      <li><strong>Alternativa (hidratação por grupo):</strong> Grupo A — SRO oral 60 mL/kg/dia; Grupo B — 60–80 mL/kg/dia sob supervisão; Grupo C/D — SF 0,9% 10 mL/kg/h EV (bolus 20 mL/kg se choque).</li>
+      <li><strong>Alérgico / contraindicação:</strong> <strong>contraindicado AAS, ibuprofeno, diclofenaco, naproxeno</strong> (risco de sangramento); evitar corticoide de rotina, profilaxia plaquetária e transfusão profilática.</li>
+    </ul>
     <h4>Pronto-socorro</h4>
     <ol class="emerg-steps">
       <li><strong>Classificação inicial (MS 2024):</strong>
@@ -253,6 +293,11 @@ const PS_CONTENT_2 = {
 
   'desconforto-abdominal': `
     <p class="muted">Desconforto abdominal inespecífico, flatulência e distensão funcional — excluir causas orgânicas e cirúrgicas antes de tratamento sintomático.</p>
+    <ul class="ps-med-options">
+      <li><strong>1ª linha:</strong> escopolamina 10 mg VO/IM 8/8 h (Buscopan®) + simeticona 40–80 mg VO 8/8 h após refeições (Luftal®).</li>
+      <li><strong>Alternativa:</strong> hioscina butilbrometo 10 mg VO 8/8 h + dipirona se desconforto associado.</li>
+      <li><strong>Alérgico / contraindicação:</strong> paracetamol se intolerância a dipirona; evitar AINE se suspeita de úlcera. Probiótico opcional: Saccharomyces boulardii 200 mg VO 12/12 h · 5 dias.</li>
+    </ul>
     <h4>Pronto-socorro</h4>
     <ol class="emerg-steps">
       <li><strong>Triagem:</strong> dor localizada intensa, defesa, febre, vômitos biliosos, sangue nas fezes, síncope, gravidez → investigar abdome agudo.</li>
@@ -279,6 +324,11 @@ const PS_CONTENT_2 = {
 
   'diabetes-insulina-hipo': `
     <p class="muted">Manejo de hipoglicemia aguda e esquemas de insulinoterapia hospitalar — sempre dosar glicemia capilar em paciente confuso, sudoreico ou convulsionando.</p>
+    <ul class="ps-med-options">
+      <li><strong>1ª linha (grave):</strong> glicose hipertônica 50% — 25 g (50 mL) EV em bolus; repetir glicemia em 15 min.</li>
+      <li><strong>Alternativa:</strong> glucagon 1 mg IM/SC (Glucagen®) se sem acesso venoso; leve/moderada — 15 g carboidrato rápido VO.</li>
+      <li><strong>Alérgico / contraindicação:</strong> sulfonilureia como causa → octreotide 50 µg SC q6h (glucagon pode ser insuficiente); após recuperação considerar SG 10% EV contínuo.</li>
+    </ul>
     <h4>Pronto-socorro</h4>
     <ol class="emerg-steps">
       <li><strong>Hipoglicemia grave</strong> (glicemia &lt; 54 mg/dL + alteração de consciência ou incapacidade de ingerir):
@@ -311,6 +361,11 @@ const PS_CONTENT_2 = {
 
   'diarreia-gastroenterite': `
     <p class="muted">Diarreia aguda (&lt; 14 dias) — priorizar reidratação oral (SRO), evitar antidiarreicos opióides na disenteria; antibiótico só se doença invasiva ou alto risco.</p>
+    <ul class="ps-med-options">
+      <li><strong>1ª linha:</strong> SRO MS/OMS 50–100 mL/kg nas primeiras 4–6 h + racecadotril 100 mg VO 8/8 h (Tiorfan®).</li>
+      <li><strong>Alternativa (invasiva/disenteria):</strong> ciprofloxacino 500 mg VO 12/12 h · 3–5 dias (Cipro®).</li>
+      <li><strong>Alérgico / contraindicação:</strong> sulfametoxazol + trimetoprima 800/160 mg VO 12/12 h · 5 dias (Bactrim®) se alergia a quinolona; azitromicina 500 mg VO 24/24 h · 3 dias se gestante. Evitar loperamida na disenteria.</li>
+    </ul>
     <h4>Pronto-socorro</h4>
     <ol class="emerg-steps">
       <li><strong>Avaliar desidratação</strong> (sinais clínicos) · peso · acesso venoso se choque ou vômitos incoercíveis.</li>
@@ -344,6 +399,11 @@ const PS_CONTENT_2 = {
 
   'dispepsia-drge': `
     <p class="muted">Dispepsia funcional, gastrite aguda ou DRGE — excluir alarmes (perda ponderal, disfagia, sangramento, anemia) antes de IBP empírico.</p>
+    <ul class="ps-med-options">
+      <li><strong>1ª linha:</strong> omeprazol 40 mg VO/EV 24/24 h (Losec®).</li>
+      <li><strong>Alternativa:</strong> pantoprazol 40 mg VO/EV 24/24 h <em>ou</em> lansoprazol 30 mg VO 24/24 h (Lanz®).</li>
+      <li><strong>Alérgico / contraindicação:</strong> domperidona 10 mg VO 8/8 h antes das refeições (Motilium®) uso curto (&lt; 7 dias); se vômitos ou contraindicação → metoclopramida 10 mg EV 8/8 h. Antácido: hidróxido de alumínio/magnésio ou sucralfato 1 g VO 6/6 h.</li>
+    </ul>
     <h4>Pronto-socorro</h4>
     <ol class="emerg-steps">
       <li><strong>Alarmes:</strong> hematemese, melena, disfagia, vômitos persistentes, massa, idade &gt; 55 anos com sintomas novos → investigar HDA/obstrução.</li>
@@ -371,6 +431,11 @@ const PS_CONTENT_2 = {
 
   'disturbios-eletroliticos': `
     <p class="muted">Distúrbios agudos de Na+, K+, Ca++ e Mg++ — corrigir conforme gravidade clínica e velocidade de instalação; monitor cardíaco se K+ ou Ca++ críticos.</p>
+    <ul class="ps-med-options">
+      <li><strong>1ª linha (hipercalemia):</strong> gluconato de cálcio 10% 10 mL EV → insulina regular 10 U + SG 25 g EV.</li>
+      <li><strong>Alternativa:</strong> salbutamol nebul 10–20 mg; hipocalemia — KCl EV 10–20 mEq/h (central se K+ &lt; 2,5); hiponatremia grave — SF 3% 100 mL EV em 10 min.</li>
+      <li><strong>Alérgico / contraindicação:</strong> hipercalemia refratária → diálise; hipomagnesemia associada — sulfato de magnésio 2 g EV em 20 min; correção lenta de Na+ (≤ 8 mEq/L/24 h) para evitar mielinólise.</li>
+    </ul>
     <h4>Pronto-socorro</h4>
     <ol class="emerg-steps">
       <li><strong>Hipercalemia</strong> (K+ ≥ 6,5 ou ECG alterado): cálcio EV (gluconato 10% 10 mL) → insulina 10 U + SG 25 g → salbutamol nebul 10–20 mg; diálise se refratária.</li>
@@ -398,6 +463,11 @@ const PS_CONTENT_2 = {
 
   'dpoc-exacerbada': `
     <p class="muted">Exacerbação de DPOC — dispneia ↑, volume/purulência do escarro; broncodilatador + corticoide sistêmico ± antibiótico se infecção bacteriana provável.</p>
+    <ul class="ps-med-options">
+      <li><strong>1ª linha (ATB):</strong> amoxicilina + clavulanato 875/125 mg VO 12/12 h · 5–7 dias (Clavulin®).</li>
+      <li><strong>Alternativa:</strong> levofloxacino 500 mg VO/EV 24/24 h · 5 dias.</li>
+      <li><strong>Alérgico / contraindicação:</strong> ceftriaxona 1 g EV 24/24 h + azitromicina 500 mg VO/EV 24/24 h · 5 dias se pneumonia grave ou alergia a penicilina com quadro sistêmico. Broncodilatador: salbutamol + ipratrópio; corticoide: prednisona 40 mg/dia · 5 dias.</li>
+    </ul>
     <h4>Pronto-socorro</h4>
     <ol class="emerg-steps">
       <li><strong>ABC</strong> · oximetria · O₂ titulado (SpO₂ 88–92% se hipercápnico conhecido) · gasometria se rebaixamento ou SpO₂ &lt; 88% em O₂.</li>
@@ -429,6 +499,11 @@ const PS_CONTENT_2 = {
 
   'edema-agudo-pulmao': `
     <p class="muted">Edema agudo de pulmão cardiogênico — dispneia súbita, estertores, SpO₂ baixa; reduzir pré/pós-carga, diurese e suporte ventilatório.</p>
+    <ul class="ps-med-options">
+      <li><strong>1ª linha:</strong> furosemida 40–80 mg EV (duplicar se uso crônico) + nitroglicerina EV 10–20 mcg/min titulada <em>ou</em> SL 0,4 mg q5 min.</li>
+      <li><strong>Alternativa:</strong> CPAP/VNI 5–10 cmH₂O precoce se dispneia intensa e SpO₂ refratária.</li>
+      <li><strong>Alérgico / contraindicação:</strong> morfina 2–4 mg EV lento com cautela (evitar rotina); PA sistólica &lt; 90 mmHg → priorizar suporte hemodinâmico sem vasodilatador. Crise hipertensiva associada → ver lote 3 (nitroprussiato).</li>
+    </ul>
     <h4>Pronto-socorro</h4>
     <ol class="emerg-steps">
       <li><strong>ABC</strong> · posição sentada · O₂ alto fluxo · monitor · acesso venoso.</li>
@@ -456,6 +531,11 @@ const PS_CONTENT_2 = {
 
   'edema-angioneurotico': `
     <p class="muted">Edema angioneurótico (EAO) — face, lábios, língua ou extremidades; diferenciar histaminérgico (anafilaxia) de bradicinínico (IECA); risco de obstrução de via aérea.</p>
+    <ul class="ps-med-options">
+      <li><strong>1ª linha (histaminérgico):</strong> adrenalina 0,5 mg IM (0,5 mL 1:1000) — repetir q5–15 min + prometazina 25 mg IM/EV.</li>
+      <li><strong>Alternativa (bradicinínico/IECA):</strong> icatibanto 30 mg SC (Firazyr®) se disponível; suspender IECA/BRA definitivamente.</li>
+      <li><strong>Alérgico / contraindicação:</strong> plasma fresco congelado 2–4 U EV ou ácido tranexâmico 1 g EV (evidência limitada); adrenalina e anti-H1 têm eficácia limitada no EAO por IECA — priorizar via aérea.</li>
+    </ul>
     <h4>Pronto-socorro</h4>
     <ol class="emerg-steps">
       <li><strong>Via aérea primeiro:</strong> avaliar estridor, voz abafada, progressão rápida — preparar intubação/cricotireoidostomia.</li>
@@ -492,6 +572,11 @@ const PS_CONTENT_2 = {
 
   'edema-mmi': `
     <p class="muted">Edema de membros inferiores agudo ou crônico agudizado — distinguir insuficiência venosa, celulite, TVP, ICC e linfedema; tratar causa e medidas mecânicas.</p>
+    <ul class="ps-med-options">
+      <li><strong>1ª linha (ICC):</strong> furosemida 40 mg VO/EV + restrição de sódio + elevação de MMII.</li>
+      <li><strong>Alternativa (venoso crônico):</strong> hidroclorotiazida 25 mg VO/dia ou furosemida curso curto + meias compressão 20–30 mmHg.</li>
+      <li><strong>Alérgico / contraindicação:</strong> celulite sobre edema — cefalexina 500 mg VO 6/6 h (Keflex®); alergia a penicilina → clindamicina 300 mg VO 6/6 h. TVP suspeita → USG doppler antes de compressão firme.</li>
+    </ul>
     <h4>Pronto-socorro</h4>
     <ol class="emerg-steps">
       <li><strong>Excluir TVP/EP</strong> (dor panturrilha unilateral, calor, Wells) e celulite (eritema, febre) — ver entradas específicas se confirmado.</li>
@@ -519,6 +604,11 @@ const PS_CONTENT_2 = {
 
   'estado-hiperosmolar': `
     <p class="muted">Estado hiperglicêmico hiperosmolar (EHH) — glicemia &gt; 600 mg/dL, osmolaridade &gt; 320 mOsm/kg, sem cetoacidose significativa; desidratação grave e alteração mental.</p>
+    <ul class="ps-med-options">
+      <li><strong>1ª linha:</strong> SF 0,9% 15–20 mL/kg na 1ª hora (1–1,5 L/h adulto) — prioridade sobre insulina.</li>
+      <li><strong>Alternativa:</strong> insulina regular 0,05–0,1 U/kg/h EV após hidratação inicial se glicemia não cai 50–70 mg/dL/h.</li>
+      <li><strong>Alérgico / contraindicação:</strong> SF 0,45% se hipernatremia após 1ª hora; K+ &lt; 3,3 mEq/L → adiar insulina e repor K+ (20–30 mEq/L de fluido se K 3,3–5,2). Evitar bicarbonato de rotina.</li>
+    </ul>
     <h4>Pronto-socorro</h4>
     <ol class="emerg-steps">
       <li><strong>ABC</strong> · glicemia capilar · gasometria · osmolaridade sérica · eletrólitos · ureia/creatinina.</li>
@@ -546,6 +636,11 @@ const PS_CONTENT_2 = {
 
   'erisipela': `
     <p class="muted">Erisipela — infecção cutânea superficial dermo-hipodérmica, bordas elevadas, febre; Streptococcus pyogenes mais comum — antibiótico precoce.</p>
+    <ul class="ps-med-options">
+      <li><strong>1ª linha:</strong> penicilina V 500 mg VO 6/6 h · 10–14 dias <em>ou</em> cefalexina 500 mg VO 6/6 h · 10–14 dias (Keflex®).</li>
+      <li><strong>Alternativa (grave/toxemia):</strong> penicilina G cristalina 2–4 milhões UI EV 4/4 h <em>ou</em> cefazolina 1–2 g EV 8/8 h.</li>
+      <li><strong>Alérgico / contraindicação:</strong> clindamicina 600 mg VO/EV 8/8 h se alergia grave a penicilina; amoxicilina 500 mg VO 8/8 h como alternativa VO. Fascite necrotizante → cirurgia + ATB amplo imediato.</li>
+    </ul>
     <h4>Pronto-socorro</h4>
     <ol class="emerg-steps">
       <li><strong>Excluir fascite necrotizante</strong> — dor desproporcional, crepitação, hipotensão, bolhas hemorrágicas → cirurgia + ATB amplo imediato.</li>
@@ -583,6 +678,11 @@ const PS_CONTENT_2 = {
 
   'escabiose': `
     <p class="muted">Escabiose (sarna) — prurido noturno, túneis interdigitais, contágio familiar; tratamento tópico ou oral conforme extensão.</p>
+    <ul class="ps-med-options">
+      <li><strong>1ª linha:</strong> permetrina 5% creme — pescoço aos pés · 8–12 h · repetir em 7 dias (Elimite®).</li>
+      <li><strong>Alternativa:</strong> ivermectina 200 mcg/kg VO dose única — repetir em 7–14 dias (Revectina®) se crostosa ou falha tópica.</li>
+      <li><strong>Alérgico / contraindicação:</strong> gestante/lactante ou &lt; 15 kg → enxofre 6–10% pomada noturna · 3 noites consecutivas; prurido — hidroxizina 25 mg VO à noite ou dexclorfeniramina 2 mg 8/8 h.</li>
+    </ul>
     <h4>Pronto-socorro</h4>
     <ol class="emerg-steps">
       <li><strong>Confirmar diagnóstico clínico</strong> — prurido ↑ à noite, lesões em espaços interdigitais, punhos, axilas, região genital; raspado (+) se disponível.</li>
@@ -609,6 +709,11 @@ const PS_CONTENT_2 = {
 
   'escorpionismo': `
     <p class="muted">Escorpionismo no Brasil (<em>Tityus</em>) — dor local intensa, sudorese, náuseas; casos graves (crianças): vômitos, sudorese profusa, bradicardia, ICC, edema pulmonar — suporte e UTI.</p>
+    <ul class="ps-med-options">
+      <li><strong>1ª linha (leve/moderado):</strong> dipirona 1 g EV/IM + lidocaína 2% sem vasoconstrictor infiltrada no ponto.</li>
+      <li><strong>Alternativa (grave):</strong> dobutamina ou dopamina titulada se choque/ICC; furosemida 40 mg EV se EAP; metoclopramida 10 mg EV se vômitos.</li>
+      <li><strong>Alérgico / contraindicação:</strong> morfina 2–5 mg EV se dor refratária; soro escorpiônico (Butantan/Fiocruz) em casos graves pediátricos conforme protocolo local; evitar torniquete, incisão e corticoide de rotina.</li>
+    </ul>
     <h4>Pronto-socorro</h4>
     <ol class="emerg-steps">
       <li><strong>Classificação de gravidade:</strong> leve (local) · moderado (sistêmico sem disfunção) · grave (criança &lt; 7 anos, ICC, EAP, convulsão, choque).</li>
@@ -642,6 +747,11 @@ const PS_CONTENT_2 = {
 
   'delirium': `
     <p class="muted">Delirium (estado confusional agudo) — início agudo, curso flutuante, desatenção; tratar causa base e medidas não farmacológicas antes de sedação.</p>
+    <ul class="ps-med-options">
+      <li><strong>1ª linha (agitação grave):</strong> haloperidol 0,5–1 mg VO/IM/EV — repetir q30 min (máx. 5 mg/dia inicial).</li>
+      <li><strong>Alternativa:</strong> quetiapina 12,5–25 mg VO se haloperidol contraindicado ou QT longo.</li>
+      <li><strong>Alérgico / contraindicação:</strong> evitar benzodiazepínicos exceto abstinência alcoólica; corrigir precipitantes (infecção, hipoglicemia, hipoxia, eletrólitos) antes de sedar. Monitor cardíaco se haloperidol EV repetido.</li>
+    </ul>
     <h4>Pronto-socorro</h4>
     <ol class="emerg-steps">
       <li><strong>Excluir emergências:</strong> hipoglicemia, hipoxia, AVC, meningite, intoxicação — glicemia capilar, SpO₂, TC crânio se focal/neurológico agudo.</li>
@@ -668,6 +778,11 @@ const PS_CONTENT_2 = {
 
   'fissura-anal': `
     <p class="muted">Fissura anal aguda — dor anal intensa à evacuação, sangramento vivo em pequena quantidade; medidas conservadoras na maioria.</p>
+    <ul class="ps-med-options">
+      <li><strong>1ª linha:</strong> diltiazem 2% pomada — aplicar 8/8 h · 6–8 sem (relaxante esfincteriano tópico).</li>
+      <li><strong>Alternativa:</strong> nifedipino 0,2–0,3% pomada 8/8 h · 6–8 sem.</li>
+      <li><strong>Alérgico / contraindicação:</strong> nitroglicerina 0,2–0,4% pomada 8/8 h (cefaleia limita uso); constipação associada — PEG 17 g/dia (Muvinlax®) ou lactulose 15 mL 12/12 h. Evitar opioides (pioram constipação).</li>
+    </ul>
     <h4>Pronto-socorro</h4>
     <ol class="emerg-steps">
       <li><strong>Excluir abscesso/fístula/hemorroida trombosada</strong> — inspeção anal cuidadosa (anestésico tópico se necessário).</li>
