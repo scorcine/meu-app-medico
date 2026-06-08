@@ -278,5 +278,63 @@ const CALC_EXTRAS = {
       return `<p><strong>PAS estimada:</strong> ${(3 * pamT - 2 * pad).toFixed(0)} mmHg</p>
               <p class="calc-note">PAS ≈ 3×PAM − 2×PAD</p>`;
     }
+  },
+
+  'rass-sedacao': {
+    title: 'RASS — escala de sedação',
+    html: `
+      <label>Escore RASS observado</label>
+      <select name="rass" required>
+        <option value="4">+4 — Combativo</option>
+        <option value="3">+3 — Muito agitado</option>
+        <option value="2">+2 — Agitado</option>
+        <option value="1">+1 — Inquieto</option>
+        <option value="0">0 — Alerta e calmo</option>
+        <option value="-1">−1 — Sonolento</option>
+        <option value="-2">−2 — Sedação leve</option>
+        <option value="-3">−3 — Sedação moderada</option>
+        <option value="-4">−4 — Sedação profunda</option>
+        <option value="-5">−5 — Não desperta</option>
+      </select>
+      <label class="calc-check"><input type="checkbox" name="vm"> Paciente em ventilação mecânica</label>
+    `,
+    calculate (form) {
+      const rass = parseInt(xSel(form, 'rass'), 10);
+      const onVm = !!form['vm']?.checked;
+
+      const labels = {
+        4: 'Combativo — perigo imediato',
+        3: 'Muito agitado — puxa tubos/cateteres',
+        2: 'Agitado — movimentos frequentes',
+        1: 'Inquieto — ansioso, movimentos mínimos',
+        0: 'Alerta e calmo',
+        [-1]: 'Sonolento — desperta > 10 s',
+        [-2]: 'Sedação leve — desperta < 10 s',
+        [-3]: 'Sedação moderada — movimento ou abertura ocular ao estímulo',
+        [-4]: 'Sedação profunda — resposta ao estímulo físico',
+        [-5]: 'Não desperta — sem resposta'
+      };
+
+      const key = rass;
+      let alvo = onVm
+        ? 'Meta usual em VM: <strong>RASS −2 a 0</strong> (individualizar neurocirurgia/SDRA)'
+        : 'Meta usual fora de VM: <strong>RASS 0 a −1</strong>';
+
+      let conduta = '';
+      if (rass >= 2) {
+        conduta = 'Agitação — investigar dor, delirium, hipóxia, retirada; titular sedação/analgesia · dexmedetomidina se agitado em VM';
+      } else if (rass === 1 || rass === 0 || rass === -1) {
+        conduta = 'Faixa terapêutica usual — manter e reavaliar q4h ou após mudança de sedação';
+      } else if (rass === -2) {
+        conduta = 'Sedação leve — adequado para maioria em VM; evitar aprofundar sem indicação';
+      } else {
+        conduta = 'Sedação profunda — considerar reduzir sedação · avaliar TOF se BNM · considerar reversores se excesso medicamentoso';
+      }
+
+      return `<p class="emerg-calc-score"><strong>RASS ${rass >= 0 ? '+' + rass : rass}:</strong> ${labels[key]}</p>
+              <p><strong>Alvo:</strong> ${alvo}</p>
+              <p><strong>Conduta:</strong> ${conduta}</p>
+              <p class="calc-note">RASS (Sessler et al.) · correlacionar com BIS/TOF conforme protocolo institucional.</p>`;
+    }
   }
 };

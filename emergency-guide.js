@@ -1,6 +1,6 @@
 /* Guia rápido de emergência — tópicos e conteúdo — build 98041d1 */
 
-const MEDHUB_EMERG_BUILD = 'pressao-ritmo-v1';
+const MEDHUB_EMERG_BUILD = 'procedimentos-v1';
 
 const PARADA_PROTOCOLS = [
   {
@@ -1934,6 +1934,158 @@ const PRESSAO_RITMO_PROTOCOLS = [
   }
 ];
 
+const PROCEDIMENTOS_PROTOCOLS = [
+  {
+    id: 'sedasia',
+    icon: '💤',
+    name: 'SEDASIA — Sedação & Monitorização',
+    html: `
+      <p>Sedação em UTI/emergência — usar escala validada (<strong>RASS</strong>), monitorização contínua e reversores quando indicado.</p>
+
+      <div class="calc-block calc-block-single emerg-calc-block emerg-calc-wide">
+        <form class="calc-form" data-emerg-calc="rass-sedacao" data-emerg-calc-inject="1">
+          <button type="submit">Interpretar RASS</button>
+        </form>
+        <div class="calc-result" hidden></div>
+      </div>
+
+      <h4>Escala RASS (referência)</h4>
+      <table class="emerg-table">
+        <tr><th>RASS</th><th>Descrição</th></tr>
+        <tr><td><strong>+4 a +1</strong></td><td>Agitação crescente</td></tr>
+        <tr><td><strong>0</strong></td><td>Alerta e calmo</td></tr>
+        <tr><td><strong>−1 a −2</strong></td><td>Sedação leve — <strong>meta usual em VM</strong></td></tr>
+        <tr><td><strong>−3 a −5</strong></td><td>Sedação moderada a profunda — reavaliar necessidade</td></tr>
+      </table>
+
+      <h4>Reversores</h4>
+      <table class="emerg-table">
+        <tr><th>Agente</th><th>Reversor</th><th>Dose (adulto)</th><th>Alertas</th></tr>
+        <tr><td>Benzodiazepínico</td><td><strong>Flumazenil</strong></td><td>0,2 mg EV q1 min (máx. 1 mg)</td><td>Convulsão se dependência · não rotina em VM</td></tr>
+        <tr><td>Opioide</td><td><strong>Naloxona</strong></td><td>0,04–0,4 mg EV titulado (máx. 2 mg)</td><td>Abstinência · dor · titular mínimo efetivo</td></tr>
+        <tr><td>Rocurônio / vecurônio</td><td><strong>Sugamadex</strong></td><td>2 mg/kg (moderado) · 4 mg/kg (profundo) · 16 mg/kg (imediato)</td><td>Alergia · custo · não reverte succinilcolina</td></tr>
+        <tr><td>Bloqueio não despolarizante (alternativa)</td><td>Neostigmina + glicopirrolato</td><td>0,05 mg/kg + 0,01 mg/kg</td><td>Só se TOF ≥ 2 · evitar se BNM profundo</td></tr>
+      </table>
+
+      <h4>Monitorização mínima</h4>
+      <ul>
+        <li><strong>Contínua:</strong> SpO₂ · ECG · PA (q5–15 min ou invasiva se instável)</li>
+        <li><strong>VM:</strong> capnografia · volume/min · pressões · RASS q4h</li>
+        <li><strong>BNM:</strong> TOF (train-of-four) · meta TOF ≥ 0,9 antes de extubar</li>
+        <li><strong>Opcional:</strong> BIS · gasometria se instável · glicemia</li>
+      </ul>
+      <p class="emerg-note">PADIS / SCCM — daily sedation interruption quando possível · tratar delirium (CAM-ICU) · analgesia-first (analgesia-based sedation).</p>
+    `
+  },
+  {
+    id: 'puncao-lombar',
+    icon: '🔬',
+    name: 'Punção Lombar',
+    html: `
+      <p>Coleta de LCR — confirmar indicação e ausência de <strong>contraindicações absolutas</strong> antes de posicionar o paciente.</p>
+
+      <h4>Contraindicações absolutas</h4>
+      <div class="emerg-rhythm-grid emerg-rhythm-grid-2">
+        <div class="emerg-rhythm-card emerg-rhythm-card-shock">
+          <span class="emerg-rhythm-tag emerg-rhythm-tag-shock">Contraindicado</span>
+          <ul>
+            <li><strong>Hipertensão intracraniana</strong> / edema cerebral / lesão ocupante de espaço</li>
+            <li><strong>Papiledema</strong> ou sinais neurológicos focais não explicados</li>
+            <li><strong>Coagulopatia</strong> — INR &gt; 1,5 · plaquetas &lt; 50.000/mm³ · anticoagulação terapêutica recente</li>
+          </ul>
+        </div>
+        <div class="emerg-rhythm-card emerg-rhythm-card-shock">
+          <span class="emerg-rhythm-tag emerg-rhythm-tag-shock">Contraindicado</span>
+          <ul>
+            <li><strong>Infecção</strong> no local da punção (celulite) ou abscesso epidural/espinhal</li>
+            <li><strong>Choque</strong> ou instabilidade hemodinâmica não corrigida</li>
+            <li>Sem TC crânio se <strong>suspeita de HIC</strong> (rebaixamento, convulsão nova, imunossupressão, neoplasia)</li>
+          </ul>
+        </div>
+      </div>
+
+      <h4>Posicionamento e técnica</h4>
+      <div class="emerg-flow-v">
+        <span class="emerg-flow-step">Decúbito lateral (L3–L4 ou L4–L5) ou sentado se normovolêmico</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">Assepsia · anestesia local · agulha 22G (diagnóstico) · medir pressão de abertura se indicado</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">Coletar tubos <strong>sequenciais</strong> — rotular na ordem · enviar imediato</span>
+      </div>
+
+      <h4>Volumes por tubo (adulto — referência)</h4>
+      <table class="emerg-table">
+        <tr><th>Tubo</th><th>Exames</th><th>Volume mínimo</th></tr>
+        <tr><td><strong>1</strong></td><td>Química (glicose, proteína) — descartar se punção traumática suspeita*</td><td>1–2 mL</td></tr>
+        <tr><td><strong>2</strong></td><td>Hemograma / citologia (celularidade, diferencial)</td><td>2–3 mL</td></tr>
+        <tr><td><strong>3</strong></td><td>Microbiologia (Gram, cultura, PCR conforme suspeita)</td><td>3–5 mL</td></tr>
+        <tr><td><strong>4</strong></td><td>Exames adicionais (tinta da China, VDRL, xantocromia, etc.)</td><td>2–3 mL</td></tr>
+      </table>
+      <p class="muted">*Punção traumática: comparar hemácias tubo 1 vs 4; xantocromia no sobrenadante do tubo 4 após centrifugação.</p>
+
+      <h4>Limites e pós-procedimento</h4>
+      <ul>
+        <li>Volume total usual <strong>8–15 mL</strong> — evitar retirada excessiva (risco cefaleia/HI)</li>
+        <li>Repouso não obrigatório · hidratação · analgesia para cefaleia pós-PL</li>
+        <li>TC prévia se imunocomprometido, idoso &gt; 60 com rebaixamento, ou crise convulsiva nova</li>
+      </ul>
+      <p class="emerg-note">IDSA / neurocrítica — pressão de abertura &gt; 20 mmHg sugere HIC; interromper se LCR turvo ou pressão elevada.</p>
+    `
+  },
+  {
+    id: 'iot-covid-safe',
+    icon: '🦠',
+    name: 'Intubação COVID-safe',
+    html: `
+      <p>Sequência rápida de intubação em <strong>suspeita/confirmado COVID-19</strong> (ou aerossol de alto risco) — minimizar equipe exposta, filtrar exhalado, EPI completo.</p>
+
+      <h4>EPI — equipe (mínimo)</h4>
+      <ul>
+        <li><strong>Respirador N95/FFP2</strong> ou PFF2 (teste de vedação) · <strong>sobrepor</strong> máscara cirúrgica se reutilização</li>
+        <li>Óculos de proteção ou face shield · capuz · avental impermeável · luvas duplas</li>
+        <li>Equipe reduzida — apenas essencial na sala · demais observam via monitor externo</li>
+      </ul>
+
+      <div class="emerg-flow-v">
+        <span class="emerg-flow-step emerg-flow-shock"><strong>1. Preparo COVID-safe</strong> — checklist drogas, tubo, SGA, filtro HEPA, aspirador fechado</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">Intubador mais experiente · videolaringoscopia preferida (distância)</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step emerg-flow-shock"><strong>2. Pré-oxigenação</strong> — máscara com <strong>filtro HEPA/HME</strong> no circuito · evitar BVM se possível</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">Se BVM necessário → técnica dos dois operadores · vedação máxima · filtro entre bolsa e paciente</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step emerg-flow-shock"><strong>3. Indução + paralisia</strong> — drogas padrão RSI · ver Via Aérea → Sequência Rápida de Intubação</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step"><strong>4. IOT</strong> — conectar tubo com <strong>filtro HEPA</strong> entre Y-piece/circuito e paciente</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">Confirmar capnografia · cuff insuflado · fixação · <strong>clamp</strong> no tubo se desconectar circuito</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step emerg-flow-shock"><strong>5. Pós-IOT</strong> — ventilador com filtro · aspirador closed-system · minimizar desconexões</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step emerg-flow-loop">Descartar EPI com doffing supervisionado · registrar exposição se falha</span>
+      </div>
+
+      <h4>Filtro HEPA / HMEF — posicionamento</h4>
+      <table class="emerg-table">
+        <tr><th>Momento</th><th>Posição do filtro</th></tr>
+        <tr><td>Pré-oxigenação / BVM</td><td>Entre máscara e bolsa-valva · ou filtro HME na máscara</td></tr>
+        <tr><td>Pós-IOT</td><td>Entre conector do tubo e circuito do ventilador (ou Y-piece)</td></tr>
+        <tr><td>Aspirador traqueal</td><td>Sistema <strong>fechado</strong> com filtro inline</td></tr>
+      </table>
+
+      <h4>Checklist rápido</h4>
+      <ul>
+        <li>☐ EPI completo verificado · ☐ Filtro HEPA testado · ☐ Equipe mínima</li>
+        <li>☐ Pré-ox sem aerosol desprotegido · ☐ Videolaringoscopia disponível</li>
+        <li>☐ SGA plano B · ☐ Capnografia · ☐ Clamp no tubo</li>
+        <li>☐ Sala com pressão negativa se disponível · ☐ Tempo limitado na sala</li>
+      </ul>
+      <p class="emerg-note">WHO / Difficult Airway Society COVID-19 · procedimento gerador de aerossol — priorizar segurança da equipe sem atrasar IOT se hipóxia.</p>
+    `
+  }
+];
+
 const EMERGENCY_TOPICS = [
   {
     id: 'parada-cardio',
@@ -2005,7 +2157,7 @@ const EMERGENCY_TOPICS = [
     id: 'procedimentos',
     icon: '🛠️',
     name: 'Procedimentos & Checklists',
-    protocols: []
+    protocols: PROCEDIMENTOS_PROTOCOLS
   }
 ];
 
@@ -2182,7 +2334,7 @@ function showEmergenciaTopic (topicId) {
     return;
   }
 
-  const expectedProtocols = { 'parada-cardio': 6, 'sca': 4, 'avc': 4, 'sepse': 3, 'trauma': 4, 'via-aerea': 3, 'reacoes-metabolicas': 4, 'obstetricia': 3, 'pediatrica': 3, 'toxicologia': 4, 'pressao-arritmias': 2 };
+  const expectedProtocols = { 'parada-cardio': 6, 'sca': 4, 'avc': 4, 'sepse': 3, 'trauma': 4, 'via-aerea': 3, 'reacoes-metabolicas': 4, 'obstetricia': 3, 'pediatrica': 3, 'toxicologia': 4, 'pressao-arritmias': 2, 'procedimentos': 3 };
   if (expectedProtocols[topicId]) {
     contentEl.innerHTML = `
       <p class="coming-soon"><strong>Arquivo desatualizado no navegador.</strong> Os protocolos de <em>${topic.name}</em> já existem no projeto, mas o navegador carregou uma versão antiga de <code>emergency-guide.js</code>.</p>
