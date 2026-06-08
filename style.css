@@ -235,6 +235,14 @@ body.app-page {
   color: #7a8a9a;
 }
 
+.sidebar-build {
+  margin: 1.25rem 1.25rem 0;
+  padding-top: 0.75rem;
+  border-top: 1px solid #e8edf2;
+  font-size: 0.72rem;
+  color: #9aa8b5;
+}
+
 .sidebar-nav {
   display: flex;
   flex-direction: column;

@@ -452,6 +452,250 @@ const SCA_PROTOCOLS = [
   }
 ];
 
+const AVC_PROTOCOLS = [
+  {
+    id: 'fast',
+    icon: '🚑',
+    name: 'Fluxo FAST',
+    html: `
+      <p>Reconhecimento <strong>pré-hospitalar</strong> — identificar AVC, anotar horário e acionar SAMU. Meta: <strong>porta-agulha ≤ 60 min</strong> / <strong>porta-puncao ≤ 90 min</strong> no hospital de referência.</p>
+
+      <h4>Mnemônico FAST</h4>
+      <div class="emerg-rhythm-grid emerg-rhythm-grid-2">
+        <div class="emerg-rhythm-card">
+          <span class="emerg-rhythm-tag emerg-rhythm-tag-shock">F — Face</span>
+          <p><strong>Assimetria facial</strong> — pedir para sorrir. Queda de um canto da boca, paralisia facial.</p>
+        </div>
+        <div class="emerg-rhythm-card">
+          <span class="emerg-rhythm-tag emerg-rhythm-tag-shock">A — Arms</span>
+          <p><strong>Queda de um braço</strong> — pedir para elevar os dois braços por 10 s. Queda unilateral ou pronación.</p>
+        </div>
+        <div class="emerg-rhythm-card">
+          <span class="emerg-rhythm-tag emerg-rhythm-tag-shock">S — Speech</span>
+          <p><strong>Fala alterada</strong> — pedir para repetir frase simples. Disartria, afasia, mudança súbita da fala.</p>
+        </div>
+        <div class="emerg-rhythm-card emerg-rhythm-card-shock">
+          <span class="emerg-rhythm-tag emerg-rhythm-tag-shock">T — Time</span>
+          <p><strong>Tempo é cérebro</strong> — anotar <strong>horário exato</strong> do início dos sintomas ou último momento conhecido bem (LKW). Ligar <strong>192 (SAMU)</strong> imediatamente.</p>
+        </div>
+      </div>
+
+      <h4>BE-FAST (extensão recomendada)</h4>
+      <ul>
+        <li><strong>B — Balance:</strong> perda súbita de equilíbrio, vertigem, ataxia</li>
+        <li><strong>E — Eyes:</strong> perda visual súbita unilateral ou diplopia</li>
+      </ul>
+
+      <div class="emerg-flow-v">
+        <span class="emerg-flow-step">Suspeita FAST/BE-FAST positivo</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">Anotar horário dos sintomas / LKW</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">Acionar SAMU — informar suspeita de <strong>AVC</strong></span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">Posicionar paciente (decúbito lateral se rebaixamento), manter VA pérvia</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">Glicemia capilar — hipoglicemia mimetiza AVC</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">Oxigênio se SpO₂ &lt; 94%; evitar hiper/hipotensão</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step emerg-flow-shock">Transporte direto ao centro com capacidade de <strong>TC + trombólise/trombectomia</strong></span>
+      </div>
+
+      <h4>Não fazer no pré-hospitalar</h4>
+      <ul>
+        <li>Não administrar AAS ou anticoagulante antes da TC</li>
+        <li>Não atrasar transporte para exame no local</li>
+        <li>Não dar alimentação ou líquidos (risco de broncoaspiração)</li>
+      </ul>
+      <p class="emerg-note">LKW = Last Known Well — último momento em que o paciente estava assintomático. Despertar com déficit: horário do despertar = início.</p>
+    `
+  },
+  {
+    id: 'trombolise',
+    icon: '💉',
+    name: 'Protocolo Trombólise',
+    html: `
+      <p>Alteplase IV (rt-PA) — janela terapêutica <strong>0–4 h 30 min</strong> do início dos sintomas ou LKW. Exige <strong>TC de crânio sem sangramento</strong> antes da infusão.</p>
+
+      <div class="emerg-flow-v">
+        <span class="emerg-flow-step">Chegada — ABC, PA, glicemia, SpO₂, ECG</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step"><strong>TC crânio sem contraste em ≤ 25 min</strong> (porta-imagem)</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">Confirmar AVC isquêmico + janela ≤ 4 h 30</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">NIHSS + revisar contraindicações ABS/REL</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">PA &lt; 185/110 mmHg (tratar se necessário antes da lise)</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step emerg-flow-shock">Alteplase <strong>0,9 mg/kg</strong> IV (máx. 90 mg)</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">10% em bolus · 90% em infusão contínua <strong>60 min</strong></span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">Internação UTI/AVC — neurochecks seriados</span>
+      </div>
+
+      <table class="emerg-table">
+        <tr><th>Janela</th><th>Indicação</th></tr>
+        <tr><td><strong>0 – 3 h</strong></td><td>Indicação clássica — avaliar ABS/REL padrão</td></tr>
+        <tr><td><strong>3 – 4 h 30</strong></td><td>Indicação estendida — aplicar exclusões adicionais (REL 3–4,5 h)</td></tr>
+        <tr><td>&gt; 4 h 30</td><td><strong>Não trombolisar</strong> — avaliar trombectomia se LVO + critérios de imagem</td></tr>
+      </table>
+
+      <h4>Contraindicações absolutas (ABS)</h4>
+      <ul>
+        <li>TC: hemorragia intracraniana ou sangramento ativo</li>
+        <li>AVC isquêmico nos <strong>últimos 3 meses</strong></li>
+        <li>Trauma craniano grave ou AVC hemorrágico prévio</li>
+        <li>Neoplasia intracraniana ou MAV conhecida</li>
+        <li>Cirurgia intracraniana / espinhal recente</li>
+        <li>PA &gt; 185/110 mmHg refratária ao tratamento</li>
+        <li>Plaquetas &lt; 100 000/mm³ · INR &gt; 1,7 · TP &gt; 15 s (varfarina)</li>
+        <li>Uso de DOAC com efeito anticoagulante relevante (conforme protocolo local)</li>
+        <li>Glicemia &lt; 50 ou &gt; 400 mg/dL</li>
+        <li>Infarto multilobar (&gt; 1/3 território ACM na TC)</li>
+        <li>Dissecção aórtica · endocardite · plaquetopenia / coagulopatia grave</li>
+      </ul>
+
+      <h4>Contraindicações relativas (REL)</h4>
+      <ul>
+        <li>AVC leve com recuperação rápida (TIA) — não indicar lise</li>
+        <li>Gravidez · cirurgia maior recente · sangramento GI/URINário &lt; 21 dias</li>
+        <li>IAM recente · punção arterial não compressível &lt; 7 dias</li>
+        <li>Convulsão no início se déficit persiste</li>
+      </ul>
+
+      <h4>Exclusões adicionais na janela 3 – 4 h 30 (REL)</h4>
+      <ul>
+        <li>Idade <strong>&gt; 80 anos</strong></li>
+        <li>Anticoagulação oral (independente do INR)</li>
+        <li><strong>NIHSS &gt; 25</strong></li>
+        <li>História prévia de <strong>AVC + diabetes mellitus</strong></li>
+      </ul>
+
+      <h4>Pós-trombólise — monitorização</h4>
+      <ul>
+        <li>Neurochecks: <strong>q 15 min</strong> durante infusão; q 30 min × 6 h; depois q 1 h × 16 h</li>
+        <li>PA alvo geral: &lt; 180/105 mmHg nas primeiras 24 h</li>
+        <li>Evitar AAS, heparina ou anticoagulante nas <strong>24 h</strong> (salvo indicação formal)</li>
+        <li>TC de controle se deterioração neurológica</li>
+      </ul>
+      <p class="emerg-note">Referência: AHA/ASA 2019 · SBACV. Adaptar às diretrizes e formulário institucional. Meta porta-agulha ≤ 60 min.</p>
+    `
+  },
+  {
+    id: 'trombectomia',
+    icon: '🔬',
+    name: 'Trombectomia mecânica',
+    html: `
+      <p>Retirada do trombo em <strong>oclusão de grande vaso (LVO)</strong>. Janela clássica <strong>0–6 h</strong>; selecionados até <strong>24 h</strong> com critérios de imagem avançada (DAWN / DEFUSE-3).</p>
+
+      <div class="emerg-flow-v">
+        <span class="emerg-flow-step">AVC isquêmico + janela ≤ 24 h</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step"><strong>TC crânio</strong> + <strong>AngioTC</strong> (ou RM) — buscar LVO</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step emerg-flow-decision">LVO em grande vaso?</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">Calcular <strong>ASPECTS</strong> na TC sem contraste</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">Trombólise IV se ≤ 4 h 30 e elegível (antes ou paralelo à MT)</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step emerg-flow-shock">Acionar neurointervenção — <strong>trombectomia</strong></span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step emerg-flow-loop">Meta porta-puncao ≤ 90 min · reperfusão TICI 2b–3</span>
+      </div>
+
+      <h4>LVO — vasos-alvo</h4>
+      <table class="emerg-table">
+        <tr><th>Vaso</th><th>Localização</th></tr>
+        <tr><td><strong>ACI</strong></td><td>Carótida interna (cervical/intracraniana)</td></tr>
+        <tr><td><strong>M1</strong></td><td>Segmento M1 da ACM</td></tr>
+        <tr><td><strong>M2 proximal</strong></td><td>Divisão superior/inferior da ACM (proximal)</td></tr>
+        <tr><td><strong>Basilar</strong></td><td>Artéria basilar (AVC posterior — prioridade máxima)</td></tr>
+      </table>
+
+      <h4>ASPECTS (Alberta Stroke Program Early CT Score)</h4>
+      <p>Escore na <strong>TC sem contraste</strong> — avalia extensão de isquemia precoce. Pontuação inicial <strong>10</strong>; subtrair <strong>1 ponto</strong> por região com alteração isquêmica precoce:</p>
+      <table class="emerg-table">
+        <tr><th>Região (território ACM)</th><th>Região (território ACM)</th></tr>
+        <tr><td>C · L · IC · I · M1 · M2</td><td>M3 · M4 · M5 · M6</td></tr>
+      </table>
+      <ul>
+        <li><strong>C</strong> = caudado · <strong>L</strong> = lentiforme · <strong>IC</strong> = cápsula interna · <strong>I</strong> = ínsula</li>
+        <li><strong>M1–M6</strong> = territórios corticais da ACM (anterior → posterior)</li>
+      </ul>
+
+      <table class="emerg-table">
+        <tr><th>Janela</th><th>Critérios resumidos</th></tr>
+        <tr><td><strong>0 – 6 h</strong></td><td>LVO + ASPECTS <strong>≥ 6</strong> + NIHSS tipicamente ≥ 6 (anterior)</td></tr>
+        <tr><td><strong>6 – 24 h</strong></td><td>LVO anterior: mismatch perfusão/núcleo (CTP/RM) ou critérios DAWN (NIHSS + idade + core infarct)</td></tr>
+        <tr><td><strong>Basilar</strong></td><td>LVO basilar — janela ampliada; não usar ASPECTS; tratar como emergência absoluta</td></tr>
+      </table>
+
+      <h4>Estratégias de rede</h4>
+      <ul>
+        <li><strong>Mothership:</strong> transporte direto ao centro com neurointervenção</li>
+        <li><strong>Drip-and-ship:</strong> trombólise no hospital periférico + transferência imediata para MT</li>
+        <li>Contato precoce com equipe de neurointervenção assim que LVO confirmado</li>
+      </ul>
+      <p class="emerg-note">ASPECTS ≤ 5 ou extensa área de infarto na TC basal sugere menor benefício — individualizar com imagem avançada. Basilar: considerar MT mesmo com NIHSS baixo se LVO confirmado.</p>
+    `
+  },
+  {
+    id: 'nihss',
+    icon: '📋',
+    name: 'NIHSS',
+    html: `
+      <p><strong>NIH Stroke Scale</strong> — padroniza gravidade do déficit neurológico (0–42). Obrigatório na admissão, pré/pós trombólise e trombectomia.</p>
+
+      <table class="emerg-table">
+        <tr><th>Item</th><th>Avalia</th><th>Pontos</th></tr>
+        <tr><td>1a</td><td>Nível de consciência</td><td>0–3</td></tr>
+        <tr><td>1b</td><td>Perguntas (mês, idade)</td><td>0–2</td></tr>
+        <tr><td>1c</td><td>Comandos (piscar, apertar mão)</td><td>0–2</td></tr>
+        <tr><td>2</td><td>Olhar conjugado / desvio</td><td>0–2</td></tr>
+        <tr><td>3</td><td>Campos visuais</td><td>0–3</td></tr>
+        <tr><td>4</td><td>Paresia facial</td><td>0–3</td></tr>
+        <tr><td>5a / 5b</td><td>Motor — braço E / D</td><td>0–4 cada</td></tr>
+        <tr><td>6a / 6b</td><td>Motor — perna E / D</td><td>0–4 cada</td></tr>
+        <tr><td>7</td><td>Ataxia de membros</td><td>0–2</td></tr>
+        <tr><td>8</td><td>Sensibilidade</td><td>0–2</td></tr>
+        <tr><td>9</td><td>Linguagem (afasia)</td><td>0–3</td></tr>
+        <tr><td>10</td><td>Disartria</td><td>0–2</td></tr>
+        <tr><td>11</td><td>Extinção / negligência</td><td>0–2</td></tr>
+      </table>
+
+      <h4>Interpretação da gravidade</h4>
+      <table class="emerg-table">
+        <tr><th>NIHSS</th><th>Classificação</th><th>Implicação clínica</th></tr>
+        <tr><td>0</td><td>Sem déficit</td><td>Investigar mimics; repetir avaliação</td></tr>
+        <tr><td>1 – 4</td><td>AVC leve</td><td>Prognóstico favorável; avaliar elegibilidade à lise</td></tr>
+        <tr><td>5 – 15</td><td>Moderado</td><td>Maioria dos candidatos à reperfusão</td></tr>
+        <tr><td>16 – 20</td><td>Moderado-grave</td><td>Alto risco; monitorização intensiva</td></tr>
+        <tr><td>21 – 42</td><td>Grave</td><td>NIHSS &gt; 25 = exclusão na janela 3–4,5 h para lise</td></tr>
+      </table>
+
+      <h4>Quando aplicar</h4>
+      <ul>
+        <li><strong>Admissão</strong> — antes de decidir trombólise / trombectomia</li>
+        <li><strong>2 h e 24 h</strong> pós-trombólise (protocolo padrão)</li>
+        <li><strong>Pré e pós trombectomia</strong> — documentar resposta (Δ NIHSS)</li>
+        <li>Reavaliar se deterioração ou suspeita de transformação hemorrágica</li>
+      </ul>
+
+      <h4>NIHSS e reperfusão</h4>
+      <ul>
+        <li><strong>Trombólise 3–4,5 h:</strong> NIHSS &gt; 25 = contraindicação relativa adicional</li>
+        <li><strong>Trombectomia 0–6 h:</strong> NIHSS ≥ 6 frequentemente usado com LVO + ASPECTS ≥ 6</li>
+        <li>NIHSS baixo com LVO (ex.: afasia isolada) — ainda pode ser candidato à MT</li>
+      </ul>
+      <p class="emerg-note">Use a calculadora <strong>NIHSS</strong> em Calculadoras essenciais → Neurologia para pontuação interativa item a item.</p>
+    `
+  }
+];
+
 const EMERGENCY_TOPICS = [
   {
     id: 'parada-cardio',
@@ -469,7 +713,7 @@ const EMERGENCY_TOPICS = [
     id: 'avc',
     icon: '🧠',
     name: 'AVC Isquêmico',
-    protocols: []
+    protocols: AVC_PROTOCOLS
   },
   {
     id: 'sepse',
