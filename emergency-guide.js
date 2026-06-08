@@ -398,7 +398,7 @@ const SCA_PROTOCOLS = [
     icon: '📋',
     name: 'Modelos de ECG — SCA',
     html: `
-      <p>Traçados reais de referência — compare com o ECG do paciente. Imagens: Wikimedia Commons (domínio público / CC).</p>
+      <p>Traçados reais de referência — compare com o ECG do paciente. <strong>Clique em qualquer imagem para ampliar.</strong> Fonte: Wikimedia Commons (domínio público / CC).</p>
 
       <div class="emerg-ecg-gallery">
         <div class="emerg-ecg-gallery-item emerg-rhythm-card emerg-rhythm-card-shock">
@@ -431,7 +431,7 @@ const SCA_PROTOCOLS = [
         <div class="emerg-ecg-gallery-item emerg-rhythm-card emerg-rhythm-card-noshock">
           <span class="emerg-rhythm-tag emerg-rhythm-tag-noshock">NSTEMI / AI</span>
           <figure class="emerg-ecg-figure">
-            <img src="assets/ecg/sca/ecg-nstemi-ischaemia.jpg" alt="ECG: isquemia miocárdica com alterações de ST e onda T" class="emerg-ecg-img emerg-ecg-img-clinical" loading="lazy">
+            <img src="assets/ecg/sca/ecg-nstemi-ischaemia.jpg?v=2" alt="ECG: ST deprimido horizontal — padrão de isquemia subendocárdica (V4–V6)" class="emerg-ecg-img emerg-ecg-img-clinical" loading="lazy">
             <figcaption>Isquemia subendocárdica</figcaption>
           </figure>
           <p><strong>ST deprimido</strong> horizontal ou descendente ≥ 0,5 mm em ≥ 2 derivações contíguas, ou inversão de T. Troponina ↑ = NSTEMI; normal = angina instável. Calcular <strong>GRACE</strong>.</p>
@@ -530,6 +530,66 @@ const EMERGENCY_TOPICS = [
 let currentEmergTopicId = null;
 let currentEmergProtocolId = null;
 
+function ensureEmergEcgLightbox () {
+  if (document.getElementById('emerg-ecg-lightbox')) return;
+
+  const lb = document.createElement('div');
+  lb.id = 'emerg-ecg-lightbox';
+  lb.className = 'emerg-ecg-lightbox';
+  lb.hidden = true;
+  lb.innerHTML = `
+    <button type="button" class="emerg-ecg-lightbox-close" aria-label="Fechar">×</button>
+    <figure class="emerg-ecg-lightbox-inner">
+      <img id="emerg-ecg-lightbox-img" alt="">
+      <figcaption id="emerg-ecg-lightbox-caption"></figcaption>
+    </figure>
+    <p class="emerg-ecg-lightbox-hint">Clique fora ou pressione Esc para fechar</p>`;
+  document.body.appendChild(lb);
+
+  const close = () => closeEmergEcgLightbox();
+  lb.querySelector('.emerg-ecg-lightbox-close').addEventListener('click', close);
+  lb.addEventListener('click', e => {
+    if (e.target === lb) close();
+  });
+  lb.querySelector('.emerg-ecg-lightbox-inner').addEventListener('click', e => e.stopPropagation());
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && !lb.hidden) close();
+  });
+}
+
+function closeEmergEcgLightbox () {
+  const lb = document.getElementById('emerg-ecg-lightbox');
+  if (!lb || lb.hidden) return;
+  lb.hidden = true;
+  document.body.classList.remove('emerg-ecg-lightbox-open');
+  const img = document.getElementById('emerg-ecg-lightbox-img');
+  if (img) img.removeAttribute('src');
+}
+
+function initEmergEcgLightbox (container) {
+  if (!container) return;
+  ensureEmergEcgLightbox();
+
+  const lb = document.getElementById('emerg-ecg-lightbox');
+  const lbImg = document.getElementById('emerg-ecg-lightbox-img');
+  const lbCaption = document.getElementById('emerg-ecg-lightbox-caption');
+
+  container.querySelectorAll('.emerg-ecg-img').forEach(img => {
+    if (img.dataset.ecgZoomBound) return;
+    img.dataset.ecgZoomBound = '1';
+    img.classList.add('emerg-ecg-img-clickable');
+    img.title = 'Clique para ampliar';
+    img.addEventListener('click', () => {
+      lbImg.src = img.currentSrc || img.src;
+      lbImg.alt = img.alt;
+      const caption = img.closest('figure')?.querySelector('figcaption');
+      lbCaption.textContent = caption?.textContent?.trim() || img.alt;
+      lb.hidden = false;
+      document.body.classList.add('emerg-ecg-lightbox-open');
+    });
+  });
+}
+
 function initGuiaEmergencia () {
   const grid = document.getElementById('emerg-topic-grid');
   if (!grid) return;
@@ -594,6 +654,7 @@ function showEmergenciaTopic (topicId) {
 
   if (topic.html && topic.html.trim()) {
     contentEl.innerHTML = topic.html;
+    initEmergEcgLightbox(contentEl);
     return;
   }
 
@@ -615,8 +676,10 @@ function showEmergenciaProtocol (protocolId) {
   backBtn.textContent = '← Voltar aos algoritmos';
   backBtn.onclick = () => showEmergenciaTopic(currentEmergTopicId);
 
-  document.getElementById('emerg-topic-content').innerHTML = `
+  const contentEl = document.getElementById('emerg-topic-content');
+  contentEl.innerHTML = `
     <div class="emerg-algo-block emerg-algo-single">
       ${protocol.html}
     </div>`;
+  initEmergEcgLightbox(contentEl);
 }
