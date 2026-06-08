@@ -597,6 +597,91 @@ body.app-page {
   margin-bottom: 0.4rem;
 }
 
+.emerg-rhythm-tag-shock {
+  background: #e67e00;
+}
+
+.emerg-rhythm-tag-noshock {
+  background: #5a6a7a;
+}
+
+.emerg-rhythm-card-shock {
+  border-left-color: #e67e00;
+}
+
+.emerg-rhythm-card-noshock {
+  border-left-color: #5a6a7a;
+}
+
+.emerg-ecg-figure {
+  margin: 0 0 0.65rem;
+}
+
+.emerg-ecg-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 6px;
+  border: 1px solid #1e2d3d;
+  background: #0f1620;
+}
+
+.emerg-ecg-figure figcaption {
+  margin-top: 0.35rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #0d6efd;
+  text-align: center;
+}
+
+.emerg-flow-question {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: #1a2b3c;
+  margin: 0.5rem 0 0.75rem;
+}
+
+.emerg-flow-step.emerg-flow-decision {
+  background: #fff8e6;
+  border-color: #f0c060;
+}
+
+.emerg-flow-step.emerg-flow-noshock {
+  background: #eef1f5;
+  border-color: #b8c4d0;
+  font-weight: 600;
+}
+
+.emerg-reversible-box {
+  margin-top: 1.25rem;
+  padding: 1rem 1.15rem;
+  background: #f8fbff;
+  border: 1px solid #dce4ec;
+  border-radius: 8px;
+}
+
+.emerg-reversible-box h4 {
+  margin: 0 0 0.65rem;
+  font-size: 0.95rem;
+  color: #0d6efd;
+}
+
+.emerg-reversible-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem 1rem;
+}
+
+.emerg-reversible-grid ul {
+  margin: 0;
+  padding-left: 1.1rem;
+  font-size: 0.86rem;
+}
+
+.emerg-reversible-grid li {
+  margin-bottom: 0.25rem;
+}
+
 .emerg-note {
   font-size: 0.85rem;
   color: #5a6a7a;
@@ -798,5 +883,9 @@ body.app-page {
 
   .emerg-flow-v {
     max-width: none;
+  }
+
+  .emerg-reversible-grid {
+    grid-template-columns: 1fr;
   }
 }

@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 110" role="img" aria-label="ECG de assistolia">
+  <title>Assistolia</title>
+  <rect width="360" height="110" fill="#0f1620"/>
+  <g stroke="#1e2d3d" stroke-width="0.5">
+    <line x1="0" y1="27.5" x2="360" y2="27.5"/>
+    <line x1="0" y1="55" x2="360" y2="55"/>
+    <line x1="0" y1="82.5" x2="360" y2="82.5"/>
+    <line x1="45" y1="0" x2="45" y2="110"/>
+    <line x1="90" y1="0" x2="90" y2="110"/>
+    <line x1="135" y1="0" x2="135" y2="110"/>
+    <line x1="180" y1="0" x2="180" y2="110"/>
+    <line x1="225" y1="0" x2="225" y2="110"/>
+    <line x1="270" y1="0" x2="270" y2="110"/>
+    <line x1="315" y1="0" x2="315" y2="110"/>
+  </g>
+  <path fill="none" stroke="#22d36b" stroke-width="2" stroke-linecap="round"
+    d="M0,55 L360,55"/>
+  <path fill="none" stroke="#22d36b" stroke-width="1.5" opacity="0.5"
+    d="M120,54 L122,56 L124,54"/>
+</svg>

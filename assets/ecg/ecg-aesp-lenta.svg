@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 110" role="img" aria-label="ECG de AESP bradicardica com QRS largo">
+  <title>AESP  bradicardia / idioventricular</title>
+  <rect width="360" height="110" fill="#0f1620"/>
+  <g stroke="#1e2d3d" stroke-width="0.5">
+    <line x1="0" y1="27.5" x2="360" y2="27.5"/>
+    <line x1="0" y1="55" x2="360" y2="55"/>
+    <line x1="0" y1="82.5" x2="360" y2="82.5"/>
+    <line x1="45" y1="0" x2="45" y2="110"/>
+    <line x1="90" y1="0" x2="90" y2="110"/>
+    <line x1="135" y1="0" x2="135" y2="110"/>
+    <line x1="180" y1="0" x2="180" y2="110"/>
+    <line x1="225" y1="0" x2="225" y2="110"/>
+    <line x1="270" y1="0" x2="270" y2="110"/>
+    <line x1="315" y1="0" x2="315" y2="110"/>
+  </g>
+  <path fill="none" stroke="#22d36b" stroke-width="2.2" stroke-linejoin="round"
+    d="M0,55 L55,55 L58,55 L62,55 L66,22 L70,88 L74,55 L78,55 L82,55 L86,55 L90,55 L145,55 L148,55 L152,55 L156,22 L160,88 L164,55 L168,55 L172,55 L176,55 L180,55 L235,55 L238,55 L242,55 L246,22 L250,88 L254,55 L258,55 L262,55 L266,55 L270,55 L325,55 L328,55 L332,55 L336,22 L340,88 L344,55 L348,55 L352,55 L360,55"/>
+</svg>

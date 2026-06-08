@@ -33,17 +33,23 @@ const PARADA_PROTOCOLS = [
       <h4>Ritmo chocável (FV / TV sem pulso)</h4>
       <p class="emerg-rhythm-intro">Dois ritmos que exigem <strong>desfibrilação imediata</strong> — confirmar ausência de pulso antes de choque:</p>
       <div class="emerg-rhythm-grid">
-        <div class="emerg-rhythm-card">
-          <span class="emerg-rhythm-tag">FV</span>
-          <strong>Fibrilação ventricular</strong>
-          <p>Ondas caóticas em “serrilhado”, sem QRS ou onda P identificáveis; ritmo totalmente irregular.</p>
-          <p class="emerg-rhythm-hint">Ex.: pós-IAM, cardiopatia estrutural, QT longo.</p>
+        <div class="emerg-rhythm-card emerg-rhythm-card-shock">
+          <span class="emerg-rhythm-tag emerg-rhythm-tag-shock">CHOCAR</span>
+          <figure class="emerg-ecg-figure">
+            <img src="assets/ecg/ecg-fv.svg" alt="ECG: fibrilação ventricular — traçado caótico sem complexos organizados" class="emerg-ecg-img" loading="lazy">
+            <figcaption>FV — fibrilação ventricular</figcaption>
+          </figure>
+          <p>Ondas caóticas em “serrilhado”, <strong>sem QRS ou onda P</strong> identificáveis; ritmo totalmente irregular.</p>
+          <p class="emerg-rhythm-hint">Pós-IAM, cardiopatia, QT longo.</p>
         </div>
-        <div class="emerg-rhythm-card">
-          <span class="emerg-rhythm-tag">TV</span>
-          <strong>Taquicardia ventricular sem pulso</strong>
-          <p>QRS largo (&gt; 120 ms), geralmente regular; frequência alta — <strong>sem pulso central</strong> (≠ TV com pulso).</p>
-          <p class="emerg-rhythm-hint">Ex.: cardiopatia, pós-choque elétrico, intoxicação (cocaína, TCAs).</p>
+        <div class="emerg-rhythm-card emerg-rhythm-card-shock">
+          <span class="emerg-rhythm-tag emerg-rhythm-tag-shock">CHOCAR</span>
+          <figure class="emerg-ecg-figure">
+            <img src="assets/ecg/ecg-tv-pulseless.svg" alt="ECG: taquicardia ventricular — QRS largo regular sem pulso" class="emerg-ecg-img" loading="lazy">
+            <figcaption>TV sem pulso — QRS largo regular</figcaption>
+          </figure>
+          <p>QRS largo (&gt; 120 ms), taquicardia <strong>regular</strong>; frequência alta — <strong>sem pulso central</strong>.</p>
+          <p class="emerg-rhythm-hint">≠ TV com pulso (paciente estável → cardioversão).</p>
         </div>
       </div>
 
@@ -78,13 +84,77 @@ const PARADA_PROTOCOLS = [
         <tr><td>Desfibrilação</td><td>120–200 J bifásico</td><td>Escalar se necessário; retomar RCP imediatamente</td></tr>
       </table>
       <h4>Ritmo não chocável (AESP / assistolia)</h4>
-      <ol class="emerg-steps">
-        <li><strong>RCP contínua</strong> — relação 30:2 ou compressões contínuas com via aérea avançada.</li>
-        <li><strong>Epinefrina 1 mg IV/IO</strong> — o mais precoce possível, depois a cada <strong>3–5 min</strong>.</li>
-        <li><strong>Causas reversíveis (5H + 5T)</strong> — hipovolemia, hipóxia, H⁺ (acidose), hipo/hipercalemia, hipotermia; tamponamento, pneumotórax, TEP, toxinas, trombose coronária/pulmonar.</li>
-        <li><strong>Via aérea avançada + capnografia</strong> — PETCO₂ baixo persistente sugere RCP inadequada ou causas reversíveis não tratadas.</li>
-      </ol>
-      <p class="emerg-note">Em todo ciclo: minimizar pausas nas compressões; checar pulso apenas em momentos de ritmo organizado.</p>
+      <p class="emerg-rhythm-intro">Sem pulso e traçado <strong>não chocável</strong> — <strong>não desfibrilar</strong>; iniciar RCP + epinefrina e tratar causas reversíveis.</p>
+
+      <p class="emerg-flow-question">Identifique o padrão no monitor:</p>
+      <div class="emerg-rhythm-grid">
+        <div class="emerg-rhythm-card emerg-rhythm-card-noshock">
+          <span class="emerg-rhythm-tag emerg-rhythm-tag-noshock">NÃO CHOCAR</span>
+          <figure class="emerg-ecg-figure">
+            <img src="assets/ecg/ecg-asistolia.svg" alt="ECG: assistolia — linha isoelétrica sem atividade elétrica" class="emerg-ecg-img" loading="lazy">
+            <figcaption>Assistolia</figcaption>
+          </figure>
+          <p>Linha reta / isoelétrica — <strong>ausência de atividade elétrica</strong> discernível (confirmar cabos, ganho e derivações).</p>
+        </div>
+        <div class="emerg-rhythm-card emerg-rhythm-card-noshock">
+          <span class="emerg-rhythm-tag emerg-rhythm-tag-noshock">NÃO CHOCAR</span>
+          <figure class="emerg-ecg-figure">
+            <img src="assets/ecg/ecg-aesp.svg" alt="ECG: AESP — complexos QRS organizados estreitos sem pulso" class="emerg-ecg-img" loading="lazy">
+            <figcaption>AESP — QRS estreito organizado</figcaption>
+          </figure>
+          <p>Atividade elétrica <strong>organizada</strong> (ex.: ritmo sinusal, ESV) porém <strong>sem pulso</strong> — AESP/PEA.</p>
+        </div>
+        <div class="emerg-rhythm-card emerg-rhythm-card-noshock">
+          <span class="emerg-rhythm-tag emerg-rhythm-tag-noshock">NÃO CHOCAR</span>
+          <figure class="emerg-ecg-figure">
+            <img src="assets/ecg/ecg-aesp-lenta.svg" alt="ECG: AESP bradicárdica — QRS largo lento sem pulso" class="emerg-ecg-img" loading="lazy">
+            <figcaption>AESP — bradicardia / idioventricular</figcaption>
+          </figure>
+          <p>Complexos <strong>largos e lentos</strong> ou bradicardia extrema — ainda é AESP se <strong>sem pulso</strong> (≠ bradicardia com pulso).</p>
+        </div>
+      </div>
+
+      <h4>Fluxograma — ritmo não chocável</h4>
+      <div class="emerg-flow-v">
+        <div class="emerg-flow-step">Parada confirmada → monitor → analisar ritmo (≤ <strong>10 s</strong>)</div>
+        <div class="emerg-flow-arrow" aria-hidden="true">↓</div>
+        <div class="emerg-flow-step emerg-flow-decision">Traçado = <strong>assistolia</strong> ou <strong>AESP</strong>? (ver modelos acima)</div>
+        <div class="emerg-flow-arrow" aria-hidden="true">↓</div>
+        <div class="emerg-flow-step emerg-flow-noshock">🚫 <strong>NÃO CHOCAR</strong> — iniciar RCP imediata</div>
+        <div class="emerg-flow-arrow" aria-hidden="true">↓</div>
+        <div class="emerg-flow-step">RCP <strong>30:2</strong> ou compressões contínuas (IOT/VNI)</div>
+        <div class="emerg-flow-arrow" aria-hidden="true">↓</div>
+        <div class="emerg-flow-step">Epinefrina <strong>1 mg</strong> IV/IO — o mais precoce possível</div>
+        <div class="emerg-flow-arrow" aria-hidden="true">↓</div>
+        <div class="emerg-flow-step">Repetir ES a cada <strong>3–5 min</strong> + RCP contínua</div>
+        <div class="emerg-flow-arrow" aria-hidden="true">↓</div>
+        <div class="emerg-flow-step">Tratar <strong>5H + 5T</strong> em paralelo</div>
+        <div class="emerg-flow-arrow" aria-hidden="true">↓</div>
+        <div class="emerg-flow-step">Via aérea avançada + capnografia — PETCO₂ &lt; 10 sugere RCP inadequada ou causa não corrigida</div>
+        <div class="emerg-flow-arrow" aria-hidden="true">↓</div>
+        <div class="emerg-flow-step emerg-flow-loop">Reavaliar ritmo a cada <strong>2 min</strong> — se tornar FV/TV → seguir algoritmo chocável</div>
+      </div>
+
+      <div class="emerg-reversible-box">
+        <h4>Causas reversíveis (5H + 5T)</h4>
+        <div class="emerg-reversible-grid">
+          <ul>
+            <li><strong>H</strong>ipovolemia</li>
+            <li><strong>H</strong>ipóxia</li>
+            <li><strong>H</strong>⁺ (acidose)</li>
+            <li><strong>H</strong>ipo / hipercalemia</li>
+            <li><strong>H</strong>ipotermia</li>
+          </ul>
+          <ul>
+            <li><strong>T</strong>amponamento</li>
+            <li><strong>T</strong>ensão (pneumotórax)</li>
+            <li><strong>T</strong>EP</li>
+            <li><strong>T</strong>oxinas</li>
+            <li><strong>T</strong>rombose (IAM / TEP)</li>
+          </ul>
+        </div>
+      </div>
+      <p class="emerg-note">Confirmar assistolia: ganho adequado, derivações corretas, dupla checagem. Ritmo organizado com pulso = não é parada — tratar bradicardia/taquicardia conforme estabilidade.</p>
     `
   },
   {
