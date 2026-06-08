@@ -1,6 +1,6 @@
 /* Guia rápido de emergência — tópicos e conteúdo — build 98041d1 */
 
-const MEDHUB_EMERG_BUILD = 'toxicologia-v1';
+const MEDHUB_EMERG_BUILD = 'pressao-ritmo-v1';
 
 const PARADA_PROTOCOLS = [
   {
@@ -1812,6 +1812,128 @@ const TOXICOLOGIA_PROTOCOLS = [
   }
 ];
 
+const PRESSAO_RITMO_PROTOCOLS = [
+  {
+    id: 'crise-hipertensiva',
+    icon: '🔴',
+    name: 'Crise Hipertensiva',
+    html: `
+      <p>PA severamente elevada — distinguir <strong>emergência hipertensiva</strong> (lesão de órgão-alvo aguda) de <strong>urgência hipertensiva</strong> (sem lesão aguda). Meta e droga dependem do cenário.</p>
+
+      <div class="emerg-rhythm-grid emerg-rhythm-grid-2">
+        <div class="emerg-rhythm-card emerg-rhythm-card-shock">
+          <span class="emerg-rhythm-tag emerg-rhythm-tag-shock">Emergência hipertensiva</span>
+          <p>PA elevada + <strong>lesão aguda de órgão-alvo</strong></p>
+          <p>Encefalopatia · AVC hemorrágico · edema agudo de pulmão · IAM · dissecção aórtica · eclâmpsia · insuficiência renal aguda</p>
+          <p><strong>Tratar IV imediato</strong> — meta individualizada (não normalizar abruptamente)</p>
+        </div>
+        <div class="emerg-rhythm-card">
+          <span class="emerg-rhythm-tag">Urgência hipertensiva</span>
+          <p>PA muito elevada <strong>sem</strong> lesão aguda de órgão-alvo</p>
+          <p>Assintomático ou cefaleia leve · exame e ECG sem alteração aguda</p>
+          <p><strong>Reajuste oral</strong> ou IV ambulatorial — meta em <strong>horas/dias</strong>, não minutos</p>
+        </div>
+      </div>
+
+      <div class="emerg-flow-v">
+        <span class="emerg-flow-step">Monitor · acesso venoso · ECG · exame neurológico · fundo de olho se encefalopatia</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step emerg-flow-decision">Lesão aguda de órgão-alvo?</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step"><strong>Não</strong> → urgência: reiniciar/ajustar anti-hipertensivos VO · observação · alta programada</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step emerg-flow-shock"><strong>Sim</strong> → emergência: escolher droga conforme órgão-alvo (tabela abaixo)</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">Redução inicial ~<strong>10–25%</strong> na 1ª h (AVC isquêmico candidato a trombólise: meta específica)</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step emerg-flow-loop">UTI/monitorização · buscar causa (droga, renal, endócrina) · transição para VO</span>
+      </div>
+
+      <h4>Drogas por órgão-alvo</h4>
+      <table class="emerg-table">
+        <tr><th>Cenário</th><th>Drogas de 1ª linha</th><th>Meta / nota</th></tr>
+        <tr><td><strong>Dissecção aórtica</strong></td><td><strong>Labetalol</strong> ou esmolol IV + nitroprussiato/nitroglicerina</td><td>PAS &lt; 120 mmHg e FC &lt; 60 · β-bloqueio <strong>antes</strong> de vasodilatador</td></tr>
+        <tr><td><strong>Edema agudo de pulmão</strong></td><td>Nitroglicerina IV + furosemida · CPAP/VNI</td><td>Reduzir pré e pós-carga · evitar bradicardia excessiva</td></tr>
+        <tr><td><strong>IAM / SCA</strong></td><td>Nitroglicerina · labetalol/esmolol se taquicardia</td><td>PAS &lt; 140 se possível · evitar queda abrupta</td></tr>
+        <tr><td><strong>Encefalopatia hipertensiva</strong></td><td>Labetalol · nicardipina · clevidipina</td><td>Queda gradual · meta ~25% em 2–6 h</td></tr>
+        <tr><td><strong>AVC hemorrágico</strong></td><td>Labetalol · nicardipina</td><td>PAS &lt; 140 (ou &lt; 130 conforme protocolo)</td></tr>
+        <tr><td><strong>AVC isquêmico</strong></td><td>Labetalol · nicardipina</td><td>Só se PAS &gt; 220 ou &gt; 185 se trombólise · queda ≤ 15% na 1ª h</td></tr>
+        <tr><td><strong>Eclâmpsia / pré-eclâmpsia grave</strong></td><td><strong>Hidralazina</strong> · labetalol · MgSO₄</td><td>Ver Obstetrícia de Urgência</td></tr>
+        <tr><td><strong>Feocromocitoma</strong></td><td><strong>Alfa-bloqueio</strong> (fenoxibenzamina) antes de β</td><td>Evitar β isolado</td></tr>
+      </table>
+
+      <h4>Doses IV frequentes (adulto)</h4>
+      <table class="emerg-table">
+        <tr><th>Fármaco</th><th>Dose</th></tr>
+        <tr><td>Labetalol</td><td>10–20 mg EV bolus — repetir q10 min ou infusão 0,5–2 mg/min</td></tr>
+        <tr><td>Nicardipina</td><td>5 mg/h IV — titular (máx. 15 mg/h)</td></tr>
+        <tr><td>Nitroglicerina</td><td>5–100 mcg/min IV — titular</td></tr>
+        <tr><td>Nitroprussiato</td><td>0,25–10 mcg/kg/min — <strong>uso curto</strong> (toxicidade cianeto)</td></tr>
+        <tr><td>Esmolol</td><td>500 mcg/kg bolus → 50–300 mcg/kg/min</td></tr>
+        <tr><td>Hidralazina</td><td>5–10 mg EV lento q20–30 min</td></tr>
+      </table>
+
+      <h4>Evitar</h4>
+      <ul>
+        <li>Queda pressórica <strong>excessiva e rápida</strong> — risco de isquemia cerebral, coronariana e renal</li>
+        <li>Nifedipino sublingual (risco de queda abrupta)</li>
+        <li>β-bloqueador isolado na dissecção antes de controlar FC · ou na feocromocitoma sem alfa-bloqueio</li>
+      </ul>
+      <p class="emerg-note">ACC/AHA · ESC — “urgência” não requer PA normal imediata; “emergência” exige UTI e droga IV titulada.</p>
+    `
+  },
+  {
+    id: 'wpw-instavel',
+    icon: '⚡',
+    name: 'Wolff-Parkinson-White Instável',
+    html: `
+      <p>Pré-excitação ventricular (delta, intervalo PR curto) — risco de condução atravessando via acessória. <strong>Instabilidade</strong> = hipotensão, choque, isquemia, EAP ou rebaixamento de consciência.</p>
+
+      <div class="emerg-flow-v">
+        <span class="emerg-flow-step">Monitor · O₂ · acesso venoso · cardioversor/sincronizador pronto</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step emerg-flow-decision">Instável?</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step emerg-flow-shock"><strong>Sim → cardioversão elétrica sincronizada imediata</strong></span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">Sedação/analgesia se consciente e tempo permitir (ex.: midazolam, etomidato)</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">FA com pré-excitação (QRS largo/irregular) → <strong>120–200 J</strong> sincronizado (bifásico)</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">Taquicardia regular estreita/larga (TRN/TV) → <strong>50–100 J</strong> sincronizado — escalar se falha</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">Repetir cardioversão · tratar causa · considerar amiodarona se recorrência (evitar AV nodal isolado)</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step emerg-flow-loop">Estável após reversão → consulta eletrofisiologia · ablação da via acessória</span>
+      </div>
+
+      <h4>O que NÃO fazer (pré-excitação + FA ou QRS largo)</h4>
+      <ul>
+        <li><strong>Não usar</strong> adenosina, verapamil, diltiazem ou β-bloqueador isolado na <strong>FA pré-excitada</strong> — risco de FV</li>
+        <li>Não usar digoxina na FA com WPW</li>
+        <li>Não atrasar cardioversão se instável tentando drogas de nó AV</li>
+      </ul>
+
+      <h4>Se estável (referência rápida)</h4>
+      <table class="emerg-table">
+        <tr><th>Ritmo</th><th>Conduta</th></tr>
+        <tr><td>TRN ortodrômica (QRS estreito)</td><td>Adenosina 6 → 12 mg (cuidado se FA induzida) · procainamida alternativa</td></tr>
+        <tr><td>FA pré-excitada (irregular, QRS largo)</td><td><strong>Procainamida</strong> ou ibutilida · evitar nó AV · cardioversão se deteriorar</td></tr>
+        <tr><td>Antidromic (QRS largo regular)</td><td>Procainamida · amiodarona · cardioversão se instável</td></tr>
+      </table>
+
+      <h4>Energia de cardioversão (bifásico, sincronizado)</h4>
+      <table class="emerg-table">
+        <tr><th>Ritmo</th><th>Energia sugerida</th></tr>
+        <tr><td>FA / flutter pré-excitado</td><td>120–200 J</td></tr>
+        <tr><td>TSV / TV regular</td><td>50–100 J → escalar</td></tr>
+      </table>
+
+      <p class="emerg-note">AHA/ACC/HRS · WPW com FA = emergência eletrofisiológica se instável. Após estabilização, ablação eletrofisiológica é tratamento definitivo.</p>
+    `
+  }
+];
+
 const EMERGENCY_TOPICS = [
   {
     id: 'parada-cardio',
@@ -1876,8 +1998,8 @@ const EMERGENCY_TOPICS = [
   {
     id: 'pressao-arritmias',
     icon: '🔺',
-    name: 'Pressão & Arritimias Agudas',
-    protocols: []
+    name: 'Pressão & Ritmo Agudo',
+    protocols: PRESSAO_RITMO_PROTOCOLS
   },
   {
     id: 'procedimentos',
@@ -2060,7 +2182,7 @@ function showEmergenciaTopic (topicId) {
     return;
   }
 
-  const expectedProtocols = { 'parada-cardio': 6, 'sca': 4, 'avc': 4, 'sepse': 3, 'trauma': 4, 'via-aerea': 3, 'reacoes-metabolicas': 4, 'obstetricia': 3, 'pediatrica': 3, 'toxicologia': 4 };
+  const expectedProtocols = { 'parada-cardio': 6, 'sca': 4, 'avc': 4, 'sepse': 3, 'trauma': 4, 'via-aerea': 3, 'reacoes-metabolicas': 4, 'obstetricia': 3, 'pediatrica': 3, 'toxicologia': 4, 'pressao-arritmias': 2 };
   if (expectedProtocols[topicId]) {
     contentEl.innerHTML = `
       <p class="coming-soon"><strong>Arquivo desatualizado no navegador.</strong> Os protocolos de <em>${topic.name}</em> já existem no projeto, mas o navegador carregou uma versão antiga de <code>emergency-guide.js</code>.</p>
