@@ -203,8 +203,8 @@ const CALC_AREAS = [
     id: 'dermatologia',
     icon: '🩹',
     name: 'Dermatologia & Queimaduras',
-    calculators: [],
-    comingSoon: ['Parkland', 'Regra dos 9', 'Área queimada (Lund-Browder)']
+    calculators: ['regra-9', 'scorten'],
+    comingSoon: []
   },
   {
     id: 'ortopedia',
@@ -382,6 +382,10 @@ if (typeof CALC_NEURO !== 'undefined') {
   Object.assign(CALC_FORMS, CALC_NEURO);
 }
 
+if (typeof CALC_DERMA !== 'undefined') {
+  Object.assign(CALC_FORMS, CALC_DERMA);
+}
+
 let currentCalcAreaId = null;
 
 const CALC_META = {
@@ -470,6 +474,8 @@ const CALC_META = {
   abcd2: { icon: '⚡' },
   'hunt-hess': { icon: '🩸' },
   mrs: { icon: '📊' },
+  'regra-9': { icon: '🔥' },
+  scorten: { icon: '⚠️' },
   'dose-peso': { icon: '💊' },
   imc: { icon: '⚖️' },
   pam: { icon: '❤️' },
