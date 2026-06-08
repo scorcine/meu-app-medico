@@ -31,16 +31,45 @@ const PARADA_PROTOCOLS = [
     html: `
       <p>Manter RCP de alta qualidade, acesso IV/IO, medicações e choques conforme ritmo.</p>
       <h4>Ritmo chocável (FV / TV sem pulso)</h4>
-      <div class="emerg-flow">
-        <span>RCP 2 min</span><span class="arrow">→</span>
-        <span>CHOC</span><span class="arrow">→</span>
-        <span>RCP 2 min</span><span class="arrow">→</span>
-        <span>CHOC</span><span class="arrow">→</span>
-        <span>RCP + ES</span><span class="arrow">→</span>
-        <span>CHOC</span><span class="arrow">→</span>
-        <span>RCP + AMIOD 300 mg</span><span class="arrow">→</span>
-        <span>CHOC</span><span class="arrow">→</span>
-        <span>RCP + AMIOD 150 mg</span>
+      <p class="emerg-rhythm-intro">Dois ritmos que exigem <strong>desfibrilação imediata</strong> — confirmar ausência de pulso antes de choque:</p>
+      <div class="emerg-rhythm-grid">
+        <div class="emerg-rhythm-card">
+          <span class="emerg-rhythm-tag">FV</span>
+          <strong>Fibrilação ventricular</strong>
+          <p>Ondas caóticas em “serrilhado”, sem QRS ou onda P identificáveis; ritmo totalmente irregular.</p>
+          <p class="emerg-rhythm-hint">Ex.: pós-IAM, cardiopatia estrutural, QT longo.</p>
+        </div>
+        <div class="emerg-rhythm-card">
+          <span class="emerg-rhythm-tag">TV</span>
+          <strong>Taquicardia ventricular sem pulso</strong>
+          <p>QRS largo (&gt; 120 ms), geralmente regular; frequência alta — <strong>sem pulso central</strong> (≠ TV com pulso).</p>
+          <p class="emerg-rhythm-hint">Ex.: cardiopatia, pós-choque elétrico, intoxicação (cocaína, TCAs).</p>
+        </div>
+      </div>
+
+      <h4>Fluxograma — ritmo chocável</h4>
+      <div class="emerg-flow-v">
+        <div class="emerg-flow-step">Iniciar RCP de alta qualidade + O₂ + monitor/DEA</div>
+        <div class="emerg-flow-arrow" aria-hidden="true">↓</div>
+        <div class="emerg-flow-step">RCP <strong>2 min</strong></div>
+        <div class="emerg-flow-arrow" aria-hidden="true">↓</div>
+        <div class="emerg-flow-step emerg-flow-shock">⚡ <strong>1º CHOC</strong> — 120–200 J bifásico → retomar RCP na hora</div>
+        <div class="emerg-flow-arrow" aria-hidden="true">↓</div>
+        <div class="emerg-flow-step">RCP <strong>2 min</strong></div>
+        <div class="emerg-flow-arrow" aria-hidden="true">↓</div>
+        <div class="emerg-flow-step emerg-flow-shock">⚡ <strong>2º CHOC</strong></div>
+        <div class="emerg-flow-arrow" aria-hidden="true">↓</div>
+        <div class="emerg-flow-step">RCP <strong>2 min</strong> + <strong>Epinefrina 1 mg</strong> IV/IO</div>
+        <div class="emerg-flow-arrow" aria-hidden="true">↓</div>
+        <div class="emerg-flow-step emerg-flow-shock">⚡ <strong>3º CHOC</strong></div>
+        <div class="emerg-flow-arrow" aria-hidden="true">↓</div>
+        <div class="emerg-flow-step">RCP <strong>2 min</strong> + <strong>Amiodarona 300 mg</strong> IV/IO</div>
+        <div class="emerg-flow-arrow" aria-hidden="true">↓</div>
+        <div class="emerg-flow-step emerg-flow-shock">⚡ <strong>4º CHOC</strong></div>
+        <div class="emerg-flow-arrow" aria-hidden="true">↓</div>
+        <div class="emerg-flow-step">RCP <strong>2 min</strong> + <strong>Amiodarona 150 mg</strong> IV/IO</div>
+        <div class="emerg-flow-arrow" aria-hidden="true">↓</div>
+        <div class="emerg-flow-step emerg-flow-loop">Repetir ES a cada <strong>3–5 min</strong>; reavaliar ritmo a cada <strong>2 min</strong> de RCP</div>
       </div>
       <table class="emerg-table">
         <tr><th>Medicação</th><th>Dose</th><th>Observação</th></tr>
