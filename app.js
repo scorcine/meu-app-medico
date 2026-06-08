@@ -75,6 +75,7 @@ function initApp () {
 
   initCalcEssenciais();
   initGuiaEmergencia();
+  initProntoSocorro();
   patchEmergenciaCacheGuard();
 
   const hash = window.location.hash.replace('#', '');
@@ -92,6 +93,7 @@ function showSection (sectionId) {
 
   showCalcCategories();
   if (typeof showEmergenciaCategories === 'function') showEmergenciaCategories();
+  if (typeof showProntoSocorroHome === 'function') showProntoSocorroHome();
 }
 
 function calcPediatrica (e) {

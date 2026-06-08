@@ -8,7 +8,7 @@
   <meta http-equiv="Expires" content="0">
   <title>MedHub</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="style.css?v=pronto-socorro">
+  <link rel="stylesheet" href="style.css?v=ps-v1">
   <script defer src="calculators-risco.js"></script>
   <script defer src="calculators-cardio.js"></script>
   <script defer src="calculators-pneumo.js?v=rsi-patient"></script>
@@ -26,7 +26,8 @@
   <script defer src="calculators-orto.js"></script>
   <script defer src="calculators-extras.js?v=procedimentos"></script>
   <script defer src="emergency-guide.js?v=procedimentos"></script>
-  <script defer src="app.js?v=procedimentos"></script>
+  <script defer src="pronto-socorro.js?v=ps-v1"></script>
+  <script defer src="app.js?v=ps-v1"></script>
   <script defer src="auth.js"></script>
 </head>
 <body class="app-page" onload="initApp()">
@@ -57,7 +58,7 @@
         <button type="button" class="sidebar-link" data-section="consultas">Consultas</button>
         <button type="button" class="sidebar-link" data-section="ferramentas">Ferramentas</button>
       </nav>
-      <p class="sidebar-build" id="app-build" title="Confira se esta versão bate com a última atualização do projeto">Build 2026.06.08 · Pronto Socorro ✓</p>
+      <p class="sidebar-build" id="app-build" title="Confira se esta versão bate com a última atualização do projeto">Build 2026.06.08 · PS 91 condições ✓</p>
     </aside>
 
     <main class="app-content">
@@ -134,10 +135,19 @@
 
       <section id="section-pronto-socorro" class="content-panel">
         <div class="card dashboard-card ps-wrap">
-          <h2>Pronto Socorro</h2>
-          <p class="muted">Materiais rápidos para o plantonista — fluxos, checklists, doses e referências do PS.</p>
-          <div id="ps-content" class="ps-content">
-            <p class="ps-placeholder">Conteúdo em construção — em breve você poderá consultar aqui os materiais do pronto-socorro.</p>
+          <div id="ps-list-view">
+            <h2>Pronto Socorro</h2>
+            <p class="muted">Condutas e referências por doença — escolha o tema para consultar.</p>
+            <label class="ps-search-label" for="ps-search">Buscar condição</label>
+            <input id="ps-search" class="ps-search" type="search" placeholder="Ex.: dengue, asma, sepse, ITU…" autocomplete="off">
+            <p id="ps-count" class="ps-count muted"></p>
+            <div id="ps-condition-grid" class="calc-category-grid ps-condition-grid"></div>
+            <p id="ps-empty" class="ps-placeholder" hidden>Nenhuma condição encontrada para esta busca.</p>
+          </div>
+          <div id="ps-condition-view" hidden>
+            <button type="button" class="btn-back" id="ps-back">← Voltar à lista</button>
+            <h2 id="ps-condition-title"></h2>
+            <div id="ps-condition-content" class="emerg-content"></div>
           </div>
         </div>
       </section>

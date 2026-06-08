@@ -303,7 +303,55 @@ body.app-page {
 }
 
 .ps-wrap {
-  max-width: 900px;
+  max-width: 960px;
+}
+
+.ps-search-label {
+  display: block;
+  margin: 0.75rem 0 0.35rem;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #334155;
+}
+
+.ps-search {
+  width: 100%;
+  max-width: 420px;
+  padding: 0.55rem 0.75rem;
+  border: 1px solid #c5d3e0;
+  border-radius: 8px;
+  font-size: 0.95rem;
+}
+
+.ps-search:focus {
+  outline: none;
+  border-color: #0d6efd;
+  box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.15);
+}
+
+.ps-count {
+  margin: 0.5rem 0 0.75rem;
+  font-size: 0.82rem;
+}
+
+.ps-condition-grid {
+  margin-top: 0.25rem;
+}
+
+.ps-condition-grid .calc-category-name {
+  font-size: 0.82rem;
+  line-height: 1.35;
+  text-align: left;
+}
+
+.ps-emerg-link-wrap {
+  margin: 1rem 0 0;
+}
+
+.ps-emerg-link {
+  width: auto;
+  padding: 0.55rem 1rem;
+  font-size: 0.9rem;
 }
 
 .ps-content {
