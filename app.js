@@ -196,8 +196,8 @@ const CALC_AREAS = [
     id: 'neurologia',
     icon: '🧠',
     name: 'Neurologia',
-    calculators: [],
-    comingSoon: ['NIHSS', 'Glasgow', 'Fisher (HSA)']
+    calculators: ['nihss', 'abcd2', 'chads-vasc', 'hunt-hess', 'mrs'],
+    comingSoon: []
   },
   {
     id: 'dermatologia',
@@ -378,6 +378,10 @@ if (typeof CALC_FARMA !== 'undefined') {
   Object.assign(CALC_FORMS, CALC_FARMA);
 }
 
+if (typeof CALC_NEURO !== 'undefined') {
+  Object.assign(CALC_FORMS, CALC_NEURO);
+}
+
 let currentCalcAreaId = null;
 
 const CALC_META = {
@@ -462,6 +466,10 @@ const CALC_META = {
   gotejamento: { icon: '💧' },
   'clcr-dose': { icon: '🫘' },
   interacoes: { icon: '⚠️' },
+  nihss: { icon: '🧠' },
+  abcd2: { icon: '⚡' },
+  'hunt-hess': { icon: '🩸' },
+  mrs: { icon: '📊' },
   'dose-peso': { icon: '💊' },
   imc: { icon: '⚖️' },
   pam: { icon: '❤️' },
