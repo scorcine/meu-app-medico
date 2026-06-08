@@ -494,6 +494,76 @@ body.app-page {
   margin-bottom: 0.35rem;
 }
 
+.rsi-drug-fieldset {
+  margin-top: 0.75rem;
+}
+
+.rsi-drug-cat {
+  margin: 0.85rem 0 0.35rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: #2c5282;
+}
+
+.rsi-drug-cat:first-child {
+  margin-top: 0;
+}
+
+.rsi-drug-row {
+  padding: 0.65rem 0.75rem;
+  margin-bottom: 0.45rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  background: #f8fafc;
+  opacity: 0.72;
+}
+
+.rsi-drug-row-active {
+  opacity: 1;
+  border-color: #b6d4fe;
+  background: #f0f7ff;
+}
+
+.rsi-drug-check {
+  margin-bottom: 0.45rem;
+}
+
+.rsi-drug-amp-label,
+.rsi-drug-dose-label {
+  display: block;
+  margin: 0.35rem 0 0.2rem;
+  font-size: 0.78rem;
+  color: #64748b;
+}
+
+.rsi-drug-row select,
+.rsi-drug-row input[type="number"] {
+  width: 100%;
+  max-width: 100%;
+}
+
+.rsi-drug-meta {
+  font-size: 0.78rem;
+  color: #64748b;
+}
+
+.rsi-result-title {
+  margin: 1rem 0 0.5rem;
+  font-size: 0.95rem;
+  color: #2c5282;
+}
+
+.rsi-flow-result {
+  margin-bottom: 0.5rem;
+}
+
+.rsi-drug-table td {
+  vertical-align: top;
+  font-size: 0.88rem;
+}
+
 .emerg-algo-block h3 {
   margin-top: 0;
   font-size: 1.1rem;

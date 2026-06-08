@@ -1041,19 +1041,27 @@ const VIA_AEREA_PROTOCOLS = [
         <span class="emerg-flow-step">Ventilador, sedação/analgesia, Rx tórax, DOPE se dessaturação</span>
       </div>
 
-      <h4>Oxigenação apneica</h4>
-      <ul>
-        <li>Cateter nasal de alto fluxo ou O₂ 15 L/min <strong>durante</strong> laringoscopia — prolonga tempo seguro de apneia</li>
-        <li>Se SpO₂ cair &lt; 90% → ventilar com bolsa-válvula-máscara antes de retomar tentativa</li>
-      </ul>
+      <h4>Calculadora — doses, apresentações e fluxo</h4>
+      <p>Escolha o fluxo (<strong>sequência rápida</strong> ou <strong>pré-oxigenação reforçada</strong>), marque os fármacos do plano e selecione a ampola disponível no seu serviço.</p>
 
+      <div class="calc-block calc-block-single emerg-calc-block emerg-calc-wide">
+        <form class="calc-form" data-emerg-calc="rsi-farmacos" data-emerg-calc-inject>
+          <button type="submit">Gerar plano RSI</button>
+        </form>
+        <div class="calc-result" hidden></div>
+      </div>
+
+      <h4>Referência rápida — doses adulto (mg/kg)</h4>
       <table class="emerg-table">
-        <tr><th>Fármaco</th><th>Dose usual (adulto)</th></tr>
-        <tr><td>Etomidato</td><td>0,3 mg/kg IV</td></tr>
-        <tr><td>Cetamina</td><td>1–2 mg/kg IV (hipotensão / asma)</td></tr>
-        <tr><td>Propofol</td><td>1–2 mg/kg IV (hemodinamicamente estável)</td></tr>
-        <tr><td>Succinilcolina</td><td>1–1,5 mg/kg IV</td></tr>
-        <tr><td>Rocurônio</td><td>1–1,2 mg/kg IV (alternativa)</td></tr>
+        <tr><th>Categoria</th><th>Fármaco</th><th>Dose usual</th><th>Indicação / nota</th></tr>
+        <tr><td rowspan="3">Pré-tratamento</td><td>Midazolam</td><td>0,02–0,05 mg/kg</td><td>Pré-medicação / co-indução</td></tr>
+        <tr><td>Fentanil</td><td>1–3 mcg/kg</td><td>TCE / HTIC — lento</td></tr>
+        <tr><td>Lidocaína</td><td>1–1,5 mg/kg (máx. 100 mg)</td><td>HTIC / asma</td></tr>
+        <tr><td rowspan="3">Indução</td><td>Propofol</td><td>1–2 mg/kg</td><td>Estável hemodinamicamente</td></tr>
+        <tr><td>Etomidato</td><td>0,3 mg/kg</td><td>Choque / instabilidade</td></tr>
+        <tr><td>Cetamina</td><td>1–2 mg/kg</td><td>Hipotensão / asma / broncoespasmo</td></tr>
+        <tr><td rowspan="2">BNM</td><td>Succinilcolina</td><td>1–1,5 mg/kg</td><td>Início rápido</td></tr>
+        <tr><td>Rocurônio</td><td>1–1,2 mg/kg</td><td>Alternativa (via aérea difícil prevista)</td></tr>
       </table>
       <p class="emerg-note">Adaptar doses ao choque, TCE, gravidez e idade. Sempre ter plano de via aérea difícil (Vortex) — ver Trauma &amp; Suporte Avançado.</p>
     `
