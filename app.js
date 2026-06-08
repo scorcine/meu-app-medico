@@ -157,8 +157,8 @@ const CALC_AREAS = [
     id: 'obstetricia',
     icon: '🤰',
     name: 'Obstetrícia & Ginecologia',
-    calculators: [],
-    comingSoon: ['Idade gestacional (DUM)', 'Escore de Bishop', 'Apgar']
+    calculators: ['bishop', 'hellp', 'magee-preeclampsia', 'naegele', 'rcog-vte', 'vbac'],
+    comingSoon: []
   },
   {
     id: 'pediatria',
@@ -355,6 +355,10 @@ if (typeof CALC_ONCO !== 'undefined') {
   Object.assign(CALC_FORMS, CALC_ONCO);
 }
 
+if (typeof CALC_OBSTETRICIA !== 'undefined') {
+  Object.assign(CALC_FORMS, CALC_OBSTETRICIA);
+}
+
 let currentCalcAreaId = null;
 
 const CALC_META = {
@@ -410,6 +414,12 @@ const CALC_META = {
   'kps-ecog': { icon: '🏃' },
   'apgar-cx': { icon: '🔪' },
   capra: { icon: '🎯' },
+  bishop: { icon: '📏' },
+  hellp: { icon: '🩸' },
+  'magee-preeclampsia': { icon: '⚠️' },
+  naegele: { icon: '📅' },
+  'rcog-vte': { icon: '🦵' },
+  vbac: { icon: '👶' },
   'dose-peso': { icon: '💊' },
   imc: { icon: '⚖️' },
   pam: { icon: '❤️' },
