@@ -30,6 +30,35 @@ function initDashboard () {
   if (greetingEl) greetingEl.textContent = `Olá, ${user.name}`;
 }
 
+function patchEmergenciaCacheGuard () {
+  if (typeof showEmergenciaTopic !== 'function' || showEmergenciaTopic._cacheGuard) return;
+
+  const orig = showEmergenciaTopic;
+  const expected = { 'parada-cardio': 6, 'sca': 4, 'avc': 4 };
+
+  showEmergenciaTopic = function (topicId) {
+    orig(topicId);
+    const topic = typeof EMERGENCY_TOPICS !== 'undefined'
+      ? EMERGENCY_TOPICS.find(t => t.id === topicId)
+      : null;
+    if (!expected[topicId] || topic?.protocols?.length) return;
+
+    const contentEl = document.getElementById('emerg-topic-content');
+    if (!contentEl) return;
+
+    contentEl.innerHTML = `
+      <p class="coming-soon"><strong>Arquivo desatualizado no navegador.</strong> Os protocolos de <em>${topic?.name || topicId}</em> já existem no projeto, mas o navegador carregou uma versão antiga de <code>emergency-guide.js</code>.</p>
+      <ul>
+        <li>Feche esta aba e abra de novo: <code>C:\\Users\\User\\Desktop\\meu-app-medico\\app.html</code></li>
+        <li>Pressione <strong>Ctrl+F5</strong> (ou abra em aba anônima)</li>
+        <li>No menu lateral deve aparecer: <strong>Build 2026.06.08 · AVC</strong></li>
+      </ul>
+      <p class="emerg-note">Build esperado do guia: <strong>98041d1</strong></p>`;
+  };
+
+  showEmergenciaTopic._cacheGuard = true;
+}
+
 function initApp () {
   const user = requireAuth();
   if (!user) return;
@@ -46,6 +75,7 @@ function initApp () {
 
   initCalcEssenciais();
   initGuiaEmergencia();
+  patchEmergenciaCacheGuard();
 
   const hash = window.location.hash.replace('#', '');
   if (hash) showSection(hash);

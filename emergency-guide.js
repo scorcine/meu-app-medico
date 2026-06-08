@@ -1,6 +1,6 @@
-/* Guia rápido de emergência — tópicos e conteúdo */
+/* Guia rápido de emergência — tópicos e conteúdo — build 98041d1 */
 
-const PARADA_PROTOCOLS = [
+const MEDHUB_EMERG_BUILD = '98041d1';
   {
     id: 'bls-adulto',
     icon: '🫀',
@@ -899,6 +899,19 @@ function showEmergenciaTopic (topicId) {
   if (topic.html && topic.html.trim()) {
     contentEl.innerHTML = topic.html;
     initEmergEcgLightbox(contentEl);
+    return;
+  }
+
+  const expectedProtocols = { 'parada-cardio': 6, 'sca': 4, 'avc': 4 };
+  if (expectedProtocols[topicId]) {
+    contentEl.innerHTML = `
+      <p class="coming-soon"><strong>Arquivo desatualizado no navegador.</strong> Os protocolos de <em>${topic.name}</em> já existem no projeto, mas o navegador carregou uma versão antiga de <code>emergency-guide.js</code>.</p>
+      <ul>
+        <li>Feche esta aba e abra de novo: <code>C:\\Users\\User\\Desktop\\meu-app-medico\\app.html</code></li>
+        <li>Pressione <strong>Ctrl+F5</strong> (ou abra em aba anônima)</li>
+        <li>No menu lateral deve aparecer: <strong>Build 2026.06.08 · AVC</strong></li>
+      </ul>
+      <p class="emerg-note">Build esperado do guia: <strong>${MEDHUB_EMERG_BUILD}</strong></p>`;
     return;
   }
 
