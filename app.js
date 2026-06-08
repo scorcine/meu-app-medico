@@ -186,8 +186,11 @@ const CALC_AREAS = [
     id: 'farmacologia',
     icon: '💊',
     name: 'Farmacologia & Dose',
-    calculators: ['dose-peso'],
-    comingSoon: ['Ajuste renal de dose', 'Conversor de unidades']
+    calculators: [
+      'dose-peso', 'dose-infusion-ped', 'insulina-correcao', 'opioide-conv',
+      'gotejamento', 'clcr-dose', 'interacoes'
+    ],
+    comingSoon: []
   },
   {
     id: 'neurologia',
@@ -371,6 +374,10 @@ if (typeof CALC_HEMATO !== 'undefined') {
   Object.assign(CALC_FORMS, CALC_HEMATO);
 }
 
+if (typeof CALC_FARMA !== 'undefined') {
+  Object.assign(CALC_FORMS, CALC_FARMA);
+}
+
 let currentCalcAreaId = null;
 
 const CALC_META = {
@@ -449,6 +456,12 @@ const CALC_META = {
   'padua-improve': { icon: '🦵' },
   '4ts': { icon: '🩸' },
   khorana: { icon: '🎗️' },
+  'dose-infusion-ped': { icon: '💉' },
+  'insulina-correcao': { icon: '🩸' },
+  'opioide-conv': { icon: '💊' },
+  gotejamento: { icon: '💧' },
+  'clcr-dose': { icon: '🫘' },
+  interacoes: { icon: '⚠️' },
   'dose-peso': { icon: '💊' },
   imc: { icon: '⚖️' },
   pam: { icon: '❤️' },
