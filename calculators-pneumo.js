@@ -378,14 +378,14 @@ const CALC_PNEUMO = {
   },
 
   'rsi-farmacos': {
-    title: 'RSI — doses, apresentações e fluxo',
+    title: 'Sequência rápida — doses, apresentações e fluxo',
     html: `
       <label>Peso do paciente (kg)</label>
       <input name="peso" type="number" min="3" max="250" step="0.1" required placeholder="Ex.: 70">
 
       <label>Fluxo de intubação</label>
       <select name="fluxo" required>
-        <option value="rsi">Sequência rápida (RSI clássica)</option>
+        <option value="rsi">Sequência rápida clássica</option>
         <option value="preox">Pré-oxigenação reforçada + oxigenação apneica</option>
       </select>
 
@@ -660,7 +660,7 @@ function rsiFlowHtmlRsi (preRows, indRows, bnmRows) {
   const bnm = rsiDrugListHtml(bnmRows, '');
 
   return `<div class="rsi-flow-result">
-            <h4 class="rsi-result-title">Fluxo — Sequência rápida (RSI)</h4>
+            <h4 class="rsi-result-title">Fluxo — Sequência rápida clássica</h4>
             <div class="emerg-flow-v">
               <span class="emerg-flow-step emerg-flow-shock"><strong>1. PREPARE</strong></span>
               <span class="emerg-flow-arrow" aria-hidden="true">↓</span>

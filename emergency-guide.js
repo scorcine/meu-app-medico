@@ -1007,9 +1007,9 @@ const VIA_AEREA_PROTOCOLS = [
   {
     id: 'rsi-7-passos',
     icon: '💉',
-    name: 'RSI em 7 Passos',
+    name: 'Sequência Rápida de Intubação em 7 Passos',
     html: `
-      <p>Sequência rápida de intubação (RSI) — intubação com sedação + bloqueador neuromuscular, <strong>sem ventilação manual</strong> entre indução e laringoscopia (exceto se hipóxia).</p>
+      <p>Sequência rápida de intubação — sedação + bloqueador neuromuscular, <strong>sem ventilação manual</strong> entre indução e laringoscopia (exceto se hipóxia).</p>
 
       <div class="emerg-flow-v">
         <span class="emerg-flow-step emerg-flow-shock"><strong>1. PREPARE</strong> — preparo</span>
@@ -1046,7 +1046,7 @@ const VIA_AEREA_PROTOCOLS = [
 
       <div class="calc-block calc-block-single emerg-calc-block emerg-calc-wide">
         <form class="calc-form" data-emerg-calc="rsi-farmacos" data-emerg-calc-inject>
-          <button type="submit">Gerar plano RSI</button>
+          <button type="submit">Gerar plano de intubação</button>
         </form>
         <div class="calc-result" hidden></div>
       </div>
