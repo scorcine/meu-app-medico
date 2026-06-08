@@ -26,13 +26,15 @@
   <script defer src="calculators-orto.js"></script>
   <script defer src="calculators-extras.js?v=procedimentos"></script>
   <script defer src="emergency-guide.js?v=procedimentos"></script>
+  <script defer src="tratamento-hospitalar-content-1.js?v=th-im-ev-v1"></script>
+  <script defer src="tratamento-hospitalar.js?v=th-im-ev-v1"></script>
   <script defer src="pronto-socorro-content-1.js?v=ps-opcoes"></script>
   <script defer src="pronto-socorro-content-2.js?v=ps-opcoes"></script>
   <script defer src="pronto-socorro-content-3.js?v=ps-opcoes"></script>
   <script defer src="pronto-socorro-content-4.js?v=ps-opcoes"></script>
   <script defer src="pronto-socorro-content-5.js?v=diverticulite"></script>
   <script defer src="pronto-socorro.js?v=ps-diverticulite-v1"></script>
-  <script defer src="app.js?v=ps-opcoes-v1"></script>
+  <script defer src="app.js?v=th-im-ev-v1"></script>
   <script defer src="auth.js"></script>
 </head>
 <body class="app-page" onload="initApp()">
@@ -61,7 +63,7 @@
         <button type="button" class="sidebar-link" data-section="consultas">Consultas</button>
         <button type="button" class="sidebar-link" data-section="ferramentas">Ferramentas</button>
       </nav>
-      <p class="sidebar-build" id="app-build" title="Confira se esta versão bate com a última atualização do projeto">Build 2026.06.08 · Prescrições PS 106 ✓</p>
+      <p class="sidebar-build" id="app-build" title="Confira se esta versão bate com a última atualização do projeto">Build 2026.06.08 · TH 30 · PS 106 ✓</p>
     </aside>
 
     <main class="app-content">
@@ -74,10 +76,21 @@
       </section>
 
       <section id="section-tratamento-hospitalar" class="content-panel">
-        <div class="card dashboard-card">
-          <h2>Tratamento hospitalar</h2>
-          <p class="muted">Prescrições e condutas para internação — medicações VO, IM e EV, hidratação, antibióticos e protocolos de enfermaria/UTI.</p>
-          <p class="coming-soon">Conteúdo em construção — em breve você poderá consultar tratamentos hospitalares aqui.</p>
+        <div class="card dashboard-card ps-wrap">
+          <div id="th-list-view">
+            <h2>Tratamento hospitalar</h2>
+            <p class="muted">Principais condições com indicação de medicação IM ou EV — posologia em ampola (apresentações usuais no Brasil). Revisado jun/2026.</p>
+            <label class="ps-search-label" for="th-search">Buscar condição</label>
+            <input id="th-search" class="ps-search" type="search" placeholder="Ex.: cefaleia, sepse, pneumonia, náusea…" autocomplete="off">
+            <p id="th-count" class="ps-count muted"></p>
+            <div id="th-condition-grid" class="calc-category-grid ps-condition-grid"></div>
+            <p id="th-empty" class="ps-placeholder" hidden>Nenhuma condição encontrada para esta busca.</p>
+          </div>
+          <div id="th-condition-view" hidden>
+            <button type="button" class="btn-back" id="th-back">← Voltar à lista</button>
+            <h2 id="th-condition-title"></h2>
+            <div id="th-condition-content" class="emerg-content"></div>
+          </div>
         </div>
       </section>
 

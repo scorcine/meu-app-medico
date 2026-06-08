@@ -75,6 +75,7 @@ function initApp () {
 
   initCalcEssenciais();
   initGuiaEmergencia();
+  initTratamentoHospitalar();
   initProntoSocorro();
   patchEmergenciaCacheGuard();
 
@@ -93,6 +94,7 @@ function showSection (sectionId) {
 
   showCalcCategories();
   if (typeof showEmergenciaCategories === 'function') showEmergenciaCategories();
+  if (typeof showTratamentoHospitalarHome === 'function') showTratamentoHospitalarHome();
   if (typeof showProntoSocorroHome === 'function') showProntoSocorroHome();
 }
 
