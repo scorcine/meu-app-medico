@@ -210,8 +210,8 @@ const CALC_AREAS = [
     id: 'ortopedia',
     icon: '🦴',
     name: 'Ortopedia & Reumatologia',
-    calculators: [],
-    comingSoon: ['FRAX', 'DAS28', 'Critérios ACR']
+    calculators: ['frax', 'ottawa', 'hip-oculta'],
+    comingSoon: []
   },
   {
     id: 'extras',
@@ -386,6 +386,10 @@ if (typeof CALC_DERMA !== 'undefined') {
   Object.assign(CALC_FORMS, CALC_DERMA);
 }
 
+if (typeof CALC_ORTO !== 'undefined') {
+  Object.assign(CALC_FORMS, CALC_ORTO);
+}
+
 let currentCalcAreaId = null;
 
 const CALC_META = {
@@ -476,6 +480,8 @@ const CALC_META = {
   mrs: { icon: '📊' },
   'regra-9': { icon: '🔥' },
   scorten: { icon: '⚠️' },
+  ottawa: { icon: '🦶' },
+  'hip-oculta': { icon: '🦴' },
   'dose-peso': { icon: '💊' },
   imc: { icon: '⚖️' },
   pam: { icon: '❤️' },
