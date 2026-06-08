@@ -229,7 +229,7 @@ const PS_CONTENT_3 = {
       <li><strong>Urgência hipertensiva</strong> (PA elevada, assintomático ou cefaleia leve, sem LOA) — captopril 25 mg VO (repetir 25 mg após 30 min se necessário) ou reiniciar anti-hipertensivo habitual; observação 4–6 h; meta em dias, não minutos.</li>
       <li><strong>Emergência hipertensiva</strong> — acesso venoso, monitor, droga IV titulada conforme cenário; redução inicial ~10–25% na 1ª hora.</li>
       <li><strong>Nitroprussiato de sódio</strong> — 0,25–10 mcg/kg/min EV (emergência: dissecção após β-bloqueio, EAP refratário); uso curto — risco cianeto; monitorização em UTI.</li>
-      <li><strong>Outras emergências</strong> — EAP: nitroglicerina EV + furosemida; encefalopatia: labetalol/nicardipina EV; eclâmpsia: hidralazina + MgSO₄.</li>
+      <li><strong>Outras emergências</strong> — EAP: nitroglicerina EV + furosemida; encefalopatia: hidralazina 5–10 mg IV ou labetalol 10–20 mg IV (nicardipina EV se disponível); eclâmpsia: hidralazina + sulfato de Mg.</li>
       <li><strong>Evitar</strong> — nifedipino sublingual (queda abrupta); normalizar PA rapidamente em urgência sem LOA.</li>
     </ol>
     <h4>Alta / ambulatorial</h4>
@@ -467,7 +467,7 @@ const PS_CONTENT_3 = {
     <p class="muted">Infecção do conduto auditivo externo — otalgia intensa, tragalgesia, edema do CAE. Predisponentes: natação, trauma local, umidade.</p>
     <h4>Pronto-socorro</h4>
     <ol class="emerg-steps">
-      <li><strong>Forma não complicada</strong> — ciprofloxacino 0,3% + dexametasona 0,1% gotas otológicas (Ciprodex ou similar) 4 gotas 12/12 h por 7–10 dias.</li>
+      <li><strong>Forma não complicada</strong> — ciprofloxacino 0,3% + dexametasona 0,1% gotas otológicas (Otociriax®, Otocin® ou genérico) 3–4 gotas 12/12 h por 7–10 dias.</li>
       <li><strong>Alternativa</strong> — ciprofloxacino 0,3% gotas 4 gotas 8/8 h ou neomicina-polimixina-hidrocortisona (cautela perfuração timpânica).</li>
       <li><strong>Edema intenso do CAE</strong> — inserir mecha com corticoide tópico; analgesia (dipirona + tramadol se necessário).</li>
       <li><strong>Celulite periauricular ou imunossupressão</strong> — ciprofloxacino 500 mg VO 12/12 h ou amoxicilina-clavulanato 875/125 mg VO 12/12 h por 7–10 dias.</li>

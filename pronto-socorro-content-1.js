@@ -26,7 +26,7 @@ const PS_CONTENT_1 = {
         <li><strong>ABC</strong> — via aérea, O₂ alvo SpO₂ &gt; 94%, 2 acessos venosos, monitor cardíaco.</li>
         <li><strong>Glicemia capilar imediata</strong> — hipoglicemia mimetiza AVC; corrigir se &lt; 60 mg/dL (glicose EV 25 g).</li>
         <li><strong>TC crânio sem contraste em ≤ 25 min</strong> — porta-imagem; angioTC se suspeita de oclusão de grande vaso.</li>
-        <li><strong>PA — alvos conforme tipo</strong> — <em>isquêmico pré-lise/MT:</em> tratar se &gt; 185/110 mmHg (labetalol 10–20 mg IV ou nicardipina EV). <em>Hemorrágico agudo:</em> meta geral &lt; 140/90 mmHg se estável (evitar queda abrupta).</li>
+        <li><strong>PA — alvos conforme tipo</strong> — <em>isquêmico pré-lise/MT:</em> tratar se &gt; 185/110 mmHg — labetalol 10–20 mg IV ou hidralazina 10 mg IV (repetir q20–30 min); nicardipina EV se disponível (Nimotop®). <em>Hemorrágico agudo:</em> meta geral &lt; 140/90 mmHg se estável (evitar queda abrupta).</li>
         <li><strong>AVC isquêmico</strong> — NIHSS; trombólise IV (alteplase 0,9 mg/kg, máx. 90 mg) se janela ≤ 4 h 30 e sem contraindicações; trombectomia se LVO. <strong>AAS 300 mg VO</strong> após 24 h da lise (ou imediato se sem lise e sem anticoagulação).</li>
         <li><strong>AVC hemorrágico</strong> — reversão de anticoagulante se em uso; neurocirurgia se hematoma com indicação; controle PA; evitar AAS/anticoagulante agudo.</li>
         <li><strong>Profilaxia convulsão</strong> — <strong>não rotineira</strong> no AVC isquêmico agudo. Considerar levetiracetam 500 mg 12/12 h ou fenitoína 15–20 mg/kg EV se convulsão no início com déficit persistente, hemorragia lobar ou HIC.</li>
@@ -215,7 +215,7 @@ const PS_CONTENT_1 = {
         <li><strong>TSV estável</strong> — manobra de Valsalva; adenosina 6 mg IV rápido → 12 mg se necessário (2ª dose); ou verapamil 5–10 mg IV (evitar em WPW com FA).</li>
         <li><strong>FA/flutter com RVR estável</strong> — controle de frequência: metoprolol 5 mg IV q5min (máx. 15 mg) ou diltiazem 0,25 mg/kg IV; anticoagulação conforme CHA₂DS₂-VASc e tempo de início.</li>
         <li><strong>Bradicardia sintomática</strong> — atropina 1 mg IV (repetir até 3 mg); se falha → dopamina 5–20 µg/kg/min ou adrenalina 2–10 µg/min; marcapasso transcutâneo/transvenoso.</li>
-        <li><strong>TV com pulso estável</strong> — amiodarona 150 mg IV em 10 min → infusão 1 mg/min × 6 h; ou procainamida 20 mg/kg IV (monitor QT).</li>
+        <li><strong>TV com pulso estável</strong> — amiodarona 150 mg IV em 10 min → infusão 1 mg/min × 6 h; alternativa: lidocaína 1–1,5 mg/kg IV (máx. 100 mg) em bolus — <em>procainamida não comercializada no Brasil</em>.</li>
         <li><strong>Investigar causa</strong> — eletrólitos, TSH, troponina, toxicologia (digoxina, antiarrítmicos).</li>
       </ol>
       <h4>Exames / investigação</h4>

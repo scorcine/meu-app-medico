@@ -350,7 +350,7 @@ const PS_CONTENT_2 = {
       <li><strong>Medidas gerais:</strong> elevar cabeceira, evitar refeições tardias, álcool, tabaco, AINE.</li>
       <li><strong>IBP:</strong> omeprazol 40 mg VO/EV 24/24 h (Losec®) <em>ou</em> pantoprazol 40 mg VO/EV 24/24 h — 4–8 semanas na alta ambulatorial.</li>
       <li><strong>Antácido</strong> se queimação aguda: hidróxido de alumínio/magnésio ou sucralfato 1 g VO 6/6 h.</li>
-      <li><strong>Procinético</strong> se plenitude/náusea: domperidona 10 mg VO 8/8 h antes das refeições (Motilium®) — uso curto; metoclopramida 10 mg EV se vômitos.</li>
+      <li><strong>Procinético</strong> se plenitude/náusea: domperidona 10 mg VO 8/8 h antes das refeições (Motilium®) — uso curto (&lt; 7 dias); contraindicado com cetoconazol/eritromicina (ANVISA); preferir metoclopramida 10 mg EV se vômitos.</li>
       <li><strong>Erradicação H. pylori</strong> se teste positivo: esquema MS (ex.: omeprazol + amoxicilina + claritromicina 14 dias) — prescrever na alta se confirmado.</li>
       <li><strong>Analgesia:</strong> dipirona; evitar AINE.</li>
     </ol>

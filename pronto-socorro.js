@@ -1,22 +1,26 @@
 /* Pronto Socorro — condições e navegação */
 
-const MEDHUB_PS_BUILD = 'ps-clinico-v1';
+const MEDHUB_PS_BUILD = 'ps-revisao-v2';
 
 const PS_CONTENT = Object.assign(
   {},
   typeof PS_CONTENT_1 !== 'undefined' ? PS_CONTENT_1 : {},
   typeof PS_CONTENT_2 !== 'undefined' ? PS_CONTENT_2 : {},
   typeof PS_CONTENT_3 !== 'undefined' ? PS_CONTENT_3 : {},
-  typeof PS_CONTENT_4 !== 'undefined' ? PS_CONTENT_4 : {}
+  typeof PS_CONTENT_4 !== 'undefined' ? PS_CONTENT_4 : {},
+  typeof PS_CONTENT_5 !== 'undefined' ? PS_CONTENT_5 : {}
 );
 
 const PS_CONDITIONS = [
   { id: 'abdome-agudo', name: 'Abdome agudo', icon: '🩹' },
+  { id: 'abscesso-cutaneo', name: 'Abscesso cutâneo — incisão e drenagem', icon: '💉' },
+  { id: 'acidente-ofidico', name: 'Acidente ofídico (envenenamento por serpente)', icon: '🐍', emerg: { topic: 'toxicologia' } },
   { id: 'avc', name: 'Acidente vascular encefálico (isquêmico, extenso, hemorrágico, AIT)', icon: '🧠', emerg: { topic: 'avc' } },
   { id: 'afta-estomatite', name: 'Afta / estomatite', icon: '👄' },
   { id: 'alergia-anafilaxia', name: 'Alergia aguda, urticária, angioedema, choque anafilático', icon: '🐝', emerg: { topic: 'reacoes-metabolicas', protocol: 'anafilaxia' } },
   { id: 'alcoolismo-intox-abstinencia', name: 'Alcoolismo: intoxicação aguda & síndrome de abstinência', icon: '🍺' },
   { id: 'ameaca-aborto', name: 'Ameaça de aborto', icon: '🤰', emerg: { topic: 'obstetricia' } },
+  { id: 'apendicite-aguda', name: 'Apendicite aguda', icon: '🩹' },
   { id: 'amigdalite-bacteriana', name: 'Amigdalite bacteriana', icon: '🦠' },
   { id: 'anemia-ferropriva', name: 'Anemia ferropriva', icon: '🩸' },
   { id: 'anemia-falciforme', name: 'Anemia falciforme — crise álgica', icon: '🩸' },
@@ -31,9 +35,12 @@ const PS_CONDITIONS = [
   { id: 'candidiase', name: 'Candidíase (oral, vaginal, balanopostite)', icon: '🔬' },
   { id: 'cardioversao-eletrica', name: 'Cardioversão elétrica (protocolo)', icon: '⚡', emerg: { topic: 'pressao-arritmias', protocol: 'wpw-instavel' } },
   { id: 'cefaleias', name: 'Cefaleias (tensional, enxaqueca, salvas)', icon: '🤕' },
+  { id: 'chikungunya', name: 'Chikungunya', icon: '🦟' },
   { id: 'celulite', name: 'Celulite', icon: '🦠' },
   { id: 'cetoacidose-diabetica', name: 'Cetoacidose diabética', icon: '🩸', emerg: { topic: 'reacoes-metabolicas', protocol: 'dka-hhs' } },
+  { id: 'colecistite-aguda', name: 'Colecistite aguda', icon: '🫃' },
   { id: 'lombalgia-ciatalgia', name: 'Ciatalgia / lombalgia / radiculopatia / torcicolo', icon: '🦴' },
+  { id: 'malaria', name: 'Malária', icon: '🦟' },
   { id: 'cistite-itu-baixa', name: 'Cistite (ITU baixa)', icon: '💧' },
   { id: 'colica-renal', name: 'Cólica renal', icon: '💎' },
   { id: 'conjuntivite', name: 'Conjuntivite (viral, bacteriana, alérgica)', icon: '👁️' },
@@ -51,7 +58,9 @@ const PS_CONDITIONS = [
   { id: 'edema-agudo-pulmao', name: 'Edema agudo de pulmão', icon: '🫁' },
   { id: 'edema-angioneurotico', name: 'Edema angioneurótico', icon: '🐝' },
   { id: 'edema-mmi', name: 'Edema de membros inferiores', icon: '🦵' },
+  { id: 'eclampsia-pre-eclampsia', name: 'Pré-eclâmpsia / eclâmpsia', icon: '🤰', emerg: { topic: 'obstetricia' } },
   { id: 'estado-hiperosmolar', name: 'Estado hiperosmolar hiperglicêmico', icon: '🩸', emerg: { topic: 'reacoes-metabolicas', protocol: 'dka-hhs' } },
+  { id: 'epistaxe', name: 'Epistaxe (sangramento nasal)', icon: '👃' },
   { id: 'erisipela', name: 'Erisipela', icon: '🦠' },
   { id: 'escabiose', name: 'Escabiose', icon: '🪲' },
   { id: 'escorpionismo', name: 'Escorpionismo (picada de escorpião)', icon: '🦂', emerg: { topic: 'toxicologia' } },
@@ -75,13 +84,16 @@ const PS_CONDITIONS = [
   { id: 'pielonefrite', name: 'ITU alta / pielonefrite', icon: '💧' },
   { id: 'leptospirose', name: 'Leptospirose', icon: '🦠' },
   { id: 'micoses-superficiais', name: 'Micoses superficiais (tinea corporis, crural, onicomicose, pitiríase versicolor)', icon: '🦶' },
+  { id: 'meningite-bacteriana', name: 'Meningite / meningoencefite bacteriana', icon: '🧠' },
   { id: 'mononucleose', name: 'Mononucleose infecciosa', icon: '🦠' },
   { id: 'otite-externa', name: 'Otite externa', icon: '👂' },
   { id: 'otite-media', name: 'Otite média aguda', icon: '👂' },
   { id: 'parasitoses-intestinais', name: 'Parasitoses intestinais (giardíase, amebíase, oxiurose)', icon: '🪱' },
   { id: 'pediculose', name: 'Pediculose', icon: '🪲' },
+  { id: 'pancreatite-aguda', name: 'Pancreatite aguda', icon: '🫃' },
   { id: 'pneumonia-comunitaria', name: 'Pneumonia comunitária (protocolos ambulatorial, enfermaria, UTI)', icon: '🫁' },
   { id: 'trauma-atls', name: 'Protocolo de trauma (ATLS)', icon: '🆘', emerg: { topic: 'trauma' } },
+  { id: 'profilaxia-antirrabica', name: 'Profilaxia antirrábica (exposição a animal)', icon: '🐕' },
   { id: 'queilite', name: 'Queilite', icon: '👄' },
   { id: 'queimaduras', name: 'Queimaduras (1º–3º grau)', icon: '🔥' },
   { id: 'rinite-alergica', name: 'Rinite alérgica', icon: '🤧' },
@@ -90,9 +102,12 @@ const PS_CONDITIONS = [
   { id: 'sinusite-aguda', name: 'Sinusite aguda', icon: '🤧' },
   { id: 'abstinencia-alcoolica', name: 'Síndrome de abstinência alcoólica', icon: '🍺' },
   { id: 'sepse-choque-septico', name: 'Síndrome do choque séptico & sepse (doses incluídas em ATB)', icon: '🩸', emerg: { topic: 'sepse' } },
+  { id: 'sincope', name: 'Síncope / pré-síncope', icon: '💫' },
   { id: 'sindrome-vestibular', name: 'Síndrome vestibular: tontura, vertigem, labirintite', icon: '🌀' },
   { id: 'soluco-persistente', name: 'Soluço persistente', icon: '🫁' },
+  { id: 'tep', name: 'Tromboembolismo pulmonar (TEP)', icon: '🫁' },
   { id: 'tinea', name: 'Tinea (pedis, crural, corporis)', icon: '🦶' },
+  { id: 'tvp', name: 'Trombose venosa profunda (TVP)', icon: '🦵' },
   { id: 'tosse', name: 'Tosse seca / produtiva (manejo sintomático)', icon: '🫁' },
   { id: 'trauma-ocular', name: 'Trauma ocular', icon: '👁️' },
   { id: 'tuberculose', name: 'Tuberculose pulmonar (esquema RHZE)', icon: '🫁' },
