@@ -172,8 +172,8 @@ const CALC_AREAS = [
     id: 'urgencia',
     icon: '🆘',
     name: 'Urgência & Trauma',
-    calculators: [],
-    comingSoon: ['Glasgow', 'RTS', 'ISS', 'qSOFA']
+    calculators: ['gcs', 'rts', 'iss', 'nexus-cspine', 'pecarn', 'lrnec', 'alvarado-air', 'syncope-vpp'],
+    comingSoon: []
   },
   {
     id: 'hematologia',
@@ -363,6 +363,10 @@ if (typeof CALC_PEDIATRIA !== 'undefined') {
   Object.assign(CALC_FORMS, CALC_PEDIATRIA);
 }
 
+if (typeof CALC_URGENCIA !== 'undefined') {
+  Object.assign(CALC_FORMS, CALC_URGENCIA);
+}
+
 let currentCalcAreaId = null;
 
 const CALC_META = {
@@ -430,6 +434,14 @@ const CALC_META = {
   'pcr-ped': { icon: '💉' },
   'who-bmi': { icon: '📊' },
   'rochester-yos': { icon: '🌡️' },
+  gcs: { icon: '🧠' },
+  rts: { icon: '🚑' },
+  iss: { icon: '💥' },
+  'nexus-cspine': { icon: '🦴' },
+  pecarn: { icon: '👶' },
+  lrnec: { icon: '🔥' },
+  'alvarado-air': { icon: '🩺' },
+  'syncope-vpp': { icon: '💫' },
   'dose-peso': { icon: '💊' },
   imc: { icon: '⚖️' },
   pam: { icon: '❤️' },
