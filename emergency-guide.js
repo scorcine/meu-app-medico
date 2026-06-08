@@ -257,6 +257,144 @@ const PARADA_PROTOCOLS = [
   }
 ];
 
+const SCA_PROTOCOLS = [
+  {
+    id: 'dor-inicial',
+    icon: '🩺',
+    name: 'Dor torácica inicial',
+    html: `
+      <p>Suspeita de SCA até prova em contrário — <strong>ECG em ≤ 10 min</strong> do primeiro contato médico.</p>
+
+      <div class="emerg-flow-v">
+        <span class="emerg-flow-step">Avaliar estabilidade — ABC, SpO₂, PA, FC, ritmo</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step emerg-flow-decision">Dor torácica sugestiva de isquemia?</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step"><strong>ECG 12 derivações em ≤ 10 min</strong></span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">Acesso venoso + troponina (serial) + eletrólitos + função renal</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">Monitor contínuo + oxigênio se SpO₂ &lt; 90%</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">Ácido acetilsalicílico 150–300 mg VO (mastigar) — se não contraindicado</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step emerg-flow-decision">Classificar: STEMI · NSTEMI · Angina instável</span>
+      </div>
+
+      <h4>Sinais de alerta — instabilidade</h4>
+      <ul>
+        <li>Hipotensão, choque, arritmia maligna</li>
+        <li>Dor refratária, ICC aguda, alteração de consciência</li>
+        <li>→ estabilizar e acionar hemodinâmica / UTI</li>
+      </ul>
+
+      <table class="emerg-table">
+        <tr><th>Conduta</th><th>Indicação</th></tr>
+        <tr><td>Nitrato SL</td><td>Dor persistente, PA sistólica &gt; 90 mmHg, sem suspeita de VD / estenose aórtica</td></tr>
+        <tr><td>Morfina</td><td>Dor refratária (usar com cautela — pode mascarar evolução)</td></tr>
+        <tr><td>Anticoagulação</td><td>Conforme tipo de SCA (heparina / enoxaparina)</td></tr>
+      </table>
+      <p class="emerg-note">Repetir ECG se dor recorrer ou instabilidade — supra ST pode ser intermitente.</p>
+    `
+  },
+  {
+    id: 'stemi',
+    icon: '🚨',
+    name: 'STEMI',
+    html: `
+      <p>Supra de ST ou equivalente — reperfusão <strong>imediata</strong>. Metas: <strong>porta-balão ≤ 90 min</strong> ou <strong>fibrinólise ≤ 30 min</strong> se ICP indisponível.</p>
+
+      <h4>Critérios ECG (resumo)</h4>
+      <ul>
+        <li>Supra ST ≥ 1 mm em ≥ 2 derivações contíguas (exceto V2–V3: ≥ 2 mm homens &gt;40 a; ≥ 1,5 mm homens &lt;40 a; ≥ 1 mm mulheres)</li>
+        <li>Bloqueio de ramo esquerdo <strong>novo</strong> ou presumivelmente novo</li>
+        <li>Equivalentes: de Winter, Wellens, supra ST em aVR com difuso ST↓</li>
+      </ul>
+
+      <div class="emerg-flowcharts-row">
+        <div class="emerg-flow-col emerg-flow-col-shock">
+          <h4>ICP primária (preferencial)</h4>
+          <div class="emerg-flow-v">
+            <span class="emerg-flow-step">Confirmar STEMI + acionar equipe / hemodinâmica</span>
+            <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+            <span class="emerg-flow-step">AAS 150–300 mg + P2Y12 (clopidogrel / ticagrelor / prasugrel)</span>
+            <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+            <span class="emerg-flow-step">Anticoagulante (heparina ou enoxaparina)</span>
+            <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+            <span class="emerg-flow-step emerg-flow-shock">Cateterismo + angioplastia</span>
+            <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+            <span class="emerg-flow-step emerg-flow-loop"><strong>Porta-balão ≤ 90 min</strong></span>
+          </div>
+        </div>
+
+        <div class="emerg-flow-col emerg-flow-col-noshock">
+          <h4>Fibrinólise (se ICP indisponível)</h4>
+          <div class="emerg-flow-v">
+            <span class="emerg-flow-step">Sem contraindicações + sintomas &lt; 12 h</span>
+            <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+            <span class="emerg-flow-step">AAS + heparina + P2Y12 conforme protocolo</span>
+            <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+            <span class="emerg-flow-step">Alteplase / tenecteplase / reteplase / estreptoquinase</span>
+            <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+            <span class="emerg-flow-step emerg-flow-shock">Transferir para ICP após lise (estratégia farmaco-invasiva)</span>
+            <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+            <span class="emerg-flow-step emerg-flow-loop"><strong>Porta-agulha ≤ 30 min</strong></span>
+          </div>
+        </div>
+      </div>
+
+      <h4>Contraindicações absolutas à fibrinólise</h4>
+      <ul>
+        <li>AVC hemorrágico ou isquêmico &lt; 3 meses</li>
+        <li>Neoplasia / MAV cerebral, dissecção aórtica</li>
+        <li>Sangramento ativo, cirurgia maior &lt; 3 semanas</li>
+        <li>Trauma craniano grave recente</li>
+      </ul>
+      <p class="emerg-note">Porta-balão = tempo da chegada ao hospital até inflação do balão. Porta-agulha = chegada até início da fibrinólise.</p>
+    `
+  },
+  {
+    id: 'nstemi-ua',
+    icon: '📊',
+    name: 'NSTEMI / Angina instável',
+    html: `
+      <p>Sem supra ST — estratificar risco (GRACE) e definir estratégia invasiva precoce ou conservadora.</p>
+
+      <div class="emerg-flow-v">
+        <span class="emerg-flow-step">Confirmar ausência de STEMI no ECG</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">Troponina elevada (NSTEMI) ou normal com alta suspeita (AI)</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">AAS + P2Y12 + anticoagulação</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step emerg-flow-decision">Calcular escore GRACE</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step emerg-flow-shock"><strong>GRACE ≥ 140</strong> → estratégia invasiva &lt; <strong>24 h</strong></span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">GRACE 109–139 → invasiva &lt; 72 h (alto risco)</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">GRACE &lt; 109 → avaliar estratégia conservadora / invasiva eletiva</span>
+      </div>
+
+      <table class="emerg-table">
+        <tr><th>GRACE (mortalidade hospitalar)</th><th>Estratégia sugerida</th></tr>
+        <tr><td><strong>≥ 140</strong></td><td>Muito alto risco — cateterismo &lt; <strong>24 h</strong></td></tr>
+        <tr><td>109 – 139</td><td>Alto risco — invasiva &lt; 72 h</td></tr>
+        <tr><td>&lt; 109</td><td>Risco intermediário/baixo — individualizar</td></tr>
+      </table>
+
+      <h4>Indicadores de invasão imediata (&lt; 2 h) — independente do GRACE</h4>
+      <ul>
+        <li>Instabilidade hemodinâmica ou arritmia ameaçadora à vida</li>
+        <li>Dor torácica refratária ao tratamento médico</li>
+        <li>Complicações mecânicas (IAM com choque, MR aguda, VSR)</li>
+        <li>Arritmias ventriculares recorrentes</li>
+      </ul>
+      <p class="emerg-note">Use a calculadora GRACE nas Calculadoras essenciais (Cardiologia) para estratificação precisa.</p>
+    `
+  }
+];
+
 const EMERGENCY_TOPICS = [
   {
     id: 'parada-cardio',
@@ -268,7 +406,7 @@ const EMERGENCY_TOPICS = [
     id: 'sca',
     icon: '❤️‍🔥',
     name: 'Síndromes Coronarianas Agudas',
-    protocols: []
+    protocols: SCA_PROTOCOLS
   },
   {
     id: 'avc',
