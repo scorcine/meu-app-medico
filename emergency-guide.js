@@ -1,6 +1,6 @@
 /* Guia rápido de emergência — tópicos e conteúdo — build 98041d1 */
 
-const MEDHUB_EMERG_BUILD = 'avc-fix-3';
+const MEDHUB_EMERG_BUILD = 'obstetricia-v1';
 
 const PARADA_PROTOCOLS = [
   {
@@ -1368,6 +1368,174 @@ const REACOES_METABOLICAS_PROTOCOLS = [
   }
 ];
 
+const OBSTETRICIA_PROTOCOLS = [
+  {
+    id: 'preeclampsia-eclampsia',
+    icon: '⚠️',
+    name: 'Pré-eclâmpsia / Eclâmpsia',
+    html: `
+      <p>Pré-eclâmpsia grave: PA ≥ 160/110 mmHg, sintomas de gravidade ou disfunção orgânica. <strong>Eclâmpsia = convulsão</strong> — sulfato de magnésio é tratamento central; hidralazina (ou alternativa) para controle pressórico.</p>
+
+      <div class="emerg-flow-v">
+        <span class="emerg-flow-step">Monitor contínuo · acesso venoso · oximetria · diurese · laboratório (Hb, plaquetas, TGO/TGP, creatinina, ácido úrico, DHL)</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step emerg-flow-shock"><strong>1. Sulfato de magnésio (MgSO₄)</strong> — profilaxia e tratamento de convulsão</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step"><strong>Ataque:</strong> 4 g EV diluídos em 100 mL SF 0,9% em <strong>15–20 min</strong></span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step"><strong>Manutenção:</strong> 1 g/h EV contínuo — manter <strong>24 h</strong> após parto ou após última convulsão</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">Convulsão recorrente → <strong>2 g MgSO₄ EV</strong> em 5 min (máx. cumulativo conforme protocolo)</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step emerg-flow-shock"><strong>2. Controle de PA</strong> — se ≥ 160/110 ou sintomas</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step"><strong>Hidralazina 5 mg EV</strong> lento — repetir a cada 20 min se necessário (máx. 20 mg)</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">Meta: PA &lt; 160/110 — <strong>não normalizar abruptamente</strong></span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step emerg-flow-shock"><strong>3. Resolução da gestação</strong> — único tratamento definitivo</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">Estabilizar → indicar parto conforme idade gestacional, colo e condição materno-fetal</span>
+      </div>
+
+      <table class="emerg-table">
+        <tr><th>Fármaco</th><th>Dose</th><th>Observação</th></tr>
+        <tr><td><strong>MgSO₄ — ataque</strong></td><td>4 g EV (100 mL SF 0,9%)</td><td>15–20 min · manter após parto/eclâmpsia</td></tr>
+        <tr><td><strong>MgSO₄ — manutenção</strong></td><td>1 g/h EV</td><td>24 h pós-parto ou pós-última crise</td></tr>
+        <tr><td><strong>MgSO₄ — crise</strong></td><td>2 g EV em 5 min</td><td>Se convulsão recorrente</td></tr>
+        <tr><td><strong>Hidralazina</strong></td><td>5 mg EV lento q20 min</td><td>Máx. 20 mg · alternativa: labetalol/nifedipino conforme serviço</td></tr>
+      </table>
+
+      <h4>Monitorização do magnésio — suspender se</h4>
+      <ul>
+        <li>Reflexo patelar <strong>ausente</strong></li>
+        <li>FR &lt; 12 irpm</li>
+        <li>Diurese &lt; 25 mL/h (ou &lt; 100 mL/4 h)</li>
+        <li>Antídoto: <strong>gluconato de cálcio 10%</strong> 10 mL EV lento se intoxicação</li>
+      </ul>
+
+      <h4>Contraindicações / alertas</h4>
+      <ul>
+        <li>Evitar MgSO₄ se insuficiência renal grave, miastenia, bloqueio cardíaco</li>
+        <li>Descartar HELLP, DPP, acretismo — ver calculadora HELLP em Calculadoras essenciais</li>
+        <li>Eclâmpsia: posição lateral, proteção de vias aéreas, não deixar de usar magnésio</li>
+      </ul>
+      <p class="emerg-note">Ministério da Saúde / FEBRASGO · OMS recomenda MgSO₄ como anticonvulsivante de escolha na eclâmpsia.</p>
+    `
+  },
+  {
+    id: 'hemorragia-pos-parto',
+    icon: '🩸',
+    name: 'Hemorragia Pós-Parto',
+    html: `
+      <p>Sangramento ≥ 500 mL após parto vaginal ou ≥ 1000 mL após cesárea — ou qualquer sangramento com instabilidade. Usar mnemônico <strong>4T</strong> e tratar em paralelo.</p>
+
+      <div class="emerg-rhythm-grid emerg-rhythm-grid-2">
+        <div class="emerg-rhythm-card emerg-rhythm-card-shock">
+          <span class="emerg-rhythm-tag emerg-rhythm-tag-shock">T — Tônus (Tone)</span>
+          <p><strong>Atonia uterina</strong> — causa mais frequente (~70%)</p>
+          <p>Massagem uterina bimanual · esvaziar bexiga · ocitocina · ergometrina · misoprostol</p>
+        </div>
+        <div class="emerg-rhythm-card emerg-rhythm-card-shock">
+          <span class="emerg-rhythm-tag emerg-rhythm-tag-shock">T — Tecidos (Tissue)</span>
+          <p><strong>Retenção</strong> — placenta, cotilédones, coágulos</p>
+          <p>Exploração manual · curetagem · ultrassom · revisão de canal de parto</p>
+        </div>
+        <div class="emerg-rhythm-card emerg-rhythm-card-shock">
+          <span class="emerg-rhythm-tag emerg-rhythm-tag-shock">T — Trauma</span>
+          <p><strong>Lacerações</strong> — colo, vagina, períneo, hematomas</p>
+          <p>Inspeção completa · sutura · compressão · embolização se indicado</p>
+        </div>
+        <div class="emerg-rhythm-card emerg-rhythm-card-shock">
+          <span class="emerg-rhythm-tag emerg-rhythm-tag-shock">T — Trombina (Thrombin)</span>
+          <p><strong>Coagulopatia</strong> — consumo, fibrinólise, CIVD</p>
+          <p>Ácido tranexâmico · plasma · plaquetas · crioprecipitado · fibrinogênio</p>
+        </div>
+      </div>
+
+      <div class="emerg-flow-v">
+        <span class="emerg-flow-step emerg-flow-shock">Chamar ajuda · 2 acessos venosos calibrosos · monitor · tipagem + reserva de hemocomponentes</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step"><strong>Massagem uterina</strong> contínua + esvaziar bexiga</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step emerg-flow-shock"><strong>Ocitocina</strong> 10–40 UI em SF 0,9% 500 mL — infundir rápido (não bolus IV puro)</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">Se refratário → <strong>ergometrina 0,2 mg IM</strong> (evitar se hipertensão/pré-eclâmpsia)</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step"><strong>Misoprostol 800–1000 mcg</strong> via retal (ou 600 mcg sublingual conforme protocolo)</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step"><strong>Ácido tranexâmico 1 g EV</strong> em 10 min — ideal &lt; 3 h do início (repetir 1 g se persistir)</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step emerg-flow-decision">4T — tratar causa concomitante (tecido, trauma, coagulopatia)</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step emerg-flow-loop">Sem resposta → balão intrauterino · compressão aórtica · cirurgia (B-Lynch, ligaduras, histerectomia) · MTP</span>
+      </div>
+
+      <table class="emerg-table">
+        <tr><th>Medida</th><th>Dose / conduta</th></tr>
+        <tr><td>Ocitocina</td><td>10–40 UI em 500 mL SF — titular; infusão de manutenção após controle</td></tr>
+        <tr><td>Ergometrina / metilergometrina</td><td>0,2 mg IM — contraindicada se HTA grave / pré-eclâmpsia</td></tr>
+        <tr><td>Misoprostol</td><td>800–1000 mcg retal</td></tr>
+        <tr><td>Carboprost (15-metil PGF₂α)</td><td>250 mcg IM q15–90 min (máx. 2 mg) — asma relativa</td></tr>
+        <tr><td>Ácido tranexâmico</td><td>1 g EV — repetir 1 g se sangramento continua</td></tr>
+      </table>
+
+      <h4>Metas e alertas</h4>
+      <ul>
+        <li>Transfundir conforme choque — protocolo de transfusão maciça se ≥ 1500 mL ou instabilidade</li>
+        <li>Fibrinogênio &lt; 200 mg/dL → crioprecipitado ou concentrado de fibrinogênio</li>
+        <li>Não atrasar transferência para centro com cirurgia/obstetrícia se recursos locais esgotados</li>
+      </ul>
+      <p class="emerg-note">OMS / WOMAN trial (tranexâmico) · FEBRASGO — HPP é causa evitável de morte materna; registrar tempo e volume perdido.</p>
+    `
+  },
+  {
+    id: 'prolapso-cordao',
+    icon: '🚨',
+    name: 'Prolapso de Cordão',
+    html: `
+      <p>Emergência obstétrica — compressão do cordão umbilical com <strong>bradicardia fetal súbita</strong> (membranas rotas, apresentação não cefálica ou polidrâmnio). Meta: aliviar compressão e <strong>parto imediato</strong>.</p>
+
+      <div class="emerg-flow-v">
+        <span class="emerg-flow-step emerg-flow-shock"><strong>Chamar equipe</strong> — obstetra, anestesia, neonatologia · preparar cesárea de urgência</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">Posicionar materna em <strong>decúbito lateral</strong> ou <strong>Trendelenburg / joelho-tórax</strong> — elevar apresentação fetal</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step emerg-flow-shock"><strong>Elevar apresentação manualmente</strong> — mão com luva estéril na vagina, empurrar apresentação para cima e afastar da pelve</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step"><strong>Não repor</strong> o cordão para dentro da vagina · não puxar o cordão</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">O₂ materno 100% · monitor cardíaco fetal contínuo · manter elevação até parto</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">Tocolítico se contrações (ex.: <strong>terbutalina 0,25 mg SC</strong>) — ganhar tempo para cesárea</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">Opcional: encher bexiga com 500 mL SF via sonda Foley para elevar apresentação (manter enchimento até parto)</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step emerg-flow-shock"><strong>Cesárea imediata</strong> — categoria 1 (decisão-parto &lt; 30 min)</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step emerg-flow-decision">Parto vaginal iminente (dilatação completa, cabeça no plano)?</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step emerg-flow-loop">Sim → parto operatório assistido · Não → cesárea — manter elevação manual durante transporte</span>
+      </div>
+
+      <h4>O que NÃO fazer</h4>
+      <ul>
+        <li>Não empurrar o cordão de volta ao útero</li>
+        <li>Não interromper a elevação da apresentação até o feto nascer</li>
+        <li>Não atrasar cesárea tentando parto vaginal se não estiver iminente</li>
+      </ul>
+
+      <h4>Fatores de risco / prevenção</h4>
+      <ul>
+        <li>Apresentação pélvica, transversa, prematuridade, polidrâmnio, cordão longo</li>
+        <li>Amniotomia com apresentação alta — evitar se não indicada</li>
+        <li>Prolapso ocorrendo antes da internação → posicionar e transportar urgente mantendo alívio da compressão</li>
+      </ul>
+      <p class="emerg-note">RCOG / FEBRASGO — bradicardia persistente ou desacelerações prolongadas = hipóxia fetal iminente; decisão de parto não deve aguardar exames.</p>
+    `
+  }
+];
+
 const EMERGENCY_TOPICS = [
   {
     id: 'parada-cardio',
@@ -1415,7 +1583,7 @@ const EMERGENCY_TOPICS = [
     id: 'obstetricia',
     icon: '🤰',
     name: 'Obstetrícia de Urgência',
-    protocols: []
+    protocols: OBSTETRICIA_PROTOCOLS
   },
   {
     id: 'pediatrica',
@@ -1616,7 +1784,7 @@ function showEmergenciaTopic (topicId) {
     return;
   }
 
-  const expectedProtocols = { 'parada-cardio': 6, 'sca': 4, 'avc': 4, 'sepse': 3, 'trauma': 4, 'via-aerea': 3, 'reacoes-metabolicas': 4 };
+  const expectedProtocols = { 'parada-cardio': 6, 'sca': 4, 'avc': 4, 'sepse': 3, 'trauma': 4, 'via-aerea': 3, 'reacoes-metabolicas': 4, 'obstetricia': 3 };
   if (expectedProtocols[topicId]) {
     contentEl.innerHTML = `
       <p class="coming-soon"><strong>Arquivo desatualizado no navegador.</strong> Os protocolos de <em>${topic.name}</em> já existem no projeto, mas o navegador carregou uma versão antiga de <code>emergency-guide.js</code>.</p>
