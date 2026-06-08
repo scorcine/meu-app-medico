@@ -217,8 +217,11 @@ const CALC_AREAS = [
     id: 'extras',
     icon: '📐',
     name: 'Extras de conveniência',
-    calculators: ['imc', 'pam'],
-    comingSoon: ['Conversor cm/pol', 'Conversor kg/lb', 'Calculadora de datas']
+    calculators: [
+      'imc', 'pam', 'map-inv', 'conv-medidas', 'datas', 'superficie',
+      'temp', 'lab-conv', 'peso-ideal', 'fio2'
+    ],
+    comingSoon: []
   }
 ];
 
@@ -390,6 +393,10 @@ if (typeof CALC_ORTO !== 'undefined') {
   Object.assign(CALC_FORMS, CALC_ORTO);
 }
 
+if (typeof CALC_EXTRAS !== 'undefined') {
+  Object.assign(CALC_FORMS, CALC_EXTRAS);
+}
+
 let currentCalcAreaId = null;
 
 const CALC_META = {
@@ -482,6 +489,14 @@ const CALC_META = {
   scorten: { icon: '⚠️' },
   ottawa: { icon: '🦶' },
   'hip-oculta': { icon: '🦴' },
+  'conv-medidas': { icon: '📐' },
+  datas: { icon: '📅' },
+  superficie: { icon: '📏' },
+  temp: { icon: '🌡️' },
+  'lab-conv': { icon: '🧪' },
+  'peso-ideal': { icon: '⚖️' },
+  fio2: { icon: '💨' },
+  'map-inv': { icon: '❤️' },
   'dose-peso': { icon: '💊' },
   imc: { icon: '⚖️' },
   pam: { icon: '❤️' },
