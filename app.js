@@ -179,8 +179,8 @@ const CALC_AREAS = [
     id: 'hematologia',
     icon: '🩸',
     name: 'Hematologia & Trombose',
-    calculators: [],
-    comingSoon: ['Wells (TVP)', 'Wells (TEP)', 'Padua (risco TVP)']
+    calculators: ['padua-improve', '4ts', 'has-bled', 'khorana', 'chads-vasc'],
+    comingSoon: []
   },
   {
     id: 'farmacologia',
@@ -367,6 +367,10 @@ if (typeof CALC_URGENCIA !== 'undefined') {
   Object.assign(CALC_FORMS, CALC_URGENCIA);
 }
 
+if (typeof CALC_HEMATO !== 'undefined') {
+  Object.assign(CALC_FORMS, CALC_HEMATO);
+}
+
 let currentCalcAreaId = null;
 
 const CALC_META = {
@@ -442,6 +446,9 @@ const CALC_META = {
   lrnec: { icon: '🔥' },
   'alvarado-air': { icon: '🩺' },
   'syncope-vpp': { icon: '💫' },
+  'padua-improve': { icon: '🦵' },
+  '4ts': { icon: '🩸' },
+  khorana: { icon: '🎗️' },
   'dose-peso': { icon: '💊' },
   imc: { icon: '⚖️' },
   pam: { icon: '❤️' },
