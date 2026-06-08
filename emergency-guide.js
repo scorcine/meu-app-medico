@@ -30,9 +30,10 @@ const PARADA_PROTOCOLS = [
     name: 'Adulto – ACLS',
     html: `
       <p>Manter RCP de alta qualidade, acesso IV/IO, medicações e choques conforme ritmo.</p>
+
       <h4>Ritmo chocável (FV / TV sem pulso)</h4>
       <p class="emerg-rhythm-intro">Dois ritmos que exigem <strong>desfibrilação imediata</strong> — confirmar ausência de pulso antes de choque:</p>
-      <div class="emerg-rhythm-grid">
+      <div class="emerg-rhythm-grid emerg-rhythm-grid-2">
         <div class="emerg-rhythm-card emerg-rhythm-card-shock">
           <span class="emerg-rhythm-tag emerg-rhythm-tag-shock">CHOCAR</span>
           <figure class="emerg-ecg-figure">
@@ -53,39 +54,8 @@ const PARADA_PROTOCOLS = [
         </div>
       </div>
 
-      <h4>Fluxograma — ritmo chocável</h4>
-      <div class="emerg-flow-v">
-        <div class="emerg-flow-step">Iniciar RCP de alta qualidade + O₂ + monitor/DEA</div>
-        <div class="emerg-flow-arrow" aria-hidden="true">↓</div>
-        <div class="emerg-flow-step">RCP <strong>2 min</strong></div>
-        <div class="emerg-flow-arrow" aria-hidden="true">↓</div>
-        <div class="emerg-flow-step emerg-flow-shock">⚡ <strong>1º CHOC</strong> — 120–200 J bifásico → retomar RCP na hora</div>
-        <div class="emerg-flow-arrow" aria-hidden="true">↓</div>
-        <div class="emerg-flow-step">RCP <strong>2 min</strong></div>
-        <div class="emerg-flow-arrow" aria-hidden="true">↓</div>
-        <div class="emerg-flow-step emerg-flow-shock">⚡ <strong>2º CHOC</strong></div>
-        <div class="emerg-flow-arrow" aria-hidden="true">↓</div>
-        <div class="emerg-flow-step">RCP <strong>2 min</strong> + <strong>Epinefrina 1 mg</strong> IV/IO</div>
-        <div class="emerg-flow-arrow" aria-hidden="true">↓</div>
-        <div class="emerg-flow-step emerg-flow-shock">⚡ <strong>3º CHOC</strong></div>
-        <div class="emerg-flow-arrow" aria-hidden="true">↓</div>
-        <div class="emerg-flow-step">RCP <strong>2 min</strong> + <strong>Amiodarona 300 mg</strong> IV/IO</div>
-        <div class="emerg-flow-arrow" aria-hidden="true">↓</div>
-        <div class="emerg-flow-step emerg-flow-shock">⚡ <strong>4º CHOC</strong></div>
-        <div class="emerg-flow-arrow" aria-hidden="true">↓</div>
-        <div class="emerg-flow-step">RCP <strong>2 min</strong> + <strong>Amiodarona 150 mg</strong> IV/IO</div>
-        <div class="emerg-flow-arrow" aria-hidden="true">↓</div>
-        <div class="emerg-flow-step emerg-flow-loop">Repetir ES a cada <strong>3–5 min</strong>; reavaliar ritmo a cada <strong>2 min</strong> de RCP</div>
-      </div>
-      <table class="emerg-table">
-        <tr><th>Medicação</th><th>Dose</th><th>Observação</th></tr>
-        <tr><td>Epinefrina (ES)</td><td>1 mg IV/IO</td><td>A cada 3–5 min (após 2º choque no chocável)</td></tr>
-        <tr><td>Amiodarona (AMIOD)</td><td>300 mg IV/IO → 150 mg</td><td>Após 3º choque; alternativa: lidocaína 1–1,5 mg/kg</td></tr>
-        <tr><td>Desfibrilação</td><td>120–200 J bifásico</td><td>Escalar se necessário; retomar RCP imediatamente</td></tr>
-      </table>
       <h4>Ritmo não chocável (AESP / assistolia)</h4>
       <p class="emerg-rhythm-intro">Sem pulso e traçado <strong>não chocável</strong> — <strong>não desfibrilar</strong>; iniciar RCP + epinefrina e tratar causas reversíveis.</p>
-
       <p class="emerg-flow-question">Identifique o padrão no monitor:</p>
       <div class="emerg-rhythm-grid">
         <div class="emerg-rhythm-card emerg-rhythm-card-noshock">
@@ -114,26 +84,64 @@ const PARADA_PROTOCOLS = [
         </div>
       </div>
 
-      <h4>Fluxograma — ritmo não chocável</h4>
-      <div class="emerg-flow-v">
-        <div class="emerg-flow-step">Parada confirmada → monitor → analisar ritmo (≤ <strong>10 s</strong>)</div>
-        <div class="emerg-flow-arrow" aria-hidden="true">↓</div>
-        <div class="emerg-flow-step emerg-flow-decision">Traçado = <strong>assistolia</strong> ou <strong>AESP</strong>? (ver modelos acima)</div>
-        <div class="emerg-flow-arrow" aria-hidden="true">↓</div>
-        <div class="emerg-flow-step emerg-flow-noshock">🚫 <strong>NÃO CHOCAR</strong> — iniciar RCP imediata</div>
-        <div class="emerg-flow-arrow" aria-hidden="true">↓</div>
-        <div class="emerg-flow-step">RCP <strong>30:2</strong> ou compressões contínuas (IOT/VNI)</div>
-        <div class="emerg-flow-arrow" aria-hidden="true">↓</div>
-        <div class="emerg-flow-step">Epinefrina <strong>1 mg</strong> IV/IO — o mais precoce possível</div>
-        <div class="emerg-flow-arrow" aria-hidden="true">↓</div>
-        <div class="emerg-flow-step">Repetir ES a cada <strong>3–5 min</strong> + RCP contínua</div>
-        <div class="emerg-flow-arrow" aria-hidden="true">↓</div>
-        <div class="emerg-flow-step">Tratar <strong>5H + 5T</strong> em paralelo</div>
-        <div class="emerg-flow-arrow" aria-hidden="true">↓</div>
-        <div class="emerg-flow-step">Via aérea avançada + capnografia — PETCO₂ &lt; 10 sugere RCP inadequada ou causa não corrigida</div>
-        <div class="emerg-flow-arrow" aria-hidden="true">↓</div>
-        <div class="emerg-flow-step emerg-flow-loop">Reavaliar ritmo a cada <strong>2 min</strong> — se tornar FV/TV → seguir algoritmo chocável</div>
+      <div class="emerg-flowcharts-row">
+        <div class="emerg-flow-col emerg-flow-col-shock">
+          <h4>Fluxograma — ritmo chocável</h4>
+          <div class="emerg-flow-h" aria-label="Fluxograma ritmo chocavel">
+            <span class="emerg-flow-step">RCP + DEA</span>
+            <span class="emerg-flow-arrow" aria-hidden="true">→</span>
+            <span class="emerg-flow-step">RCP 2 min</span>
+            <span class="emerg-flow-arrow" aria-hidden="true">→</span>
+            <span class="emerg-flow-step emerg-flow-shock">1º CHOC</span>
+            <span class="emerg-flow-arrow" aria-hidden="true">→</span>
+            <span class="emerg-flow-step">RCP 2 min</span>
+            <span class="emerg-flow-arrow" aria-hidden="true">→</span>
+            <span class="emerg-flow-step emerg-flow-shock">2º CHOC</span>
+            <span class="emerg-flow-arrow" aria-hidden="true">→</span>
+            <span class="emerg-flow-step">RCP + ES</span>
+            <span class="emerg-flow-arrow" aria-hidden="true">→</span>
+            <span class="emerg-flow-step emerg-flow-shock">3º CHOC</span>
+            <span class="emerg-flow-arrow" aria-hidden="true">→</span>
+            <span class="emerg-flow-step">RCP + AMIOD 300</span>
+            <span class="emerg-flow-arrow" aria-hidden="true">→</span>
+            <span class="emerg-flow-step emerg-flow-shock">4º CHOC</span>
+            <span class="emerg-flow-arrow" aria-hidden="true">→</span>
+            <span class="emerg-flow-step">RCP + AMIOD 150</span>
+            <span class="emerg-flow-arrow" aria-hidden="true">→</span>
+            <span class="emerg-flow-step emerg-flow-loop">ES q3–5 min</span>
+          </div>
+        </div>
+
+        <div class="emerg-flow-col emerg-flow-col-noshock">
+          <h4>Fluxograma — ritmo não chocável</h4>
+          <div class="emerg-flow-h" aria-label="Fluxograma ritmo nao chocavel">
+            <span class="emerg-flow-step">Analisar ≤ 10 s</span>
+            <span class="emerg-flow-arrow" aria-hidden="true">→</span>
+            <span class="emerg-flow-step emerg-flow-decision">Assistolia / AESP</span>
+            <span class="emerg-flow-arrow" aria-hidden="true">→</span>
+            <span class="emerg-flow-step emerg-flow-noshock">NÃO CHOCAR</span>
+            <span class="emerg-flow-arrow" aria-hidden="true">→</span>
+            <span class="emerg-flow-step">RCP 30:2</span>
+            <span class="emerg-flow-arrow" aria-hidden="true">→</span>
+            <span class="emerg-flow-step">ES 1 mg</span>
+            <span class="emerg-flow-arrow" aria-hidden="true">→</span>
+            <span class="emerg-flow-step">ES q3–5 min</span>
+            <span class="emerg-flow-arrow" aria-hidden="true">→</span>
+            <span class="emerg-flow-step">5H + 5T</span>
+            <span class="emerg-flow-arrow" aria-hidden="true">→</span>
+            <span class="emerg-flow-step">IOT + EtCO₂</span>
+            <span class="emerg-flow-arrow" aria-hidden="true">→</span>
+            <span class="emerg-flow-step emerg-flow-loop">Reavaliar 2 min</span>
+          </div>
+        </div>
       </div>
+
+      <table class="emerg-table">
+        <tr><th>Medicação</th><th>Dose</th><th>Observação</th></tr>
+        <tr><td>Epinefrina (ES)</td><td>1 mg IV/IO</td><td>A cada 3–5 min (após 2º choque no chocável)</td></tr>
+        <tr><td>Amiodarona (AMIOD)</td><td>300 mg IV/IO → 150 mg</td><td>Após 3º choque; alternativa: lidocaína 1–1,5 mg/kg</td></tr>
+        <tr><td>Desfibrilação</td><td>120–200 J bifásico</td><td>Escalar se necessário; retomar RCP imediatamente</td></tr>
+      </table>
 
       <div class="emerg-reversible-box">
         <h4>Causas reversíveis (5H + 5T)</h4>
