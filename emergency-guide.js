@@ -392,6 +392,63 @@ const SCA_PROTOCOLS = [
       </ul>
       <p class="emerg-note">Use a calculadora GRACE nas Calculadoras essenciais (Cardiologia) para estratificação precisa.</p>
     `
+  },
+  {
+    id: 'ecg-modelos',
+    icon: '📋',
+    name: 'Modelos de ECG — SCA',
+    html: `
+      <p>Traçados reais de referência — compare com o ECG do paciente. Imagens: Wikimedia Commons (domínio público / CC).</p>
+
+      <div class="emerg-ecg-gallery">
+        <div class="emerg-ecg-gallery-item emerg-rhythm-card emerg-rhythm-card-shock">
+          <span class="emerg-rhythm-tag emerg-rhythm-tag-shock">STEMI</span>
+          <figure class="emerg-ecg-figure">
+            <img src="assets/ecg/sca/ecg-stemi-anterior.jpg" alt="ECG 12 derivações: IAM anterior com supra de ST" class="emerg-ecg-img emerg-ecg-img-strip" loading="lazy">
+            <figcaption>IAM anterior — derivações precordiais</figcaption>
+          </figure>
+          <p><strong>Supra de ST</strong> em V1–V4 (≥ 2 mm em V2–V3 conforme sexo). Conduta: reperfusão imediata (ICP ou fibrinólise).</p>
+        </div>
+
+        <div class="emerg-ecg-gallery-item emerg-rhythm-card emerg-rhythm-card-shock">
+          <span class="emerg-rhythm-tag emerg-rhythm-tag-shock">STEMI</span>
+          <figure class="emerg-ecg-figure">
+            <img src="assets/ecg/sca/ecg-stemi-anterior-clinical.jpg" alt="ECG clínico: supra de ST extenso em derivações anteriores" class="emerg-ecg-img emerg-ecg-img-clinical" loading="lazy">
+            <figcaption>IAM anterior — supra ST extenso</figcaption>
+          </figure>
+          <p><strong>Supra de ST</strong> em derivações anteriores (V2–V6). Pode evoluir com ondas Q. Acionar hemodinâmica — <strong>porta-balão ≤ 90 min</strong>.</p>
+        </div>
+
+        <div class="emerg-ecg-gallery-item emerg-rhythm-card emerg-rhythm-card-shock">
+          <span class="emerg-rhythm-tag emerg-rhythm-tag-shock">STEMI</span>
+          <figure class="emerg-ecg-figure">
+            <img src="assets/ecg/sca/ecg-stemi-inferior.jpg" alt="ECG 12 derivações: IAM inferior com supra ST em II III aVF" class="emerg-ecg-img emerg-ecg-img-strip" loading="lazy">
+            <figcaption>IAM inferior — II, III, aVF</figcaption>
+          </figure>
+          <p><strong>Supra de ST</strong> em II, III e aVF. Observar <strong>infradesnivelamento recíproco</strong> em D1/aVL. Considerar IAM de VD se V1 + V4R.</p>
+        </div>
+
+        <div class="emerg-ecg-gallery-item emerg-rhythm-card emerg-rhythm-card-noshock">
+          <span class="emerg-rhythm-tag emerg-rhythm-tag-noshock">NSTEMI / AI</span>
+          <figure class="emerg-ecg-figure">
+            <img src="assets/ecg/sca/ecg-nstemi-ischaemia.jpg" alt="ECG: isquemia miocárdica com alterações de ST e onda T" class="emerg-ecg-img emerg-ecg-img-clinical" loading="lazy">
+            <figcaption>Isquemia subendocárdica</figcaption>
+          </figure>
+          <p><strong>ST deprimido</strong> horizontal ou descendente ≥ 0,5 mm em ≥ 2 derivações contíguas, ou inversão de T. Troponina ↑ = NSTEMI; normal = angina instável. Calcular <strong>GRACE</strong>.</p>
+        </div>
+
+        <div class="emerg-ecg-gallery-item emerg-rhythm-card emerg-rhythm-card-shock">
+          <span class="emerg-rhythm-tag emerg-rhythm-tag-shock">EQUIVALENTE STEMI</span>
+          <figure class="emerg-ecg-figure">
+            <img src="assets/ecg/sca/ecg-lbbb-novo.jpg" alt="ECG: bloqueio de ramo esquerdo novo em contexto de dor torácica" class="emerg-ecg-img emerg-ecg-img-clinical" loading="lazy">
+            <figcaption>BRE novo ou presumivelmente novo</figcaption>
+          </figure>
+          <p><strong>Bloqueio de ramo esquerdo novo</strong> com dor torácica sugestiva = tratar como STEMI (reperfusão imediata). Usar critérios de Sgarbossa / Smith se BRE prévio.</p>
+        </div>
+      </div>
+
+      <p class="emerg-note">Sempre correlacionar ECG com clínica, troponina seriada e repetir traçado se dor persistir ou piorar.</p>
+    `
   }
 ];
 

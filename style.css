@@ -696,6 +696,31 @@ body.app-page {
   text-align: center;
 }
 
+.emerg-ecg-gallery {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 0.75rem;
+}
+
+.emerg-ecg-gallery-item {
+  margin-bottom: 0;
+}
+
+.emerg-ecg-gallery-item p {
+  margin: 0.5rem 0 0;
+  font-size: 0.86rem;
+  line-height: 1.45;
+}
+
+.emerg-ecg-img-strip {
+  max-height: 110px;
+}
+
+.emerg-ecg-img-clinical {
+  max-height: 280px;
+}
+
 .emerg-flow-question {
   font-size: 0.92rem;
   font-weight: 600;
