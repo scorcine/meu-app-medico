@@ -380,15 +380,6 @@ const CALC_PNEUMO = {
   'rsi-farmacos': {
     title: 'Sequência rápida — doses, apresentações e fluxo',
     html: `
-      <label>Peso do paciente (kg)</label>
-      <input name="peso" type="number" min="3" max="250" step="0.1" required placeholder="Ex.: 70">
-
-      <label>Fluxo de intubação</label>
-      <select name="fluxo" required>
-        <option value="rsi">Sequência rápida clássica</option>
-        <option value="preox">Pré-oxigenação reforçada + oxigenação apneica</option>
-      </select>
-
       <fieldset class="calc-fieldset rsi-drug-fieldset">
         <legend>Fármacos — marque os que vai usar e escolha a ampola do seu serviço</legend>
         <div id="rsi-drug-fields"></div>
@@ -425,12 +416,16 @@ const CALC_PNEUMO = {
           `).join('')}`;
       }).join('');
 
+      const defaultChecked = ['etomidato', 'succinilcolina'];
+
       RSI_DRUG_LIB.forEach(d => {
         const row = container.querySelector(`[data-rsi-drug="${d.id}"]`);
         const chk = row?.querySelector(`[name="use_${d.id}"]`);
         const amp = row?.querySelector(`[name="amp_${d.id}"]`);
         const dose = row?.querySelector(`[name="dose_${d.id}"]`);
         if (!chk || !amp || !dose) return;
+
+        if (defaultChecked.includes(d.id)) chk.checked = true;
 
         const sync = () => {
           const on = chk.checked;
@@ -444,7 +439,10 @@ const CALC_PNEUMO = {
     },
     calculate (form) {
       const peso = pNum(form, 'peso');
+      const idade = pNum(form, 'idade');
+      const sexo = pSel(form, 'sexo');
       if (!peso || peso <= 0) return alert('Informe o peso do paciente.');
+      if (!Number.isFinite(idade) || idade < 0) return alert('Informe a idade do paciente.');
 
       const fluxo = pSel(form, 'fluxo');
       const selected = RSI_DRUG_LIB.filter(d => form[`use_${d.id}`]?.checked);
@@ -454,12 +452,15 @@ const CALC_PNEUMO = {
       if (!hasInducao) return alert('Selecione ao menos um agente de indução (propofol, etomidato ou cetamina).');
       if (!hasBnm) return alert('Selecione ao menos um bloqueador neuromuscular (succinilcolina ou rocurônio).');
 
+      const patientNotes = rsiPatientNotes(peso, idade, sexo);
+
       const rows = selected.map(d => {
         const ampIdx = parseInt(pSel(form, `amp_${d.id}`), 10) || 0;
         const pres = d.presentations[ampIdx] || d.presentations[0];
-        const dosePerKg = pNum(form, `dose_${d.id}`) || d.doseDefault;
+        const inputDose = pNum(form, `dose_${d.id}`) || d.doseDefault;
+        const { dosePerKg, adjustNote } = rsiAdjustDoseForPatient(d, inputDose, idade);
         const calc = rsiComputeDrugDose(d, peso, dosePerKg, pres);
-        return { drug: d, pres, calc, dosePerKg };
+        return { drug: d, pres, calc, dosePerKg, adjustNote };
       });
 
       const preRows = rows.filter(r => r.drug.cat === 'premedicacao');
@@ -470,26 +471,35 @@ const CALC_PNEUMO = {
         ? rsiFlowHtmlRsi(preRows, indRows, bnmRows)
         : rsiFlowHtmlPreox(preRows, indRows, bnmRows);
 
-      const tableRows = rows.map(({ drug, pres, calc, dosePerKg }) => {
+      const sexoLabel = sexo === 'F' ? 'Feminino' : 'Masculino';
+      const patientHtml = `<p class="rsi-patient-summary"><strong>Paciente:</strong> ${rsiFormatNum(peso, 1)} kg · ${sexoLabel} · ${Math.round(idade)} anos</p>`;
+
+      const tableRows = rows.map(({ drug, pres, calc, dosePerKg, adjustNote }) => {
         const unitLabel = drug.unit === 'mcg/kg' ? 'mcg/kg' : 'mg/kg';
+        const doseNote = adjustNote ? `<br><span class="rsi-drug-meta">${adjustNote}</span>` : '';
         return `<tr>
           <td><strong>${drug.name}</strong><br><span class="rsi-drug-meta">${drug.catLabel}</span></td>
-          <td>${dosePerKg} ${unitLabel}<br><strong>${calc.doseLabel}</strong></td>
+          <td>${rsiFormatNum(dosePerKg, drug.unit === 'mcg/kg' ? 1 : 2)} ${unitLabel}<br><strong>${calc.doseLabel}</strong>${doseNote}</td>
           <td>${pres.label}</td>
           <td><strong>${calc.volumeMl} mL</strong>${calc.ampNote ? `<br>${calc.ampNote}` : ''}</td>
           <td>${drug.dilution}</td>
         </tr>`;
       }).join('');
 
-      return `${flowHtml}
-              <h4 class="rsi-result-title">Plano farmacológico (${peso} kg)</h4>
+      const alertsHtml = patientNotes.length
+        ? `<ul class="emerg-calc-alerts">${patientNotes.map(n => `<li>${n}</li>`).join('')}</ul>`
+        : '';
+
+      return `${patientHtml}${flowHtml}
+              <h4 class="rsi-result-title">Plano farmacológico — sequência rápida</h4>
               <table class="emerg-table rsi-drug-table">
                 <tr><th>Fármaco</th><th>Dose</th><th>Ampola escolhida</th><th>Volume</th><th>Diluição / preparo</th></tr>
                 ${tableRows}
               </table>
+              ${alertsHtml}
               <ul class="emerg-calc-alerts">
                 <li>Ordem sugerida: pré-tratamento (3–5 min antes) → indução → BNM imediatamente após (ou simultâneo conforme protocolo local).</li>
-                <li>Adaptar ao choque, TCE, asma, gravidez e idade. Succinilcolina: evitar em hipercalemia, queimadura crônica, paralisia.</li>
+                <li>Adaptar ao choque, TCE, asma e comorbidades. Succinilcolina: evitar em hipercalemia, queimadura crônica, paralisia.</li>
                 <li>Sempre ter plano B/C de via aérea (Vortex) — ver Trauma &amp; Suporte Avançado.</li>
               </ul>`;
     }
@@ -619,6 +629,47 @@ const RSI_DRUG_LIB = [
 
 function rsiFormatNum (n, dec) {
   return Number(n.toFixed(dec)).toString().replace('.', ',');
+}
+
+function rsiAdjustDoseForPatient (drug, dosePerKg, idade) {
+  let adjusted = dosePerKg;
+  let adjustNote = '';
+
+  if (idade >= 65) {
+    if (drug.id === 'propofol' && adjusted > 1) {
+      adjusted = 1;
+      adjustNote = 'Reduzido — idoso (máx. 1 mg/kg)';
+    } else if (drug.id === 'midazolam' && adjusted > 0.02) {
+      adjusted = 0.02;
+      adjustNote = 'Reduzido — idoso (0,02 mg/kg)';
+    } else if (drug.id === 'fentanil' && adjusted > 1.5) {
+      adjusted = 1.5;
+      adjustNote = 'Reduzido — idoso (1,5 mcg/kg)';
+    }
+  }
+
+  if (idade < 18) {
+    adjustNote = adjustNote || 'Pediatria — confirmar dose pediátrica específica';
+  }
+
+  return { dosePerKg: adjusted, adjustNote };
+}
+
+function rsiPatientNotes (peso, idade, sexo) {
+  const notes = [];
+
+  if (idade < 1) notes.push('Lactente — usar protocolo pediátrico e tubo por idade/peso.');
+  else if (idade < 12) notes.push('Criança — doses em mg/kg; considerar atropina pré-indução se &lt;1 ano.');
+  else if (idade >= 80) notes.push('Idoso muito frágil — preferir etomidato ou cetamina em dose baixa.');
+  else if (idade >= 65) notes.push('Idoso — maior risco de hipotensão pós-indução; reduzir sedativos e titular.');
+
+  if (sexo === 'F' && idade >= 12 && idade <= 55) {
+    notes.push('Sexo feminino em idade fértil — descartar gravidez; evitar succinilcolina se possível (hipercalemia).');
+  }
+
+  if (peso >= 120) notes.push('Obesidade — doses por peso ideal ou peso ajustado conforme protocolo local.');
+
+  return notes;
 }
 
 function rsiComputeDrugDose (drug, peso, dosePerKg, pres) {

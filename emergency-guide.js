@@ -978,7 +978,7 @@ const TRAUMA_PROTOCOLS = [
       <p>Regra clínica para decidir <strong>TC de crânio vs observação</strong> em TCE leve (GCS 14–15) em crianças &lt; 18 anos — reduz exposição desnecessária à radiação.</p>
 
       <div class="calc-block calc-block-single emerg-calc-block emerg-calc-wide">
-        <form class="calc-form" data-emerg-calc="pecarn" data-emerg-calc-inject>
+        <form class="calc-form" data-emerg-calc="pecarn" data-emerg-calc-inject="1">
           <button type="submit">Avaliar PECARN</button>
         </form>
         <div class="calc-result" hidden></div>
@@ -1042,10 +1042,37 @@ const VIA_AEREA_PROTOCOLS = [
       </div>
 
       <h4>Calculadora — doses, apresentações e fluxo</h4>
-      <p>Escolha o fluxo (<strong>sequência rápida</strong> ou <strong>pré-oxigenação reforçada</strong>), marque os fármacos do plano e selecione a ampola disponível no seu serviço.</p>
+      <p>Informe <strong>peso, sexo e idade</strong>, escolha o fluxo, marque os fármacos e selecione a ampola do seu serviço.</p>
 
       <div class="calc-block calc-block-single emerg-calc-block emerg-calc-wide">
-        <form class="calc-form" data-emerg-calc="rsi-farmacos" data-emerg-calc-inject>
+        <form class="calc-form" data-emerg-calc="rsi-farmacos" data-emerg-calc-inject="1">
+          <fieldset class="calc-fieldset rsi-patient-fieldset">
+            <legend>Dados do paciente</legend>
+            <div class="rsi-patient-grid">
+              <div>
+                <label for="rsi-peso">Peso (kg)</label>
+                <input id="rsi-peso" name="peso" type="number" min="3" max="250" step="0.1" required placeholder="Ex.: 70">
+              </div>
+              <div>
+                <label for="rsi-sexo">Sexo</label>
+                <select id="rsi-sexo" name="sexo" required>
+                  <option value="M">Masculino</option>
+                  <option value="F">Feminino</option>
+                </select>
+              </div>
+              <div>
+                <label for="rsi-idade">Idade (anos)</label>
+                <input id="rsi-idade" name="idade" type="number" min="0" max="120" step="1" required placeholder="Ex.: 45">
+              </div>
+            </div>
+          </fieldset>
+
+          <label for="rsi-fluxo">Fluxo de intubação</label>
+          <select id="rsi-fluxo" name="fluxo" required>
+            <option value="rsi">Sequência rápida clássica</option>
+            <option value="preox">Pré-oxigenação reforçada + oxigenação apneica</option>
+          </select>
+
           <button type="submit">Gerar plano de intubação</button>
         </form>
         <div class="calc-result" hidden></div>
@@ -1127,7 +1154,7 @@ const VIA_AEREA_PROTOCOLS = [
       <p>Estratificação para extubação — <strong>índice de Tobin (RSBI)</strong> e <strong>teste de respiração espontânea (TRE/SBT)</strong>.</p>
 
       <div class="calc-block calc-block-single emerg-calc-block emerg-calc-wide">
-        <form class="calc-form" data-emerg-calc="tobin-rsbi" data-emerg-calc-inject>
+        <form class="calc-form" data-emerg-calc="tobin-rsbi" data-emerg-calc-inject="1">
           <button type="submit">Calcular índice de Tobin</button>
         </form>
         <div class="calc-result" hidden></div>
@@ -1490,7 +1517,7 @@ function initEmergCalcForms (container) {
       ? CALC_FORMS[calcId]
       : null;
 
-    if (calc && form.dataset.emergCalcInject && !form.dataset.emergCalcInjected) {
+    if (calc && form.hasAttribute('data-emerg-calc-inject') && !form.dataset.emergCalcInjected) {
       const submitBtn = form.querySelector('button[type="submit"]');
       const tmp = document.createElement('div');
       tmp.innerHTML = calc.html;

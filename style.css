@@ -498,6 +498,32 @@ body.app-page {
   margin-top: 0.75rem;
 }
 
+.rsi-patient-fieldset {
+  margin-bottom: 0.5rem;
+  background: #f0f7ff;
+  border-color: #b6d4fe;
+}
+
+.rsi-patient-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.rsi-patient-summary {
+  margin: 0 0 0.75rem;
+  padding: 0.55rem 0.75rem;
+  background: #e8f4fd;
+  border-radius: 8px;
+  font-size: 0.92rem;
+}
+
+@media (max-width: 640px) {
+  .rsi-patient-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 .rsi-drug-cat {
   margin: 0.85rem 0 0.35rem;
   font-size: 0.82rem;
