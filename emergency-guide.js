@@ -1291,9 +1291,9 @@ const REACOES_METABOLICAS_PROTOCOLS = [
   {
     id: 'dka-hhs',
     icon: '🩸',
-    name: 'DKA / HHS',
+    name: 'Cetoacidose Diabética / Estado Hiperosmolar',
     html: `
-      <p>Cetoacidose diabética (DKA) e estado hiperglicêmico hiperosmolar (HHS) — fluido + insulina + <strong>reposição de K⁺</strong> guiada por níveis seriados.</p>
+      <p>Cetoacidose diabética e estado hiperglicêmico hiperosmolar — fluido + insulina + <strong>reposição de K⁺</strong> guiada por níveis seriados.</p>
 
       <div class="emerg-flow-v">
         <span class="emerg-flow-step">ABC · glicemia · gasometria · eletrólitos · cetonas (β-hidroxibutirato) · osmolaridade</span>
@@ -1322,21 +1322,21 @@ const REACOES_METABOLICAS_PROTOCOLS = [
         <tr><td><strong>&gt; 5,2</strong></td><td>Insulina sem K+ inicial · monitorar q2–4 h</td></tr>
       </table>
 
-      <h4>DKA vs HHS (resumo)</h4>
+      <h4>Cetoacidose diabética vs estado hiperglicêmico hiperosmolar</h4>
       <table class="emerg-table">
-        <tr><th></th><th>DKA</th><th>HHS</th></tr>
+        <tr><th></th><th>Cetoacidose diabética</th><th>Estado hiperglicêmico hiperosmolar</th></tr>
         <tr><td>Glicemia</td><td>≥ 250 mg/dL (geralmente)</td><td>≥ 600 mg/dL frequentemente</td></tr>
         <tr><td>pH / HCO₃</td><td>&lt; 7,3 / &lt; 18</td><td>&gt; 7,3 / &gt; 18</td></tr>
         <tr><td>Cetonas</td><td>Presentes</td><td>Ausentes ou leves</td></tr>
-        <tr><td>Osmolaridade</td><td>Variable</td><td>&gt; 320 mOsm/kg</td></tr>
+        <tr><td>Osmolaridade</td><td>Variável</td><td>&gt; 320 mOsm/kg</td></tr>
       </table>
 
-      <h4>Resolução DKA (todos)</h4>
+      <h4>Resolução da cetoacidose diabética</h4>
       <ul>
         <li>pH &gt; 7,3 · HCO₃ &gt; 15 · glicemia &lt; 200 · cetonas negativas/traço</li>
-        <li>Buscar infecção, IAM, suspensão de insulina, SGLT2 (euglicemic DKA)</li>
+        <li>Buscar infecção, IAM, suspensão de insulina, SGLT2 (cetoacidose euglicêmica)</li>
       </ul>
-      <p class="emerg-note">ADA 2024 · calculadora DKA em Calculadoras essenciais → Endocrinologia. HHS: hidratação mais prolongada; insulina em dose menor se indicada.</p>
+      <p class="emerg-note">ADA 2024 · calculadora de cetoacidose em Calculadoras essenciais → Endocrinologia. Estado hiperosmolar: hidratação mais prolongada; insulina em dose menor se indicada.</p>
     `
   }
 ];
