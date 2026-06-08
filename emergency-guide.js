@@ -36,7 +36,7 @@ const PARADA_PROTOCOLS = [
         <div class="emerg-rhythm-card emerg-rhythm-card-shock">
           <span class="emerg-rhythm-tag emerg-rhythm-tag-shock">CHOCAR</span>
           <figure class="emerg-ecg-figure">
-            <img src="assets/ecg/ecg-fv.svg" alt="ECG: fibrilação ventricular — traçado caótico sem complexos organizados" class="emerg-ecg-img" loading="lazy">
+            <img src="assets/ecg/ecg-fv.jpg" alt="ECG real: fibrilação ventricular — traçado caótico irregular sem complexos QRS organizados" class="emerg-ecg-img" width="672" height="110" loading="eager" decoding="async">
             <figcaption>FV — fibrilação ventricular</figcaption>
           </figure>
           <p>Ondas caóticas em “serrilhado”, <strong>sem QRS ou onda P</strong> identificáveis; ritmo totalmente irregular.</p>
@@ -45,8 +45,8 @@ const PARADA_PROTOCOLS = [
         <div class="emerg-rhythm-card emerg-rhythm-card-shock">
           <span class="emerg-rhythm-tag emerg-rhythm-tag-shock">CHOCAR</span>
           <figure class="emerg-ecg-figure">
-            <img src="assets/ecg/ecg-tv-pulseless.svg" alt="ECG: taquicardia ventricular — QRS largo regular sem pulso" class="emerg-ecg-img" loading="lazy">
-            <figcaption>TV sem pulso — QRS largo regular</figcaption>
+            <img src="assets/ecg/ecg-tv-pulseless.png" alt="ECG real: taquicardia ventricular monomórfica — QRS largo regular sem pulso" class="emerg-ecg-img" width="800" height="200" loading="eager" decoding="async">
+            <figcaption>TV sem pulso — QRS largo regular (monomórfica)</figcaption>
           </figure>
           <p>QRS largo (&gt; 120 ms), taquicardia <strong>regular</strong>; frequência alta — <strong>sem pulso central</strong>.</p>
           <p class="emerg-rhythm-hint">≠ TV com pulso (paciente estável → cardioversão).</p>
