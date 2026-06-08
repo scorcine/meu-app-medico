@@ -681,6 +681,152 @@ const AVC_PROTOCOLS = [
   }
 ];
 
+const SEPSE_PROTOCOLS = [
+  {
+    id: 'bundle-hora1',
+    icon: '⏱️',
+    name: 'Bundle Hora-1',
+    html: `
+      <p>Conjunto de medidas a iniciar na <strong>1ª hora</strong> após reconhecer sepse ou choque séptico. Meta: reperfusão tecidual precoce e ATB empírico adequado.</p>
+
+      <div class="emerg-flow-v">
+        <span class="emerg-flow-step emerg-flow-shock"><strong>1. Lactato sérico</strong> — dosar na admissão</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">Se lactato &gt; 2 mmol/L → <strong>repetir em 2–4 h</strong> (ou conforme protocolo)</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step emerg-flow-shock"><strong>2. Hemoculturas</strong> — ≥ 2 pares (aeróbia + anaeróbia) antes do ATB</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">Não atrasar antibiótico &gt; 45 min por coleta — coletar e já preparar ATB</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step emerg-flow-shock"><strong>3. Antibiótico de amplo espectro</strong> — <strong>≤ 1 h</strong> do reconhecimento</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">Ajustar ao foco (pulmonar, urinário, abdominal, pele, neutropenia febril)</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step emerg-flow-shock"><strong>4. Cristaloides</strong> — <strong>30 ml/kg</strong> IV</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">Indicação: hipotensão (PAS &lt; 90 / PAM &lt; 65) ou lactato ≥ 4 mmol/L</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">Infundir nas primeiras <strong>3 h</strong>; reavaliar congestão / sobrecarga</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step emerg-flow-shock"><strong>5. Vasopressor</strong> — se PAM &lt; 65 mmHg durante ou após fluidos</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step emerg-flow-loop">Noradrenalina 1ª linha · meta PAM ≥ 65 mmHg</span>
+      </div>
+
+      <table class="emerg-table">
+        <tr><th>Elemento</th><th>Meta / detalhe</th></tr>
+        <tr><td>Lactato</td><td>Basal + repetir se &gt; 2 mmol/L</td></tr>
+        <tr><td>Hemocultura</td><td>Antes do ATB; não postergar ATB &gt; 45 min</td></tr>
+        <tr><td>Antibiótico</td><td>Amplo espectro em <strong>≤ 1 h</strong></td></tr>
+        <tr><td>Fluidos</td><td><strong>30 ml/kg</strong> cristaloide se hipotensão ou lactato ≥ 4</td></tr>
+        <tr><td>Vasopressor</td><td>Noradrenalina se PAM &lt; 65 após/durante ressuscitação volêmica</td></tr>
+      </table>
+
+      <h4>Reconhecimento rápido (Sepsis-3)</h4>
+      <ul>
+        <li>Infecção suspeita/confirmada + disfunção orgânica (ΔSOFA ≥ 2 ou qSOFA ≥ 2)</li>
+        <li>Choque séptico: necessidade de vasopressor para PAM ≥ 65 + lactato &gt; 2 mmol/L apesar de volume</li>
+      </ul>
+      <p class="emerg-note">Surviving Sepsis Campaign 2021 · Sepsis-3. Use calculadoras <strong>qSOFA</strong> e <strong>SOFA</strong> em Calculadoras essenciais. Adaptar ATB ao protocolo institucional e foco infeccioso.</p>
+    `
+  },
+  {
+    id: 'norepi-map',
+    icon: '💉',
+    name: 'Titulação de Noradrenalina',
+    html: `
+      <p>Vasopressor de <strong>1ª linha</strong> no choque séptico. Objetivo: <strong>PAM ≥ 65 mmHg</strong> e perfusão adequada (diurese, lactato, consciência).</p>
+
+      <div class="emerg-flow-v">
+        <span class="emerg-flow-step">PAM &lt; 65 mmHg após ou durante <strong>30 ml/kg</strong> de cristaloide</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">Acesso venoso central preferencial (periférico temporário em emergência se necessário)</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step emerg-flow-shock">Iniciar <strong>noradrenalina</strong> em BIC</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">Titular a cada <strong>2–5 min</strong> conforme PAM alvo</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step emerg-flow-decision">PAM ≥ 65 mmHg sustentada?</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">Monitorar perfusão: diurese ≥ 0,5 ml/kg/h, lactato em queda, extremidades aquecidas</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step emerg-flow-loop">Reavaliar volume · foco infeccioso · ATB · corticoide se indicado</span>
+      </div>
+
+      <table class="emerg-table">
+        <tr><th>Parâmetro</th><th>Alvo</th></tr>
+        <tr><td><strong>PAM</strong></td><td>≥ <strong>65 mmHg</strong> (individualizar 65–70 se idoso / HTA prévia)</td></tr>
+        <tr><td>PAS / PAD</td><td>Evitar hipotensão sustentada; evitar hipertensão excessiva com vasopressor</td></tr>
+        <tr><td>Diurese</td><td>≥ 0,5 ml/kg/h (sinal de perfusão, não isolado)</td></tr>
+        <tr><td>Lactato</td><td>Queda ≥ 10% em 2 h ou ≥ 40% em 6 h (ver protocolo de reavaliação)</td></tr>
+      </table>
+
+      <h4>Esquema prático de titulação (noradrenalina)</h4>
+      <ul>
+        <li>Apresentação usual: 4–16 mg em 250 ml SG 5% (16–64 µg/ml) ou diluição institucional</li>
+        <li>Início típico: <strong>0,05–0,1 µg/kg/min</strong> — ajustar conforme resposta</li>
+        <li>Incrementos: dobrar ou +0,05 µg/kg/min a cada 2–5 min até PAM ≥ 65</li>
+        <li>Dose usual: 0,1–0,5 µg/kg/min; doses altas → avaliar choque refratário</li>
+      </ul>
+
+      <h4>Se noradrenalina insuficiente</h4>
+      <ul>
+        <li>Adicionar <strong>vasopressina</strong> (0,03 U/min fixo) — poupar catecolamina</li>
+        <li><strong>Epinefrina</strong> ou <strong>dobutamina</strong> se disfunção miocárdica / baixo débito associado</li>
+        <li>Investigar foco não drenado, adequação do ATB, hemorragia, tamponamento</li>
+      </ul>
+
+      <h4>Evitar / cautela</h4>
+      <ul>
+        <li>Extravasamento periférico — risco de necrose; preferir acesso central</li>
+        <li>Arritmias, isquemia miocárdica, extremidades frias com PAM “adequada”</li>
+        <li>Não suspender vasopressor abruptamente — titular para baixo com PAM estável e lactato em queda</li>
+      </ul>
+      <p class="emerg-note">Referência: Surviving Sepsis Campaign 2021. Documentar dose de noradrenalina (µg/kg/min) e PAM a cada titulação.</p>
+    `
+  },
+  {
+    id: 'lactato-reavaliacao',
+    icon: '📉',
+    name: 'Reavaliação de Lactato',
+    html: `
+      <p>Lactato reflete hipoperfusão tecidual. Após ressuscitação inicial, a <strong>queda do lactato</strong> orienta resposta ao tratamento.</p>
+
+      <h4>Metas de clearance</h4>
+      <table class="emerg-table">
+        <tr><th>Momento</th><th>Meta sugerida</th><th>Conduta se não atingir</th></tr>
+        <tr><td><strong>2 h</strong></td><td>Queda ≥ 10% vs basal</td><td>Reavaliar volume, vasopressor, foco</td></tr>
+        <tr><td><strong>6 h</strong></td><td><strong>Clearance ≥ 40%</strong> vs basal</td><td>Intensificar ressuscitação; UTI; revisar ATB e drenagem</td></tr>
+        <tr><td>Qualquer</td><td>Lactato em ascensão</td><td>Choque refratário — equipe sênior, foco urgente, vasopressores</td></tr>
+      </table>
+
+      <p><strong>Fórmula:</strong> clearance (%) = [(lactato basal − lactato controle) / lactato basal] × 100</p>
+
+      <div class="calc-block calc-block-single emerg-calc-block emerg-calc-wide">
+        <form class="calc-form" data-emerg-calc="lactate-clearance">
+          <label>Lactato basal (mmol/L)</label>
+          <input name="lact0" type="number" step="0.1" min="0.1" required placeholder="Ex.: 4.2">
+          <label>Lactato controle (mmol/L)</label>
+          <input name="lact1" type="number" step="0.1" min="0" required placeholder="Ex.: 2.1">
+          <label>Intervalo desde basal (horas)</label>
+          <input name="horas" type="number" step="0.5" min="0.5" value="6" required placeholder="Ex.: 2 ou 6">
+          <button type="submit">Calcular clearance</button>
+        </form>
+        <div class="calc-result" hidden></div>
+      </div>
+
+      <h4>Conduta conforme resposta</h4>
+      <ul>
+        <li><strong>Meta 6 h atingida (≥ 40%):</strong> manter monitorização; não suspender ATB precocemente</li>
+        <li><strong>Queda parcial (10–40% em 6 h):</strong> otimizar vasopressor, volume cauteloso, repetir lactato</li>
+        <li><strong>Sem queda ou ↑ lactato:</strong> repetir bundle — volume guiado por resposta, noradrenalina, busca de foco (abscesso, isquemia, cateter)</li>
+        <li>Considerar ecocardiograma à beira-leito se suspeita de disfunção ventricular</li>
+      </ul>
+      <p class="emerg-note">Lactato isolado pode ser falsamente elevado (convulsão, catecolaminas, insuficiência hepática). Correlacionar com PAM, diurese e clínica. Calculadora também em Calculadoras essenciais → Avaliação geral.</p>
+    `
+  }
+];
+
 const EMERGENCY_TOPICS = [
   {
     id: 'parada-cardio',
@@ -704,7 +850,7 @@ const EMERGENCY_TOPICS = [
     id: 'sepse',
     icon: '🩸',
     name: 'Sepse & Choque Séptico',
-    protocols: []
+    protocols: SEPSE_PROTOCOLS
   },
   {
     id: 'trauma',
@@ -914,7 +1060,7 @@ function showEmergenciaTopic (topicId) {
     return;
   }
 
-  const expectedProtocols = { 'parada-cardio': 6, 'sca': 4, 'avc': 4 };
+  const expectedProtocols = { 'parada-cardio': 6, 'sca': 4, 'avc': 4, 'sepse': 3 };
   if (expectedProtocols[topicId]) {
     contentEl.innerHTML = `
       <p class="coming-soon"><strong>Arquivo desatualizado no navegador.</strong> Os protocolos de <em>${topic.name}</em> já existem no projeto, mas o navegador carregou uma versão antiga de <code>emergency-guide.js</code>.</p>

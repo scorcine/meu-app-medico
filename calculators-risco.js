@@ -642,9 +642,10 @@ const CALC_RISCO = {
       const rate = (l0 - l1) / horas;
 
       let meta = 'Meta não atingida — reavaliar perfusão e ressuscitação';
-      if (horas <= 2 && clearance >= 10) meta = 'Meta 2h atingida (≥10% clearance) — resposta favorável';
-      else if (horas <= 6 && clearance >= 20) meta = 'Meta 6h atingida (≥20% clearance) — resposta favorável';
-      else if (clearance >= 10) meta = 'Clearance ≥10% — tendência favorável';
+      if (horas <= 2 && clearance >= 10) meta = 'Meta 2 h atingida (≥10% clearance) — resposta favorável';
+      else if (horas <= 6 && clearance >= 40) meta = 'Meta 6 h atingida (≥40% clearance) — resposta favorável';
+      else if (horas <= 6 && clearance >= 20) meta = 'Clearance parcial (≥20% em 6 h) — otimizar ressuscitação';
+      else if (clearance >= 10) meta = 'Clearance ≥10% — tendência favorável, repetir lactato';
 
       if (l1 >= l0) meta = 'Sem queda ou lactato em ascensão — alto risco, intensificar ressuscitação';
 
@@ -652,7 +653,7 @@ const CALC_RISCO = {
               <p><strong>Queda absoluta:</strong> ${(l0 - l1).toFixed(2)} mmol/L em ${horas}h</p>
               <p><strong>Taxa de queda:</strong> ${rate.toFixed(2)} mmol/L/h</p>
               <p><strong>Interpretação:</strong> ${meta}</p>
-              <p class="calc-note">Metas usuais: ≥10% em 2h ou ≥20% em 6h após ressuscitação inicial.</p>`;
+              <p class="calc-note">Metas usuais: ≥10% em 2 h; ≥40% em 6 h (meta preferencial de ressuscitação). ≥20% em 6 h = resposta parcial.</p>`;
     }
   },
 
