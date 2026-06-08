@@ -1,6 +1,6 @@
 /* Guia rápido de emergência — tópicos e conteúdo — build 98041d1 */
 
-const MEDHUB_EMERG_BUILD = 'pediatrica-v1';
+const MEDHUB_EMERG_BUILD = 'toxicologia-v1';
 
 const PARADA_PROTOCOLS = [
   {
@@ -1642,6 +1642,176 @@ const PEDIATRIC_PROTOCOLS = [
   }
 ];
 
+const TOXICOLOGIA_PROTOCOLS = [
+  {
+    id: 'overdose-opioide',
+    icon: '💉',
+    name: 'Overdose de Opioide',
+    html: `
+      <p>Triade: rebaixamento de consciência, miose (pode estar ausente se co-intoxicação), <strong>depressão respiratória</strong>. Tratar ventilação antes de antídoto.</p>
+
+      <div class="emerg-flow-v">
+        <span class="emerg-flow-step">ABC — ventilar com bolsa-válvula-máscara · O₂ · monitor · acesso venoso</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step emerg-flow-shock"><strong>Naloxona — escala de doses</strong></span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step"><strong>1ª dose: 0,4 mg</strong> EV/IM/IN · repetir a cada 2–3 min se sem resposta</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step"><strong>2ª escalonamento: 2 mg</strong> EV — se persistir depressão respiratória</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step emerg-flow-shock"><strong>3ª escalonamento: 10 mg</strong> EV — suspeitar opioide potente (fentanil/analogos) ou co-intoxicação</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">Dose total cumulativa &gt; 10 mg sem resposta → <strong>não é opioide isolado</strong> — investigar outras causas</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step emerg-flow-loop">Infusão contínua se opioide longa ação (metadona, buprenorfina) — metade da dose de reversão horária</span>
+      </div>
+
+      <table class="emerg-table">
+        <tr><th>Passo</th><th>Dose naloxona</th><th>Via / intervalo</th></tr>
+        <tr><td><strong>1</strong></td><td>0,4 mg</td><td>EV/IM/IN · repetir q2–3 min</td></tr>
+        <tr><td><strong>2</strong></td><td>2 mg</td><td>EV bolus</td></tr>
+        <tr><td><strong>3</strong></td><td>10 mg</td><td>EV bolus</td></tr>
+        <tr><td>Pediátrico</td><td>0,1 mg/kg</td><td>Máx. 2 mg/dose · mesma lógica de repetir</td></tr>
+      </table>
+
+      <h4>Alertas</h4>
+      <ul>
+        <li><strong>Síndrome de abstinência</strong> e edema pulmonar de rebote — titular dose mínima efetiva</li>
+        <li>Buprenorfina / fentanil lipofílico — doses altas e infusão prolongada</li>
+        <li>Observação ≥ 4–6 h (opioide longa ação) · não alta isolada após 1ª resposta</li>
+      </ul>
+      <p class="emerg-note">ACMT / CDC — naloxona IN 4 mg disponível na comunidade; no hospital titular EV. Co-intoxicação benzodiazepínico comum.</p>
+    `
+  },
+  {
+    id: 'paracetamol-rumack',
+    icon: '💊',
+    name: 'Paracetamol — Rumack-Matthew',
+    html: `
+      <p>Intoxicação aguda por paracetamol — usar <strong>nomograma de Rumack-Matthew</strong> (≥ 4 h pós-ingestão) e iniciar <strong>N-acetilcisteína (NAC)</strong> se acima da linha de tratamento ou dose tóxica conhecida.</p>
+
+      <div class="calc-block calc-block-single emerg-calc-block emerg-calc-wide">
+        <form class="calc-form" data-emerg-calc="rumack-nac" data-emerg-calc-inject="1">
+          <button type="submit">Avaliar nomograma e dose de NAC</button>
+        </form>
+        <div class="calc-result" hidden></div>
+      </div>
+
+      <h4>Linha de tratamento (referência)</h4>
+      <table class="emerg-table">
+        <tr><th>Tempo pós-ingestão</th><th>Paracetamol sérico (mg/L) — tratar se ≥</th></tr>
+        <tr><td>4 h</td><td><strong>150</strong></td></tr>
+        <tr><td>8 h</td><td><strong>75</strong></td></tr>
+        <tr><td>12 h</td><td><strong>30</strong></td></tr>
+        <tr><td>16 h</td><td><strong>15</strong></td></tr>
+        <tr><td>24 h</td><td><strong>4</strong></td></tr>
+      </table>
+
+      <h4>Iniciar NAC sem nível se</h4>
+      <ul>
+        <li>Dose ingerida ≥ <strong>150 mg/kg</strong> ou ≥ <strong>10 g</strong> (adulto)</li>
+        <li>Paracetamol sérico acima da linha · hepatite aguda · etilismo crônico</li>
+        <li>Tempo &lt; 8 h desde ingestão = janela ideal de NAC</li>
+      </ul>
+      <p class="emerg-note">Rumack &amp; Matthew, 1975 · NAC VO (72 h) alternativa se IV indisponível — preferir IV se encefalopatia ou vômitos.</p>
+    `
+  },
+  {
+    id: 'hipertermia-maligna-calor',
+    icon: '🔥',
+    name: 'Hipertermia Maligna / Golpe de Calor',
+    html: `
+      <p>Diferenciar <strong>hipertermia maligna (HM)</strong> — gatilho anestésico (halogenados + succinilcolina) — de <strong>golpe de calor</strong> ambiental/exercício. Conduta diverge no antídoto.</p>
+
+      <table class="emerg-table">
+        <tr><th></th><th>Hipertermia maligna</th><th>Golpe de calor</th></tr>
+        <tr><td>Gatilho</td><td>Anestésicos voláteis, succinilcolina</td><td>Calor + umidade, exercício, idoso</td></tr>
+        <tr><td>Tríade</td><td>Hipercapnia, rigidez, taquicardia, hipertermia</td><td>Temperatura &gt; 40 °C, pele quente seca ou sudoreica, CNS alterado</td></tr>
+        <tr><td>1ª linha</td><td><strong>Dantrolene 2,5 mg/kg EV</strong></td><td><strong>Resfriamento rápido</strong> (sem dantrolene de rotina)</td></tr>
+      </table>
+
+      <div class="emerg-rhythm-grid emerg-rhythm-grid-2">
+        <div class="emerg-rhythm-card emerg-rhythm-card-shock">
+          <span class="emerg-rhythm-tag emerg-rhythm-tag-shock">Hipertermia maligna</span>
+          <div class="emerg-flow-v">
+            <span class="emerg-flow-step">Parar gatilhos — suspender voláteis · hiperventilar 100% O₂</span>
+            <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+            <span class="emerg-flow-step emerg-flow-shock"><strong>Dantrolene 2,5 mg/kg EV</strong> — repetir até 10 mg/kg (máx. ~30 mg/kg/dia)</span>
+            <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+            <span class="emerg-flow-step">Resfriamento ativo adjuvante · tratar hipercalemia, acidose, arritmias</span>
+            <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+            <span class="emerg-flow-step">UTI · CPK · creatinina · coagulação · MH hotline</span>
+          </div>
+        </div>
+        <div class="emerg-rhythm-card emerg-rhythm-card-shock">
+          <span class="emerg-rhythm-tag emerg-rhythm-tag-shock">Golpe de calor</span>
+          <div class="emerg-flow-v">
+            <span class="emerg-flow-step">ABC · O₂ · acesso · monitor · laboratório (lactato, eletrólitos, coagulação)</span>
+            <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+            <span class="emerg-flow-step emerg-flow-shock"><strong>Resfriamento rápido</strong> — meta queda 0,2–0,5 °C/min</span>
+            <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+            <span class="emerg-flow-step">Imersão em água com gelo · compressas + ventilador · lavagem gástrica/peritoneal se grave</span>
+            <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+            <span class="emerg-flow-step">Fluidos frios IV · benzodiazepina se agitação/convulsão · <strong>não usar dantrolene</strong></span>
+            <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+            <span class="emerg-flow-step">Tratar coagulopatia (CIVD), rabdomiólise, insuficiência renal</span>
+          </div>
+        </div>
+      </div>
+
+      <h4>Metas de resfriamento (golpe de calor)</h4>
+      <ul>
+        <li>Meta: <strong>&lt; 39 °C</strong> em 30 min · evitar overshoot (&lt; 36 °C)</li>
+        <li>Antipiréticos (paracetamol/AINE) <strong>ineficazes</strong> — não são febre central</li>
+      </ul>
+      <p class="emerg-note">MHAUS (hipertermia maligna) · Surviving Sepsis/adaptado para golpe de calor — resfriamento precoce reduz mortalidade.</p>
+    `
+  },
+  {
+    id: 'hipotermia-swiss',
+    icon: '❄️',
+    name: 'Hipotermia — Algoritmo Swiss',
+    html: `
+      <p>Hipotermia acidental — estadiamento <strong>Swiss (HT I–IV)</strong> guia reaquecimento passivo, ativo externo, interno ou <strong>ECMO/CPB</strong>.</p>
+
+      <table class="emerg-table">
+        <tr><th>Estádio</th><th>Temperatura</th><th>Clínica</th><th>Conduta</th></tr>
+        <tr><td><strong>HT I</strong></td><td>&gt; 35 °C</td><td>Alerta, tremores</td><td>Reaquecimento passivo</td></tr>
+        <tr><td><strong>HT II</strong></td><td>32–35 °C</td><td>Rebaixado, sem tremor</td><td>Reaquecimento ativo externo</td></tr>
+        <tr><td><strong>HT III</strong></td><td>28–32 °C</td><td>Inconsciente</td><td>Reaquecimento interno · considerar ECMO</td></tr>
+        <tr><td><strong>HT IV</strong></td><td>&lt; 28 °C</td><td>Aparente morte</td><td>ECMO/CPB se elegível · RCP prolongada</td></tr>
+      </table>
+
+      <div class="calc-block calc-block-single emerg-calc-block emerg-calc-wide">
+        <form class="calc-form" data-emerg-calc="hipotermia-swiss" data-emerg-calc-inject="1">
+          <button type="submit">Estadiar e definir reaquecimento</button>
+        </form>
+        <div class="calc-result" hidden></div>
+      </div>
+
+      <h4>PCR em hipotermia</h4>
+      <div class="emerg-flow-v">
+        <span class="emerg-flow-step">“<strong>Ninguém morto até estar quente e morto</strong>” — RCP conforme PALS/ACLS</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">Máximo <strong>3 tentativas de desfibrilação</strong> se T &lt; 30 °C — reaquecer paralelamente</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step emerg-flow-shock"><strong>ECMO VA</strong> se disponível — reaquecimento 1–2 °C/h</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">Considerar cessar esforços se T &gt; 32–35 °C ainda sem ROSC (tempo imersão, comorbidades)</span>
+      </div>
+
+      <h4>Medidas de reaquecimento</h4>
+      <ul>
+        <li><strong>Passivo:</strong> ambiental, cobertores secos, roupas secas</li>
+        <li><strong>Ativo externo:</strong> Bair Hugger, mantas térmicas, calor radiante</li>
+        <li><strong>Ativo interno:</strong> SF morno 40 °C IV, lavagem peritoneal/torácica, ECMO</li>
+        <li>Manuseio delicado — arritmias ventriculares induzíveis por movimentação (J wave/Osborn)</li>
+      </ul>
+      <p class="emerg-note">Swiss Staging System (SSHP) / ERC Hypothermia Guideline · medir temperatura central (esôfago, bexiga, PA).</p>
+    `
+  }
+];
+
 const EMERGENCY_TOPICS = [
   {
     id: 'parada-cardio',
@@ -1701,7 +1871,7 @@ const EMERGENCY_TOPICS = [
     id: 'toxicologia',
     icon: '☠️',
     name: 'Toxicologia & Ambientais',
-    protocols: []
+    protocols: TOXICOLOGIA_PROTOCOLS
   },
   {
     id: 'pressao-arritmias',
@@ -1890,7 +2060,7 @@ function showEmergenciaTopic (topicId) {
     return;
   }
 
-  const expectedProtocols = { 'parada-cardio': 6, 'sca': 4, 'avc': 4, 'sepse': 3, 'trauma': 4, 'via-aerea': 3, 'reacoes-metabolicas': 4, 'obstetricia': 3, 'pediatrica': 3 };
+  const expectedProtocols = { 'parada-cardio': 6, 'sca': 4, 'avc': 4, 'sepse': 3, 'trauma': 4, 'via-aerea': 3, 'reacoes-metabolicas': 4, 'obstetricia': 3, 'pediatrica': 3, 'toxicologia': 4 };
   if (expectedProtocols[topicId]) {
     contentEl.innerHTML = `
       <p class="coming-soon"><strong>Arquivo desatualizado no navegador.</strong> Os protocolos de <em>${topic.name}</em> já existem no projeto, mas o navegador carregou uma versão antiga de <code>emergency-guide.js</code>.</p>

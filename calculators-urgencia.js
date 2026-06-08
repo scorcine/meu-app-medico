@@ -446,5 +446,151 @@ const CALC_URGENCIA = {
               <p><strong>STANDING:</strong> ${standing}</p>
               <p class="calc-note">PERCIST = critérios PET-oncológicos (não síncope). CSRS/SFSR para síncope; STANDING (Vanni 2014) para vertigem.</p>`;
     }
+  },
+
+  'rumack-nac': {
+    title: 'Paracetamol — Nomograma Rumack-Matthew + NAC',
+    wide: true,
+    html: `
+      <label>Peso (kg)</label>
+      <input name="peso" type="number" step="0.1" min="1" required placeholder="Ex.: 70">
+      <label>Horas desde a ingestão aguda</label>
+      <input name="horas" type="number" step="0.5" min="0" required placeholder="Mín. 4 h para nomograma clássico">
+      <label>Paracetamol sérico (mg/L)</label>
+      <input name="nivel" type="number" step="1" min="0" placeholder="Resultado laboratorial">
+      <label class="calc-check"><input type="checkbox" name="dose_alta"> Dose ingerida ≥ 150 mg/kg ou ≥ 10 g (nível desconhecido)</label>
+      <label class="calc-check"><input type="checkbox" name="hepato"> Doença hepática crônica / etilismo / desnutrição</label>
+    `,
+    calculate (form) {
+      const peso = uNum(form, 'peso');
+      const horas = uNum(form, 'horas');
+      const nivel = uNum(form, 'nivel');
+      if (!peso || peso <= 0) return alert('Informe o peso.');
+      if (!Number.isFinite(horas) || horas < 0) return alert('Informe as horas desde a ingestão.');
+
+      const doseAlta = uChk(form, 'dose_alta');
+      const hepato = uChk(form, 'hepato');
+      const linha = rumackTreatmentLine(horas);
+      let tratar = doseAlta || hepato;
+
+      let nomogramaTxt = '';
+      if (Number.isFinite(nivel) && horas >= 4) {
+        tratar = tratar || nivel >= linha;
+        nomogramaTxt = `<p><strong>Nível:</strong> ${nivel} mg/L às ${horas} h · <strong>Linha de tratamento:</strong> ${linha.toFixed(0)} mg/L</p>
+                        <p><strong>Acima da linha:</strong> ${nivel >= linha ? 'Sim — iniciar NAC' : 'Não — monitorar conforme clínica'}</p>`;
+      } else if (Number.isFinite(nivel) && horas < 4) {
+        nomogramaTxt = `<p class="emerg-calc-alerts">Nível ${nivel} mg/L com &lt; 4 h — repetir paracetamol sérico ≥ 4 h após ingestão para usar nomograma.</p>`;
+      } else if (!doseAlta) {
+        nomogramaTxt = `<p>Informe paracetamol sérico (≥ 4 h) ou marque dose tóxica conhecida.</p>`;
+      }
+
+      const nac = rumackNacDoses(peso);
+      const conduta = tratar
+        ? '<strong>Iniciar N-acetilcisteína (NAC) IV</strong> — não aguardar confirmação se dose tóxica ou acima da linha'
+        : 'Sem indicação imediata de NAC pelo nomograma — reavaliar com novo nível ou se sintomas hepáticos';
+
+      return `${nomogramaTxt}
+              <p class="emerg-calc-score"><strong>Conduta:</strong> ${conduta}</p>
+              <h4 class="rsi-result-title">NAC IV — protocolo 21 h (adulto)</h4>
+              <table class="emerg-table">
+                <tr><th>Fase</th><th>Dose</th><th>Infusão</th></tr>
+                <tr><td>1 — ataque</td><td><strong>${nac.fase1} mg</strong> (150 mg/kg)</td><td>200 mL SG 5% em 1 h (máx. 15 g)</td></tr>
+                <tr><td>2</td><td><strong>${nac.fase2} mg</strong> (50 mg/kg)</td><td>500 mL SG 5% em 4 h (máx. 5 g)</td></tr>
+                <tr><td>3</td><td><strong>${nac.fase3} mg</strong> (100 mg/kg)</td><td>1000 mL SG 5% em 16 h (máx. 10 g)</td></tr>
+              </table>
+              <ul class="emerg-calc-alerts">
+                <li>Iniciar NAC &lt; 8 h ideal · benefício até 24 h se hepatotoxicidade.</li>
+                <li>Monitorar TGO/TGP, INR, lactato, glicemia · consulta toxicologia/hepatologia.</li>
+              </ul>
+              <p class="calc-note">Rumack-Matthew (linha de tratamento 150 mg/L às 4 h). NAC: protocolo IV trifásico padrão.</p>`;
+    }
+  },
+
+  'hipotermia-swiss': {
+    title: 'Hipotermia — estadiamento Swiss (HT I–IV)',
+    html: `
+      <label>Temperatura central (°C)</label>
+      <input name="temp" type="number" step="0.1" required placeholder="Ex.: 30,5">
+      <label>Consciência / pulso</label>
+      <select name="clinica" required>
+        <option value="I">HT I — alerta, tremores, &gt; 35 °C</option>
+        <option value="II">HT II — rebaixado, sem tremor, 32–35 °C</option>
+        <option value="III">HT III — inconsciente, 28–32 °C</option>
+        <option value="IV">HT IV — aparente morte, &lt; 28 °C</option>
+      </select>
+      <label class="calc-check"><input type="checkbox" name="arrest"> Parada cardíaca / instabilidade refratária</label>
+    `,
+    calculate (form) {
+      const temp = uNum(form, 'temp');
+      const estadio = uSel(form, 'clinica');
+      const arrest = uChk(form, 'arrest');
+
+      let stage = estadio;
+      if (Number.isFinite(temp)) {
+        if (temp >= 35) stage = 'I';
+        else if (temp >= 32) stage = 'II';
+        else if (temp >= 28) stage = 'III';
+        else stage = 'IV';
+      }
+
+      const plan = {
+        I: {
+          titulo: 'HT I (> 35 °C)',
+          reaquecer: 'Reaquecimento passivo — ambiental, cobertores secos, bebidas quentes se alerta',
+          ecmo: 'Não indicado'
+        },
+        II: {
+          titulo: 'HT II (32–35 °C)',
+          reaquecer: 'Reaquecimento ativo externo — Bair Hugger, mantas térmicas, fluidos IV mornos 40 °C',
+          ecmo: 'Considerar se refratário'
+        },
+        III: {
+          titulo: 'HT III (28–32 °C)',
+          reaquecer: 'Reaquecimento ativo interno — fluidos mornos, lavagem gástrica/peritoneal, ECMO se instável',
+          ecmo: 'Considerar ECMO/CPB se choque ou arritmia refratária'
+        },
+        IV: {
+          titulo: 'HT IV (< 28 °C)',
+          reaquecer: 'Reaquecimento central — meta 1–2 °C/h · manuseio delicado',
+          ecmo: '<strong>ECMO/CPB</strong> se critérios de ressuscitação — “ninguém morto até quente e morto”'
+        }
+      }[stage];
+
+      let extra = '';
+      if (arrest || stage === 'IV') {
+        extra = `<p><strong>PCR hipotérmica:</strong> RCP contínua · 3 choques máximo · considerar <strong>ECMO</strong> · reaquecer para &gt; 30–32 °C antes de cessar se tempo de imersão frio &lt; 6 h.</p>`;
+      }
+
+      return `<p class="emerg-calc-score"><strong>${plan.titulo}</strong>${Number.isFinite(temp) ? ` · medido ${temp.toFixed(1).replace('.', ',')} °C` : ''}</p>
+              <p><strong>Reaquecimento:</strong> ${plan.reaquecer}</p>
+              <p><strong>ECMO / CPB:</strong> ${plan.ecmo}</p>
+              ${extra}
+              <p class="calc-note">Algoritmo Swiss Staging (SSHP) · temperatura esofágica/bladder/central — não axilar.</p>`;
+    }
   }
 };
+
+function rumackTreatmentLine (hours) {
+  const pts = [
+    [4, 150], [8, 75], [12, 30], [16, 15], [24, 4]
+  ];
+  if (hours <= 4) return 150;
+  if (hours >= 24) return 4;
+  for (let i = 0; i < pts.length - 1; i++) {
+    const [h1, l1] = pts[i];
+    const [h2, l2] = pts[i + 1];
+    if (hours >= h1 && hours <= h2) {
+      const t = (hours - h1) / (h2 - h1);
+      return l1 + t * (l2 - l1);
+    }
+  }
+  return 4;
+}
+
+function rumackNacDoses (peso) {
+  return {
+    fase1: Math.min(Math.round(150 * peso), 15000),
+    fase2: Math.min(Math.round(50 * peso), 5000),
+    fase3: Math.min(Math.round(100 * peso), 10000)
+  };
+}
