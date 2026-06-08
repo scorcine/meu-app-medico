@@ -444,6 +444,148 @@ body.app-page {
   border-radius: 4px;
 }
 
+.emerg-algo-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 1rem 0 1.5rem;
+  padding: 0.75rem;
+  background: #f0f6ff;
+  border-radius: 10px;
+  border: 1px solid #d0e3f7;
+}
+
+.emerg-algo-nav a {
+  font-size: 0.82rem;
+  color: #0d6efd;
+  text-decoration: none;
+  padding: 0.35rem 0.65rem;
+  background: #fff;
+  border: 1px solid #c8ddf5;
+  border-radius: 6px;
+  line-height: 1.3;
+}
+
+.emerg-algo-nav a:hover {
+  background: #e8f2ff;
+  border-color: #0d6efd;
+}
+
+.emerg-algo-block {
+  margin-bottom: 1.75rem;
+  padding: 1.1rem 1.25rem;
+  background: #fafbfd;
+  border: 1px solid #dce4ec;
+  border-left: 4px solid #0d6efd;
+  border-radius: 0 10px 10px 0;
+  scroll-margin-top: 1rem;
+}
+
+.emerg-algo-block h3 {
+  margin-top: 0;
+  font-size: 1.1rem;
+}
+
+.emerg-algo-block h4 {
+  font-size: 0.95rem;
+  color: #2c5282;
+  margin: 1rem 0 0.4rem;
+}
+
+.emerg-steps {
+  counter-reset: step;
+  list-style: none;
+  margin: 0.75rem 0 0;
+  padding: 0;
+}
+
+.emerg-steps > li {
+  counter-increment: step;
+  position: relative;
+  padding: 0.5rem 0 0.5rem 2.25rem;
+  margin-bottom: 0.25rem;
+  border-bottom: 1px dashed #e8edf2;
+}
+
+.emerg-steps > li:last-child {
+  border-bottom: none;
+}
+
+.emerg-steps > li::before {
+  content: counter(step);
+  position: absolute;
+  left: 0;
+  top: 0.45rem;
+  width: 1.5rem;
+  height: 1.5rem;
+  background: #0d6efd;
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.emerg-flow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
+  margin: 0.75rem 0;
+  padding: 0.75rem;
+  background: #fff;
+  border-radius: 8px;
+  border: 1px solid #e0e8f0;
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+.emerg-flow span {
+  padding: 0.3rem 0.6rem;
+  background: #e8f2ff;
+  border-radius: 6px;
+  color: #0d6efd;
+}
+
+.emerg-flow .arrow {
+  background: none;
+  color: #8899aa;
+  padding: 0;
+  font-weight: 400;
+}
+
+.emerg-note {
+  font-size: 0.85rem;
+  color: #5a6a7a;
+  margin-top: 0.75rem;
+  padding: 0.6rem 0.75rem;
+  background: #fff8e6;
+  border-radius: 6px;
+  border-left: 3px solid #f0ad4e;
+}
+
+.emerg-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+  margin: 0.75rem 0;
+}
+
+.emerg-table th,
+.emerg-table td {
+  padding: 0.45rem 0.6rem;
+  border: 1px solid #dce4ec;
+  text-align: left;
+}
+
+.emerg-table th {
+  background: #e8f2ff;
+  color: #0d6efd;
+  font-weight: 600;
+}
+
 
 .calc-soon-block {
   margin-top: 1.5rem;
