@@ -87,51 +87,51 @@ const PARADA_PROTOCOLS = [
       <div class="emerg-flowcharts-row">
         <div class="emerg-flow-col emerg-flow-col-shock">
           <h4>Fluxograma — ritmo chocável</h4>
-          <div class="emerg-flow-h" aria-label="Fluxograma ritmo chocavel">
+          <div class="emerg-flow-v" aria-label="Fluxograma ritmo chocavel">
             <span class="emerg-flow-step">RCP + DEA</span>
-            <span class="emerg-flow-arrow" aria-hidden="true">→</span>
+            <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
             <span class="emerg-flow-step">RCP 2 min</span>
-            <span class="emerg-flow-arrow" aria-hidden="true">→</span>
+            <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
             <span class="emerg-flow-step emerg-flow-shock">1º CHOC</span>
-            <span class="emerg-flow-arrow" aria-hidden="true">→</span>
+            <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
             <span class="emerg-flow-step">RCP 2 min</span>
-            <span class="emerg-flow-arrow" aria-hidden="true">→</span>
+            <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
             <span class="emerg-flow-step emerg-flow-shock">2º CHOC</span>
-            <span class="emerg-flow-arrow" aria-hidden="true">→</span>
+            <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
             <span class="emerg-flow-step">RCP + ES</span>
-            <span class="emerg-flow-arrow" aria-hidden="true">→</span>
+            <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
             <span class="emerg-flow-step emerg-flow-shock">3º CHOC</span>
-            <span class="emerg-flow-arrow" aria-hidden="true">→</span>
+            <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
             <span class="emerg-flow-step">RCP + AMIOD 300</span>
-            <span class="emerg-flow-arrow" aria-hidden="true">→</span>
+            <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
             <span class="emerg-flow-step emerg-flow-shock">4º CHOC</span>
-            <span class="emerg-flow-arrow" aria-hidden="true">→</span>
+            <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
             <span class="emerg-flow-step">RCP + AMIOD 150</span>
-            <span class="emerg-flow-arrow" aria-hidden="true">→</span>
-            <span class="emerg-flow-step emerg-flow-loop">ES q3–5 min</span>
+            <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+            <span class="emerg-flow-step emerg-flow-loop">ES q3–5 min · reavaliar ritmo</span>
           </div>
         </div>
 
         <div class="emerg-flow-col emerg-flow-col-noshock">
           <h4>Fluxograma — ritmo não chocável</h4>
-          <div class="emerg-flow-h" aria-label="Fluxograma ritmo nao chocavel">
-            <span class="emerg-flow-step">Analisar ≤ 10 s</span>
-            <span class="emerg-flow-arrow" aria-hidden="true">→</span>
-            <span class="emerg-flow-step emerg-flow-decision">Assistolia / AESP</span>
-            <span class="emerg-flow-arrow" aria-hidden="true">→</span>
-            <span class="emerg-flow-step emerg-flow-noshock">NÃO CHOCAR</span>
-            <span class="emerg-flow-arrow" aria-hidden="true">→</span>
-            <span class="emerg-flow-step">RCP 30:2</span>
-            <span class="emerg-flow-arrow" aria-hidden="true">→</span>
-            <span class="emerg-flow-step">ES 1 mg</span>
-            <span class="emerg-flow-arrow" aria-hidden="true">→</span>
-            <span class="emerg-flow-step">ES q3–5 min</span>
-            <span class="emerg-flow-arrow" aria-hidden="true">→</span>
-            <span class="emerg-flow-step">5H + 5T</span>
-            <span class="emerg-flow-arrow" aria-hidden="true">→</span>
-            <span class="emerg-flow-step">IOT + EtCO₂</span>
-            <span class="emerg-flow-arrow" aria-hidden="true">→</span>
-            <span class="emerg-flow-step emerg-flow-loop">Reavaliar 2 min</span>
+          <div class="emerg-flow-v" aria-label="Fluxograma ritmo nao chocavel">
+            <span class="emerg-flow-step">Analisar ritmo ≤ 10 s</span>
+            <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+            <span class="emerg-flow-step emerg-flow-decision">Assistolia ou AESP</span>
+            <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+            <span class="emerg-flow-step emerg-flow-noshock">NÃO CHOCAR — RCP imediata</span>
+            <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+            <span class="emerg-flow-step">RCP 30:2 ou compressões contínuas</span>
+            <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+            <span class="emerg-flow-step">Epinefrina 1 mg IV/IO</span>
+            <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+            <span class="emerg-flow-step">Repetir ES q3–5 min</span>
+            <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+            <span class="emerg-flow-step">Tratar 5H + 5T</span>
+            <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+            <span class="emerg-flow-step">Via aérea + capnografia</span>
+            <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+            <span class="emerg-flow-step emerg-flow-loop">Reavaliar a cada 2 min</span>
           </div>
         </div>
       </div>
