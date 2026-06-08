@@ -1003,6 +1003,164 @@ const TRAUMA_PROTOCOLS = [
   }
 ];
 
+const VIA_AEREA_PROTOCOLS = [
+  {
+    id: 'rsi-7-passos',
+    icon: '💉',
+    name: 'RSI em 7 Passos',
+    html: `
+      <p>Sequência rápida de intubação (RSI) — intubação com sedação + bloqueador neuromuscular, <strong>sem ventilação manual</strong> entre indução e laringoscopia (exceto se hipóxia).</p>
+
+      <div class="emerg-flow-v">
+        <span class="emerg-flow-step emerg-flow-shock"><strong>1. PREPARE</strong> — preparo</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">Equipe, monitor, aspirador, tubos (±1 tamanho), SGA, plano B/C (Vortex)</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step emerg-flow-shock"><strong>2. Pré-oxigenação</strong></span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">O₂ 100% 3–5 min ou 8 VC · meta SpO₂ &gt; 95%</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step emerg-flow-shock"><strong>3. Pré-tratamento</strong> (opcional)</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">Fentanil (TCE/HTIC) · atropina (&lt;1 ano) · lidocaíva (asma/HTIC) — conforme cenário</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step emerg-flow-shock"><strong>4. Paralisia + sedação</strong></span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">Indução (etomidato, cetamina, propofol) + BNM (succinilcolina ou rocurônio)</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step emerg-flow-shock"><strong>5. Posicionamento</strong></span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">Sniffing / ramp · laringoscopia ótima</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step emerg-flow-shock"><strong>6. Passagem com prova</strong></span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">IOT + <strong>capnografia</strong> (onda quadrada) · ausculta · fixação</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step emerg-flow-shock"><strong>7. Pós-IOT</strong></span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">Ventilador, sedação/analgesia, Rx tórax, DOPE se dessaturação</span>
+      </div>
+
+      <h4>Oxigenação apneica</h4>
+      <ul>
+        <li>Cateter nasal de alto fluxo ou O₂ 15 L/min <strong>durante</strong> laringoscopia — prolonga tempo seguro de apneia</li>
+        <li>Se SpO₂ cair &lt; 90% → ventilar com bolsa-válvula-máscara antes de retomar tentativa</li>
+      </ul>
+
+      <table class="emerg-table">
+        <tr><th>Fármaco</th><th>Dose usual (adulto)</th></tr>
+        <tr><td>Etomidato</td><td>0,3 mg/kg IV</td></tr>
+        <tr><td>Cetamina</td><td>1–2 mg/kg IV (hipotensão / asma)</td></tr>
+        <tr><td>Propofol</td><td>1–2 mg/kg IV (hemodinamicamente estável)</td></tr>
+        <tr><td>Succinilcolina</td><td>1–1,5 mg/kg IV</td></tr>
+        <tr><td>Rocurônio</td><td>1–1,2 mg/kg IV (alternativa)</td></tr>
+      </table>
+      <p class="emerg-note">Adaptar doses ao choque, TCE, gravidez e idade. Sempre ter plano de via aérea difícil (Vortex) — ver Trauma &amp; Suporte Avançado.</p>
+    `
+  },
+  {
+    id: 'dope-pos-iot',
+    icon: '🚨',
+    name: 'Hipoxemia pós-IOT — DOPE',
+    html: `
+      <p>Queda de SpO₂ ou aumento de pressão de pico <strong>logo após intubação</strong> — usar mnemônico <strong>DOPE</strong> antes de aumentar FiO₂ cegamente.</p>
+
+      <div class="emerg-rhythm-grid emerg-rhythm-grid-2">
+        <div class="emerg-rhythm-card emerg-rhythm-card-shock">
+          <span class="emerg-rhythm-tag emerg-rhythm-tag-shock">D — Displacement</span>
+          <p><strong>Deslocamento do tubo</strong> — bronco principal, extubação parcial</p>
+          <p>Confirmar profundidade (21–23 cm incisivos adulto) · capnografia · ausculta bilateral</p>
+        </div>
+        <div class="emerg-rhythm-card emerg-rhythm-card-shock">
+          <span class="emerg-rhythm-tag emerg-rhythm-tag-shock">O — Obstruction</span>
+          <p><strong>Obstrução</strong> — secreção, coágulo, mordida do tubo, kinking</p>
+          <p>Aspirar traqueal · tubo orofaríngeo · relaxar se mordendo (BNM)</p>
+        </div>
+        <div class="emerg-rhythm-card emerg-rhythm-card-shock">
+          <span class="emerg-rhythm-tag emerg-rhythm-tag-shock">P — Pneumothorax</span>
+          <p><strong>Pneumotórax</strong> (hipertensivo) — desvio traqueal, MV abolido, instabilidade</p>
+          <p>Descompressão imediata · drenagem torácica</p>
+        </div>
+        <div class="emerg-rhythm-card emerg-rhythm-card-shock">
+          <span class="emerg-rhythm-tag emerg-rhythm-tag-shock">E — Equipment</span>
+          <p><strong>Equipamento</strong> — desconexão, balão sem O₂, ventilador parado, FiO₂ baixa</p>
+          <p>Verificar circuito, CO₂, entrada de O₂, alarmes</p>
+        </div>
+      </div>
+
+      <div class="emerg-flow-v">
+        <span class="emerg-flow-step">SpO₂ ↓ pós-IOT — chamar ajuda, FiO₂ 100%, manual ventilation</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step emerg-flow-decision">DOPE — percorrer D → O → P → E</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">Capnografia presente? Ausculta bilateral?</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">Suspeita pneumotórax hipertensivo → descompressar antes de Rx</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step emerg-flow-loop">Corrigir causa · Rx tórax · reavaliar gasometria</span>
+      </div>
+
+      <h4>Sinais por causa</h4>
+      <table class="emerg-table">
+        <tr><th>Causa</th><th>Pista clínica</th></tr>
+        <tr><td>Deslocamento</td><td>Capnografia ↓/ausente unilateral, MV assimétrico</td></tr>
+        <tr><td>Obstrução</td><td>Pressão de pico ↑, platô normal ou ↑, aspiração produtiva</td></tr>
+        <tr><td>Pneumotórax</td><td>HIPOTENSÃO + MV abolido + hiperressonância / turgência jugular</td></tr>
+        <tr><td>Equipamento</td><td>Alarme silencioso, tubo desconectado visível</td></tr>
+      </table>
+      <p class="emerg-note">Se não resolver rapidamente → considerar broncoespasmo, edema, hemotórax, TEP ou falha de oxigenação (shunt).</p>
+    `
+  },
+  {
+    id: 'desmame-ventilatorio',
+    icon: '📉',
+    name: 'Desmame Ventilatório',
+    html: `
+      <p>Estratificação para extubação — <strong>índice de Tobin (RSBI)</strong> e <strong>teste de respiração espontânea (TRE/SBT)</strong>.</p>
+
+      <div class="calc-block calc-block-single emerg-calc-block emerg-calc-wide">
+        <form class="calc-form" data-emerg-calc="tobin-rsbi" data-emerg-calc-inject>
+          <button type="submit">Calcular índice de Tobin</button>
+        </form>
+        <div class="calc-result" hidden></div>
+      </div>
+
+      <h4>Índice de Tobin (RSBI)</h4>
+      <p><strong>RSBI = FR / Vt (L)</strong> — calculado com paciente em respiração espontânea na ventilação mecânica.</p>
+      <table class="emerg-table">
+        <tr><th>RSBI</th><th>Interpretação</th></tr>
+        <tr><td><strong>&lt; 80</strong></td><td>Favorável ao desmame</td></tr>
+        <tr><td><strong>80 – 105</strong></td><td>Intermediário — individualizar TRE</td></tr>
+        <tr><td><strong>&gt; 105</strong></td><td>Desfavorável — alto risco de falha na extubação</td></tr>
+      </table>
+
+      <h4>Teste de respiração espontânea (TRE / SBT)</h4>
+      <div class="emerg-flow-v">
+        <span class="emerg-flow-step">Pré-requisitos: causa aguda resolvida, estável hemodinamicamente, sem vasopressor crescente</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">Oxigenação: PaO₂/FiO₂ ≥ 150–200 · PEEP ≤ 5–8 · FiO₂ ≤ 0,4–0,5</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">Gasometria: pH ≥ 7,30 · sem hipercapnia progressiva</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step emerg-flow-shock">TRE <strong>30–120 min</strong> (CPAP 5–7 ou T tubo conforme protocolo)</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step emerg-flow-decision">Tolerou? (FR, FC, PA, SpO₂, sudorese, agitação)</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step emerg-flow-loop">Sim → extubar · Não → retomar parâmetros e reavaliar causa</span>
+      </div>
+
+      <h4>Critérios de falha no TRE (parar teste)</h4>
+      <ul>
+        <li>SpO₂ &lt; 90% · PaO₂ &lt; 60 mmHg</li>
+        <li>FR &gt; 35 ou &lt; 8 · FC &gt; 140 ou ↑/↓ &gt; 20%</li>
+        <li>PAS &lt; 90 ou &gt; 180 mmHg · alteração de consciência</li>
+        <li>Dioreses, agitação, uso de musculatura acessória</li>
+      </ul>
+      <p class="emerg-note">Boles GABA / ACCP guidelines. RSBI isolado não substitui julgamento clínico — tosse, secreção e nível de consciência importam.</p>
+    `
+  }
+];
+
 const EMERGENCY_TOPICS = [
   {
     id: 'parada-cardio',
@@ -1038,7 +1196,7 @@ const EMERGENCY_TOPICS = [
     id: 'via-aerea',
     icon: '🌬️',
     name: 'Via Aérea & Ventilação',
-    protocols: []
+    protocols: VIA_AEREA_PROTOCOLS
   },
   {
     id: 'reacoes-metabolicas',
@@ -1251,7 +1409,7 @@ function showEmergenciaTopic (topicId) {
     return;
   }
 
-  const expectedProtocols = { 'parada-cardio': 6, 'sca': 4, 'avc': 4, 'sepse': 3, 'trauma': 4 };
+  const expectedProtocols = { 'parada-cardio': 6, 'sca': 4, 'avc': 4, 'sepse': 3, 'trauma': 4, 'via-aerea': 3 };
   if (expectedProtocols[topicId]) {
     contentEl.innerHTML = `
       <p class="coming-soon"><strong>Arquivo desatualizado no navegador.</strong> Os protocolos de <em>${topic.name}</em> já existem no projeto, mas o navegador carregou uma versão antiga de <code>emergency-guide.js</code>.</p>

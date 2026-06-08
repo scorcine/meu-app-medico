@@ -340,5 +340,40 @@ const CALC_PNEUMO = {
               <p><strong>Interpretação:</strong> ${interp}</p>
               <p class="calc-note">ROX = SpO₂ / FiO₂ / FR. Roca et al., 2016.</p>`;
     }
+  },
+
+  'tobin-rsbi': {
+    title: 'Índice de Tobin (RSBI)',
+    html: `
+      <label>Frequência respiratória espontânea (irpm)</label>
+      <input name="fr" type="number" min="1" step="1" required placeholder="Ex.: 28">
+      <label>Volume corrente espontâneo (mL)</label>
+      <input name="vt" type="number" min="50" step="10" required placeholder="Ex.: 350">
+    `,
+    calculate (form) {
+      const fr = pNum(form, 'fr');
+      const vt = pNum(form, 'vt');
+      if (!fr || !vt || vt <= 0) return alert('Preencha FR e volume corrente válidos.');
+
+      const tobin = fr / (vt / 1000);
+      let interp;
+      let sbt;
+
+      if (tobin < 80) {
+        interp = 'Favorável ao desmame';
+        sbt = 'Boa chance de sucesso no teste de respiração espontânea (TRE/SBT)';
+      } else if (tobin <= 105) {
+        interp = 'Zona intermediária — avaliar clínica e critérios de SBT';
+        sbt = 'TRE possível com monitorização estreita';
+      } else {
+        interp = 'Desfavorável — respiração rápida e superficial';
+        sbt = 'Alto risco de falha no TRE — otimizar antes de novo teste';
+      }
+
+      return `<p><strong>Índice de Tobin (RSBI):</strong> ${tobin.toFixed(1)}</p>
+              <p><strong>Interpretação:</strong> ${interp}</p>
+              <p><strong>TRE / SBT:</strong> ${sbt}</p>
+              <p class="calc-note">RSBI = FR / Vt (L). Meta usual &lt;105 (ideal &lt;80). Yang &amp; Tobin, 1991.</p>`;
+    }
   }
 };

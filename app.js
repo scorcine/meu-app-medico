@@ -34,7 +34,7 @@ function patchEmergenciaCacheGuard () {
   if (typeof showEmergenciaTopic !== 'function' || showEmergenciaTopic._cacheGuard) return;
 
   const orig = showEmergenciaTopic;
-  const expected = { 'parada-cardio': 6, 'sca': 4, 'avc': 4, 'sepse': 3, 'trauma': 4 };
+  const expected = { 'parada-cardio': 6, 'sca': 4, 'avc': 4, 'sepse': 3, 'trauma': 4, 'via-aerea': 3 };
 
   showEmergenciaTopic = function (topicId) {
     orig(topicId);
