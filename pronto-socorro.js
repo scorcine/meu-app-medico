@@ -1,6 +1,14 @@
 /* Pronto Socorro — condições e navegação */
 
-const MEDHUB_PS_BUILD = 'ps-v1';
+const MEDHUB_PS_BUILD = 'ps-clinico-v1';
+
+const PS_CONTENT = Object.assign(
+  {},
+  typeof PS_CONTENT_1 !== 'undefined' ? PS_CONTENT_1 : {},
+  typeof PS_CONTENT_2 !== 'undefined' ? PS_CONTENT_2 : {},
+  typeof PS_CONTENT_3 !== 'undefined' ? PS_CONTENT_3 : {},
+  typeof PS_CONTENT_4 !== 'undefined' ? PS_CONTENT_4 : {}
+);
 
 const PS_CONDITIONS = [
   { id: 'abdome-agudo', name: 'Abdome agudo', icon: '🩹' },
@@ -96,26 +104,27 @@ const PS_CONDITIONS = [
   { id: 'vulvovaginites', name: 'Vulvovaginites (vaginose bacteriana, candidíase, tricomoníase)', icon: '🔬' }
 ];
 
-PS_CONDITIONS.forEach(c => {
-  if (!c.html) c.html = psDefaultHtml(c);
-});
-
-function psDefaultHtml (condition) {
-  let emergBtn = '';
-  if (condition.emerg) {
-    const { topic, protocol } = condition.emerg;
-    emergBtn = `
-      <p class="ps-emerg-link-wrap">
-        <button type="button" class="btn ps-emerg-link" data-emerg-topic="${topic}"${protocol ? ` data-emerg-protocol="${protocol}"` : ''}>
-          Abrir protocolo no Guia de emergência
-        </button>
-      </p>`;
-  }
+function psEmergBtnHtml (condition) {
+  if (!condition.emerg) return '';
+  const { topic, protocol } = condition.emerg;
   return `
-    <p class="coming-soon">Conteúdo de <strong>${condition.name}</strong> em construção — em breve condutas, doses e fluxos para o plantonista.</p>
-    ${emergBtn}
-    <p class="emerg-note">Build Pronto Socorro: <strong>${MEDHUB_PS_BUILD}</strong> · adicione protocolos em <code>pronto-socorro.js</code>.</p>`;
+    <p class="ps-emerg-link-wrap">
+      <button type="button" class="btn ps-emerg-link" data-emerg-topic="${topic}"${protocol ? ` data-emerg-protocol="${protocol}"` : ''}>
+        Abrir protocolo no Guia de emergência
+      </button>
+    </p>`;
 }
+
+function getPsConditionHtml (condition) {
+  const body = PS_CONTENT[condition.id] || `
+    <p class="coming-soon">Conteúdo de <strong>${condition.name}</strong> em construção — adicione em <code>pronto-socorro-content-*.js</code>.</p>
+    <p class="emerg-note">Build Pronto Socorro: <strong>${MEDHUB_PS_BUILD}</strong></p>`;
+  return body + psEmergBtnHtml(condition);
+}
+
+PS_CONDITIONS.forEach(c => {
+  c.html = getPsConditionHtml(c);
+});
 
 let currentPsConditionId = null;
 
