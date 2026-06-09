@@ -15,6 +15,7 @@ const RX_CATALOG = [
             id: 'cef-tens-1',
             tier: '1ª linha',
             label: 'Dipirona ou paracetamol (VO)',
+            classes: ['analgesic_non_opioid'],
             items: [
               'Dipirona 500 mg — 1 comprimido VO 6/6 horas, por 3 a 5 dias, se dor',
               'OU Paracetamol 750 mg — 1 comprimido VO 6/6 horas, por 3 a 5 dias, se dor'
@@ -25,6 +26,7 @@ const RX_CATALOG = [
             id: 'cef-tens-2',
             tier: 'Alternativa',
             label: 'AINE + relaxante cervical (VO)',
+            classes: ['nsaid', 'muscle_relaxant'],
             items: [
               'Naproxeno 500 mg — 1 comprimido VO 12/12 horas, por 3 a 5 dias',
               'Ibuprofeno 400 mg — 1 comprimido VO 8/8 horas, por 3 dias (alternativa)',
@@ -36,6 +38,7 @@ const RX_CATALOG = [
             id: 'cef-tens-3',
             tier: 'Refractário',
             label: 'Tramadol (VO) — dor refratária',
+            classes: ['opioid'],
             items: [
               'Tramadol 50 mg — 1 comprimido VO 6/6 horas, se dor intensa, por até 3 dias'
             ],
@@ -51,6 +54,7 @@ const RX_CATALOG = [
             id: 'cef-enx-1',
             tier: '1ª linha',
             label: 'Sumatriptano + antiemético',
+            classes: ['triptan', 'antiemetic', 'analgesic_non_opioid'],
             items: [
               'Sumatriptano 50 mg — 1 comprimido VO ao início da crise (pode repetir após 2 h; máx. 200 mg/dia)',
               'Metoclopramida 10 mg — 1 comprimido VO junto ao triptano (náusea)',
@@ -62,6 +66,7 @@ const RX_CATALOG = [
             id: 'cef-enx-2',
             tier: 'Alternativa',
             label: 'Zolmitriptano ou AINE associado',
+            classes: ['triptan', 'analgesic_non_opioid', 'nsaid'],
             items: [
               'Zolmitriptano 2,5 mg — 1 comprimido VO ao início da crise (pode repetir 2,5 mg após 2 h)',
               'Paracetamol 750 mg — 1 comprimido VO 6/6 horas',
@@ -73,6 +78,7 @@ const RX_CATALOG = [
             id: 'cef-enx-3',
             tier: 'Profilaxia',
             label: 'Profilaxia ambulatorial (enxaqueca recorrente)',
+            classes: ['beta_blocker', 'anticonvulsant', 'tricyclic'],
             items: [
               'Propranolol 40 mg — 1 comprimido VO 12/12 horas (ajustar conforme FC/PA)',
               'OU Topiramato 25 mg — 1 comprimido VO à noite (titular gradualmente)',
@@ -90,6 +96,7 @@ const RX_CATALOG = [
             id: 'cef-sal-1',
             tier: '1ª linha',
             label: 'Sumatriptano SC / nasal na crise',
+            classes: ['triptan'],
             items: [
               'Sumatriptano 6 mg — 1 aplicacao SC ao início da crise (repetir após 1 h se necessário; máx. 12 mg/24 h)',
               'OU Zolmitriptano 5 mg — 1 spray nasal na crise'
@@ -100,6 +107,7 @@ const RX_CATALOG = [
             id: 'cef-sal-2',
             tier: 'Profilaxia',
             label: 'Verapamil — profilaxia de salvas',
+            classes: ['calcium_channel_blocker'],
             items: [
               'Verapamil 80 mg — 1 comprimido VO 8/8 horas (titular conforme tolerância e ECG)'
             ],
@@ -123,6 +131,7 @@ const RX_CATALOG = [
             id: 'amig-1',
             tier: '1ª linha',
             label: 'Amoxicilina VO',
+            classes: ['penicillin'],
             items: [
               'Amoxicilina 500 mg — 1 comprimido VO 8/8 horas, por 10 dias'
             ],
@@ -132,6 +141,7 @@ const RX_CATALOG = [
             id: 'amig-2',
             tier: 'Alternativa',
             label: 'Amoxicilina-clavulanato',
+            classes: ['penicillin', 'penicillin_clavulanate'],
             items: [
               'Amoxicilina + clavulanato 875/125 mg — 1 comprimido VO 12/12 horas, por 10 dias'
             ],
@@ -155,6 +165,7 @@ const RX_CATALOG = [
             id: 'itu-1',
             tier: '1ª linha',
             label: 'Fosfomicina dose única',
+            classes: ['antibiotic_misc'],
             items: [
               'Fosfomicina trometamol 3 g — 1 envelope VO dose única (dissolver em meio copo de agua)'
             ],
@@ -164,6 +175,7 @@ const RX_CATALOG = [
             id: 'itu-2',
             tier: 'Alternativa',
             label: 'Nitrofurantoína',
+            classes: ['nitrofuran'],
             items: [
               'Nitrofurantoína 100 mg — 1 comprimido VO 6/6 horas, por 5 dias'
             ],
@@ -187,6 +199,7 @@ const RX_CATALOG = [
             id: 'lomb-1',
             tier: '1ª linha',
             label: 'Analgésico + AINE (VO)',
+            classes: ['analgesic_non_opioid', 'nsaid', 'muscle_relaxant'],
             items: [
               'Dipirona 500 mg — 1 comprimido VO 6/6 horas, por 5 a 7 dias',
               'Naproxeno 500 mg — 1 comprimido VO 12/12 horas, por 5 dias',
@@ -202,6 +215,125 @@ const RX_CATALOG = [
 
 function rxNormText (text) {
   return (text || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim();
+}
+
+const RX_CLASS_RULES = [
+  {
+    class: 'nsaid',
+    max: 1,
+    severity: 'error',
+    message: 'Não prescreva dois esquemas com AINE (ex.: naproxeno + ibuprofeno). Escolha apenas um AINE.'
+  },
+  {
+    class: 'triptan',
+    max: 1,
+    severity: 'error',
+    message: 'Use apenas um triptano por prescrição (sumatriptano ou zolmitriptano, não ambos).'
+  },
+  {
+    class: 'opioid',
+    max: 1,
+    severity: 'error',
+    message: 'Use apenas um opioide por prescrição.'
+  },
+  {
+    class: 'penicillin',
+    max: 1,
+    severity: 'error',
+    message: 'Não combine amoxicilina com amoxicilina-clavulanato (duplicidade de beta-lactâmico).'
+  },
+  {
+    class: 'beta_blocker',
+    max: 1,
+    severity: 'warning',
+    message: 'Múltiplos betabloqueadores — confirme indicação de profilaxia.'
+  },
+  {
+    class: 'anticonvulsant',
+    max: 1,
+    severity: 'warning',
+    message: 'Múltiplos anticonvulsivantes — prefira monoterapia na profilaxia.'
+  },
+  {
+    class: 'tricyclic',
+    max: 1,
+    severity: 'warning',
+    message: 'Evite associar dois antidepressivos tricíclicos.'
+  },
+  {
+    class: 'analgesic_non_opioid',
+    max: 1,
+    severity: 'warning',
+    message: 'Vários analgésicos não opioides selecionados — prefira um por vez (ex.: dipirona OU paracetamol).'
+  }
+];
+
+const RX_PAIR_RULES = [
+  {
+    classes: ['penicillin', 'penicillin_clavulanate'],
+    severity: 'error',
+    message: 'Amoxicilina + amoxicilina-clavulanato — não prescreva ambos (clavulanato já contém amoxicilina).'
+  },
+  {
+    classes: ['antibiotic_misc', 'nitrofuran'],
+    severity: 'warning',
+    message: 'Dois antibióticos para ITU — escolha monoterapia (fosfomicina OU nitrofurantoína).'
+  },
+  {
+    classes: ['nsaid', 'opioid'],
+    severity: 'warning',
+    message: 'AINE + opioide — avaliar necessidade; reforçar proteção gástrica e hidratação.'
+  }
+];
+
+function rxCollectSelectedOptions (condition, selectedIds) {
+  const out = [];
+  if (!condition) return out;
+  condition.groups.forEach(group => {
+    group.options.forEach(option => {
+      if (selectedIds.has(option.id)) out.push({ group, option });
+    });
+  });
+  return out;
+}
+
+function rxValidateSelection (condition, selectedIds) {
+  const messages = [];
+  const selections = rxCollectSelectedOptions(condition, selectedIds);
+  if (selections.length < 2) return messages;
+
+  const classCounts = {};
+  selections.forEach(({ option }) => {
+    (option.classes || []).forEach(cls => {
+      classCounts[cls] = (classCounts[cls] || 0) + 1;
+    });
+  });
+
+  RX_CLASS_RULES.forEach(rule => {
+    const count = classCounts[rule.class] || 0;
+    if (count > rule.max) {
+      messages.push({ severity: rule.severity, text: rule.message });
+    }
+  });
+
+  RX_PAIR_RULES.forEach(rule => {
+    const hasAll = rule.classes.every(cls => (classCounts[cls] || 0) > 0);
+    if (hasAll) {
+      messages.push({ severity: rule.severity, text: rule.message });
+    }
+  });
+
+  const seen = new Set();
+  return messages.filter(m => {
+    const key = m.severity + '|' + m.text;
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+
+function rxHasValidationErrors (messages) {
+  return messages.some(m => m.severity === 'error');
 }
 
 function rxMatchConditions (queixa) {

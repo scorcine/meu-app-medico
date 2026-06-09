@@ -6,6 +6,7 @@ const MEDHUB_ACTIVE_IDADE = 'medhub-active-idade';
 const MEDHUB_RX_CRM_KEY = 'medhub-rx-crm';
 
 let rxSelectedConditionId = null;
+let rxSelectedOptionIds = new Set();
 
 function rxSyncFromAnamnese () {
   const queixa = document.getElementById('anam-queixa')?.value.trim();
@@ -30,6 +31,10 @@ function rxGetPatientContext () {
       document.getElementById('anam-idade')?.value.trim() || '',
     queixa: rxGetActiveQueixa()
   };
+}
+
+function rxGetCurrentCondition () {
+  return RX_CATALOG.find(c => c.id === rxSelectedConditionId) || null;
 }
 
 function rxUpdateQueixaHint () {
@@ -61,7 +66,7 @@ function rxUpdateQueixaHint () {
   }
 }
 
-function rxFormatReceita (condition, group, option) {
+function rxFormatReceitaMulti (condition, selections, validationMessages) {
   const ctx = rxGetPatientContext();
   const user = typeof getSession === 'function' ? getSession() : null;
   const crm = localStorage.getItem(MEDHUB_RX_CRM_KEY) || '____________';
@@ -74,21 +79,43 @@ function rxFormatReceita (condition, group, option) {
     'Idade: ' + (ctx.idade || '________'),
     'Queixa: ' + (ctx.queixa || condition.name),
     '',
-    condition.name + ' — ' + group.label,
-    option.label + ' (' + option.tier + ')',
-    '',
-    'Uso ' + (option.items.some(i => /VO|oral/i.test(i)) ? 'oral' : 'conforme indicado') + ':',
+    condition.name,
+    selections.length === 1
+      ? selections[0].group.label + ' — ' + selections[0].option.label
+      : selections.length + ' opção(ões) selecionada(s)',
     ''
   ];
 
-  option.items.forEach((item, i) => {
-    lines.push((i + 1) + '. ' + item);
+  let itemNum = 1;
+  selections.forEach(({ group, option }) => {
+    if (selections.length > 1) {
+      lines.push('— ' + group.label + ': ' + option.label + ' (' + option.tier + ')');
+    } else {
+      lines.push(option.label + ' (' + option.tier + ')');
+    }
+    lines.push('');
+    option.items.forEach(item => {
+      lines.push(itemNum + '. ' + item);
+      itemNum += 1;
+    });
+    lines.push('');
   });
 
-  lines.push('');
-  lines.push('Orientações:');
-  lines.push(option.orientacoes || 'Seguir orientações médicas.');
-  lines.push('');
+  const orientacoes = selections
+    .map(({ option }) => option.orientacoes)
+    .filter(Boolean);
+  if (orientacoes.length) {
+    lines.push('Orientações:');
+    orientacoes.forEach(text => lines.push('• ' + text));
+    lines.push('');
+  }
+
+  if (validationMessages.length) {
+    lines.push('⚠ ATENÇÃO — revisar antes de prescrever:');
+    validationMessages.forEach(m => lines.push('• ' + m.text));
+    lines.push('');
+  }
+
   lines.push('______________________, ' + date);
   lines.push('');
   lines.push('Dr(a). ' + (user?.name || '________________________'));
@@ -97,6 +124,94 @@ function rxFormatReceita (condition, group, option) {
   lines.push('— Gerado pelo MedHub. Conteúdo educacional; revisar antes de prescrever.');
 
   return lines.join('\n');
+}
+
+function rxRenderValidation (messages) {
+  const el = document.getElementById('rx-validation');
+  if (!el) return;
+
+  if (!messages.length) {
+    el.hidden = true;
+    el.innerHTML = '';
+    return;
+  }
+
+  el.hidden = false;
+  el.innerHTML = messages.map(m =>
+    `<div class="rx-validation-msg rx-validation-msg--${m.severity}">${m.severity === 'error' ? '⛔' : '⚠️'} ${m.text}</div>`
+  ).join('');
+}
+
+function rxUpdateSelectionBar () {
+  const condition = rxGetCurrentCondition();
+  const count = rxSelectedOptionIds.size;
+  const bar = document.getElementById('rx-selection-bar');
+  const countEl = document.getElementById('rx-selection-count');
+  const generateBtn = document.getElementById('rx-generate');
+  const clearBtn = document.getElementById('rx-clear-selection');
+  const messages = condition && count >= 2
+    ? rxValidateSelection(condition, rxSelectedOptionIds)
+    : [];
+
+  if (countEl) {
+    countEl.textContent = count
+      ? `${count} opção(ões) selecionada(s)`
+      : 'Nenhuma opção selecionada';
+  }
+
+  rxRenderValidation(messages);
+
+  if (generateBtn) {
+    generateBtn.disabled = count === 0 || rxHasValidationErrors(messages);
+  }
+  if (clearBtn) {
+    clearBtn.disabled = count === 0;
+  }
+  if (bar) bar.hidden = false;
+}
+
+function rxToggleOption (optId) {
+  if (rxSelectedOptionIds.has(optId)) rxSelectedOptionIds.delete(optId);
+  else rxSelectedOptionIds.add(optId);
+
+  document.querySelectorAll('.rx-option-card').forEach(card => {
+    const selected = rxSelectedOptionIds.has(card.dataset.optId);
+    card.classList.toggle('rx-option-card--selected', selected);
+    card.setAttribute('aria-pressed', selected ? 'true' : 'false');
+  });
+
+  rxUpdateSelectionBar();
+
+  const resultEl = document.getElementById('rx-result');
+  if (resultEl && rxSelectedOptionIds.size === 0) resultEl.hidden = true;
+}
+
+function rxGenerateReceita () {
+  const condition = rxGetCurrentCondition();
+  if (!condition || !rxSelectedOptionIds.size) return;
+
+  const selections = rxCollectSelectedOptions(condition, rxSelectedOptionIds);
+  const messages = rxValidateSelection(condition, rxSelectedOptionIds);
+  if (rxHasValidationErrors(messages)) return;
+
+  const resultEl = document.getElementById('rx-result');
+  const textEl = document.getElementById('rx-result-text');
+  if (!resultEl || !textEl) return;
+
+  textEl.value = rxFormatReceitaMulti(condition, selections, messages);
+  resultEl.hidden = false;
+  resultEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function rxClearSelection () {
+  rxSelectedOptionIds.clear();
+  document.querySelectorAll('.rx-option-card').forEach(card => {
+    card.classList.remove('rx-option-card--selected');
+    card.setAttribute('aria-pressed', 'false');
+  });
+  const resultEl = document.getElementById('rx-result');
+  if (resultEl) resultEl.hidden = true;
+  rxUpdateSelectionBar();
 }
 
 function rxRenderConditionList (filterText) {
@@ -151,6 +266,8 @@ function rxShowCondition (conditionId) {
   if (!condition) return;
 
   rxSelectedConditionId = conditionId;
+  rxSelectedOptionIds.clear();
+
   const listView = document.getElementById('rx-list-view');
   const detailView = document.getElementById('rx-detail-view');
   const titleEl = document.getElementById('rx-condition-title');
@@ -168,8 +285,11 @@ function rxShowCondition (conditionId) {
       <legend>${group.label}</legend>
       <div class="rx-option-list">
         ${group.options.map(opt => `
-          <button type="button" class="rx-option-card" data-opt-id="${opt.id}">
-            <span class="ps-rx-tier ps-rx-tier--${opt.tier.replace(/\s+/g, '')}">${opt.tier}</span>
+          <button type="button" class="rx-option-card" data-opt-id="${opt.id}" aria-pressed="false">
+            <span class="rx-option-card-head">
+              <span class="rx-option-check" aria-hidden="true"></span>
+              <span class="ps-rx-tier ps-rx-tier--${opt.tier.replace(/\s+/g, '')}">${opt.tier}</span>
+            </span>
             <strong>${opt.label}</strong>
             <span class="rx-option-preview">${opt.items[0]}${opt.items.length > 1 ? ' · +' + (opt.items.length - 1) + ' item(ns)' : ''}</span>
           </button>
@@ -179,32 +299,10 @@ function rxShowCondition (conditionId) {
   `).join('');
 
   optionsEl.querySelectorAll('.rx-option-card').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const optId = btn.dataset.optId;
-      let foundOpt = null;
-      let foundGroup = null;
-      condition.groups.forEach(g => {
-        g.options.forEach(o => {
-          if (o.id === optId) {
-            foundOpt = o;
-            foundGroup = g;
-          }
-        });
-      });
-      if (foundOpt && foundGroup) rxShowReceita(condition, foundGroup, foundOpt);
-    });
+    btn.addEventListener('click', () => rxToggleOption(btn.dataset.optId));
   });
-}
 
-function rxShowReceita (condition, group, option) {
-  const resultEl = document.getElementById('rx-result');
-  const textEl = document.getElementById('rx-result-text');
-  if (!resultEl || !textEl) return;
-
-  const text = rxFormatReceita(condition, group, option);
-  textEl.value = text;
-  resultEl.hidden = false;
-  resultEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  rxUpdateSelectionBar();
 }
 
 function rxShowList () {
@@ -213,6 +311,7 @@ function rxShowList () {
   if (listView) listView.hidden = false;
   if (detailView) detailView.hidden = true;
   rxSelectedConditionId = null;
+  rxSelectedOptionIds.clear();
   rxRenderConditionList(document.getElementById('rx-search')?.value || '');
 }
 
@@ -241,6 +340,8 @@ function initReceituario () {
   const search = document.getElementById('rx-search');
   const backBtn = document.getElementById('rx-back');
   const copyBtn = document.getElementById('rx-copy');
+  const generateBtn = document.getElementById('rx-generate');
+  const clearBtn = document.getElementById('rx-clear-selection');
   const crmInput = document.getElementById('rx-crm');
 
   if (crmInput) {
@@ -255,6 +356,8 @@ function initReceituario () {
   }
   if (backBtn) backBtn.addEventListener('click', rxShowList);
   if (copyBtn) copyBtn.addEventListener('click', rxCopyReceita);
+  if (generateBtn) generateBtn.addEventListener('click', rxGenerateReceita);
+  if (clearBtn) clearBtn.addEventListener('click', rxClearSelection);
 
   rxRenderConditionList('');
 }
