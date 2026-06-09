@@ -53,8 +53,8 @@ function psCollectSelectedDrugs (config, selectedMedIds, selectedRoutes) {
   const drugs = [];
   selectedMedIds.forEach(medId => {
     const med = config.medications.find(m => m.id === medId);
-    if (!med) return;
-    const route = (selectedRoutes && selectedRoutes[medId]) || med.defaultRoute || med.routes[0];
+    if (!med || !Array.isArray(med.drugs)) return;
+    const route = (selectedRoutes && selectedRoutes[medId]) || med.defaultRoute || (med.routes && med.routes[0]);
     med.drugs.forEach(d => {
       drugs.push({ id: d.id, route: d.route || route, medId });
     });
@@ -123,8 +123,16 @@ function psValidatePrescription (conditionId, config, selectedMedIds, context, s
   if (config.rules) {
     config.rules.forEach(rule => {
       if (typeof rule.check === 'function') {
-        const result = rule.check({ meds, drugs, context, selectedMedIds });
-        if (result) messages.push(result);
+        try {
+          const result = rule.check({ meds, drugs, context, selectedMedIds, config, conditionId });
+          if (result) messages.push(result);
+        } catch (err) {
+          console.error('PS interactive rule error:', err);
+          messages.push({
+            severity: 'warning',
+            text: 'Erro ao avaliar uma regra do protocolo — revise manualmente.'
+          });
+        }
       }
     });
   }
@@ -326,8 +334,18 @@ function psRenderInteractiveRx (conditionId, container) {
   }
 
   wrap.querySelector('#ps-rx-analyze').addEventListener('click', () => {
-    const analysis = psValidatePrescription(conditionId, config, getSelected(), getContext());
+    let analysis;
+    try {
+      analysis = psValidatePrescription(conditionId, config, getSelected(), getContext());
+    } catch (err) {
+      console.error('PS analyze error:', err);
+      analysis = {
+        status: 'error',
+        messages: [{ severity: 'error', text: 'Erro ao analisar a prescrição. Tente novamente ou use o protocolo abaixo.' }]
+      };
+    }
     resultEl.hidden = false;
+    resultEl.removeAttribute('hidden');
     resultEl.className = `ps-rx-result ps-rx-result--${analysis.status}`;
     resultEl.innerHTML = `
       <h4>${analysis.status === 'ok' ? '✓ Prescrição adequada' : analysis.status === 'warning' ? '⚠ Revise a prescrição' : '✗ Interação ou contraindicação'}</h4>
