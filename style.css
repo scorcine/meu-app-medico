@@ -2379,6 +2379,19 @@ textarea {
   color: #111;
   font-family: Georgia, 'Times New Roman', serif;
   line-height: 1.5;
+  cursor: text;
+  outline: none;
+  min-height: 12rem;
+}
+
+.rx-print-sheet:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent-soft);
+}
+
+.rx-edit-hint {
+  margin: -0.35rem 0 0.65rem;
+  font-size: 0.85rem;
 }
 
 [data-theme="dark"] .rx-print-sheet {

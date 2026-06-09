@@ -139,7 +139,7 @@ function rxRenderPrintPreview (condition, medEntries, orientacoesList) {
   const date = new Date().toLocaleDateString('pt-BR');
 
   preview.innerHTML = `
-    <div class="rx-print-sheet">
+    <div class="rx-print-sheet" contenteditable="true" spellcheck="true" lang="pt-BR" aria-label="Receita editável">
       <h4 class="rx-print-title">RECEITUÁRIO SIMPLES</h4>
       <div class="rx-print-meta">
         <p><strong>Paciente:</strong> ${ctx.paciente || '________________________________'}</p>
@@ -493,21 +493,34 @@ function rxShowList () {
   rxRenderConditionList(document.getElementById('rx-search')?.value || '');
 }
 
+function rxGetEditableSheet () {
+  return document.querySelector('#rx-print-preview .rx-print-sheet');
+}
+
+function rxGetReceitaPlainText () {
+  const sheet = rxGetEditableSheet();
+  return sheet ? sheet.innerText.trim() : '';
+}
+
 function rxCopyReceita () {
-  const textEl = document.getElementById('rx-result-text');
-  if (!textEl) return;
-  textEl.select();
-  navigator.clipboard.writeText(textEl.value).then(() => {
+  const text = rxGetReceitaPlainText();
+  if (!text) return;
+  navigator.clipboard.writeText(text).then(() => {
     alert('Receita copiada para a área de transferência.');
   }).catch(() => {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    document.body.appendChild(ta);
+    ta.select();
     document.execCommand('copy');
+    document.body.removeChild(ta);
     alert('Receita copiada.');
   });
 }
 
 function rxPrintReceita () {
-  const preview = document.getElementById('rx-print-preview');
-  if (!preview || !preview.innerHTML.trim()) return;
+  const sheet = rxGetEditableSheet();
+  if (!sheet) return;
 
   const win = window.open('', '_blank', 'width=720,height=900');
   if (!win) {
@@ -533,7 +546,7 @@ function rxPrintReceita () {
         @media print { body { margin: 1.5cm; } }
       </style>
     </head>
-    <body>${preview.innerHTML}</body>
+    <body>${sheet.outerHTML}</body>
     </html>
   `);
   win.document.close();

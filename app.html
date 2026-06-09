@@ -9,7 +9,7 @@
   <title>MedHub</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <script src="theme.js"></script>
-  <link rel="stylesheet" href="style.css?v=rx-v5">
+  <link rel="stylesheet" href="style.css?v=rx-v6">
   <script defer src="calculators-risco.js"></script>
   <script defer src="calculators-cardio.js"></script>
   <script defer src="calculators-pneumo.js?v=rsi-patient"></script>
@@ -41,7 +41,7 @@
   <script defer src="pronto-socorro.js?v=ps-interactive-rx-v3"></script>
   <script defer src="med-apresentacoes-vo.js?v=med-vo-v1"></script>
   <script defer src="receituario-data.js?v=rx-v5"></script>
-  <script defer src="receituario.js?v=rx-v5"></script>
+  <script defer src="receituario.js?v=rx-v6"></script>
   <script defer src="google-drive.js?v=anamnese-v1"></script>
   <script defer src="anamnese.js?v=anamnese-v1"></script>
   <script defer src="app.js?v=rx-v1"></script>
@@ -191,6 +191,7 @@
             <div id="rx-validation" class="rx-validation" hidden></div>
             <div id="rx-result" class="rx-result" hidden>
               <h3>Receita gerada</h3>
+              <p class="muted rx-edit-hint">Clique no texto abaixo para editar livremente antes de imprimir ou copiar.</p>
               <div id="rx-print-preview" class="rx-print-preview"></div>
               <textarea id="rx-result-text" class="rx-result-text" rows="12" readonly hidden aria-hidden="true"></textarea>
               <div class="rx-result-actions">
