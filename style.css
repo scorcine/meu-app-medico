@@ -458,6 +458,17 @@ body.app-page {
   max-width: 800px;
 }
 
+.app-content .home-card {
+  max-width: 720px;
+}
+
+.home-greeting {
+  font-size: 1rem;
+  color: var(--text-accent);
+  font-weight: 600;
+  margin: 0 0 0.5rem;
+}
+
 .coming-soon {
   color: var(--text-muted);
   font-size: 0.95rem;
