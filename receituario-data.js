@@ -1,6 +1,6 @@
 /* Receituário — catálogo de condições e modelos de receita */
 
-const RX_CATALOG = [
+const RX_CATALOG_MANUAL = [
   {
     id: 'cefaleias',
     name: 'Cefaleia',
@@ -452,6 +452,12 @@ function rxExclusiveGroupsComplete (condition, selectedOptionIds, selectedMedIds
 
 const RX_CLASS_RULES = [
   {
+    class: 'antibiotic',
+    max: 1,
+    severity: 'warning',
+    message: 'Vários antibióticos selecionados — confirme esquema combinado previsto na diretriz.'
+  },
+  {
     class: 'nsaid',
     max: 1,
     severity: 'error',
@@ -602,9 +608,12 @@ function rxMatchConditions (queixa) {
   const norm = rxNormText(queixa);
   if (!norm || norm.length < 3) return [];
 
-  return RX_CATALOG.filter(cond => {
+  const catalog = typeof rxGetCatalog === 'function' ? rxGetCatalog() : RX_CATALOG_MANUAL;
+
+  return catalog.filter(cond => {
     if (cond.aliases.some(a => norm.includes(rxNormText(a)))) return true;
     if (norm.includes(rxNormText(cond.name))) return true;
+    if (cond.id && norm.includes(rxNormText(cond.id.replace(/-/g, ' ')))) return true;
     return cond.aliases.some(a => rxNormText(a).includes(norm));
   }).sort((a, b) => {
     const aExact = a.aliases.some(al => rxNormText(al) === norm) ? 0 : 1;

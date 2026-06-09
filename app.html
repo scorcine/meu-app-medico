@@ -9,7 +9,7 @@
   <title>MedHub</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <script src="theme.js"></script>
-  <link rel="stylesheet" href="style.css?v=rx-v6">
+  <link rel="stylesheet" href="style.css?v=rx-v7">
   <script defer src="calculators-risco.js"></script>
   <script defer src="calculators-cardio.js"></script>
   <script defer src="calculators-pneumo.js?v=rsi-patient"></script>
@@ -40,8 +40,9 @@
   <script defer src="pronto-socorro-interactive-core.js?v=ps-interactive-rx-v3"></script>
   <script defer src="pronto-socorro.js?v=ps-interactive-rx-v3"></script>
   <script defer src="med-apresentacoes-vo.js?v=med-vo-v1"></script>
-  <script defer src="receituario-data.js?v=rx-v5"></script>
-  <script defer src="receituario.js?v=rx-v6"></script>
+  <script defer src="receituario-data.js?v=rx-v7"></script>
+  <script defer src="receituario-ps-bridge.js?v=rx-v7"></script>
+  <script defer src="receituario.js?v=rx-v7"></script>
   <script defer src="google-drive.js?v=anamnese-v1"></script>
   <script defer src="anamnese.js?v=anamnese-v1"></script>
   <script defer src="app.js?v=rx-v1"></script>
@@ -167,10 +168,11 @@
         <div class="card dashboard-card rx-wrap">
           <div id="rx-list-view">
             <h2>Receituário</h2>
-            <p class="muted">Modelos de receita por condição. Digite a queixa na <strong>Anamnese</strong> (ex.: cefaleia) e as opções aparecem aqui automaticamente.</p>
+            <p class="muted">Todas as condições do PS estão disponíveis. Modelos completos (cefaleia, ITU, etc.) ou opções extraídas das diretrizes do protocolo.</p>
             <label class="ps-search-label" for="rx-crm">CRM (opcional — aparece na receita)</label>
             <input id="rx-crm" class="ps-search rx-crm-input" type="text" placeholder="Ex.: CRM-SP 123456" autocomplete="off">
             <div id="rx-suggest-banner" class="rx-suggest-banner" hidden></div>
+            <div id="rx-source-banner" class="rx-source-banner" hidden></div>
             <label class="ps-search-label" for="rx-search">Buscar condição</label>
             <input id="rx-search" class="ps-search" type="search" placeholder="Ex.: cefaleia, amigdalite, cistite…" autocomplete="off">
             <div id="rx-condition-grid" class="calc-category-grid"></div>

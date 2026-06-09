@@ -35,7 +35,9 @@ function rxGetPatientContext () {
 }
 
 function rxGetCurrentCondition () {
-  return RX_CATALOG.find(c => c.id === rxSelectedConditionId) || null;
+  return typeof rxGetCatalogEntry === 'function'
+    ? rxGetCatalogEntry(rxSelectedConditionId)
+    : null;
 }
 
 function rxRemoveMedsForOption (optionId) {
@@ -394,7 +396,7 @@ function rxRenderConditionList (filterText) {
   const activeQueixa = rxGetActiveQueixa();
   const fromQueixa = typeof rxMatchConditions === 'function' ? rxMatchConditions(activeQueixa) : [];
 
-  let list = RX_CATALOG.slice();
+  let list = (typeof rxGetCatalog === 'function' ? rxGetCatalog() : []).slice();
   if (norm) {
     list = list.filter(c =>
       rxNormText(c.name).includes(norm) ||
@@ -434,7 +436,9 @@ function rxRenderConditionList (filterText) {
 }
 
 function rxShowCondition (conditionId) {
-  const condition = RX_CATALOG.find(c => c.id === conditionId);
+  const condition = typeof rxGetCatalogEntry === 'function'
+    ? rxGetCatalogEntry(conditionId)
+    : null;
   if (!condition) return;
 
   rxSelectedConditionId = conditionId;
@@ -454,6 +458,20 @@ function rxShowCondition (conditionId) {
   if (titleEl) titleEl.textContent = condition.icon + ' ' + condition.name;
   if (resultEl) resultEl.hidden = true;
   if (medsPanel) { medsPanel.hidden = true; medsPanel.innerHTML = ''; }
+
+  const sourceBanner = document.getElementById('rx-source-banner');
+  if (sourceBanner) {
+    if (condition.source === 'guideline') {
+      sourceBanner.hidden = false;
+      sourceBanner.innerHTML = '📋 Opções extraídas do <strong>protocolo PS MedHub</strong> (diretriz). Selecione o esquema, escolha os medicamentos e edite a receita antes de imprimir.';
+    } else if (condition.source === 'reference') {
+      sourceBanner.hidden = false;
+      sourceBanner.innerHTML = '📖 Condição sem modelo VO detalhado — use o protocolo PS como referência, selecione a opção abaixo e <strong>edite a receita</strong> manualmente.';
+    } else {
+      sourceBanner.hidden = false;
+      sourceBanner.innerHTML = '✓ Modelo completo com apresentações VO revisadas. Selecione esquemas, medicamentos e edite a receita livremente.';
+    }
+  }
 
   optionsEl.innerHTML = condition.groups.map(group => `
     <fieldset class="ps-rx-fieldset rx-options-group">
@@ -487,6 +505,8 @@ function rxShowList () {
   const detailView = document.getElementById('rx-detail-view');
   if (listView) listView.hidden = false;
   if (detailView) detailView.hidden = true;
+  const sourceBanner = document.getElementById('rx-source-banner');
+  if (sourceBanner) { sourceBanner.hidden = true; sourceBanner.innerHTML = ''; }
   rxSelectedConditionId = null;
   rxSelectedOptionIds.clear();
   rxSelectedMedIds.clear();
