@@ -1,6 +1,6 @@
 /* Prescrições de Pronto Socorro — condições e navegação */
 
-const MEDHUB_PS_BUILD = 'ps-interactive-rx-v2';
+const MEDHUB_PS_BUILD = 'ps-interactive-rx-v3';
 
 const PS_CONTENT = Object.assign(
   {},

@@ -119,7 +119,8 @@ const PS_DRUG_META = {
   hidroxicloroquina: { name: 'Hidroxicloroquina', classes: ['antimalarial'] },
   tiamazol: { name: 'Tiamazol', classes: ['antithyroid'] },
   propiltiouracil: { name: 'Propiltiouracil', classes: ['antithyroid'] },
-  levotiroxina: { name: 'Levotiroxina', classes: ['thyroid_hormone'] }
+  levotiroxina: { name: 'Levotiroxina', classes: ['thyroid_hormone'] },
+  tamsulosina: { name: 'Tamsulosina', classes: ['alpha_blocker', 'discharge_only'] }
 };
 
 const PS_DRUG_ALIASES = [
@@ -148,7 +149,8 @@ const PS_DRUG_ALIASES = [
   ['potassio_cloreto', ['kcl', 'cloreto de potássio', 'cloreto de potassio']],
   ['gluconato_calcio', ['gluconato de cálcio', 'gluconato de calcio']],
   ['artesunato', ['artesunato', 'artesunate']],
-  ['magnesio_sulfato', ['sulfato de magnésio ev', 'mgso4']]
+  ['magnesio_sulfato', ['sulfato de magnésio ev', 'mgso4']],
+  ['tamsulosina', ['tamsulosina', 'cloridrato de tamsulosina']]
 ];
 
 Object.keys(PS_DRUG_META).forEach(id => {
@@ -248,6 +250,57 @@ function psMedHasAntibiotic (med) {
     med.drugs.some(d => (PS_DRUG_META[d.id]?.classes || []).includes('antibiotic'));
 }
 
+/** Linhas do protocolo mutuamente excludentes (não combinar na mesma prescrição) */
+const PS_EXCLUSIVE_TIER_KEYS = [
+  { key: 'primeira', label: '1ª linha', test: t => /1ª linha/i.test(t) },
+  { key: 'alternativa', label: 'alternativa', test: t => /alternativa|resist/i.test(t) },
+  { key: 'alergico', label: 'alérgico', test: t => /alerg/i.test(t) },
+  { key: 'refractario', label: 'refractário', test: t => /refract|refrat/i.test(t) },
+  { key: 'evitar', label: 'evitar', test: t => /evitar/i.test(t) },
+  { key: 'segunda', label: '2ª linha', test: t => /2ª linha/i.test(t) }
+];
+
+const PS_THERAPY_TYPE_LABELS = {
+  antibiotic: 'antibiótico',
+  analgesia: 'analgesia',
+  supportive: 'suporte sintomático',
+  respiratory: 'tratamento respiratório',
+  allergy: 'anti-alérgico',
+  other: 'terapia'
+};
+
+function psGetExclusiveTierKeys (med) {
+  const t = (med && med.tier) || '';
+  return PS_EXCLUSIVE_TIER_KEYS.filter(x => x.test(t)).map(x => x.key);
+}
+
+function psMedDrugClasses (med) {
+  const classes = new Set();
+  if (!med || !Array.isArray(med.drugs)) return classes;
+  med.drugs.forEach(d => {
+    (PS_DRUG_META[d.id]?.classes || []).forEach(c => classes.add(c));
+  });
+  return classes;
+}
+
+function psMedTherapyType (med) {
+  const classes = psMedDrugClasses(med);
+  if (classes.has('antibiotic')) return 'antibiotic';
+  if (['analgesic', 'nsaid', 'opioid'].some(c => classes.has(c))) return 'analgesia';
+  if (['antispasmodic', 'antiemetic', 'antivertigo'].some(c => classes.has(c))) return 'supportive';
+  if (['bronchodilator', 'corticosteroid'].some(c => classes.has(c))) return 'respiratory';
+  if (classes.has('antihistamine')) return 'allergy';
+  return 'other';
+}
+
+function psUniqueDrugIdsByClass (drugs, className) {
+  return [...new Set(
+    drugs
+      .filter(d => (PS_DRUG_META[d.id]?.classes || []).includes(className))
+      .map(d => d.id)
+  )];
+}
+
 function psNormText (text) {
   return (text || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 }
@@ -328,14 +381,22 @@ function psGenericInteractiveRules () {
           const med = config.medications.find(m => m.id === id);
           return med && !/1ª linha/i.test(med.tier || '');
         });
-        if (onlyAlt && selectedMedIds.length) {
+        if (onlyAlt && selectedMedIds.length === 1) {
           return { severity: 'warning', text: 'Nenhuma opção de 1ª linha selecionada — confirme se há contraindicação ou resistência.' };
         }
         if (hasFirst && selectedMedIds.length === 1) {
           return { severity: 'ok', text: 'Inclui medicação de 1ª linha do protocolo.' };
         }
-        if (hasFirst && selectedMedIds.length > 1) {
-          return null;
+        return null;
+      }
+    },
+    {
+      check: ({ selectedMedIds }) => {
+        if (selectedMedIds.length >= 3) {
+          return {
+            severity: 'warning',
+            text: 'Três ou mais opções marcadas — confirme se não está combinando linhas alternativas do protocolo.'
+          };
         }
         return null;
       }

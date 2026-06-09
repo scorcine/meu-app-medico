@@ -15,9 +15,9 @@ const PS_CLASS_RULES = [
   },
   {
     class: 'opioid',
-    max: 2,
-    severity: 'warning',
-    message: 'Múltiplos opioides aumentam risco de depressão respiratória — prefira um só.'
+    max: 1,
+    severity: 'error',
+    message: 'Use apenas um opioide por prescrição (tramadol OU morfina, não ambos).'
   },
   {
     class: 'benzodiazepine',
@@ -66,6 +66,12 @@ const PS_CLASS_RULES = [
     max: 1,
     severity: 'error',
     message: 'Não combine tiamazol e propiltiouracil na mesma prescrição.'
+  },
+  {
+    class: 'antispasmodic',
+    max: 1,
+    severity: 'warning',
+    message: 'Evite associar dois antiespasmódicos (ex.: escopolamina + butilbrometo).'
   }
 ];
 
@@ -109,6 +115,21 @@ const PS_PAIR_RULES = [
     drugs: ['prometazina', 'difenidramina'],
     severity: 'warning',
     message: 'Associação de anti-histamínicos/antihistamínicos sedativos — risco de depressão do SNC.'
+  },
+  {
+    drugs: ['tramadol', 'morfina'],
+    severity: 'error',
+    message: 'Tramadol + morfina — duplo opioide; escolha um só agente no escalonamento analgésico.'
+  },
+  {
+    drugs: ['tramadol', 'fentanil'],
+    severity: 'error',
+    message: 'Não combine dois opioides potentes na mesma prescrição.'
+  },
+  {
+    drugs: ['dipirona', 'paracetamol'],
+    severity: 'warning',
+    message: 'Dipirona + paracetamol juntos — prefira um analgésico não opioide por vez; rotacionar se necessário.'
   }
 ];
 
@@ -146,42 +167,102 @@ function psCheckAntibioticInteractions (drugs, meds) {
     });
   }
 
-  const abMeds = meds.filter(psMedHasAntibiotic);
-  if (abMeds.length >= 2) {
-    const hasFirst = abMeds.some(m => /1ª linha/i.test(m.tier || ''));
-    const hasAlt = abMeds.some(m => /alternativa|resist/i.test(m.tier || ''));
-    const hasRefr = abMeds.some(m => /refract|refrat/i.test(m.tier || ''));
-    const hasAlerg = abMeds.some(m => /alerg/i.test(m.tier || ''));
-    let tierGroups = 0;
-    if (hasFirst) tierGroups++;
-    if (hasAlt) tierGroups++;
-    if (hasRefr) tierGroups++;
-    if (hasAlerg) tierGroups++;
+  return messages;
+}
 
-    if (tierGroups >= 2 && !psIsValidAntibioticCombination(abIds)) {
+function psCheckTherapyTierExclusivity (meds) {
+  const messages = [];
+  if (meds.length < 2) return messages;
+
+  const byType = {};
+  meds.forEach(m => {
+    const type = psMedTherapyType(m);
+    if (!byType[type]) byType[type] = [];
+    byType[type].push(m);
+  });
+
+  Object.entries(byType).forEach(([type, typeMeds]) => {
+    if (typeMeds.length < 2) return;
+
+    const tierKeys = new Set();
+    const tierLabels = [];
+    typeMeds.forEach(m => {
+      psGetExclusiveTierKeys(m).forEach(key => {
+        if (!tierKeys.has(key)) {
+          tierKeys.add(key);
+          const def = PS_EXCLUSIVE_TIER_KEYS.find(x => x.key === key);
+          if (def) tierLabels.push(def.label);
+        }
+      });
+    });
+
+    if (tierKeys.size >= 2) {
       messages.push({
         severity: 'error',
-        text: 'Selecionou esquemas de ATB de linhas diferentes do protocolo (1ª linha, alternativa, alérgico ou refractário) — use apenas um esquema empírico por vez.'
+        text: `Selecionou opções de ${PS_THERAPY_TYPE_LABELS[type] || type} de linhas diferentes do protocolo (${tierLabels.join(', ')}) — escolha apenas UMA linha por vez (1ª linha OU alternativa OU alérgico/refractário).`
       });
     }
-  }
+  });
 
   return messages;
 }
 
-function psCheckDuplicateAnalgesics (drugs) {
-  const analgesics = [...new Set(
-    drugs
-      .filter(d => (PS_DRUG_META[d.id]?.classes || []).includes('analgesic'))
-      .map(d => d.id)
-  )];
-  if (analgesics.length >= 3) {
-    return [{
-      severity: 'warning',
-      text: `Três ou mais analgésicos (${analgesics.map(psDrugLabel).join(', ')}) — revise necessidade e risco acumulado.`
-    }];
+function psCheckPainAnalgesiaStack (drugs, meds) {
+  const messages = [];
+  const analgesicIds = psUniqueDrugIdsByClass(drugs, 'analgesic');
+  const nsaidIds = psUniqueDrugIdsByClass(drugs, 'nsaid');
+  const opioidIds = psUniqueDrugIdsByClass(drugs, 'opioid');
+  const painIds = [...new Set([].concat(analgesicIds, nsaidIds, opioidIds))];
+
+  if (opioidIds.length > 1) {
+    messages.push({
+      severity: 'error',
+      text: 'Não combine ' + opioidIds.map(psDrugLabel).join(' + ') + ' — use um único opioide no escalonamento analgésico.'
+    });
   }
-  return [];
+
+  if (analgesicIds.length >= 2) {
+    messages.push({
+      severity: meds.length >= 2 ? 'error' : 'warning',
+      text: `Evite associar ${analgesicIds.map(psDrugLabel).join(' + ')} simultaneamente — prefira um analgésico não opioide por vez.`
+    });
+  }
+
+  if (painIds.length >= 3 && meds.length >= 2) {
+    messages.push({
+      severity: 'error',
+      text: `Analgesia excessiva (${painIds.map(psDrugLabel).join(', ')}) — você selecionou fármacos de múltiplas linhas do protocolo; use escalonamento em uma única linha terapêutica.`
+    });
+  } else if (painIds.length >= 4) {
+    messages.push({
+      severity: 'error',
+      text: `Analgesia excessiva: ${painIds.map(psDrugLabel).join(', ')} — revise escalonamento e risco de depressão respiratória/lesão renal.`
+    });
+  }
+
+  const analgesiaMeds = meds.filter(m => psMedTherapyType(m) === 'analgesia');
+  if (analgesiaMeds.length >= 2) {
+    const hasNsaid = nsaidIds.length > 0;
+    const hasAlergicLine = analgesiaMeds.some(m => /alerg/i.test(m.tier || ''));
+    const hasFirstLine = analgesiaMeds.some(m => /1ª linha/i.test(m.tier || ''));
+    if (hasNsaid && hasAlergicLine && (hasFirstLine || analgesiaMeds.some(m => /alternativa/i.test(m.tier || '')))) {
+      messages.push({
+        severity: 'error',
+        text: 'Linha alérgica/contraindicada não deve ser associada a esquema com AINE — escolha um único perfil terapêutico conforme o paciente.'
+      });
+    }
+  }
+
+  const dischargeOnly = drugs.filter(d => (PS_DRUG_META[d.id]?.classes || []).includes('discharge_only'));
+  const acutePain = painIds.length > 0;
+  if (dischargeOnly.length && acutePain && meds.length >= 2) {
+    messages.push({
+      severity: 'warning',
+      text: `${psDrugLabel(dischargeOnly[0].id)} é medicamento de alta/ambulatorial — não associe à analgesia aguda do PS salvo prescrição de retorno.`
+    });
+  }
+
+  return messages;
 }
 
 function psDrugLabel (drugId) {
@@ -243,24 +324,25 @@ function psValidatePrescription (conditionId, config, selectedMedIds, context, s
   });
 
   PS_CLASS_RULES.forEach(rule => {
-    const count = drugs.filter(d => {
+    const ids = [...new Set(drugs.filter(d => {
       const meta = PS_DRUG_META[d.id];
       return meta && meta.classes.includes(rule.class);
-    }).length;
-    if (count > rule.max) {
+    }).map(d => d.id))];
+    if (ids.length > rule.max) {
       messages.push({ severity: rule.severity, text: rule.message });
     }
   });
 
   PS_PAIR_RULES.forEach(rule => {
-    const ids = drugs.map(d => d.id);
+    const ids = [...new Set(drugs.map(d => d.id))];
     if (rule.drugs.every(d => ids.includes(d))) {
       messages.push({ severity: rule.severity, text: rule.message });
     }
   });
 
+  psCheckTherapyTierExclusivity(meds).forEach(m => messages.push(m));
   psCheckAntibioticInteractions(drugs, meds).forEach(m => messages.push(m));
-  psCheckDuplicateAnalgesics(drugs).forEach(m => messages.push(m));
+  psCheckPainAnalgesiaStack(drugs, meds).forEach(m => messages.push(m));
 
   if (config.rules) {
     config.rules.forEach(rule => {
