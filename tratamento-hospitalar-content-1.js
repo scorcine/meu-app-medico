@@ -234,15 +234,16 @@ const TH_CONTENT_1 = {
     </ul>`,
 
   'vertigem-vestibular': `
-    <p class="muted">Vertigem aguda / labirintite — antivertiginoso + hidratação; excluir AVC posterior.</p>
+    <p class="muted">Vertigem aguda / labirintite / síndrome vestibular — HINTS se suspeita central; antivertiginoso + hidratação.</p>
     <h4>Medicação IM / EV</h4>
     <ul class="ps-med-options">
-      <li><strong>1ª linha:</strong> dimenidrinato 1 amp (50 mg/1 mL) IM ou EV lento 6/6 h</li>
+      <li><strong>1ª linha:</strong> dimenidrinato 1 amp (50 mg/1 mL) IM ou EV lento 6/6 h × 24–48 h</li>
       <li><strong>Antieméticos/antivertiginosos alternativos:</strong> metoclopramida 1 amp (10 mg/2 mL) IM ou EV · ondansetrona 1 amp (4 mg/2 mL) IM ou EV · prometazina 25 mg IM · meclizina 25 mg VO</li>
-      <li><strong>Analgésicos (cefaleia associada):</strong> dipirona 1 amp IM ou EV · paracetamol 750 mg EV · cetoprofeno 1 amp IM</li>
-      <li><strong>Corticoides (labirintite aguda):</strong> dexametasona 1 amp IM ou EV · metilprednisolona 125 mg EV · prednisolona 1 mg/kg VO</li>
-      <li><strong>Refractário:</strong> diazepam 5 mg IM ou EV lento (curto prazo · risco queda) · dimenidrinato + metoclopramida</li>
-    </ul>`,
+      <li><strong>Analgésicos (cefaleia associada):</strong> dipirona 1 amp IM ou EV · paracetamol 750 mg EV · cetoprofeno 1 amp IM · ketorolaco 30 mg IM</li>
+      <li><strong>Corticoides (labirintite/neurite vestibular):</strong> dexametasona 1 amp IM ou EV · metilprednisolona 1 amp (125 mg) EV · prednisolona 1 mg/kg VO × 5–7 dias</li>
+      <li><strong>Refractário:</strong> ondansetrona + dimenidrinato · diazepam 5 mg IM ou EV lento (curto prazo · risco queda) · hidratação SF 0,9% 500 mL EV</li>
+    </ul>
+    <p class="emerg-note">Vertigem + déficit neurológico → TC crânio urgente. Conteúdo educacional.</p>`,
 
   'agitacao-psiquiatrica': `
     <p class="muted">Agitação psicomotora / delirium — contenção verbal + medicação IM se risco iminente.</p>
@@ -362,17 +363,5 @@ const TH_CONTENT_1 = {
       <li><strong>Hidratação:</strong> SF 0,9% 15–20 mL/kg EV 1ª hora · depois 250–500 mL/h (titular) · trocar para SG 5% quando glicemia &lt; 250 mg/dL</li>
       <li><strong>Adjuvantes:</strong> dipirona 1 amp IM ou EV · paracetamol 750 mg EV · ondansetrona 1 amp · metoclopramida 1 amp · KCl EV conforme K+</li>
       <li><strong>Corticoide:</strong> hidrocortisona 100 mg EV 8/8 h apenas se insuficiência adrenal associada</li>
-    </ul>`,
-
-  'sindrome-vestibular': `
-    <p class="muted">Síndrome vestibular aguda — HINTS se suspeita central; sintomáticos IM/EV.</p>
-    <h4>Medicação IM / EV</h4>
-    <ul class="ps-med-options">
-      <li><strong>1ª linha:</strong> dimenidrinato 1 amp (50 mg/1 mL) IM ou EV lento 6/6 h × 24–48 h</li>
-      <li><strong>Antieméticos/antivertiginosos alternativos:</strong> metoclopramida 1 amp IM ou EV · ondansetrona 1 amp IM ou EV · prometazina 25 mg IM · meclizina 25 mg VO</li>
-      <li><strong>Analgésicos:</strong> dipirona 1 amp IM ou EV · paracetamol 750 mg EV · cetoprofeno 1 amp IM (cefaleia vestibular)</li>
-      <li><strong>Corticoides (labirintite/neurite vestibular):</strong> metilprednisolona 1 amp (125 mg) EV · dexametasona 1 amp (10 mg) IM ou EV · prednisolona 1 mg/kg VO × 5–7 dias</li>
-      <li><strong>Refractário:</strong> ondansetrona + dimenidrinato · diazepam 5 mg IM (curto prazo) · hidratação SF 0,9% 500 mL EV</li>
-    </ul>
-    <p class="emerg-note">Vertigem + déficit neurológico → TC crânio urgente. Conteúdo educacional.</p>`
+    </ul>`
 };

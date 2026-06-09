@@ -1,43 +1,60 @@
 /* Tratamento hospitalar — condições com medicação IM/EV e navegação */
 
-const MEDHUB_TH_BUILD = 'th-opcoes-v2';
+const MEDHUB_TH_BUILD = 'th-expand-v1';
 
 const TH_CONTENT = Object.assign(
   {},
-  typeof TH_CONTENT_1 !== 'undefined' ? TH_CONTENT_1 : {}
+  typeof TH_CONTENT_1 !== 'undefined' ? TH_CONTENT_1 : {},
+  typeof TH_CONTENT_2 !== 'undefined' ? TH_CONTENT_2 : {}
 );
 
 const TH_CONDITIONS = [
   { id: 'cefaleia', name: 'Cefaleia (tensional, enxaqueca)', icon: '🤕' },
-  { id: 'dor-abdominal', name: 'Dor abdominal aguda', icon: '🫃' },
-  { id: 'colica-renal', name: 'Cólica renal', icon: '💎' },
-  { id: 'lombalgia-ciatalgia', name: 'Lombalgia / ciatalgia', icon: '🦴' },
-  { id: 'dor-toracica', name: 'Dor torácica / SCA suspeita', icon: '❤️‍🔥' },
-  { id: 'nausea-vomitos', name: 'Náusea e vômitos', icon: '🤢' },
-  { id: 'asma-broncoespasmo', name: 'Asma / broncoespasmo', icon: '🌬️' },
-  { id: 'dpoc-exacerbada', name: 'DPOC exacerbada', icon: '🫁' },
-  { id: 'pneumonia', name: 'Pneumonia (internação)', icon: '🫁' },
-  { id: 'celulite-erisipela', name: 'Celulite / erisipela', icon: '🦠' },
-  { id: 'pielonefrite', name: 'Pielonefrite / ITU alta', icon: '💧' },
-  { id: 'sepse-infeccao-grave', name: 'Sepse / infecção grave', icon: '🩸' },
-  { id: 'crise-hipertensiva', name: 'Crise hipertensiva', icon: '🔴' },
-  { id: 'hipoglicemia', name: 'Hipoglicemia', icon: '🍬' },
-  { id: 'convulsao-eme', name: 'Crise convulsiva / EME', icon: '⚡' },
+  { id: 'ansiedade-panico', name: 'Crise de ansiedade / pânico', icon: '😰' },
   { id: 'anafilaxia', name: 'Anafilaxia / urticária grave', icon: '🐝' },
-  { id: 'gota-crise', name: 'Gota — crise aguda', icon: '🦶' },
-  { id: 'artralgia-dor-msk', name: 'Artralgia / dor musculoesquelética', icon: '🦴' },
-  { id: 'vertigem-vestibular', name: 'Vertigem / labirintite', icon: '🌀' },
+  { id: 'anemia-falciforme', name: 'Anemia falciforme — crise álgica', icon: '🩸' },
+  { id: 'abscesso-cutaneo', name: 'Abscesso cutâneo pós-drenagem', icon: '💉' },
+  { id: 'abstinencia-alcool', name: 'Abstinência alcoólica / delirium tremens', icon: '🍺' },
   { id: 'agitacao-psiquiatrica', name: 'Agitação psicomotora / delirium', icon: '🧠' },
-  { id: 'pancreatite', name: 'Pancreatite aguda', icon: '🫃' },
-  { id: 'colecistite', name: 'Colecistite aguda', icon: '🫃' },
   { id: 'apendicite', name: 'Apendicite aguda (pré-operatório)', icon: '🩹' },
-  { id: 'influenza-gripe', name: 'Influenza / gripe com complicação', icon: '🤧' },
-  { id: 'dengue-dor', name: 'Dengue — analgesia hospitalar', icon: '🦟' },
-  { id: 'hda', name: 'Hemorragia digestiva alta', icon: '🩸' },
-  { id: 'flebite', name: 'Flebite / tromboflebite', icon: '🦵' },
-  { id: 'profilaxia-tetano', name: 'Profilaxia antitetânica', icon: '💉' },
+  { id: 'artralgia-dor-msk', name: 'Artralgia / dor musculoesquelética', icon: '🦴' },
+  { id: 'asma-broncoespasmo', name: 'Asma / broncoespasmo', icon: '🌬️' },
+  { id: 'celulite-erisipela', name: 'Celulite / erisipela', icon: '🦠' },
   { id: 'cetoacidose-dm', name: 'Cetoacidose diabética', icon: '🩸' },
-  { id: 'sindrome-vestibular', name: 'Síndrome vestibular aguda', icon: '🌀' }
+  { id: 'colica-renal', name: 'Cólica renal', icon: '💎' },
+  { id: 'colecistite', name: 'Colecistite aguda', icon: '🫃' },
+  { id: 'convulsao-eme', name: 'Crise convulsiva / EME', icon: '⚡' },
+  { id: 'crise-hipertensiva', name: 'Crise hipertensiva', icon: '🔴' },
+  { id: 'crise-tireotoxica', name: 'Crise tireotóxica / tempestade tiroidiana', icon: '🦋' },
+  { id: 'dengue-dor', name: 'Dengue — analgesia hospitalar', icon: '🦟' },
+  { id: 'diverticulite', name: 'Diverticulite aguda complicada', icon: '🩹' },
+  { id: 'disturbios-eletroliticos', name: 'Distúrbios hidroeletrolíticos sintomáticos', icon: '⚗️' },
+  { id: 'dor-abdominal', name: 'Dor abdominal aguda', icon: '🫃' },
+  { id: 'dor-toracica', name: 'Dor torácica / SCA suspeita', icon: '❤️‍🔥' },
+  { id: 'dpoc-exacerbada', name: 'DPOC exacerbada', icon: '🫁' },
+  { id: 'edema-pulmao-ic', name: 'Edema agudo de pulmão / IC descompensada', icon: '🫁' },
+  { id: 'flebite', name: 'Flebite / tromboflebite', icon: '🦵' },
+  { id: 'gonorreia-ist', name: 'Gonorreia / cervicite ou uretrite', icon: '🔬' },
+  { id: 'gota-crise', name: 'Gota — crise aguda', icon: '🦶' },
+  { id: 'hda', name: 'Hemorragia digestiva alta', icon: '🩸' },
+  { id: 'herpes-zoster', name: 'Herpes zóster (internação / imunossuprimido)', icon: '🔬' },
+  { id: 'hipoglicemia', name: 'Hipoglicemia', icon: '🍬' },
+  { id: 'influenza-gripe', name: 'Influenza / gripe com complicação', icon: '🤧' },
+  { id: 'intoxicacoes-exogenas', name: 'Intoxicações exógenas', icon: '☠️' },
+  { id: 'leptospirose', name: 'Leptospirose — forma grave', icon: '🦠' },
+  { id: 'lombalgia-ciatalgia', name: 'Lombalgia / ciatalgia', icon: '🦴' },
+  { id: 'malaria-grave', name: 'Malária grave', icon: '🦟' },
+  { id: 'meningite-bacteriana', name: 'Meningite bacteriana', icon: '🧠' },
+  { id: 'nausea-vomitos', name: 'Náusea e vômitos', icon: '🤢' },
+  { id: 'pancreatite', name: 'Pancreatite aguda', icon: '🫃' },
+  { id: 'pielonefrite', name: 'Pielonefrite / ITU alta', icon: '💧' },
+  { id: 'pneumonia', name: 'Pneumonia (internação)', icon: '🫁' },
+  { id: 'pre-eclampsia-eclampsia', name: 'Pré-eclâmpsia / eclâmpsia', icon: '🤰' },
+  { id: 'profilaxia-antirrabica', name: 'Profilaxia antirrábica', icon: '🐕' },
+  { id: 'profilaxia-tetano', name: 'Profilaxia antitetânica', icon: '💉' },
+  { id: 'queimadura', name: 'Queimadura — analgesia e hidratação', icon: '🔥' },
+  { id: 'sepse-infeccao-grave', name: 'Sepse / infecção grave', icon: '🩸' },
+  { id: 'vertigem-vestibular', name: 'Vertigem / síndrome vestibular aguda', icon: '🌀' }
 ];
 
 function getThConditionHtml (condition) {
