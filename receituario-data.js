@@ -12,35 +12,55 @@ const RX_CATALOG = [
         label: 'Cefaleia tensional',
         options: [
           {
-            id: 'cef-tens-1',
+            id: 'cef-tens-analgesic',
             tier: '1ª linha',
-            label: 'Dipirona ou paracetamol (VO)',
+            label: 'Analgésico simples — escolha um',
             classes: ['analgesic_non_opioid'],
-            items: [
-              'Dipirona 500 mg — 1 comprimido VO 6/6 horas, por 3 a 5 dias, se dor',
-              'OU Paracetamol 750 mg — 1 comprimido VO 6/6 horas, por 3 a 5 dias, se dor'
+            items: [],
+            meds: [
+              { id: 'cef-tens-analgesic-dip', text: 'Dipirona 500 mg — 1 comprimido VO 6/6 horas, por 3 a 5 dias, se dor', classes: ['analgesic_non_opioid'], exclusiveGroup: 'cef-tens-analgesic' },
+              { id: 'cef-tens-analgesic-par750', text: 'Paracetamol 750 mg — 1 comprimido VO 6/6 horas, por 3 a 5 dias, se dor', classes: ['analgesic_non_opioid'], exclusiveGroup: 'cef-tens-analgesic' },
+              { id: 'cef-tens-analgesic-par1g', text: 'Paracetamol 1 g — 1 comprimido VO 6/6 horas, por 3 a 5 dias, se dor', classes: ['analgesic_non_opioid'], exclusiveGroup: 'cef-tens-analgesic' }
             ],
             orientacoes: 'Evitar uso diário prolongado de analgésicos (> 10–15 dias/mês). Retorno imediato se cefaleia súbita intensa (“pior da vida”), febre, rigidez de nuca ou déficit neurológico.'
           },
           {
-            id: 'cef-tens-2',
+            id: 'cef-tens-aine',
             tier: 'Alternativa',
-            label: 'AINE + relaxante cervical (VO)',
-            classes: ['nsaid', 'muscle_relaxant'],
-            items: [
-              'Naproxeno 500 mg — 1 comprimido VO 12/12 horas, por 3 a 5 dias',
-              'Ibuprofeno 400 mg — 1 comprimido VO 8/8 horas, por 3 dias (alternativa)',
-              'Ciclobenzaprina 5 mg — 1 comprimido VO à noite, por 3 a 5 dias (se componente cervical)'
+            label: 'AINE — escolha um',
+            classes: ['nsaid'],
+            items: [],
+            meds: [
+              { id: 'cef-tens-aine-nap', text: 'Naproxeno 500 mg — 1 comprimido VO 12/12 horas, por 3 a 5 dias', classes: ['nsaid'], exclusiveGroup: 'cef-tens-aine' },
+              { id: 'cef-tens-aine-ibu400', text: 'Ibuprofeno 400 mg — 1 comprimido VO 8/8 horas, por 3 a 5 dias', classes: ['nsaid'], exclusiveGroup: 'cef-tens-aine' },
+              { id: 'cef-tens-aine-ibu600', text: 'Ibuprofeno 600 mg — 1 comprimido VO 8/8 horas, por 3 a 5 dias', classes: ['nsaid'], exclusiveGroup: 'cef-tens-aine' },
+              { id: 'cef-tens-aine-dic', text: 'Diclofenaco 50 mg — 1 comprimido VO 8/8 horas, por 3 a 5 dias', classes: ['nsaid'], exclusiveGroup: 'cef-tens-aine' },
+              { id: 'cef-tens-aine-cet', text: 'Cetoprofeno 100 mg — 1 comprimido VO 12/12 horas, por 3 a 5 dias', classes: ['nsaid'], exclusiveGroup: 'cef-tens-aine' },
+              { id: 'cef-tens-aine-nim', text: 'Nimesulida 100 mg — 1 comprimido VO 12/12 horas, por 3 a 5 dias', classes: ['nsaid'], exclusiveGroup: 'cef-tens-aine' }
             ],
-            orientacoes: 'Cautela em úlcera péptica, DRC, gestação e asma. Tomar AINE após alimentação.'
+            orientacoes: 'Cautela em úlcera péptica, DRC, gestação e asma. Tomar AINE após alimentação. Prescreva apenas um AINE por receita.'
           },
           {
-            id: 'cef-tens-3',
+            id: 'cef-tens-relaxant',
+            tier: 'Adjuvante',
+            label: 'Relaxante muscular — escolha um (se componente cervical)',
+            classes: ['muscle_relaxant'],
+            items: [],
+            meds: [
+              { id: 'cef-tens-relax-ciclo5', text: 'Ciclobenzaprina 5 mg — 1 comprimido VO à noite, por 3 a 5 dias', classes: ['muscle_relaxant'], exclusiveGroup: 'cef-tens-relaxant' },
+              { id: 'cef-tens-relax-ciclo10', text: 'Ciclobenzaprina 10 mg — 1 comprimido VO à noite, por 3 a 5 dias', classes: ['muscle_relaxant'], exclusiveGroup: 'cef-tens-relaxant' },
+              { id: 'cef-tens-relax-tiza', text: 'Tizanidina 2 mg — 1 comprimido VO 8/8 horas, por 3 a 5 dias', classes: ['muscle_relaxant'], exclusiveGroup: 'cef-tens-relaxant' }
+            ],
+            orientacoes: 'Evitar dirigir ou operar máquinas. Cautela em idosos e hepatopatia.'
+          },
+          {
+            id: 'cef-tens-opioid',
             tier: 'Refractário',
-            label: 'Tramadol (VO) — dor refratária',
+            label: 'Opioide — dor refratária',
             classes: ['opioid'],
-            items: [
-              'Tramadol 50 mg — 1 comprimido VO 6/6 horas, se dor intensa, por até 3 dias'
+            items: [],
+            meds: [
+              { id: 'cef-tens-opioid-tram', text: 'Tramadol 50 mg — 1 comprimido VO 6/6 horas, se dor intensa, por até 3 dias', classes: ['opioid'] }
             ],
             orientacoes: 'Receita especial (A2). Evitar associar outros opioides. Não dirigir se sedação.'
           }
@@ -51,40 +71,83 @@ const RX_CATALOG = [
         label: 'Enxaqueca moderada a grave',
         options: [
           {
-            id: 'cef-enx-1',
+            id: 'cef-enx-triptan',
             tier: '1ª linha',
-            label: 'Sumatriptano + antiemético',
-            classes: ['triptan', 'antiemetic', 'analgesic_non_opioid'],
-            items: [
-              'Sumatriptano 50 mg — 1 comprimido VO ao início da crise (pode repetir após 2 h; máx. 200 mg/dia)',
-              'Metoclopramida 10 mg — 1 comprimido VO junto ao triptano (náusea)',
-              'Dipirona 500 mg — 1 comprimido VO 6/6 horas se dor residual'
+            label: 'Triptano — escolha um',
+            classes: ['triptan'],
+            items: [],
+            meds: [
+              { id: 'cef-enx-trip-sum-vo', text: 'Sumatriptano 50 mg — 1 comprimido VO ao início da crise (repetir 50 mg após 2 h; máx. 200 mg/dia)', classes: ['triptan'], exclusiveGroup: 'cef-enx-triptan' },
+              { id: 'cef-enx-trip-sum-vo100', text: 'Sumatriptano 100 mg — 1 comprimido VO ao início da crise (repetir 50 mg após 2 h; máx. 200 mg/dia)', classes: ['triptan'], exclusiveGroup: 'cef-enx-triptan' },
+              { id: 'cef-enx-trip-sum-sc', text: 'Sumatriptano 6 mg — 1 aplicação SC ao início da crise (repetir após 1 h se necessário; máx. 12 mg/24 h)', classes: ['triptan'], exclusiveGroup: 'cef-enx-triptan' },
+              { id: 'cef-enx-trip-zol-vo', text: 'Zolmitriptano 2,5 mg — 1 comprimido VO ao início da crise (pode repetir 2,5 mg após 2 h)', classes: ['triptan'], exclusiveGroup: 'cef-enx-triptan' },
+              { id: 'cef-enx-trip-zol-nas', text: 'Zolmitriptano 5 mg — 1 spray nasal ao início da crise', classes: ['triptan'], exclusiveGroup: 'cef-enx-triptan' }
             ],
             orientacoes: 'Contraindicado se DAC, AVC prévio, PA não controlada ou gestação (revisar). Não usar triptano > 10 dias/mês.'
           },
           {
-            id: 'cef-enx-2',
-            tier: 'Alternativa',
-            label: 'Zolmitriptano ou AINE associado',
-            classes: ['triptan', 'analgesic_non_opioid', 'nsaid'],
-            items: [
-              'Zolmitriptano 2,5 mg — 1 comprimido VO ao início da crise (pode repetir 2,5 mg após 2 h)',
-              'Paracetamol 750 mg — 1 comprimido VO 6/6 horas',
-              'Naproxeno 500 mg — 1 comprimido VO 12/12 horas por 2 dias'
+            id: 'cef-enx-antiemetic',
+            tier: 'Adjuvante',
+            label: 'Antiemético — escolha um',
+            classes: ['antiemetic'],
+            items: [],
+            meds: [
+              { id: 'cef-enx-anti-met', text: 'Metoclopramida 10 mg — 1 comprimido VO junto ao triptano (náusea)', classes: ['antiemetic'], exclusiveGroup: 'cef-enx-antiemetic' },
+              { id: 'cef-enx-anti-ond', text: 'Ondansetrona 8 mg — 1 comprimido VO junto ao triptano (náusea)', classes: ['antiemetic'], exclusiveGroup: 'cef-enx-antiemetic' }
             ],
-            orientacoes: 'Evitar combinar dois triptanos. Orientar diário de cefaleia.'
+            orientacoes: 'Associar antiemético ao triptano melhora absorção e controle de náusea.'
           },
           {
-            id: 'cef-enx-3',
-            tier: 'Profilaxia',
-            label: 'Profilaxia ambulatorial (enxaqueca recorrente)',
-            classes: ['beta_blocker', 'anticonvulsant', 'tricyclic'],
-            items: [
-              'Propranolol 40 mg — 1 comprimido VO 12/12 horas (ajustar conforme FC/PA)',
-              'OU Topiramato 25 mg — 1 comprimido VO à noite (titular gradualmente)',
-              'OU Amitriptilina 25 mg — 1 comprimido VO à noite'
+            id: 'cef-enx-analgesic',
+            tier: 'Adjuvante',
+            label: 'Analgésico adjuvante — escolha um',
+            classes: ['analgesic_non_opioid'],
+            items: [],
+            meds: [
+              { id: 'cef-enx-anal-dip', text: 'Dipirona 500 mg — 1 comprimido VO 6/6 horas se dor residual', classes: ['analgesic_non_opioid'], exclusiveGroup: 'cef-enx-analgesic' },
+              { id: 'cef-enx-anal-par', text: 'Paracetamol 750 mg — 1 comprimido VO 6/6 horas se dor residual', classes: ['analgesic_non_opioid'], exclusiveGroup: 'cef-enx-analgesic' },
+              { id: 'cef-enx-anal-par1g', text: 'Paracetamol 1 g — 1 comprimido VO 6/6 horas se dor residual', classes: ['analgesic_non_opioid'], exclusiveGroup: 'cef-enx-analgesic' }
             ],
-            orientacoes: 'Avaliar indicação de profilaxia se ≥ 4 crises/mês ou impacto funcional. Retorno em 4–8 semanas para resposta.'
+            orientacoes: 'Usar como adjuvante, não substituir triptano na crise moderada-grave.'
+          },
+          {
+            id: 'cef-enx-aine',
+            tier: 'Alternativa',
+            label: 'AINE adjuvante — escolha um',
+            classes: ['nsaid'],
+            items: [],
+            meds: [
+              { id: 'cef-enx-aine-nap', text: 'Naproxeno 500 mg — 1 comprimido VO 12/12 horas por 2 dias', classes: ['nsaid'], exclusiveGroup: 'cef-enx-aine' },
+              { id: 'cef-enx-aine-ibu', text: 'Ibuprofeno 400 mg — 1 comprimido VO 8/8 horas por 2 dias', classes: ['nsaid'], exclusiveGroup: 'cef-enx-aine' },
+              { id: 'cef-enx-aine-dic', text: 'Diclofenaco 50 mg — 1 comprimido VO 8/8 horas por 2 dias', classes: ['nsaid'], exclusiveGroup: 'cef-enx-aine' },
+              { id: 'cef-enx-aine-cet', text: 'Cetoprofeno 100 mg — 1 comprimido VO 12/12 horas por 2 dias', classes: ['nsaid'], exclusiveGroup: 'cef-enx-aine' },
+              { id: 'cef-enx-aine-nim', text: 'Nimesulida 100 mg — 1 comprimido VO 12/12 horas por 2 dias', classes: ['nsaid'], exclusiveGroup: 'cef-enx-aine' }
+            ],
+            orientacoes: 'Alternativa ou adjuvante se contraindicação a triptano. Apenas um AINE por receita.'
+          },
+          {
+            id: 'cef-enx-corticoide',
+            tier: 'Refractário',
+            label: 'Corticoide — prevenção de recorrência',
+            classes: ['corticosteroid'],
+            items: [],
+            meds: [
+              { id: 'cef-enx-cort-dexa', text: 'Dexametasona 10 mg — dose única VO ou IM (prevenir recorrência em 48 h)', classes: ['corticosteroid'] }
+            ],
+            orientacoes: 'Considerar após crise refratária ou status migrainoso. Reavaliar glicemia e infecção.'
+          },
+          {
+            id: 'cef-enx-profilaxia',
+            tier: 'Profilaxia',
+            label: 'Profilaxia ambulatorial — escolha um',
+            classes: ['beta_blocker', 'anticonvulsant', 'tricyclic'],
+            items: [],
+            meds: [
+              { id: 'cef-enx-prof-prop', text: 'Propranolol 40 mg — 1 comprimido VO 12/12 horas (ajustar conforme FC/PA)', classes: ['beta_blocker'], exclusiveGroup: 'cef-enx-profilaxia' },
+              { id: 'cef-enx-prof-topo', text: 'Topiramato 25 mg — 1 comprimido VO à noite (titular gradualmente)', classes: ['anticonvulsant'], exclusiveGroup: 'cef-enx-profilaxia' },
+              { id: 'cef-enx-prof-amit', text: 'Amitriptilina 25 mg — 1 comprimido VO à noite', classes: ['tricyclic'], exclusiveGroup: 'cef-enx-profilaxia' }
+            ],
+            orientacoes: 'Indicar se ≥ 4 crises/mês ou impacto funcional. Retorno em 4–8 semanas para resposta.'
           }
         ]
       },
@@ -93,23 +156,27 @@ const RX_CATALOG = [
         label: 'Cefaleia em salvas',
         options: [
           {
-            id: 'cef-sal-1',
+            id: 'cef-sal-crise',
             tier: '1ª linha',
-            label: 'Sumatriptano SC / nasal na crise',
+            label: 'Tratamento da crise — escolha um',
             classes: ['triptan'],
-            items: [
-              'Sumatriptano 6 mg — 1 aplicacao SC ao início da crise (repetir após 1 h se necessário; máx. 12 mg/24 h)',
-              'OU Zolmitriptano 5 mg — 1 spray nasal na crise'
+            items: [],
+            meds: [
+              { id: 'cef-sal-o2', text: 'Oxigenoterapia — O₂ 100% 12–15 L/min por máscara não reinalante × 15–20 min na crise', classes: [], exclusiveGroup: 'cef-sal-crise' },
+              { id: 'cef-sal-sum-sc', text: 'Sumatriptano 6 mg — 1 aplicação SC ao início da crise (repetir após 1 h se necessário; máx. 12 mg/24 h)', classes: ['triptan'], exclusiveGroup: 'cef-sal-crise' },
+              { id: 'cef-sal-zol-nas', text: 'Zolmitriptano 5 mg — 1 spray nasal ao início da crise', classes: ['triptan'], exclusiveGroup: 'cef-sal-crise' }
             ],
-            orientacoes: 'Orientar evitar álcool e nitratos na crise. Encaminhar neurologia para profilaxia (verapamil).'
+            orientacoes: 'Orientar evitar álcool e nitratos na crise. Encaminhar neurologia para profilaxia.'
           },
           {
-            id: 'cef-sal-2',
+            id: 'cef-sal-profilaxia',
             tier: 'Profilaxia',
-            label: 'Verapamil — profilaxia de salvas',
+            label: 'Profilaxia ambulatorial — escolha um',
             classes: ['calcium_channel_blocker'],
-            items: [
-              'Verapamil 80 mg — 1 comprimido VO 8/8 horas (titular conforme tolerância e ECG)'
+            items: [],
+            meds: [
+              { id: 'cef-sal-prof-vera', text: 'Verapamil 80 mg — 1 comprimido VO 8/8 horas (titular conforme tolerância e ECG)', classes: ['calcium_channel_blocker'], exclusiveGroup: 'cef-sal-profilaxia' },
+              { id: 'cef-sal-prof-vera120', text: 'Verapamil 120 mg — 1 comprimido VO 8/8 horas (titular conforme tolerância e ECG)', classes: ['calcium_channel_blocker'], exclusiveGroup: 'cef-sal-profilaxia' }
             ],
             orientacoes: 'Solicitar ECG antes e monitorar. Especialista/neurologia recomendado.'
           }
@@ -196,16 +263,43 @@ const RX_CATALOG = [
         label: 'Analgesia',
         options: [
           {
-            id: 'lomb-1',
+            id: 'lomb-analgesic',
             tier: '1ª linha',
-            label: 'Analgésico + AINE (VO)',
-            classes: ['analgesic_non_opioid', 'nsaid', 'muscle_relaxant'],
-            items: [
-              'Dipirona 500 mg — 1 comprimido VO 6/6 horas, por 5 a 7 dias',
-              'Naproxeno 500 mg — 1 comprimido VO 12/12 horas, por 5 dias',
-              'Ciclobenzaprina 5 mg — 1 comprimido VO à noite, por 5 dias (se espasmo)'
+            label: 'Analgésico simples — escolha um',
+            classes: ['analgesic_non_opioid'],
+            items: [],
+            meds: [
+              { id: 'lomb-anal-dip', text: 'Dipirona 500 mg — 1 comprimido VO 6/6 horas, por 5 a 7 dias', classes: ['analgesic_non_opioid'], exclusiveGroup: 'lomb-analgesic' },
+              { id: 'lomb-anal-par', text: 'Paracetamol 750 mg — 1 comprimido VO 6/6 horas, por 5 a 7 dias', classes: ['analgesic_non_opioid'], exclusiveGroup: 'lomb-analgesic' }
             ],
-            orientacoes: 'Repouso relativo, calor local. Retorno imediato se deficit motor, anestesia em sela, febre ou trauma.'
+            orientacoes: 'Repouso relativo, calor local.'
+          },
+          {
+            id: 'lomb-aine',
+            tier: '1ª linha',
+            label: 'AINE — escolha um',
+            classes: ['nsaid'],
+            items: [],
+            meds: [
+              { id: 'lomb-aine-nap', text: 'Naproxeno 500 mg — 1 comprimido VO 12/12 horas, por 5 dias', classes: ['nsaid'], exclusiveGroup: 'lomb-aine' },
+              { id: 'lomb-aine-ibu', text: 'Ibuprofeno 400 mg — 1 comprimido VO 8/8 horas, por 5 dias', classes: ['nsaid'], exclusiveGroup: 'lomb-aine' },
+              { id: 'lomb-aine-dic', text: 'Diclofenaco 50 mg — 1 comprimido VO 8/8 horas, por 5 dias', classes: ['nsaid'], exclusiveGroup: 'lomb-aine' },
+              { id: 'lomb-aine-cet', text: 'Cetoprofeno 100 mg — 1 comprimido VO 12/12 horas, por 5 dias', classes: ['nsaid'], exclusiveGroup: 'lomb-aine' },
+              { id: 'lomb-aine-nim', text: 'Nimesulida 100 mg — 1 comprimido VO 12/12 horas, por 5 dias', classes: ['nsaid'], exclusiveGroup: 'lomb-aine' }
+            ],
+            orientacoes: 'Tomar após alimentação. Cautela em DRC, úlcera e anticoagulação.'
+          },
+          {
+            id: 'lomb-relaxant',
+            tier: 'Adjuvante',
+            label: 'Relaxante muscular — escolha um (se espasmo)',
+            classes: ['muscle_relaxant'],
+            items: [],
+            meds: [
+              { id: 'lomb-relax-ciclo', text: 'Ciclobenzaprina 5 mg — 1 comprimido VO à noite, por 5 dias', classes: ['muscle_relaxant'], exclusiveGroup: 'lomb-relaxant' },
+              { id: 'lomb-relax-tiza', text: 'Tizanidina 2 mg — 1 comprimido VO 8/8 horas, por 5 dias', classes: ['muscle_relaxant'], exclusiveGroup: 'lomb-relaxant' }
+            ],
+            orientacoes: 'Retorno imediato se déficit motor, anestesia em sela, febre ou trauma.'
           }
         ]
       }
@@ -228,6 +322,7 @@ function rxInferMedClasses (text) {
   if (/tramadol|morfina|codeina|fentanil|oxicode/.test(t)) classes.push('opioid');
   if (/metoclopramid|ondansetrona|bromoprida|dimenidrinato/.test(t)) classes.push('antiemetic');
   if (/ciclobenzaprina|carisoprodol|tizanidina/.test(t)) classes.push('muscle_relaxant');
+  if (/dexametasona|prednisona|prednisolona|hidrocortisona|metilprednisolona/.test(t)) classes.push('corticosteroid');
   if (/propranolol|atenolol|metoprolol|bisoprolol|carvedilol/.test(t)) classes.push('beta_blocker');
   if (/topiramato|valproato|carbamazepina|fenitoina|levetiracetam/.test(t)) classes.push('anticonvulsant');
   if (/amitriptilin|nortriptilin|imipramina/.test(t)) classes.push('tricyclic');
@@ -362,6 +457,30 @@ const RX_CLASS_RULES = [
     max: 1,
     severity: 'error',
     message: 'Não combine amoxicilina com amoxicilina-clavulanato (duplicidade de beta-lactâmico).'
+  },
+  {
+    class: 'antiemetic',
+    max: 1,
+    severity: 'warning',
+    message: 'Evite associar dois antieméticos na mesma prescrição.'
+  },
+  {
+    class: 'muscle_relaxant',
+    max: 1,
+    severity: 'warning',
+    message: 'Evite associar dois relaxantes musculares.'
+  },
+  {
+    class: 'corticosteroid',
+    max: 1,
+    severity: 'error',
+    message: 'Não combine dois corticoides sistêmicos na mesma prescrição.'
+  },
+  {
+    class: 'calcium_channel_blocker',
+    max: 1,
+    severity: 'warning',
+    message: 'Múltiplos bloqueadores de canal de cálcio — confirme indicação.'
   },
   {
     class: 'beta_blocker',
