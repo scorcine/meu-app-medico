@@ -1,6 +1,6 @@
 /* Tratamento hospitalar — condições com medicação IM/EV e navegação */
 
-const MEDHUB_TH_BUILD = 'th-im-ev-v1';
+const MEDHUB_TH_BUILD = 'th-opcoes-v2';
 
 const TH_CONTENT = Object.assign(
   {},
