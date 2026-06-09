@@ -1,6 +1,6 @@
 /* Prescrições de Pronto Socorro — condições e navegação */
 
-const MEDHUB_PS_BUILD = 'ps-diverticulite-v1';
+const MEDHUB_PS_BUILD = 'ps-interactive-all-v1';
 
 const PS_CONTENT = Object.assign(
   {},
@@ -234,4 +234,5 @@ function showProntoSocorroCondition (conditionId) {
 
   if (typeof initEmergCalcForms === 'function') initEmergCalcForms(contentEl);
   if (typeof initEmergEcgLightbox === 'function') initEmergEcgLightbox(contentEl);
+  if (typeof initPsInteractive === 'function') initPsInteractive(conditionId, contentEl);
 }

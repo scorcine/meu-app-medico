@@ -394,6 +394,259 @@ body.app-page {
   text-align: center;
 }
 
+/* Prescrição interativa PS */
+.ps-rx-wrap {
+  margin-bottom: 1.5rem;
+  padding: 1.15rem 1.25rem;
+  background: linear-gradient(180deg, #f0f7ff 0%, #fafbfd 100%);
+  border: 1px solid #b6d4fe;
+  border-radius: 12px;
+}
+
+.ps-rx-header h3 {
+  margin: 0 0 0.35rem;
+  font-size: 1.05rem;
+  color: #0d6efd;
+}
+
+.ps-rx-header .muted {
+  margin: 0 0 1rem;
+  font-size: 0.88rem;
+}
+
+.ps-rx-fieldset {
+  border: 1px solid #dce4ec;
+  border-radius: 10px;
+  padding: 0.85rem 1rem;
+  margin: 0 0 1rem;
+  background: #fff;
+}
+
+.ps-rx-fieldset legend {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #2c5282;
+  padding: 0 0.35rem;
+}
+
+.ps-rx-label {
+  display: block;
+  margin-bottom: 0.65rem;
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: #334155;
+}
+
+.ps-rx-select {
+  display: block;
+  width: 100%;
+  max-width: 420px;
+  margin-top: 0.35rem;
+  padding: 0.5rem 0.65rem;
+  border: 1px solid #c5d3e0;
+  border-radius: 8px;
+  font-size: 0.9rem;
+}
+
+.ps-rx-check {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.45rem;
+  font-size: 0.88rem;
+  cursor: pointer;
+}
+
+.ps-rx-med-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.ps-rx-med-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  padding: 0.65rem 0.75rem;
+  border: 1px solid #dce4ec;
+  border-radius: 8px;
+  background: #f8fbff;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.ps-rx-med-card:hover {
+  border-color: #0d6efd;
+  background: #eef5ff;
+}
+
+.ps-rx-med-card:has(.ps-rx-med-check:checked) {
+  border-color: #0d6efd;
+  background: #e8f2ff;
+  box-shadow: 0 0 0 2px rgba(13, 110, 253, 0.12);
+}
+
+.ps-rx-med-check {
+  margin-top: 0.2rem;
+  flex-shrink: 0;
+}
+
+.ps-rx-med-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 0.88rem;
+  line-height: 1.4;
+}
+
+.ps-rx-med-detail {
+  font-size: 0.8rem;
+  color: #64748b;
+}
+
+.ps-rx-tier {
+  display: inline-block;
+  align-self: flex-start;
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  padding: 0.12rem 0.45rem;
+  border-radius: 4px;
+  background: #e2e8f0;
+  color: #475569;
+}
+
+.ps-rx-tier--1ªlinha {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.ps-rx-tier--Alternativa {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.ps-rx-tier--Refractário,
+.ps-rx-tier--Refractario {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.ps-rx-tier--Evitar {
+  background: #fecaca;
+  color: #7f1d1d;
+}
+
+.ps-rx-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  margin-top: 0.5rem;
+}
+
+.ps-rx-actions .btn {
+  border: none;
+  cursor: pointer;
+  padding: 0.6rem 1.15rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.ps-rx-analyze {
+  background: #0d6efd;
+  color: #fff;
+}
+
+.ps-rx-analyze:hover {
+  background: #0b5ed7;
+}
+
+.ps-rx-clear {
+  background: transparent;
+  border: 1px solid #c5d3e0 !important;
+  color: #475569;
+}
+
+.ps-rx-result {
+  margin-top: 1rem;
+  padding: 1rem 1.1rem;
+  border-radius: 10px;
+  border-left: 4px solid #64748b;
+}
+
+.ps-rx-result h4 {
+  margin: 0 0 0.65rem;
+  font-size: 1rem;
+}
+
+.ps-rx-result--ok {
+  background: #ecfdf5;
+  border-color: #10b981;
+}
+
+.ps-rx-result--ok h4 {
+  color: #047857;
+}
+
+.ps-rx-result--warning {
+  background: #fffbeb;
+  border-color: #f59e0b;
+}
+
+.ps-rx-result--warning h4 {
+  color: #b45309;
+}
+
+.ps-rx-result--error {
+  background: #fef2f2;
+  border-color: #ef4444;
+}
+
+.ps-rx-result--error h4 {
+  color: #b91c1c;
+}
+
+.ps-rx-result-list {
+  margin: 0;
+  padding-left: 1.15rem;
+}
+
+.ps-rx-msg {
+  margin-bottom: 0.35rem;
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+
+.ps-rx-disclaimer {
+  margin: 0.75rem 0 0;
+  font-size: 0.78rem;
+  color: #64748b;
+}
+
+.ps-rx-auto-note {
+  margin: 0 0 0.75rem;
+  font-size: 0.8rem;
+}
+
+.ps-rx-soon {
+  margin: 0 0 1rem;
+  padding: 0.65rem 0.85rem;
+  background: #f8fafc;
+  border-radius: 8px;
+  font-size: 0.85rem;
+}
+
+.ps-rx-protocol-divider {
+  margin: 1.25rem 0 0.75rem;
+  padding-top: 1rem;
+  border-top: 1px dashed #dce4ec;
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: #64748b;
+}
+
 .calc-form {
   display: flex;
   flex-direction: column;
