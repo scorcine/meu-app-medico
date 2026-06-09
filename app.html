@@ -9,7 +9,7 @@
   <title>MedHub</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <script src="theme.js"></script>
-  <link rel="stylesheet" href="style.css?v=anamnese-v1">
+  <link rel="stylesheet" href="style.css?v=rx-v1">
   <script defer src="calculators-risco.js"></script>
   <script defer src="calculators-cardio.js"></script>
   <script defer src="calculators-pneumo.js?v=rsi-patient"></script>
@@ -39,9 +39,11 @@
   <script defer src="pronto-socorro-interactive-data.js?v=ps-interactive-rx-v3"></script>
   <script defer src="pronto-socorro-interactive-core.js?v=ps-interactive-rx-v3"></script>
   <script defer src="pronto-socorro.js?v=ps-interactive-rx-v3"></script>
+  <script defer src="receituario-data.js?v=rx-v1"></script>
+  <script defer src="receituario.js?v=rx-v1"></script>
   <script defer src="google-drive.js?v=anamnese-v1"></script>
   <script defer src="anamnese.js?v=anamnese-v1"></script>
-  <script defer src="app.js?v=anamnese-v1"></script>
+  <script defer src="app.js?v=rx-v1"></script>
   <script defer src="auth.js"></script>
 </head>
 <body class="app-page" onload="initApp()">
@@ -71,7 +73,7 @@
         <button type="button" class="sidebar-link" data-section="consultas">Consultas</button>
         <button type="button" class="sidebar-link" data-section="ferramentas">Ferramentas</button>
       </nav>
-      <p class="sidebar-build" id="app-build" title="Confira se esta versão bate com a última atualização do projeto">Build 2026.06.08 · Anamnese + Drive ✓</p>
+      <p class="sidebar-build" id="app-build" title="Confira se esta versão bate com a última atualização do projeto">Build 2026.06.08 · Receituário integrado ✓</p>
     </aside>
 
     <main class="app-content">
@@ -161,10 +163,30 @@
       </section>
 
       <section id="section-receituario" class="content-panel">
-        <div class="card dashboard-card">
-          <h2>Receituário</h2>
-          <p class="muted">Modelos e referências para prescrições durante o plantão.</p>
-          <p class="coming-soon">Conteúdo em construção — em breve você poderá gerar e consultar receitas aqui.</p>
+        <div class="card dashboard-card rx-wrap">
+          <div id="rx-list-view">
+            <h2>Receituário</h2>
+            <p class="muted">Modelos de receita por condição. Digite a queixa na <strong>Anamnese</strong> (ex.: cefaleia) e as opções aparecem aqui automaticamente.</p>
+            <label class="ps-search-label" for="rx-crm">CRM (opcional — aparece na receita)</label>
+            <input id="rx-crm" class="ps-search rx-crm-input" type="text" placeholder="Ex.: CRM-SP 123456" autocomplete="off">
+            <div id="rx-suggest-banner" class="rx-suggest-banner" hidden></div>
+            <label class="ps-search-label" for="rx-search">Buscar condição</label>
+            <input id="rx-search" class="ps-search" type="search" placeholder="Ex.: cefaleia, amigdalite, cistite…" autocomplete="off">
+            <div id="rx-condition-grid" class="calc-category-grid"></div>
+          </div>
+          <div id="rx-detail-view" hidden>
+            <button type="button" class="btn-back" id="rx-back">← Voltar às condições</button>
+            <h2 id="rx-condition-title"></h2>
+            <p class="muted">Clique em uma opção para gerar a receita pronta (com dados do paciente da anamnese, se preenchidos).</p>
+            <div id="rx-options-wrap"></div>
+            <div id="rx-result" class="rx-result" hidden>
+              <h3>Receita gerada</h3>
+              <textarea id="rx-result-text" class="rx-result-text" rows="16" readonly></textarea>
+              <div class="rx-result-actions">
+                <button type="button" class="btn" id="rx-copy">Copiar receita</button>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -313,8 +335,9 @@
             </div>
 
             <label class="anamnese-label">Queixa principal
-              <textarea id="anam-queixa" class="anamnese-textarea" rows="2" placeholder="Motivo da consulta"></textarea>
+              <textarea id="anam-queixa" class="anamnese-textarea" rows="2" placeholder="Motivo da consulta (ex.: cefaleia)"></textarea>
             </label>
+            <p id="anam-queixa-hint" class="anamnese-queixa-hint" hidden></p>
             <label class="anamnese-label">História da doença atual (HDA)
               <textarea id="anam-hda" class="anamnese-textarea" rows="4"></textarea>
             </label>

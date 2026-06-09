@@ -1,0 +1,220 @@
+/* Receituário — catálogo de condições e modelos de receita */
+
+const RX_CATALOG = [
+  {
+    id: 'cefaleias',
+    name: 'Cefaleia',
+    icon: '🤕',
+    aliases: ['cefaleia', 'cefaleias', 'dor de cabeca', 'dor cabeca', 'enxaqueca', 'migranea', 'migraine', 'headache', 'salvas'],
+    groups: [
+      {
+        id: 'tensional',
+        label: 'Cefaleia tensional',
+        options: [
+          {
+            id: 'cef-tens-1',
+            tier: '1ª linha',
+            label: 'Dipirona ou paracetamol (VO)',
+            items: [
+              'Dipirona 500 mg — 1 comprimido VO 6/6 horas, por 3 a 5 dias, se dor',
+              'OU Paracetamol 750 mg — 1 comprimido VO 6/6 horas, por 3 a 5 dias, se dor'
+            ],
+            orientacoes: 'Evitar uso diário prolongado de analgésicos (> 10–15 dias/mês). Retorno imediato se cefaleia súbita intensa (“pior da vida”), febre, rigidez de nuca ou déficit neurológico.'
+          },
+          {
+            id: 'cef-tens-2',
+            tier: 'Alternativa',
+            label: 'AINE + relaxante cervical (VO)',
+            items: [
+              'Naproxeno 500 mg — 1 comprimido VO 12/12 horas, por 3 a 5 dias',
+              'Ibuprofeno 400 mg — 1 comprimido VO 8/8 horas, por 3 dias (alternativa)',
+              'Ciclobenzaprina 5 mg — 1 comprimido VO à noite, por 3 a 5 dias (se componente cervical)'
+            ],
+            orientacoes: 'Cautela em úlcera péptica, DRC, gestação e asma. Tomar AINE após alimentação.'
+          },
+          {
+            id: 'cef-tens-3',
+            tier: 'Refractário',
+            label: 'Tramadol (VO) — dor refratária',
+            items: [
+              'Tramadol 50 mg — 1 comprimido VO 6/6 horas, se dor intensa, por até 3 dias'
+            ],
+            orientacoes: 'Receita especial (A2). Evitar associar outros opioides. Não dirigir se sedação.'
+          }
+        ]
+      },
+      {
+        id: 'enxaqueca',
+        label: 'Enxaqueca moderada a grave',
+        options: [
+          {
+            id: 'cef-enx-1',
+            tier: '1ª linha',
+            label: 'Sumatriptano + antiemético',
+            items: [
+              'Sumatriptano 50 mg — 1 comprimido VO ao início da crise (pode repetir após 2 h; máx. 200 mg/dia)',
+              'Metoclopramida 10 mg — 1 comprimido VO junto ao triptano (náusea)',
+              'Dipirona 500 mg — 1 comprimido VO 6/6 horas se dor residual'
+            ],
+            orientacoes: 'Contraindicado se DAC, AVC prévio, PA não controlada ou gestação (revisar). Não usar triptano > 10 dias/mês.'
+          },
+          {
+            id: 'cef-enx-2',
+            tier: 'Alternativa',
+            label: 'Zolmitriptano ou AINE associado',
+            items: [
+              'Zolmitriptano 2,5 mg — 1 comprimido VO ao início da crise (pode repetir 2,5 mg após 2 h)',
+              'Paracetamol 750 mg — 1 comprimido VO 6/6 horas',
+              'Naproxeno 500 mg — 1 comprimido VO 12/12 horas por 2 dias'
+            ],
+            orientacoes: 'Evitar combinar dois triptanos. Orientar diário de cefaleia.'
+          },
+          {
+            id: 'cef-enx-3',
+            tier: 'Profilaxia',
+            label: 'Profilaxia ambulatorial (enxaqueca recorrente)',
+            items: [
+              'Propranolol 40 mg — 1 comprimido VO 12/12 horas (ajustar conforme FC/PA)',
+              'OU Topiramato 25 mg — 1 comprimido VO à noite (titular gradualmente)',
+              'OU Amitriptilina 25 mg — 1 comprimido VO à noite'
+            ],
+            orientacoes: 'Avaliar indicação de profilaxia se ≥ 4 crises/mês ou impacto funcional. Retorno em 4–8 semanas para resposta.'
+          }
+        ]
+      },
+      {
+        id: 'salvas',
+        label: 'Cefaleia em salvas',
+        options: [
+          {
+            id: 'cef-sal-1',
+            tier: '1ª linha',
+            label: 'Sumatriptano SC / nasal na crise',
+            items: [
+              'Sumatriptano 6 mg — 1 aplicacao SC ao início da crise (repetir após 1 h se necessário; máx. 12 mg/24 h)',
+              'OU Zolmitriptano 5 mg — 1 spray nasal na crise'
+            ],
+            orientacoes: 'Orientar evitar álcool e nitratos na crise. Encaminhar neurologia para profilaxia (verapamil).'
+          },
+          {
+            id: 'cef-sal-2',
+            tier: 'Profilaxia',
+            label: 'Verapamil — profilaxia de salvas',
+            items: [
+              'Verapamil 80 mg — 1 comprimido VO 8/8 horas (titular conforme tolerância e ECG)'
+            ],
+            orientacoes: 'Solicitar ECG antes e monitorar. Especialista/neurologia recomendado.'
+          }
+        ]
+      }
+    ]
+  },
+  {
+    id: 'amigdalite-bacteriana',
+    name: 'Amigdalite bacteriana',
+    icon: '🦠',
+    aliases: ['amigdalite', 'faringite', 'faringoamigdalite', 'dor de garganta', 'odinofagia'],
+    groups: [
+      {
+        id: 'atb',
+        label: 'Antibiótico',
+        options: [
+          {
+            id: 'amig-1',
+            tier: '1ª linha',
+            label: 'Amoxicilina VO',
+            items: [
+              'Amoxicilina 500 mg — 1 comprimido VO 8/8 horas, por 10 dias'
+            ],
+            orientacoes: 'Completar 10 dias mesmo com melhora em 48 h. Retorno se trismo, voz abafada ou piora unilateral (abscesso).'
+          },
+          {
+            id: 'amig-2',
+            tier: 'Alternativa',
+            label: 'Amoxicilina-clavulanato',
+            items: [
+              'Amoxicilina + clavulanato 875/125 mg — 1 comprimido VO 12/12 horas, por 10 dias'
+            ],
+            orientacoes: 'Alternativa se falha terapêutica ou fatores de risco para resistência.'
+          }
+        ]
+      }
+    ]
+  },
+  {
+    id: 'cistite-itu-baixa',
+    name: 'Cistite (ITU baixa)',
+    icon: '💧',
+    aliases: ['cistite', 'itu', 'infecao urinaria', 'urina', 'disuria', 'polaciuria'],
+    groups: [
+      {
+        id: 'atb',
+        label: 'Antibiótico',
+        options: [
+          {
+            id: 'itu-1',
+            tier: '1ª linha',
+            label: 'Fosfomicina dose única',
+            items: [
+              'Fosfomicina trometamol 3 g — 1 envelope VO dose única (dissolver em meio copo de agua)'
+            ],
+            orientacoes: 'Hidratação abundante. Retorno se febre, dor lombar ou piora em 48 h (pielonefrite).'
+          },
+          {
+            id: 'itu-2',
+            tier: 'Alternativa',
+            label: 'Nitrofurantoína',
+            items: [
+              'Nitrofurantoína 100 mg — 1 comprimido VO 6/6 horas, por 5 dias'
+            ],
+            orientacoes: 'Evitar se TFG < 30 mL/min. Urina pode ficar amarelada — orientar paciente.'
+          }
+        ]
+      }
+    ]
+  },
+  {
+    id: 'lombalgia-ciatalgia',
+    name: 'Lombalgia / ciatalgia',
+    icon: '🦴',
+    aliases: ['lombalgia', 'lombago', 'ciatalgia', 'ciatica', 'dor lombar', 'dor nas costas'],
+    groups: [
+      {
+        id: 'analgesia',
+        label: 'Analgesia',
+        options: [
+          {
+            id: 'lomb-1',
+            tier: '1ª linha',
+            label: 'Analgésico + AINE (VO)',
+            items: [
+              'Dipirona 500 mg — 1 comprimido VO 6/6 horas, por 5 a 7 dias',
+              'Naproxeno 500 mg — 1 comprimido VO 12/12 horas, por 5 dias',
+              'Ciclobenzaprina 5 mg — 1 comprimido VO à noite, por 5 dias (se espasmo)'
+            ],
+            orientacoes: 'Repouso relativo, calor local. Retorno imediato se deficit motor, anestesia em sela, febre ou trauma.'
+          }
+        ]
+      }
+    ]
+  }
+];
+
+function rxNormText (text) {
+  return (text || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim();
+}
+
+function rxMatchConditions (queixa) {
+  const norm = rxNormText(queixa);
+  if (!norm || norm.length < 3) return [];
+
+  return RX_CATALOG.filter(cond => {
+    if (cond.aliases.some(a => norm.includes(rxNormText(a)))) return true;
+    if (norm.includes(rxNormText(cond.name))) return true;
+    return cond.aliases.some(a => rxNormText(a).includes(norm));
+  }).sort((a, b) => {
+    const aExact = a.aliases.some(al => rxNormText(al) === norm) ? 0 : 1;
+    const bExact = b.aliases.some(al => rxNormText(al) === norm) ? 0 : 1;
+    return aExact - bExact;
+  });
+}
