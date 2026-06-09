@@ -77,6 +77,7 @@ function initApp () {
   initGuiaEmergencia();
   initTratamentoHospitalar();
   initProntoSocorro();
+  initAnamnese();
   patchEmergenciaCacheGuard();
 
   const hash = window.location.hash.replace('#', '');

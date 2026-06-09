@@ -9,7 +9,7 @@
   <title>MedHub</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <script src="theme.js"></script>
-  <link rel="stylesheet" href="style.css?v=theme-v2">
+  <link rel="stylesheet" href="style.css?v=anamnese-v1">
   <script defer src="calculators-risco.js"></script>
   <script defer src="calculators-cardio.js"></script>
   <script defer src="calculators-pneumo.js?v=rsi-patient"></script>
@@ -39,7 +39,9 @@
   <script defer src="pronto-socorro-interactive-data.js?v=ps-interactive-rx-v3"></script>
   <script defer src="pronto-socorro-interactive-core.js?v=ps-interactive-rx-v3"></script>
   <script defer src="pronto-socorro.js?v=ps-interactive-rx-v3"></script>
-  <script defer src="app.js?v=th-im-ev-v1"></script>
+  <script defer src="google-drive.js?v=anamnese-v1"></script>
+  <script defer src="anamnese.js?v=anamnese-v1"></script>
+  <script defer src="app.js?v=anamnese-v1"></script>
   <script defer src="auth.js"></script>
 </head>
 <body class="app-page" onload="initApp()">
@@ -65,10 +67,11 @@
         <button type="button" class="sidebar-link" data-section="calc-pediatrica">Calculadora pediátrica</button>
         <button type="button" class="sidebar-link" data-section="calc-essenciais">Calculadoras essenciais</button>
         <button type="button" class="sidebar-link" data-section="pacientes">Pacientes</button>
+        <button type="button" class="sidebar-link" data-section="anamnese">Anamnese</button>
         <button type="button" class="sidebar-link" data-section="consultas">Consultas</button>
         <button type="button" class="sidebar-link" data-section="ferramentas">Ferramentas</button>
       </nav>
-      <p class="sidebar-build" id="app-build" title="Confira se esta versão bate com a última atualização do projeto">Build 2026.06.08 · PS interativo 106 · TH 46 ✓</p>
+      <p class="sidebar-build" id="app-build" title="Confira se esta versão bate com a última atualização do projeto">Build 2026.06.08 · Anamnese + Drive ✓</p>
     </aside>
 
     <main class="app-content">
@@ -256,6 +259,99 @@
         <div class="card dashboard-card">
           <h2>Pacientes</h2>
           <p class="coming-soon">Em breve: cadastro e lista de pacientes.</p>
+        </div>
+      </section>
+
+      <section id="section-anamnese" class="content-panel">
+        <div class="card dashboard-card anamnese-wrap">
+          <h2>Anamnese</h2>
+          <p class="muted">Registre a anamnese do paciente. Ao salvar, o texto fica no histórico local e pode ser enviado automaticamente ao seu Google Drive.</p>
+
+          <details class="anamnese-drive-panel">
+            <summary>Google Drive — envio automático</summary>
+            <div class="anamnese-drive-body">
+              <p class="anamnese-drive-help muted">
+                Para enviar ao Drive, crie um <strong>Client ID OAuth</strong> no
+                <a href="https://console.cloud.google.com/apis/credentials" target="_blank" rel="noopener">Google Cloud Console</a>
+                (tipo <em>Aplicativo da Web</em>) e autorize a origem <code>https://meu-app-medico.vercel.app</code>.
+                Ative a API <strong>Google Drive</strong>.
+              </p>
+              <label class="anamnese-label" for="anamnese-gdrive-client-id">Client ID OAuth (Google)</label>
+              <input id="anamnese-gdrive-client-id" class="anamnese-input" type="text" placeholder="123456789-xxxx.apps.googleusercontent.com" autocomplete="off">
+              <label class="anamnese-check">
+                <input type="checkbox" id="anamnese-gdrive-auto" checked>
+                Enviar automaticamente ao Google Drive ao salvar
+              </label>
+              <div class="anamnese-drive-actions">
+                <button type="button" class="btn-outline" id="anamnese-gdrive-save-settings">Salvar configurações</button>
+                <button type="button" class="btn" id="anamnese-drive-connect">Conectar Google Drive</button>
+                <button type="button" class="btn-outline" id="anamnese-drive-disconnect">Desconectar</button>
+              </div>
+              <p id="anamnese-drive-status" class="anamnese-drive-status anamnese-drive-status--idle"></p>
+            </div>
+          </details>
+
+          <form id="anamnese-form" class="anamnese-form">
+            <div class="anamnese-grid">
+              <label class="anamnese-label">Paciente
+                <input id="anam-paciente" class="anamnese-input" type="text" required placeholder="Nome completo">
+              </label>
+              <label class="anamnese-label">Idade
+                <input id="anam-idade" class="anamnese-input" type="text" placeholder="Ex.: 45 anos">
+              </label>
+              <label class="anamnese-label">Sexo
+                <select id="anam-sexo" class="anamnese-input">
+                  <option value="">—</option>
+                  <option value="Feminino">Feminino</option>
+                  <option value="Masculino">Masculino</option>
+                  <option value="Outro">Outro</option>
+                </select>
+              </label>
+              <label class="anamnese-label">Data / hora
+                <input id="anam-data" class="anamnese-input" type="text">
+              </label>
+            </div>
+
+            <label class="anamnese-label">Queixa principal
+              <textarea id="anam-queixa" class="anamnese-textarea" rows="2" placeholder="Motivo da consulta"></textarea>
+            </label>
+            <label class="anamnese-label">História da doença atual (HDA)
+              <textarea id="anam-hda" class="anamnese-textarea" rows="4"></textarea>
+            </label>
+            <label class="anamnese-label">Antecedentes pessoais
+              <textarea id="anam-antecedentes" class="anamnese-textarea" rows="3"></textarea>
+            </label>
+            <label class="anamnese-label">Medicações em uso
+              <textarea id="anam-medicacoes" class="anamnese-textarea" rows="2"></textarea>
+            </label>
+            <label class="anamnese-label">Alergias
+              <textarea id="anam-alergias" class="anamnese-textarea" rows="2" placeholder="NKDA ou listar"></textarea>
+            </label>
+            <label class="anamnese-label">Hábitos
+              <textarea id="anam-habitos" class="anamnese-textarea" rows="2"></textarea>
+            </label>
+            <label class="anamnese-label">Exame físico
+              <textarea id="anam-exame" class="anamnese-textarea" rows="4"></textarea>
+            </label>
+            <label class="anamnese-label">Hipóteses diagnósticas
+              <textarea id="anam-hipoteses" class="anamnese-textarea" rows="2"></textarea>
+            </label>
+            <label class="anamnese-label">Conduta / plano
+              <textarea id="anam-conduta" class="anamnese-textarea" rows="3"></textarea>
+            </label>
+
+            <div class="anamnese-form-actions">
+              <button type="submit" class="btn">Salvar anamnese</button>
+              <button type="button" class="btn-outline" id="anamnese-clear">Limpar formulário</button>
+            </div>
+            <p id="anamnese-save-status" class="anamnese-save-status" hidden></p>
+          </form>
+
+          <section class="anamnese-history">
+            <h3>Histórico local</h3>
+            <p id="anamnese-history-empty" class="muted">Nenhuma anamnese salva ainda.</p>
+            <ul id="anamnese-history-list" class="anamnese-history-list"></ul>
+          </section>
         </div>
       </section>
 
