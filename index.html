@@ -9,21 +9,75 @@
   <link rel="stylesheet" href="style.css?v=theme-v1">
   <script defer src="app.js"></script>
 </head>
-<body onload="redirectLoggedFromHome()">
+<body class="home-page" onload="redirectLoggedFromHome()">
   <header>
     <h1>MedHub</h1>
   </header>
 
   <main>
-    <div class="card">
-      <div class="icon">🏥</div>
-      <h2>Bem-vindo</h2>
-      <p>
-        O MedHub está no ar. Aqui você poderá gerenciar consultas,
-        pacientes e informações de saúde de forma simples e segura.
-      </p>
-      <a href="login.html" class="btn">Começar</a>
-    </div>
+    <article class="card home-card">
+      <header class="home-hero">
+        <p class="home-emoji" aria-hidden="true">👋</p>
+        <h2>Seja bem-vindo ao MedHub</h2>
+        <p class="home-tagline">O seu pronto-socorro de bolso – rápido, confiável e sempre à mão.</p>
+      </header>
+
+      <section class="home-section">
+        <h3>Por que abrir o MedHub agora?</h3>
+        <p class="home-lead">
+          Porque cada segundo conta: aqui você encontra, em poucos toques, tudo o que precisa para decidir, prescrever e agir com segurança.
+        </p>
+      </section>
+
+      <section class="home-section">
+        <h3>🔑 O que o MedHub entrega ao plantonista</h3>
+        <ul class="home-features">
+          <li>
+            <strong>⚡ Guia Rápido de Emergência</strong>
+            <span>Algoritmos passo-a-passo e fluxogramas ACLS, AVC, sepse, trauma e muito mais.</span>
+          </li>
+          <li>
+            <strong>🧮 Calculadoras &amp; Escalas Clínicas</strong>
+            <span>CHA₂DS₂-VASc, CURB-65, MELD, Cockcroft-Gault, doses pediátricas por peso – resultado interpretado na hora.</span>
+          </li>
+          <li>
+            <strong>💊 Prescrições Básicas Prontas</strong>
+            <span>Sugestões de posologia hospitalar para as doenças mais comuns, com ajuste renal automático.</span>
+          </li>
+          <li>
+            <strong>📚 Protocolos de Conduta Atualizados</strong>
+            <span>Guias de antibiótico, vias aéreas, analgesia, anticoagulação e profilaxias, todos com referência bibliográfica.</span>
+          </li>
+          <li>
+            <strong>🔍 Busca Instantânea</strong>
+            <span>Digite três letras e ache drogas, doses ou procedimentos em milissegundos, mesmo offline.</span>
+          </li>
+          <li>
+            <strong>⭐ Favoritos, Anotações e Histórico</strong>
+            <span>Salve seus protocolos preferidos, anexe lembretes pessoais e retome onde parou.</span>
+          </li>
+          <li>
+            <strong>📴 Modo Offline Completo</strong>
+            <span>Todo o conteúdo (inclusive imagens e calculadoras) disponível sem internet.</span>
+          </li>
+          <li>
+            <strong>📈 Painel de Pacientes &amp; Consultas</strong>
+            <span>Registre atendimentos, monitore evolução e gere relatórios rápidos.</span>
+          </li>
+          <li>
+            <strong>🔔 Atualizações em Tempo Real</strong>
+            <span>Notificações quando saem novos guidelines ou calculadoras importantes.</span>
+          </li>
+          <li>
+            <strong>🔐 Segurança &amp; LGPD</strong>
+            <span>Criptografia ponta-a-ponta, login multifator e controle de acesso por perfil.</span>
+          </li>
+        </ul>
+      </section>
+
+      <p class="home-cta-text">🚀 Toque em “Começar” e veja como o MedHub economiza minutos preciosos — e pode salvar vidas.</p>
+      <a href="login.html" class="btn home-btn">Começar</a>
+    </article>
   </main>
 
   <footer>
