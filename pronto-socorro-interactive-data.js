@@ -34,8 +34,8 @@ const PS_INTERACTIVE = {
     ],
     requiredContext: [{ id: 'subtype', label: 'subtipo de cefaleia' }],
     medications: [
-      { id: 'cef-dipirona', tier: '1ª linha', label: 'Dipirona 1 g IV/VO 6/6 h', drugs: [{ id: 'dipirona' }] },
-      { id: 'cef-paracetamol', tier: '1ª linha', label: 'Paracetamol 750 mg–1 g VO 6/6 h', drugs: [{ id: 'paracetamol' }] },
+      { id: 'cef-dipirona', tier: '1ª linha', label: 'Dipirona 500 mg ou 1 g VO 6/6 h', drugs: [{ id: 'dipirona' }] },
+      { id: 'cef-paracetamol', tier: '1ª linha', label: 'Paracetamol 500 mg ou 750 mg VO 6/6 h', drugs: [{ id: 'paracetamol' }] },
       { id: 'cef-naproxeno', tier: 'Alternativa', label: 'Naproxeno 500 mg VO 12/12 h', drugs: [{ id: 'naproxeno' }] },
       { id: 'cef-ibuprofeno', tier: 'Alternativa', label: 'Ibuprofeno 400 mg VO 8/8 h', drugs: [{ id: 'ibuprofeno' }] },
       { id: 'cef-ciclobenzaprina', tier: 'Alternativa', label: 'Ciclobenzaprina 5–10 mg VO (componente cervical)', drugs: [{ id: 'ciclobenzaprina' }] },
@@ -134,8 +134,8 @@ const PS_INTERACTIVE = {
       { id: 'plaquetopenia', label: 'Plaquetas < 50 mil', type: 'checkbox' }
     ],
     medications: [
-      { id: 'dengue-paracetamol', tier: '1ª linha', label: 'Paracetamol 750 mg–1 g VO/EV 6/6 h', drugs: [{ id: 'paracetamol' }] },
-      { id: 'dengue-dipirona', tier: 'Alternativa', label: 'Dipirona 1 g IV/VO 6/6 h (após fase crítica)', drugs: [{ id: 'dipirona' }] },
+      { id: 'dengue-paracetamol', tier: '1ª linha', label: 'Paracetamol 500 mg ou 750 mg VO / 750 mg EV 6/6 h', drugs: [{ id: 'paracetamol' }] },
+      { id: 'dengue-dipirona', tier: 'Alternativa', label: 'Dipirona 500 mg ou 1 g IV/VO 6/6 h (após fase crítica)', drugs: [{ id: 'dipirona' }] },
       { id: 'dengue-diclofenaco', tier: 'Evitar', label: 'Diclofenaco / AINE', drugs: [{ id: 'diclofenaco' }] },
       { id: 'dengue-hidratacao', tier: '1ª linha', label: 'Hidratação VO ou EV conforme grupo', drugs: [] }
     ],

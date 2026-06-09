@@ -42,14 +42,14 @@ const PS_CONTENT_2 = {
     <ul class="ps-med-options">
       <li><strong>1ª linha:</strong> dipirona 1 g EV/IM + cetoprofeno 100 mg EV (se função renal OK).</li>
       <li><strong>Alternativa:</strong> tramadol 50–100 mg EV/IM + escopolamina 20 mg IM se componente espasmódico.</li>
-      <li><strong>Alérgico / contraindicação:</strong> paracetamol 1 g VO/EV ± morfina 2,5–5 mg EV se dor refratária; evitar AINE se IRA ou gestante. Tamsulosina 0,4 mg VO 24/24 h na alta se cálculo distal &lt; 10 mm.</li>
+      <li><strong>Alérgico / contraindicação:</strong> paracetamol 500 mg ou 750 mg VO / 750 mg EV ± morfina 2,5–5 mg EV se dor refratária; evitar AINE se IRA ou gestante. Tamsulosina 0,4 mg VO 24/24 h na alta se cálculo distal &lt; 10 mm.</li>
     </ul>
     <h4>Prescrições de pronto-socorro</h4>
     <ol class="emerg-steps">
       <li><strong>ABC</strong> · analgesia imediata · acesso venoso se vômitos.</li>
       <li><strong>Analgesia escalonada:</strong>
         <ul>
-          <li><strong>1ª linha:</strong> dipirona 1 g EV/IM ou paracetamol 1 g VO/EV.</li>
+          <li><strong>1ª linha:</strong> dipirona 1 g EV/IM ou paracetamol 500 mg ou 750 mg VO / 750 mg EV.</li>
           <li><strong>AINE:</strong> cetoprofeno 100 mg EV ou diclofenaco 75 mg IM — se função renal OK e sem contraindicação.</li>
           <li><strong>Opioide:</strong> tramadol 50–100 mg EV/IM ou morfina 2,5–5 mg EV se dor refratária.</li>
           <li><strong>Adjuvante:</strong> escopolamina 20 mg IM se componente espasmódico.</li>

@@ -119,7 +119,7 @@ const PS_CONTENT_4 = {
       <li><strong>Analgesia</strong>
         <ul class="ps-med-options">
           <li><strong>1ª linha:</strong> dipirona 500 mg–1 g VO/EV 6/6h se necessário.</li>
-          <li><strong>Alternativa:</strong> paracetamol 750 mg–1 g VO 6/6h (máx. 3 g/dia).</li>
+          <li><strong>Alternativa:</strong> paracetamol 500 mg ou 750 mg VO 6/6h (máx. 3 g/dia).</li>
           <li><strong>Alérgico:</strong> paracetamol VO.</li>
           <li><strong>Refractário:</strong> ibuprofeno 400 mg VO 8/8h (se sem contraindicação) + barreira tópica.</li>
         </ul>
@@ -259,7 +259,7 @@ const PS_CONTENT_4 = {
       <li><strong>Dor/cólicas</strong>
         <ul class="ps-med-options">
           <li><strong>1ª linha:</strong> dipirona 1 g VO/EV 6/6h.</li>
-          <li><strong>Alternativa:</strong> paracetamol 1 g VO 6/6h.</li>
+          <li><strong>Alternativa:</strong> paracetamol 500 mg ou 750 mg VO 6/6h.</li>
           <li><strong>Alérgico:</strong> paracetamol VO.</li>
           <li><strong>Refractário:</strong> buscopan 20 mg VO 8/8h; evitar AINE se sangramento intenso.</li>
         </ul>

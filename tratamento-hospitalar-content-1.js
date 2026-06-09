@@ -7,7 +7,7 @@ const TH_CONTENT_1 = {
     <ul class="ps-med-options">
       <li><strong>1ª linha:</strong> dipirona 1 amp (1 g/2 mL) IM ou EV · dexametasona 1 amp (4 mg/1 mL ou 10 mg/2,5 mL) IM ou EV</li>
       <li><strong>AINE (escolher 1 — IM salvo ketorolaco):</strong> diclofenaco 1 amp (75 mg/3 mL) <strong>IM</strong> · cetoprofeno 1 amp (100 mg/2 mL — Tilatil®/Profenid®) <strong>IM</strong> · ketorolaco 1 amp (30 mg/1 mL) IM ou EV lento · tenoxicam 1 amp (20 mg/2 mL) <strong>IM</strong></li>
-      <li><strong>Analgésicos alternativos:</strong> paracetamol 750 mg–1 g VO ou EV 6/6 h · tramadol 1 amp (50 mg/1 mL) IM ou EV lento · dipirona + paracetamol (associação permitida)</li>
+      <li><strong>Analgésicos alternativos:</strong> paracetamol 500 mg ou 750 mg VO ou 750 mg EV 6/6 h · tramadol 1 amp (50 mg/1 mL) IM ou EV lento · dipirona + paracetamol (associação permitida)</li>
       <li><strong>Corticoides alternativos:</strong> metilprednisolona 1 amp (125 mg) EV · hidrocortisona 1 amp (500 mg) EV · dexametasona 4–10 mg IM ou EV (prevenir recorrência enxaqueca 48 h)</li>
       <li><strong>Enxaqueca moderada-grave:</strong> metoclopramida 1 amp (10 mg/2 mL) IM ou EV lento + dipirona 1 amp · ou ondansetrona 1 amp + analgésico</li>
       <li><strong>Refractário:</strong> tramadol 1 amp IM ou EV lento + hidratação SF 0,9% 500 mL EV · morfina 2–4 mg EV lento titulada se dor intensa (monitorizado)</li>
@@ -20,7 +20,7 @@ const TH_CONTENT_1 = {
     <ul class="ps-med-options">
       <li><strong>1ª linha:</strong> dipirona 1 amp (1 g/2 mL) IM ou EV 6/6 h</li>
       <li><strong>AINE (escolher 1 — preferir IM):</strong> diclofenaco 1 amp (75 mg/3 mL) IM 12/12 h · cetoprofeno 1 amp (100 mg/2 mL) IM 12/12 h · ketorolaco 30 mg IM ou EV lento 8/8 h (máx. 5 dias) · tenoxicam 1 amp (20 mg/2 mL) IM 24/24 h</li>
-      <li><strong>Analgésicos alternativos:</strong> paracetamol 750 mg–1 g VO/EV 6/6 h · tramadol 1 amp (50 mg/1 mL) IM ou EV lento 6/6 h · morfina 2–4 mg EV lento titulada se dor intensa pós-avaliação</li>
+      <li><strong>Analgésicos alternativos:</strong> paracetamol 500 mg ou 750 mg VO / 750 mg EV 6/6 h · tramadol 1 amp (50 mg/1 mL) IM ou EV lento 6/6 h · morfina 2–4 mg EV lento titulada se dor intensa pós-avaliação</li>
       <li><strong>Corticoides (inflamação/peritoneite leve — curto prazo):</strong> dexametasona 1 amp IM ou EV · metilprednisolona 125 mg EV dose única</li>
       <li><strong>Antiespasmódico (cólica):</strong> escopolamina 1 amp (20 mg/1 mL) IM ou EV lento · hioscina 1 amp IM · + dipirona 1 amp</li>
       <li><strong>Refractário:</strong> tramadol + dipirona alternados · buscopan composto (escopolamina + dipirona) IM se disponível</li>
@@ -33,7 +33,7 @@ const TH_CONTENT_1 = {
     <ul class="ps-med-options">
       <li><strong>1ª linha:</strong> dipirona 1 amp (1 g/2 mL) IM ou EV · dexametasona 1 amp (4–10 mg) IM ou EV</li>
       <li><strong>AINE (escolher 1):</strong> diclofenaco 1 amp (75 mg/3 mL) <strong>IM</strong> · cetoprofeno 1 amp (100 mg/2 mL) <strong>IM</strong> · ketorolaco 30 mg IM ou EV lento 8/8 h · tenoxicam 1 amp (20 mg/2 mL) <strong>IM</strong></li>
-      <li><strong>Analgésicos alternativos:</strong> paracetamol 1 g VO/EV 6/6 h · tramadol 1 amp IM ou EV lento · dipirona + AINE IM (associação comum na cólica)</li>
+      <li><strong>Analgésicos alternativos:</strong> paracetamol 500 mg ou 750 mg VO / 750 mg EV 6/6 h · tramadol 1 amp IM ou EV lento · dipirona + AINE IM (associação comum na cólica)</li>
       <li><strong>Corticoides alternativos:</strong> metilprednisolona 1 amp (125 mg) EV · hidrocortisona 500 mg EV (reduzir edema ureteral — curto prazo)</li>
       <li><strong>Adjuvantes:</strong> escopolamina 1 amp IM ou EV lento · ondansetrona 1 amp IM ou EV se náusea</li>
       <li><strong>Refractário:</strong> tramadol 1 amp + dipirona 1 amp + hidratação SF 0,9% 500 mL–1 L EV · morfina 2–4 mg EV titulada se dor intratável</li>
@@ -45,7 +45,7 @@ const TH_CONTENT_1 = {
     <ul class="ps-med-options">
       <li><strong>1ª linha:</strong> dipirona 1 amp (1 g/2 mL) IM ou EV 6/6 h</li>
       <li><strong>AINE (escolher 1):</strong> diclofenaco 1 amp (75 mg/3 mL) IM 12/12 h · cetoprofeno 1 amp (100 mg/2 mL) IM 12/12 h · ketorolaco 30 mg IM ou EV lento 8/8 h · tenoxicam 1 amp (20 mg/2 mL) IM 24/24 h</li>
-      <li><strong>Analgésicos alternativos:</strong> paracetamol 1 g VO/EV 6/6 h · tramadol 1 amp IM ou EV lento 6/6 h · morfina 2–4 mg EV titulada (dor radicular intensa · curto prazo)</li>
+      <li><strong>Analgésicos alternativos:</strong> paracetamol 500 mg ou 750 mg VO / 750 mg EV 6/6 h · tramadol 1 amp IM ou EV lento 6/6 h · morfina 2–4 mg EV titulada (dor radicular intensa · curto prazo)</li>
       <li><strong>Corticoides (ciática/radiculopatia):</strong> dexametasona 1 amp (10 mg/2,5 mL) IM ou EV · metilprednisolona 1 amp (125 mg) EV · hidrocortisona 500 mg EV</li>
       <li><strong>Miorrelaxante (componente espasmo):</strong> ciclobenzaprina 5–10 mg VO (se tolerando) · diazepam 5 mg IM ou EV lento (curto prazo · risco queda)</li>
       <li><strong>Refractário:</strong> tramadol + dexametasona EV + AINE IM · considerar bloqueio radicular (anestesiologia)</li>
@@ -109,7 +109,7 @@ const TH_CONTENT_1 = {
     </ul>
     <h4>Sintomáticos IM / EV</h4>
     <ul class="ps-med-options">
-      <li><strong>Antitérmico/analgésico:</strong> dipirona 1 amp IM ou EV 6/6 h · paracetamol 750 mg–1 g VO/EV 6/6 h · tramadol 1 amp se mialgia intensa</li>
+      <li><strong>Antitérmico/analgésico:</strong> dipirona 1 amp IM ou EV 6/6 h · paracetamol 500 mg ou 750 mg VO / 750 mg EV 6/6 h · tramadol 1 amp se mialgia intensa</li>
       <li><strong>AINE (febre/mialgia — se sem contraindicação):</strong> cetoprofeno 1 amp IM · ketorolaco 30 mg IM ou EV lento · evitar se sepse/insuf. renal</li>
       <li><strong>Broncoespasmo associado:</strong> salbutamol nebulização + metilprednisolona 125 mg EV</li>
     </ul>`,
@@ -141,7 +141,7 @@ const TH_CONTENT_1 = {
     </ul>
     <h4>Sintomáticos</h4>
     <ul class="ps-med-options">
-      <li><strong>Dor/febre:</strong> dipirona 1 amp IM ou EV 6/6 h · paracetamol 1 g VO/EV · escopolamina 1 amp IM se cólica</li>
+      <li><strong>Dor/febre:</strong> dipirona 1 amp IM ou EV 6/6 h · paracetamol 500 mg ou 750 mg VO / 750 mg EV · escopolamina 1 amp IM se cólica</li>
       <li><strong>AINE (cólica/febre — se hidratado):</strong> diclofenaco 1 amp IM · cetoprofeno 1 amp IM · ketorolaco 30 mg IM ou EV lento</li>
       <li><strong>Refractário:</strong> tramadol 1 amp + dipirona 1 amp · ondansetrona 1 amp se vômitos</li>
     </ul>`,
@@ -173,7 +173,7 @@ const TH_CONTENT_1 = {
     </ul>
     <h4>Cefaleia / dor associada</h4>
     <ul class="ps-med-options">
-      <li><strong>Analgésicos:</strong> dipirona 1 amp IM ou EV · paracetamol 1 g VO/EV · tramadol 1 amp EV lento</li>
+      <li><strong>Analgésicos:</strong> dipirona 1 amp IM ou EV · paracetamol 500 mg ou 750 mg VO / 750 mg EV · tramadol 1 amp EV lento</li>
       <li><strong>Corticoide (encefalopatia hipertensiva — adjuvante):</strong> dexametasona 1 amp IM ou EV · metilprednisolona 125 mg EV (evidência limitada — usar se edema cerebral)</li>
       <li><strong>Evitar:</strong> AINE (diclofenaco, cetoprofeno, ketorolaco) — pioram PA e função renal</li>
     </ul>`,
@@ -218,7 +218,7 @@ const TH_CONTENT_1 = {
       <li><strong>1ª linha:</strong> dipirona 1 amp (1 g/2 mL) IM ou EV 6/6 h</li>
       <li><strong>AINE (escolher 1 — preferir IM):</strong> diclofenaco 1 amp (75 mg/3 mL) IM 12/12 h · cetoprofeno 1 amp (100 mg/2 mL) IM 12/12 h · ketorolaco 30 mg IM ou EV lento 8/8 h · tenoxicam 1 amp (20 mg/2 mL) IM 24/24 h</li>
       <li><strong>Corticoides (contraindicação AINE/DRC):</strong> metilprednisolona 1 amp (125 mg) EV dose única · dexametasona 1 amp (10 mg) IM ou EV · hidrocortisona 500 mg EV · prednisolona 30 mg VO</li>
-      <li><strong>Analgésicos alternativos:</strong> paracetamol 1 g VO/EV · tramadol 1 amp IM ou EV lento · colchicina 0,5 mg VO 8/8 h (se função renal OK — preferir precoce)</li>
+      <li><strong>Analgésicos alternativos:</strong> paracetamol 500 mg ou 750 mg VO / 750 mg EV · tramadol 1 amp IM ou EV lento · colchicina 0,5 mg VO 8/8 h (se função renal OK — preferir precoce)</li>
       <li><strong>Refractário:</strong> metilprednisolona 125 mg EV + AINE IM · considerar artrocentese (corticoide intra-articular)</li>
     </ul>`,
 
@@ -228,7 +228,7 @@ const TH_CONTENT_1 = {
     <ul class="ps-med-options">
       <li><strong>1ª linha:</strong> dipirona 1 amp (1 g/2 mL) IM ou EV 6/6 h</li>
       <li><strong>AINE (escolher 1):</strong> diclofenaco 1 amp (75 mg/3 mL) IM 12/12 h · cetoprofeno 1 amp (100 mg/2 mL) IM 12/12 h · ketorolaco 30 mg IM ou EV lento 8/8 h · tenoxicam 1 amp (20 mg/2 mL) IM 24/24 h</li>
-      <li><strong>Analgésicos alternativos:</strong> paracetamol 1 g VO/EV 6/6 h · tramadol 1 amp IM ou EV lento 6/6 h · morfina 2–4 mg EV titulada (dor intensa · curto prazo)</li>
+      <li><strong>Analgésicos alternativos:</strong> paracetamol 500 mg ou 750 mg VO / 750 mg EV 6/6 h · tramadol 1 amp IM ou EV lento 6/6 h · morfina 2–4 mg EV titulada (dor intensa · curto prazo)</li>
       <li><strong>Corticoides (inflamação importante):</strong> dexametasona 1 amp (4–10 mg) IM ou EV · metilprednisolona 1 amp (125 mg) EV · hidrocortisona 500 mg EV</li>
       <li><strong>Refractário:</strong> tramadol + AINE IM alternados · dexametasona EV + dipirona · ciclobenzaprina 5–10 mg VO (espasmo muscular)</li>
     </ul>`,
@@ -305,7 +305,7 @@ const TH_CONTENT_1 = {
     <p class="muted">Influenza com complicação / internação — sintomáticos IM/EV + oseltamivir VO quando indicado.</p>
     <h4>Medicação IM / EV</h4>
     <ul class="ps-med-options">
-      <li><strong>Antitérmico/analgésico 1ª linha:</strong> dipirona 1 amp (1 g/2 mL) IM ou EV 6/6 h · paracetamol 750 mg–1 g VO/EV 6/6 h</li>
+      <li><strong>Antitérmico/analgésico 1ª linha:</strong> dipirona 1 amp (1 g/2 mL) IM ou EV 6/6 h · paracetamol 500 mg ou 750 mg VO / 750 mg EV 6/6 h</li>
       <li><strong>AINE (mialgia/febre):</strong> cetoprofeno 1 amp IM · ketorolaco 30 mg IM ou EV lento · diclofenaco 1 amp IM (se hidratado e sem contraindicação)</li>
       <li><strong>Analgésicos alternativos:</strong> tramadol 1 amp IM ou EV lento · dipirona + paracetamol alternados</li>
       <li><strong>Pneumonia secundária:</strong> ceftriaxona 1 amp (1 g) EV 24/24 h + oseltamivir 75 mg VO 12/12 h × 5 dias · azitromicina associada</li>

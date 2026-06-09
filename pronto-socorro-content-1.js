@@ -7,7 +7,7 @@ const PS_CONTENT_1 = {
         <li><strong>ABC</strong> — monitorização, O₂ se necessário, 2 acessos venosos calibrosos se instável ou suspeita de abdome cirúrgico.</li>
         <li><strong>Analgesia escalonada</strong> — reavaliar após cada degrau; evitar mascarar sinais de peritonite:
           <ul class="ps-med-options">
-            <li><strong>1ª linha:</strong> dipirona 1 g IV/IM (Novalgina®) 6/6 h ou paracetamol 750 mg–1 g IV/VO 6/6 h</li>
+            <li><strong>1ª linha:</strong> dipirona 1 g IV/IM (Novalgina®) 6/6 h ou paracetamol 500 mg ou 750 mg VO / 750 mg EV 6/6 h</li>
             <li><strong>Alternativa / resistência:</strong> cetoprofeno 100 mg IV 8/8 h ou naproxeno 500 mg VO 12/12 h (cautela GI/renal; evitar se suspeita de úlcera perfurada)</li>
             <li><strong>Refratário / grave:</strong> tramadol 50–100 mg IV lento 6/6 h → morfina 2–5 mg IV titulada q10–15 min (máx. 10 mg) se dor intensa</li>
           </ul>
@@ -228,7 +228,7 @@ const PS_CONTENT_1 = {
         <li><strong>Repouso relativo</strong> — abstinência sexual temporária; evitar AINE na gestação. Analgesia:
           <ul class="ps-med-options">
             <li><strong>1ª linha:</strong> dipirona 1 g VO 6/6 h ou paracetamol 750 mg VO 6/6 h</li>
-            <li><strong>Alternativa / resistência:</strong> paracetamol 1 g VO 6/6 h se dipirona indisponível</li>
+            <li><strong>Alternativa / resistência:</strong> paracetamol 500 mg ou 750 mg VO 6/6 h se dipirona indisponível</li>
             <li><strong>Refratário / grave:</strong> tramadol 50 mg VO 6/6 h (apenas se dor intensa e após avaliação obstétrica; evitar no 1º trimestre)</li>
           </ul>
         </li>
@@ -487,7 +487,7 @@ const PS_CONTENT_1 = {
         <li><strong>Sinais de alarme</strong> — febre, articulação quente/eritematosa monoarticular (artrocentese para excluir séptica), trauma com deformidade, déficit neurovascular.</li>
         <li><strong>Analgesia</strong> — escalonada:
           <ul class="ps-med-options">
-            <li><strong>1ª linha:</strong> dipirona 1 g IV/VO 6/6 h ou paracetamol 750 mg–1 g VO 6/6 h</li>
+            <li><strong>1ª linha:</strong> dipirona 500 mg ou 1 g IV/VO 6/6 h ou paracetamol 500 mg ou 750 mg VO 6/6 h</li>
             <li><strong>Alternativa / resistência:</strong> cetoprofeno 100 mg IV/VO 8/8 h ou naproxeno 500 mg VO 12/12 h ou ibuprofeno 400 mg VO 8/8 h (cautela GI/renal)</li>
             <li><strong>Refratário / grave:</strong> tramadol 50–100 mg VO/IV 6/6 h; codeína 30 mg VO 6/6 h se disponível e sem contraindicação</li>
           </ul>
@@ -737,15 +737,15 @@ const PS_CONTENT_1 = {
         <li><strong>Sinais de alarme (SNOOP4)</strong> — início súbito (“pior da vida”), febre, rigidez de nuca, déficit focal, papiledema, gestação/puerpério, imunossupressão, trauma → TC crânio ± punção lombar.</li>
         <li><strong>Cefaleia tensional</strong> — analgesia:
           <ul class="ps-med-options">
-            <li><strong>1ª linha:</strong> dipirona 1 g IV/VO 6/6 h ou paracetamol 750 mg–1 g VO 6/6 h</li>
-            <li><strong>Alternativa / resistência:</strong> naproxeno 500 mg VO 12/12 h ou ibuprofeno 400 mg VO 8/8 h + ciclobenzaprina 5–10 mg VO se componente cervical</li>
+            <li><strong>1ª linha:</strong> dipirona 500 mg ou 1 g VO 6/6 h · paracetamol 500 mg ou 750 mg VO 6/6 h</li>
+            <li><strong>Alternativa / resistência:</strong> naproxeno 500 mg VO 12/12 h · ibuprofeno 400 mg VO 8/8 h · diclofenaco potássico 50 mg VO 8/8 h · cetoprofeno 50–100 mg VO · nimesulida 100 mg VO 12/12 h + ciclobenzaprina 5–10 mg VO se componente cervical</li>
             <li><strong>Refratário / grave:</strong> tramadol 50 mg VO 6/6 h; relaxante muscular por 3–5 dias</li>
           </ul>
         </li>
         <li><strong>Enxaqueca moderada-grave</strong> — evitar triptano se DAC, AVC prévio, PA não controlada:
           <ul class="ps-med-options">
             <li><strong>1ª linha:</strong> sumatriptano 50–100 mg VO (máx. 200 mg/dia) ou 6 mg SC + metoclopramida 10 mg IV + dipirona 1 g</li>
-            <li><strong>Alternativa / resistência:</strong> zolmitriptano 2,5–5 mg VO ou 5 mg nasal; paracetamol 1 g + naproxeno 500 mg</li>
+            <li><strong>Alternativa / resistência:</strong> zolmitriptano 2,5 mg VO ou 5 mg nasal · paracetamol 500 mg ou 750 mg VO · naproxeno 500 mg VO</li>
             <li><strong>Refratário / grave:</strong> metoclopramida 10 mg IV + dipirona 1 g IV + hidratação SF; dexametasona 10 mg IV (prevenir recorrência 48 h)</li>
           </ul>
         </li>
@@ -857,7 +857,7 @@ const PS_CONTENT_1 = {
         <li><strong>Sinais de alarme</strong> — anestesia em sela, retenção urinária/incontinência (cauda equina → RM urgente + neurocirurgia), febre, trauma de alta energia, câncer prévio, uso crônico de corticoide.</li>
         <li><strong>Analgesia</strong> — escalonada:
           <ul class="ps-med-options">
-            <li><strong>1ª linha:</strong> dipirona 1 g IV/VO 6/6 h ou paracetamol 750 mg–1 g VO 6/6 h + ciclobenzaprina 5–10 mg VO 8/8 h (espasmo)</li>
+            <li><strong>1ª linha:</strong> dipirona 500 mg ou 1 g IV/VO 6/6 h ou paracetamol 500 mg ou 750 mg VO 6/6 h + ciclobenzaprina 5–10 mg VO 8/8 h (espasmo)</li>
             <li><strong>Alternativa / resistência:</strong> naproxeno 500 mg VO 12/12 h ou ibuprofeno 400 mg VO 8/8 h por 5–7 dias (cautela GI/renal)</li>
             <li><strong>Refratário / grave:</strong> tramadol 50–100 mg VO 6/6 h; codeína 30 mg VO 6/6 h se disponível</li>
           </ul>
