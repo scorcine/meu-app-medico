@@ -166,6 +166,88 @@ PS_DRUG_ALIASES.sort((a, b) => {
 const PS_PENICILLIN_CLASS = ['penicillin'];
 const PS_CEPHALOSPORIN_CLASS = ['cephalosporin'];
 
+/** Combinação fixa já inclui o fármaco base — não prescrever junto */
+const PS_DRUG_CONTAINS = {
+  amoxicilina_clavulanato: ['amoxicilina'],
+  ampicilina_sulbactam: ['ampicilina'],
+  piperacilina_tazobactam: ['piperacilina']
+};
+
+/** Subclasses de ATB — no máximo um fármaco por subclasse na mesma prescrição */
+const PS_ATB_SUBCLASSES = [
+  'penicillin', 'cephalosporin', 'macrolide', 'fluoroquinolone',
+  'carbapenem', 'aminoglycoside', 'lincosamide', 'glycopeptide', 'tetracycline'
+];
+
+/** Pares de ATB com sinergia/indicação documentada em protocolos de PS */
+const PS_VALID_ATB_PAIRS = [
+  ['amoxicilina', 'azitromicina'],
+  ['amoxicilina', 'claritromicina'],
+  ['amoxicilina_clavulanato', 'azitromicina'],
+  ['amoxicilina_clavulanato', 'claritromicina'],
+  ['ampicilina', 'gentamicina'],
+  ['ampicilina', 'azitromicina'],
+  ['ceftriaxona', 'azitromicina'],
+  ['ceftriaxona', 'claritromicina'],
+  ['ceftriaxona', 'metronidazol'],
+  ['ceftriaxona', 'clindamicina'],
+  ['cefotaxima', 'azitromicina'],
+  ['cefotaxima', 'metronidazol'],
+  ['cefotaxima', 'clindamicina'],
+  ['ceftazidima', 'metronidazol'],
+  ['piperacilina_tazobactam', 'metronidazol'],
+  ['piperacilina_tazobactam', 'vancomicina'],
+  ['meropenem', 'metronidazol'],
+  ['imipenem', 'metronidazol'],
+  ['vancomicina', 'ceftriaxona'],
+  ['vancomicina', 'cefotaxima'],
+  ['vancomicina', 'cefazolina'],
+  ['vancomicina', 'ampicilina'],
+  ['vancomicina', 'meropenem'],
+  ['clindamicina', 'metronidazol'],
+  ['clindamicina', 'ceftriaxona'],
+  ['clindamicina', 'cefotaxima'],
+  ['ciprofloxacino', 'metronidazol'],
+  ['levofloxacino', 'metronidazol'],
+  ['moxifloxacino', 'metronidazol'],
+  ['oxacilina', 'gentamicina'],
+  ['oxacilina', 'amicacina'],
+  ['gentamicina', 'ampicilina'],
+  ['gentamicina', 'penicilina_cristalina']
+];
+
+function psPairKey (a, b) {
+  return [a, b].sort().join('|');
+}
+
+function psIsValidAntibioticPair (a, b) {
+  return PS_VALID_ATB_PAIRS.some(([x, y]) => psPairKey(x, y) === psPairKey(a, b));
+}
+
+function psIsValidAntibioticCombination (drugIds) {
+  const ids = [...new Set(drugIds)];
+  if (ids.length <= 1) return true;
+  for (let i = 0; i < ids.length; i++) {
+    for (let j = i + 1; j < ids.length; j++) {
+      if (!psIsValidAntibioticPair(ids[i], ids[j])) return false;
+    }
+  }
+  return true;
+}
+
+function psUniqueAntibioticIds (drugs) {
+  return [...new Set(
+    drugs
+      .filter(d => (PS_DRUG_META[d.id]?.classes || []).includes('antibiotic'))
+      .map(d => d.id)
+  )];
+}
+
+function psMedHasAntibiotic (med) {
+  return med && Array.isArray(med.drugs) &&
+    med.drugs.some(d => (PS_DRUG_META[d.id]?.classes || []).includes('antibiotic'));
+}
+
 function psNormText (text) {
   return (text || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 }
@@ -249,8 +331,11 @@ function psGenericInteractiveRules () {
         if (onlyAlt && selectedMedIds.length) {
           return { severity: 'warning', text: 'Nenhuma opção de 1ª linha selecionada — confirme se há contraindicação ou resistência.' };
         }
-        if (hasFirst) {
+        if (hasFirst && selectedMedIds.length === 1) {
           return { severity: 'ok', text: 'Inclui medicação de 1ª linha do protocolo.' };
+        }
+        if (hasFirst && selectedMedIds.length > 1) {
+          return null;
         }
         return null;
       }

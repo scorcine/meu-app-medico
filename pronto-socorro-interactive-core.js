@@ -24,6 +24,48 @@ const PS_CLASS_RULES = [
     max: 1,
     severity: 'warning',
     message: 'Evite combinar benzodiazepínicos (risco de sedação excessiva).'
+  },
+  {
+    class: 'corticosteroid',
+    max: 1,
+    severity: 'error',
+    message: 'Não combine dois corticoides sistêmicos (ex.: dexametasona + prednisona).'
+  },
+  {
+    class: 'ppi',
+    max: 1,
+    severity: 'error',
+    message: 'Use apenas um IBP por vez (omeprazol, pantoprazol ou esomeprazol).'
+  },
+  {
+    class: 'acei',
+    max: 1,
+    severity: 'error',
+    message: 'Não combine dois IECA (ex.: captopril + enalapril).'
+  },
+  {
+    class: 'arb',
+    max: 1,
+    severity: 'error',
+    message: 'Não combine dois BRA (ex.: losartana + valsartana).'
+  },
+  {
+    class: 'beta_blocker',
+    max: 1,
+    severity: 'error',
+    message: 'Não combine dois betabloqueadores (ex.: propranolol + metoprolol).'
+  },
+  {
+    class: 'anticonvulsant',
+    max: 2,
+    severity: 'warning',
+    message: 'Múltiplos anticonvulsivantes — confirme indicação (status epilepticus vs. monoterapia).'
+  },
+  {
+    class: 'antithyroid',
+    max: 1,
+    severity: 'error',
+    message: 'Não combine tiamazol e propiltiouracil na mesma prescrição.'
   }
 ];
 
@@ -42,8 +84,105 @@ const PS_PAIR_RULES = [
     drugs: ['adrenalina', 'verapamil'],
     severity: 'error',
     message: 'Verapamil + adrenalina em anafilaxia: preferir adrenalina isolada; verapamil não trata anafilaxia.'
+  },
+  {
+    drugs: ['captopril', 'losartana'],
+    severity: 'error',
+    message: 'Não combine IECA + BRA (dupla bloqueio do RAA — risco de hipotensão e lesão renal).'
+  },
+  {
+    drugs: ['enalapril', 'losartana'],
+    severity: 'error',
+    message: 'Não combine IECA + BRA (dupla bloqueio do RAA — risco de hipotensão e lesão renal).'
+  },
+  {
+    drugs: ['omeprazol', 'pantoprazol'],
+    severity: 'error',
+    message: 'Não combine dois IBPs na mesma prescrição.'
+  },
+  {
+    drugs: ['difenidramina', 'loratadina'],
+    severity: 'warning',
+    message: 'Associação de anti-histamínicos — avaliar necessidade; risco de sedação (especialmente 1ª geração).'
+  },
+  {
+    drugs: ['prometazina', 'difenidramina'],
+    severity: 'warning',
+    message: 'Associação de anti-histamínicos/antihistamínicos sedativos — risco de depressão do SNC.'
   }
 ];
+
+function psCheckAntibioticInteractions (drugs, meds) {
+  const messages = [];
+  const abIds = psUniqueAntibioticIds(drugs);
+  if (!abIds.length) return messages;
+
+  Object.entries(PS_DRUG_CONTAINS).forEach(([parent, children]) => {
+    if (!abIds.includes(parent)) return;
+    children.forEach(child => {
+      if (abIds.includes(child)) {
+        messages.push({
+          severity: 'error',
+          text: `${psDrugLabel(parent)} já inclui ${psDrugLabel(child)} — não prescreva ambos (duplicidade de beta-lactâmico).`
+        });
+      }
+    });
+  });
+
+  PS_ATB_SUBCLASSES.forEach(sub => {
+    const inClass = abIds.filter(id => (PS_DRUG_META[id]?.classes || []).includes(sub));
+    if (inClass.length > 1) {
+      messages.push({
+        severity: 'error',
+        text: `Não combine ${inClass.map(psDrugLabel).join(' + ')} — redundância (${sub === 'penicillin' ? 'penicilinas' : sub === 'cephalosporin' ? 'cefalosporinas' : sub === 'macrolide' ? 'macrolídeos' : sub === 'fluoroquinolone' ? 'fluoroquinolonas' : sub === 'carbapenem' ? 'carbapenêmicos' : sub === 'aminoglycoside' ? 'aminoglicosídeos' : sub === 'lincosamide' ? 'lincosamidas' : sub === 'glycopeptide' ? 'glicopeptídeos' : 'tetraciclinas'}).`
+      });
+    }
+  });
+
+  if (abIds.length >= 2 && !psIsValidAntibioticCombination(abIds)) {
+    messages.push({
+      severity: 'error',
+      text: `Combinação antibiótica inadequada: ${abIds.map(psDrugLabel).join(' + ')}. Escolha monoterapia ou esquema combinado previsto no protocolo (ex.: ceftriaxona + azitromicina na PAC, ceftriaxona + metronidazol em foco anaeróbio).`
+    });
+  }
+
+  const abMeds = meds.filter(psMedHasAntibiotic);
+  if (abMeds.length >= 2) {
+    const hasFirst = abMeds.some(m => /1ª linha/i.test(m.tier || ''));
+    const hasAlt = abMeds.some(m => /alternativa|resist/i.test(m.tier || ''));
+    const hasRefr = abMeds.some(m => /refract|refrat/i.test(m.tier || ''));
+    const hasAlerg = abMeds.some(m => /alerg/i.test(m.tier || ''));
+    let tierGroups = 0;
+    if (hasFirst) tierGroups++;
+    if (hasAlt) tierGroups++;
+    if (hasRefr) tierGroups++;
+    if (hasAlerg) tierGroups++;
+
+    if (tierGroups >= 2 && !psIsValidAntibioticCombination(abIds)) {
+      messages.push({
+        severity: 'error',
+        text: 'Selecionou esquemas de ATB de linhas diferentes do protocolo (1ª linha, alternativa, alérgico ou refractário) — use apenas um esquema empírico por vez.'
+      });
+    }
+  }
+
+  return messages;
+}
+
+function psCheckDuplicateAnalgesics (drugs) {
+  const analgesics = [...new Set(
+    drugs
+      .filter(d => (PS_DRUG_META[d.id]?.classes || []).includes('analgesic'))
+      .map(d => d.id)
+  )];
+  if (analgesics.length >= 3) {
+    return [{
+      severity: 'warning',
+      text: `Três ou mais analgésicos (${analgesics.map(psDrugLabel).join(', ')}) — revise necessidade e risco acumulado.`
+    }];
+  }
+  return [];
+}
 
 function psDrugLabel (drugId) {
   return (PS_DRUG_META[drugId] && PS_DRUG_META[drugId].name) || drugId;
@@ -63,7 +202,7 @@ function psCollectSelectedDrugs (config, selectedMedIds, selectedRoutes) {
 }
 
 function psValidatePrescription (conditionId, config, selectedMedIds, context, selectedRoutes) {
-  const messages = [];
+  let messages = [];
   const meds = selectedMedIds.map(id => config.medications.find(m => m.id === id)).filter(Boolean);
   const drugs = psCollectSelectedDrugs(config, selectedMedIds, selectedRoutes);
 
@@ -119,6 +258,9 @@ function psValidatePrescription (conditionId, config, selectedMedIds, context, s
       messages.push({ severity: rule.severity, text: rule.message });
     }
   });
+
+  psCheckAntibioticInteractions(drugs, meds).forEach(m => messages.push(m));
+  psCheckDuplicateAnalgesics(drugs).forEach(m => messages.push(m));
 
   if (config.rules) {
     config.rules.forEach(rule => {
@@ -248,9 +390,13 @@ function psValidatePrescription (conditionId, config, selectedMedIds, context, s
     });
   }
 
-  const hasError = messages.some(m => m.severity === 'error');
-  const hasWarning = messages.some(m => m.severity === 'warning');
-  const hasOk = messages.some(m => m.severity === 'ok');
+  let hasError = messages.some(m => m.severity === 'error');
+  let hasWarning = messages.some(m => m.severity === 'warning');
+  let hasOk = messages.some(m => m.severity === 'ok');
+
+  if (hasError) {
+    messages = messages.filter(m => m.severity !== 'ok');
+  }
 
   let status = 'ok';
   if (hasError) status = 'error';
