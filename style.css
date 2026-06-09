@@ -2299,6 +2299,149 @@ textarea {
   color: #a16207;
 }
 
+.rx-meds-panel {
+  margin-top: 1rem;
+  padding: 1rem;
+  border: 1px solid var(--accent-soft);
+  border-radius: 10px;
+  background: var(--bg-surface-accent);
+}
+
+.rx-meds-title {
+  font-size: 1rem;
+  color: var(--text-heading);
+  margin: 0 0 0.35rem;
+}
+
+.rx-meds-hint {
+  margin: 0 0 0.85rem;
+  font-size: 0.85rem;
+}
+
+.rx-meds-group {
+  margin: 0 0 0.85rem;
+  padding: 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg-surface-raised);
+}
+
+.rx-meds-group legend {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  padding: 0 0.35rem;
+}
+
+.rx-med-alt-group {
+  margin-bottom: 0.65rem;
+  padding: 0.55rem 0.65rem;
+  border-radius: 6px;
+  background: var(--bg-surface);
+  border: 1px dashed var(--border-input);
+}
+
+.rx-med-alt-label {
+  display: block;
+  font-size: 0.78rem;
+  color: var(--text-caption);
+  margin-bottom: 0.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.rx-med-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.55rem;
+  padding: 0.45rem 0.2rem;
+  cursor: pointer;
+  font-size: 0.88rem;
+  line-height: 1.4;
+  color: var(--text-primary);
+}
+
+.rx-med-item input {
+  margin-top: 0.2rem;
+  flex-shrink: 0;
+  accent-color: var(--accent);
+}
+
+.rx-print-preview {
+  margin-bottom: 0.75rem;
+}
+
+.rx-print-sheet {
+  padding: 1.25rem 1.5rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #fff;
+  color: #111;
+  font-family: Georgia, 'Times New Roman', serif;
+  line-height: 1.5;
+}
+
+[data-theme="dark"] .rx-print-sheet {
+  background: #f8fafc;
+}
+
+.rx-print-title {
+  text-align: center;
+  letter-spacing: 0.08em;
+  font-size: 1rem;
+  margin: 0 0 1rem;
+  color: #111;
+}
+
+.rx-print-meta p {
+  margin: 0.2rem 0;
+  font-size: 0.92rem;
+}
+
+.rx-print-route {
+  margin: 1rem 0 0.4rem;
+  font-size: 0.92rem;
+}
+
+.rx-print-meds {
+  margin: 0.35rem 0 0.85rem 1.1rem;
+  padding: 0;
+  font-size: 0.92rem;
+}
+
+.rx-print-meds li {
+  margin-bottom: 0.55rem;
+}
+
+.rx-print-orient {
+  font-size: 0.88rem;
+  margin-bottom: 0.75rem;
+}
+
+.rx-print-orient ul {
+  margin: 0.3rem 0 0 1rem;
+  padding: 0;
+}
+
+.rx-print-sign {
+  margin-top: 1.5rem;
+  font-size: 0.92rem;
+}
+
+.rx-result-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+.rx-result-actions .btn {
+  border: none;
+  cursor: pointer;
+  padding: 0.6rem 1.1rem;
+  border-radius: 8px;
+}
+
 .rx-option-card strong {
   font-size: 0.92rem;
   color: var(--text-primary);
@@ -2333,17 +2476,6 @@ textarea {
   font-size: 0.82rem;
   line-height: 1.45;
   resize: vertical;
-}
-
-.rx-result-actions {
-  margin-top: 0.75rem;
-}
-
-.rx-result-actions .btn {
-  border: none;
-  cursor: pointer;
-  padding: 0.6rem 1.1rem;
-  border-radius: 8px;
 }
 
 .anamnese-queixa-hint {

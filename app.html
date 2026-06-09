@@ -9,7 +9,7 @@
   <title>MedHub</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <script src="theme.js"></script>
-  <link rel="stylesheet" href="style.css?v=rx-v2">
+  <link rel="stylesheet" href="style.css?v=rx-v3">
   <script defer src="calculators-risco.js"></script>
   <script defer src="calculators-cardio.js"></script>
   <script defer src="calculators-pneumo.js?v=rsi-patient"></script>
@@ -39,8 +39,8 @@
   <script defer src="pronto-socorro-interactive-data.js?v=ps-interactive-rx-v3"></script>
   <script defer src="pronto-socorro-interactive-core.js?v=ps-interactive-rx-v3"></script>
   <script defer src="pronto-socorro.js?v=ps-interactive-rx-v3"></script>
-  <script defer src="receituario-data.js?v=rx-v2"></script>
-  <script defer src="receituario.js?v=rx-v2"></script>
+  <script defer src="receituario-data.js?v=rx-v3"></script>
+  <script defer src="receituario.js?v=rx-v3"></script>
   <script defer src="google-drive.js?v=anamnese-v1"></script>
   <script defer src="anamnese.js?v=anamnese-v1"></script>
   <script defer src="app.js?v=rx-v1"></script>
@@ -177,8 +177,9 @@
           <div id="rx-detail-view" hidden>
             <button type="button" class="btn-back" id="rx-back">← Voltar às condições</button>
             <h2 id="rx-condition-title"></h2>
-            <p class="muted">Selecione uma ou mais opções (clique para marcar/desmarcar). O sistema alerta combinações inadequadas — ex.: dois AINEs.</p>
+            <p class="muted">1) Marque o esquema desejado. 2) Escolha os medicamentos (alternativas OU = só uma). 3) Gere a receita para imprimir.</p>
             <div id="rx-options-wrap"></div>
+            <div id="rx-meds-panel" class="rx-meds-panel" hidden></div>
             <div id="rx-selection-bar" class="rx-selection-bar" hidden>
               <span id="rx-selection-count" class="rx-selection-count">Nenhuma opção selecionada</span>
               <div class="rx-selection-actions">
@@ -189,9 +190,11 @@
             <div id="rx-validation" class="rx-validation" hidden></div>
             <div id="rx-result" class="rx-result" hidden>
               <h3>Receita gerada</h3>
-              <textarea id="rx-result-text" class="rx-result-text" rows="16" readonly></textarea>
+              <div id="rx-print-preview" class="rx-print-preview"></div>
+              <textarea id="rx-result-text" class="rx-result-text" rows="12" readonly hidden aria-hidden="true"></textarea>
               <div class="rx-result-actions">
-                <button type="button" class="btn" id="rx-copy">Copiar receita</button>
+                <button type="button" class="btn" id="rx-print">Imprimir receita</button>
+                <button type="button" class="btn btn-secondary" id="rx-copy">Copiar texto</button>
               </div>
             </div>
           </div>

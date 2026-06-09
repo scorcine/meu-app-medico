@@ -217,12 +217,133 @@ function rxNormText (text) {
   return (text || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim();
 }
 
+function rxInferMedClasses (text) {
+  const t = rxNormText(text);
+  const classes = [];
+  if (/naproxeno|ibuprofeno|diclofenac|cetoprofeno|nimesulid|aas|aspirin|acido acetilsalicilico|meloxicam|piroxicam/.test(t)) {
+    classes.push('nsaid');
+  }
+  if (/dipirona|paracetamol|acetaminofen/.test(t)) classes.push('analgesic_non_opioid');
+  if (/sumatriptano|zolmitriptano|eletriptano|rizatriptano|almotriptano/.test(t)) classes.push('triptan');
+  if (/tramadol|morfina|codeina|fentanil|oxicode/.test(t)) classes.push('opioid');
+  if (/metoclopramid|ondansetrona|bromoprida|dimenidrinato/.test(t)) classes.push('antiemetic');
+  if (/ciclobenzaprina|carisoprodol|tizanidina/.test(t)) classes.push('muscle_relaxant');
+  if (/propranolol|atenolol|metoprolol|bisoprolol|carvedilol/.test(t)) classes.push('beta_blocker');
+  if (/topiramato|valproato|carbamazepina|fenitoina|levetiracetam/.test(t)) classes.push('anticonvulsant');
+  if (/amitriptilin|nortriptilin|imipramina/.test(t)) classes.push('tricyclic');
+  if (/verapamil|diltiazem|anlodipino|nifedipino/.test(t)) classes.push('calcium_channel_blocker');
+  if (/amoxicilina|ampicilina|penicilina/.test(t)) classes.push('penicillin');
+  if (/clavulanato|clavul/.test(t)) classes.push('penicillin_clavulanate');
+  if (/fosfomicina|nitrofurantoina|ciprofloxacino|levofloxacino|azitromicina|cefalexina/.test(t)) {
+    classes.push('antibiotic');
+  }
+  if (/nitrofurantoina/.test(t)) classes.push('nitrofuran');
+  if (/fosfomicina/.test(t)) classes.push('antibiotic_misc');
+  return classes;
+}
+
+function rxGetOptionMeds (option) {
+  if (option.meds) return option.meds;
+
+  const meds = [];
+  let pendingGroup = null;
+
+  option.items.forEach((raw, i) => {
+    const isOu = /^OU\s/i.test(raw);
+    const text = raw.replace(/^OU\s/i, '').trim();
+    const isAlt = /\(alternativa\)/i.test(text);
+    let exclusiveGroup = null;
+
+    if (isOu || isAlt) {
+      if (!pendingGroup) pendingGroup = `${option.id}-g${meds.length}`;
+      exclusiveGroup = pendingGroup;
+    } else {
+      const next = option.items[i + 1];
+      if (next && (/^OU\s/i.test(next) || /\(alternativa\)/i.test(next))) {
+        pendingGroup = `${option.id}-g${i}`;
+        exclusiveGroup = pendingGroup;
+      } else {
+        pendingGroup = null;
+      }
+    }
+
+    meds.push({
+      id: `${option.id}-m${i}`,
+      text,
+      classes: rxInferMedClasses(text),
+      exclusiveGroup
+    });
+  });
+
+  return meds;
+}
+
+function rxFindMed (condition, medId) {
+  for (const group of condition.groups) {
+    for (const option of group.options) {
+      const med = rxGetOptionMeds(option).find(m => m.id === medId);
+      if (med) return { group, option, med };
+    }
+  }
+  return null;
+}
+
+function rxCollectSelectedMeds (condition, selectedMedIds) {
+  const out = [];
+  selectedMedIds.forEach(medId => {
+    const found = rxFindMed(condition, medId);
+    if (found) out.push(found);
+  });
+  return out;
+}
+
+function rxValidateMeds (selectedMedEntries) {
+  const messages = [];
+  if (selectedMedEntries.length < 2) return messages;
+
+  const classCounts = {};
+  selectedMedEntries.forEach(({ med }) => {
+    (med.classes || []).forEach(cls => {
+      classCounts[cls] = (classCounts[cls] || 0) + 1;
+    });
+  });
+
+  RX_CLASS_RULES.forEach(rule => {
+    const count = classCounts[rule.class] || 0;
+    if (count > rule.max) {
+      messages.push({ severity: rule.severity, text: rule.message });
+    }
+  });
+
+  RX_PAIR_RULES.forEach(rule => {
+    const hasAll = rule.classes.every(cls => (classCounts[cls] || 0) > 0);
+    if (hasAll) messages.push({ severity: rule.severity, text: rule.message });
+  });
+
+  const seen = new Set();
+  return messages.filter(m => {
+    const key = m.severity + '|' + m.text;
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+
+function rxExclusiveGroupsComplete (condition, selectedOptionIds, selectedMedIds) {
+  const selections = rxCollectSelectedOptions(condition, selectedOptionIds);
+  return selections.every(({ option }) => {
+    const meds = rxGetOptionMeds(option);
+    const groups = [...new Set(meds.filter(m => m.exclusiveGroup).map(m => m.exclusiveGroup))];
+    return groups.every(g => meds.some(m => m.exclusiveGroup === g && selectedMedIds.has(m.id)));
+  });
+}
+
 const RX_CLASS_RULES = [
   {
     class: 'nsaid',
     max: 1,
     severity: 'error',
-    message: 'Não prescreva dois esquemas com AINE (ex.: naproxeno + ibuprofeno). Escolha apenas um AINE.'
+    message: 'Não prescreva dois AINEs (ex.: naproxeno + ibuprofeno). Escolha apenas um.'
   },
   {
     class: 'triptan',
@@ -297,7 +418,7 @@ function rxCollectSelectedOptions (condition, selectedIds) {
   return out;
 }
 
-function rxValidateSelection (condition, selectedIds) {
+function rxValidateSchemes (condition, selectedIds) {
   const messages = [];
   const selections = rxCollectSelectedOptions(condition, selectedIds);
   if (selections.length < 2) return messages;
@@ -305,31 +426,36 @@ function rxValidateSelection (condition, selectedIds) {
   const classCounts = {};
   selections.forEach(({ option }) => {
     (option.classes || []).forEach(cls => {
-      classCounts[cls] = (classCounts[cls] || 0) + 1;
+      if (['penicillin', 'penicillin_clavulanate', 'antibiotic_misc', 'nitrofuran'].includes(cls)) {
+        classCounts[cls] = (classCounts[cls] || 0) + 1;
+      }
     });
   });
 
-  RX_CLASS_RULES.forEach(rule => {
-    const count = classCounts[rule.class] || 0;
-    if (count > rule.max) {
-      messages.push({ severity: rule.severity, text: rule.message });
-    }
-  });
+  if ((classCounts.penicillin || 0) >= 1 && (classCounts.penicillin_clavulanate || 0) >= 1) {
+    messages.push({
+      severity: 'error',
+      text: 'Amoxicilina + amoxicilina-clavulanato — não prescreva ambos (clavulanato já contém amoxicilina).'
+    });
+  }
+  if ((classCounts.penicillin || 0) > 1) {
+    messages.push({
+      severity: 'error',
+      text: 'Não combine amoxicilina com amoxicilina-clavulanato (duplicidade de beta-lactâmico).'
+    });
+  }
+  if ((classCounts.antibiotic_misc || 0) >= 1 && (classCounts.nitrofuran || 0) >= 1) {
+    messages.push({
+      severity: 'warning',
+      text: 'Dois antibióticos para ITU — escolha monoterapia (fosfomicina OU nitrofurantoína).'
+    });
+  }
 
-  RX_PAIR_RULES.forEach(rule => {
-    const hasAll = rule.classes.every(cls => (classCounts[cls] || 0) > 0);
-    if (hasAll) {
-      messages.push({ severity: rule.severity, text: rule.message });
-    }
-  });
+  return messages;
+}
 
-  const seen = new Set();
-  return messages.filter(m => {
-    const key = m.severity + '|' + m.text;
-    if (seen.has(key)) return false;
-    seen.add(key);
-    return true;
-  });
+function rxValidateSelection (condition, selectedIds) {
+  return rxValidateSchemes(condition, selectedIds);
 }
 
 function rxHasValidationErrors (messages) {
