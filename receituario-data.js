@@ -431,37 +431,49 @@ function rxInferMedClasses (text) {
 }
 
 function rxGetOptionMeds (option) {
-  if (option.meds) return option.meds;
+  let meds;
 
-  const meds = [];
-  let pendingGroup = null;
+  if (option.meds) {
+    meds = option.meds;
+  } else {
+    meds = [];
+    let pendingGroup = null;
 
-  option.items.forEach((raw, i) => {
-    const isOu = /^OU\s/i.test(raw);
-    const text = raw.replace(/^OU\s/i, '').trim();
-    const isAlt = /\(alternativa\)/i.test(text);
-    let exclusiveGroup = null;
+    option.items.forEach((raw, i) => {
+      const isOu = /^OU\s/i.test(raw);
+      const text = raw.replace(/^OU\s/i, '').trim();
+      const isAlt = /\(alternativa\)/i.test(text);
+      let exclusiveGroup = null;
 
-    if (isOu || isAlt) {
-      if (!pendingGroup) pendingGroup = `${option.id}-g${meds.length}`;
-      exclusiveGroup = pendingGroup;
-    } else {
-      const next = option.items[i + 1];
-      if (next && (/^OU\s/i.test(next) || /\(alternativa\)/i.test(next))) {
-        pendingGroup = `${option.id}-g${i}`;
+      if (isOu || isAlt) {
+        if (!pendingGroup) pendingGroup = `${option.id}-g${meds.length}`;
         exclusiveGroup = pendingGroup;
       } else {
-        pendingGroup = null;
+        const next = option.items[i + 1];
+        if (next && (/^OU\s/i.test(next) || /\(alternativa\)/i.test(next))) {
+          pendingGroup = `${option.id}-g${i}`;
+          exclusiveGroup = pendingGroup;
+        } else {
+          pendingGroup = null;
+        }
       }
-    }
 
-    meds.push({
-      id: `${option.id}-m${i}`,
-      text,
-      classes: rxInferMedClasses(text),
-      exclusiveGroup
+      meds.push({
+        id: `${option.id}-m${i}`,
+        text,
+        classes: rxInferMedClasses(text),
+        exclusiveGroup
+      });
     });
-  });
+  }
+
+  if (typeof medVoExpandMeds === 'function') {
+    return medVoExpandMeds(meds, {
+      optionClasses: option.classes || [],
+      label: [option.label, option.tier].filter(Boolean).join(' — '),
+      idPrefix: option.id
+    });
+  }
 
   return meds;
 }

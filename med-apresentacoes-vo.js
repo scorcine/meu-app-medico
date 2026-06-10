@@ -52,3 +52,212 @@ const MED_VO = {
   clindamicina300: 'Clindamicina 300 mg — 1 comprimido VO 6/6 horas, por 10 dias',
   naproxeno250: 'Naproxeno 250 mg — 1 comprimido VO 12/12 horas, se dor'
 };
+
+/* Grupos de apresentações — fonte única para listar todas as opções VO */
+const MED_VO_GROUPS = {
+  analgesic_non_opioid: ['dipirona500', 'dipirona1g', 'paracetamol500', 'paracetamol750'],
+  nsaid: ['naproxeno250', 'naproxeno500', 'ibuprofeno200', 'ibuprofeno400', 'ibuprofeno600', 'diclofenaco50', 'cetoprofeno50', 'cetoprofeno100', 'nimesulida100'],
+  muscle_relaxant: ['ciclobenzaprina5', 'ciclobenzaprina10', 'tizanidina2'],
+  triptan: ['sumatriptano50', 'sumatriptano100', 'sumatriptanoSc6', 'zolmitriptano25', 'zolmitriptanoNas5'],
+  antiemetic: ['metoclopramida10', 'ondansetrona4', 'ondansetrona8'],
+  corticosteroid: ['dexametasona4'],
+  beta_blocker: ['propranolol40'],
+  anticonvulsant: ['topiramato25'],
+  tricyclic: ['amitriptilina25'],
+  calcium_channel_blocker: ['verapamil80', 'verapamil120'],
+  penicillin: ['amoxicilina500', 'amoxicilina875'],
+  penicillin_clavulanate: ['amoxClav875', 'amoxClav500'],
+  antibiotic_alternative: ['azitromicina500', 'clindamicina300'],
+  antibiotic_misc: ['fosfomicina3g'],
+  nitrofuran: ['nitrofurantoina100'],
+  opioid: ['tramadol50']
+};
+
+const MED_VO_FAMILIES = {
+  dipirona: ['dipirona500', 'dipirona1g'],
+  paracetamol: ['paracetamol500', 'paracetamol750'],
+  naproxeno: ['naproxeno250', 'naproxeno500'],
+  ibuprofeno: ['ibuprofeno200', 'ibuprofeno400', 'ibuprofeno600'],
+  diclofenaco: ['diclofenaco50'],
+  cetoprofeno: ['cetoprofeno50', 'cetoprofeno100'],
+  nimesulida: ['nimesulida100'],
+  ciclobenzaprina: ['ciclobenzaprina5', 'ciclobenzaprina10'],
+  tizanidina: ['tizanidina2'],
+  sumatriptano: ['sumatriptano50', 'sumatriptano100', 'sumatriptanoSc6'],
+  zolmitriptano: ['zolmitriptano25', 'zolmitriptanoNas5'],
+  metoclopramida: ['metoclopramida10'],
+  ondansetrona: ['ondansetrona4', 'ondansetrona8'],
+  dexametasona: ['dexametasona4'],
+  propranolol: ['propranolol40'],
+  topiramato: ['topiramato25'],
+  amitriptilina: ['amitriptilina25'],
+  verapamil: ['verapamil80', 'verapamil120'],
+  amoxicilina: ['amoxicilina500', 'amoxicilina875'],
+  azitromicina: ['azitromicina500'],
+  clindamicina: ['clindamicina300'],
+  fosfomicina: ['fosfomicina3g'],
+  nitrofurantoina: ['nitrofurantoina100'],
+  tramadol: ['tramadol50']
+};
+
+const MED_VO_KEY_CLASSES = {};
+Object.entries(MED_VO_GROUPS).forEach(([group, keys]) => {
+  keys.forEach(key => {
+    if (!MED_VO_KEY_CLASSES[key]) MED_VO_KEY_CLASSES[key] = [];
+    const cls = group === 'antibiotic_alternative' ? 'antibiotic'
+      : group === 'penicillin_clavulanate' ? 'penicillin_clavulanate'
+      : group;
+    if (!MED_VO_KEY_CLASSES[key].includes(cls)) MED_VO_KEY_CLASSES[key].push(cls);
+    if (group === 'penicillin_clavulanate' && !MED_VO_KEY_CLASSES[key].includes('penicillin')) {
+      MED_VO_KEY_CLASSES[key].push('penicillin');
+    }
+  });
+});
+
+function medVoNorm (text) {
+  return (text || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim();
+}
+
+function medVoClassesForKey (key) {
+  return MED_VO_KEY_CLASSES[key] ? MED_VO_KEY_CLASSES[key].slice() : [];
+}
+
+function medVoMatchKey (text) {
+  if (!text) return null;
+  for (const [key, val] of Object.entries(MED_VO)) {
+    if (text === val || text.startsWith(val)) return key;
+  }
+  return null;
+}
+
+function medVoInferFamilyKeys (text) {
+  const t = medVoNorm(text);
+  const keys = new Set();
+  if (/clavulanato|amox.*clav/.test(t)) {
+    (MED_VO_GROUPS.penicillin_clavulanate || []).forEach(k => keys.add(k));
+    return [...keys];
+  }
+  Object.entries(MED_VO_FAMILIES).forEach(([family, familyKeys]) => {
+    if (t.includes(family)) familyKeys.forEach(k => keys.add(k));
+  });
+  return [...keys];
+}
+
+function medVoIsCatalogText (text) {
+  return !!medVoMatchKey(text) || medVoInferFamilyKeys(text).length > 0;
+}
+
+function medVoDetectSuffix (meds) {
+  for (const m of meds) {
+    for (const val of Object.values(MED_VO)) {
+      if (m.text.startsWith(val)) return m.text.slice(val.length);
+    }
+  }
+  return '';
+}
+
+function medVoDetectExclusiveGroup (meds, idPrefix) {
+  const existing = meds.find(m => m.exclusiveGroup);
+  if (existing) return existing.exclusiveGroup;
+  if (meds.some(m => medVoIsCatalogText(m.text))) return `${idPrefix}-pick`;
+  return null;
+}
+
+function medVoDetectExpandGroups (optionClasses, label, meds) {
+  const groups = new Set();
+  const norm = medVoNorm(label);
+
+  (optionClasses || []).forEach(c => groups.add(c));
+  meds.forEach(m => (m.classes || []).forEach(c => groups.add(c)));
+
+  if (/aine|nsaid|anti-?inflamat|ibuprofeno|naproxeno|diclofenac|cetoprofeno|nimesulid/.test(norm)) groups.add('nsaid');
+  if (/analges|dipirona|paracetamol|acetaminofen/.test(norm)) groups.add('analgesic_non_opioid');
+  if (/relaxante muscular|ciclobenzaprina|tizanidina/.test(norm)) groups.add('muscle_relaxant');
+  if (/triptan|sumatriptano|zolmitriptano/.test(norm)) groups.add('triptan');
+  if (/antiemet|metoclopramid|ondansetrona/.test(norm)) groups.add('antiemetic');
+  if (/corticoide|dexametasona|prednisona/.test(norm)) groups.add('corticosteroid');
+  if (/propranolol|betabloqueador/.test(norm)) groups.add('beta_blocker');
+  if (/topiramato|anticonvulsiv/.test(norm)) groups.add('anticonvulsant');
+  if (/amitriptilina|triciclic/.test(norm)) groups.add('tricyclic');
+  if (/verapamil|bloqueador.*calcio/.test(norm)) groups.add('calcium_channel_blocker');
+  if (/tramadol|opioide|morfina/.test(norm)) groups.add('opioid');
+
+  if (/alergic.*penicilina|alergico.*penicilina/.test(norm)) {
+    groups.delete('penicillin');
+    groups.delete('penicillin_clavulanate');
+    groups.add('antibiotic_alternative');
+  } else if (/clavulanato|amox.*clav/.test(norm)) {
+    groups.add('penicillin_clavulanate');
+    groups.delete('penicillin');
+  } else if (/amoxicilina|penicilina/.test(norm)) {
+    groups.add('penicillin');
+  }
+
+  if (/fosfomicina/.test(norm)) groups.add('antibiotic_misc');
+  if (/nitrofurantoina/.test(norm)) groups.add('nitrofuran');
+  if (/azitromicina|clindamicina/.test(norm)) groups.add('antibiotic_alternative');
+
+  if ((optionClasses || []).includes('penicillin_clavulanate') && !(optionClasses || []).includes('penicillin')) {
+    groups.delete('penicillin');
+  }
+
+  return groups;
+}
+
+function medVoMeds (idPrefix, groupKey, opts) {
+  const suffix = opts && opts.suffix ? opts.suffix : '';
+  const exclusiveGroup = opts && opts.exclusiveGroup;
+  const keys = MED_VO_GROUPS[groupKey] || [];
+  return keys.map(key => ({
+    id: `${idPrefix}-${key}`,
+    text: MED_VO[key] + suffix,
+    classes: medVoClassesForKey(key),
+    exclusiveGroup
+  }));
+}
+
+function medVoExpandMeds (meds, opts) {
+  if (!meds || !meds.length || typeof MED_VO === 'undefined') return meds || [];
+
+  const optionClasses = (opts && opts.optionClasses) || [];
+  const label = (opts && opts.label) || '';
+  const idPrefix = (opts && opts.idPrefix) || 'med';
+  const suffix = medVoDetectSuffix(meds);
+  const exclusiveGroup = medVoDetectExclusiveGroup(meds, idPrefix);
+  const fullClassExpand = exclusiveGroup
+    || /escolha (um|uma|apresent)/.test(medVoNorm(label))
+    || /escolher na etapa/.test(medVoNorm(label));
+
+  const result = new Map();
+
+  meds.forEach(m => {
+    if (!medVoIsCatalogText(m.text)) result.set(m.id, m);
+  });
+
+  const keysToAdd = new Set();
+
+  if (fullClassExpand) {
+    medVoDetectExpandGroups(optionClasses, label, meds).forEach(groupKey => {
+      (MED_VO_GROUPS[groupKey] || []).forEach(k => keysToAdd.add(k));
+    });
+  }
+
+  [label, ...meds.map(m => m.text)].forEach(text => {
+    medVoInferFamilyKeys(text).forEach(k => keysToAdd.add(k));
+  });
+
+  if (!keysToAdd.size && !fullClassExpand) return meds;
+
+  keysToAdd.forEach(key => {
+    const id = `${idPrefix}-${key}`;
+    result.set(id, {
+      id,
+      text: MED_VO[key] + suffix,
+      classes: medVoClassesForKey(key),
+      exclusiveGroup: exclusiveGroup || undefined
+    });
+  });
+
+  if (!keysToAdd.size) return meds;
+  return [...result.values()];
+}

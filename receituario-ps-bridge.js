@@ -86,13 +86,22 @@ function rxParseLabelToMeds (optId, label) {
 
 function rxPsMedToRxOption (conditionId, psMed) {
   const optId = `rxps-${conditionId}-${psMed.id}`;
-  const meds = rxParseLabelToMeds(optId, psMed.label);
+  let meds = rxParseLabelToMeds(optId, psMed.label);
+  const optionClasses = rxInferClassesFromPsDrugs(psMed.drugs);
+
+  if (typeof medVoExpandMeds === 'function') {
+    meds = medVoExpandMeds(meds, {
+      optionClasses,
+      label: [psMed.tier, psMed.label].filter(Boolean).join(': '),
+      idPrefix: optId
+    });
+  }
 
   return {
     id: optId,
     tier: psMed.tier || 'Opção',
     label: psMed.label.length > 120 ? psMed.label.slice(0, 117) + '…' : psMed.label,
-    classes: rxInferClassesFromPsDrugs(psMed.drugs),
+    classes: optionClasses,
     items: [],
     meds,
     orientacoes: 'Protocolo PS MedHub (diretriz). Revisar via, dose, alergias e contraindicações antes de prescrever.'
