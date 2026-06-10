@@ -4,7 +4,9 @@ const RX_MANUAL_PRIORITY_IDS = new Set([
   'cefaleias',
   'amigdalite-bacteriana',
   'cistite-itu-baixa',
-  'lombalgia-ciatalgia'
+  'lombalgia-ciatalgia',
+  'violencia-sexual-pep',
+  'gonorreia-clamidia'
 ]);
 
 let RX_CATALOG_CACHE = null;
@@ -71,6 +73,9 @@ function rxNormalizeVoText (text) {
   }
 
   if (/\b(EV|IV|IM)\b/i.test(t) && !/\bVO\b/i.test(t)) {
+    if (/ceftriaxona|cefotaxima|espectinomicina|gentamicina/.test(t)) {
+      return t + ' — aplicar no serviço (IM/EV); não há apresentação VO equivalente';
+    }
     return t + ' — adaptar apresentação VO na alta ambulatorial, se indicado';
   }
   return t;

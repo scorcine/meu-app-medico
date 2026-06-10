@@ -86,6 +86,23 @@ function rxUpdateQueixaHint () {
   }
 }
 
+function rxClassifyMedRoute (text) {
+  const t = (text || '').toLowerCase();
+  if (/^hidratacao|soro de reidratacao|repouso relativo/.test(t)) return 'geral';
+  if (/\b(im|intramuscular)\b/.test(t) && !/\bvo\b/.test(t)) return 'im';
+  if (/tenofovir|dolutegravir|emtricitabina|raltegravir|zidovudina|tdf\/|pep hiv|tarv/.test(t)) return 'tarv';
+  return 'vo';
+}
+
+function rxAppendMedsToLines (lines, entries, startNum) {
+  let n = startNum;
+  entries.forEach(({ med }) => {
+    lines.push(n + '. ' + med.text);
+    n += 1;
+  });
+  return n;
+}
+
 function rxFormatReceitaPrint (condition, medEntries, orientacoesList, validationMessages) {
   const ctx = rxGetPatientContext();
   const user = typeof getSession === 'function' ? getSession() : null;
@@ -99,14 +116,47 @@ function rxFormatReceitaPrint (condition, medEntries, orientacoesList, validatio
     '',
     'Paciente: ' + paciente + '                    Data: ' + date,
     'Idade: ' + idade,
-    '',
-    'Uso oral:',
     ''
   ];
 
-  medEntries.forEach(({ med }, i) => {
-    lines.push((i + 1) + '. ' + med.text);
+  const byRoute = { vo: [], im: [], tarv: [], geral: [] };
+  medEntries.forEach(entry => {
+    byRoute[rxClassifyMedRoute(entry.med.text)].push(entry);
   });
+
+  let itemNum = 1;
+
+  if (byRoute.vo.length) {
+    lines.push('Uso oral:');
+    lines.push('');
+    itemNum = rxAppendMedsToLines(lines, byRoute.vo, itemNum);
+  }
+
+  if (byRoute.im.length) {
+    lines.push('');
+    lines.push('Uso IM (aplicar no serviço de saúde):');
+    lines.push('');
+    itemNum = rxAppendMedsToLines(lines, byRoute.im, itemNum);
+  }
+
+  if (byRoute.tarv.length) {
+    lines.push('');
+    lines.push('PEP HIV / TARV (28 dias — receita especial):');
+    lines.push('');
+    itemNum = rxAppendMedsToLines(lines, byRoute.tarv, itemNum);
+  }
+
+  if (byRoute.geral.length) {
+    lines.push('');
+    lines.push('Orientações prescritas:');
+    lines.push('');
+    rxAppendMedsToLines(lines, byRoute.geral, itemNum);
+  }
+
+  if (!medEntries.length) {
+    lines.push('Uso oral:');
+    lines.push('');
+  }
 
   if (orientacoesList.length) {
     lines.push('');
@@ -140,6 +190,16 @@ function rxRenderPrintPreview (condition, medEntries, orientacoesList) {
   const crm = localStorage.getItem(MEDHUB_RX_CRM_KEY) || '____________';
   const date = new Date().toLocaleDateString('pt-BR');
 
+  const byRoute = { vo: [], im: [], tarv: [], geral: [] };
+  medEntries.forEach(entry => {
+    byRoute[rxClassifyMedRoute(entry.med.text)].push(entry);
+  });
+
+  const routeBlock = (title, entries) => entries.length
+    ? `<p class="rx-print-route"><strong>${title}</strong></p>
+       <ol class="rx-print-meds">${entries.map(({ med }) => `<li>${med.text}</li>`).join('')}</ol>`
+    : '';
+
   preview.innerHTML = `
     <div class="rx-print-sheet" contenteditable="true" spellcheck="true" lang="pt-BR" aria-label="Receita editável">
       <h4 class="rx-print-title">RECEITUÁRIO SIMPLES</h4>
@@ -148,10 +208,10 @@ function rxRenderPrintPreview (condition, medEntries, orientacoesList) {
         <p><strong>Data:</strong> ${date}</p>
         <p><strong>Idade:</strong> ${ctx.idade ? ctx.idade + ' anos' : '________'}</p>
       </div>
-      <p class="rx-print-route"><strong>Uso oral:</strong></p>
-      <ol class="rx-print-meds">
-        ${medEntries.map(({ med }) => `<li>${med.text}</li>`).join('')}
-      </ol>
+      ${routeBlock('Uso oral:', byRoute.vo)}
+      ${routeBlock('Uso IM (aplicar no serviço de saúde):', byRoute.im)}
+      ${routeBlock('PEP HIV / TARV (28 dias — receita especial):', byRoute.tarv)}
+      ${routeBlock('Orientações prescritas:', byRoute.geral)}
       ${orientacoesList.length ? `
         <div class="rx-print-orient">
           <strong>Orientações:</strong>

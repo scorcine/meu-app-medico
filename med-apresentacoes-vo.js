@@ -50,6 +50,10 @@ const MED_VO = {
   nitrofurantoina100: 'Nitrofurantoína 100 mg — 1 comprimido VO 12/12 horas, por 5 dias',
 
   azitromicina500: 'Azitromicina 500 mg — 1 comprimido VO 24/24 horas, por 5 dias',
+  azitromicina1g: 'Azitromicina 1 g — 2 comprimidos de 500 mg VO dose única',
+  metronidazol2g: 'Metronidazol 2 g — 4 comprimidos de 500 mg VO dose única',
+  cefixima400: 'Cefixima 400 mg — 1 comprimido VO dose única',
+  levonorgestrel15: 'Levonorgestrel 1,5 mg — 1 comprimido VO dose única (até 72 h)',
   clindamicina300: 'Clindamicina 300 mg — 1 comprimido VO 6/6 horas, por 10 dias',
   naproxeno250: 'Naproxeno 250 mg — 1 comprimido VO 12/12 horas, se dor'
 };
@@ -68,7 +72,7 @@ const MED_VO_GROUPS = {
   calcium_channel_blocker: ['verapamil80', 'verapamil120'],
   penicillin: ['amoxicilina500', 'amoxicilina875'],
   penicillin_clavulanate: ['amoxClav875', 'amoxClav500'],
-  antibiotic_alternative: ['azitromicina500', 'clindamicina300'],
+  antibiotic_alternative: ['azitromicina500', 'azitromicina1g', 'clindamicina300'],
   antibiotic_misc: ['fosfomicina3g'],
   nitrofuran: ['nitrofurantoina100'],
   opioid: ['tramadol50']
@@ -94,7 +98,7 @@ const MED_VO_FAMILIES = {
   amitriptilina: ['amitriptilina25'],
   verapamil: ['verapamil80', 'verapamil120'],
   amoxicilina: ['amoxicilina500', 'amoxicilina875'],
-  azitromicina: ['azitromicina500'],
+  azitromicina: ['azitromicina500', 'azitromicina1g'],
   clindamicina: ['clindamicina300'],
   fosfomicina: ['fosfomicina3g'],
   nitrofurantoina: ['nitrofurantoina100'],
@@ -304,6 +308,7 @@ function medVoExpandMeds (meds, opts) {
 
 function medVoExpandOption (option) {
   if (!option || typeof medVoExpandMeds !== 'function') return option;
+  if (option.noVoExpand) return { ...option, _voExpanded: true };
   const rawMeds = option.meds || [];
   if (!rawMeds.length) return option;
   return {

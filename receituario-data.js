@@ -397,6 +397,168 @@ const RX_CATALOG_MANUAL = [
         ]
       }
     ]
+  },
+  {
+    id: 'gonorreia-clamidia',
+    name: 'Gonorreia / clamídia',
+    icon: '🔬',
+    aliases: ['gonorreia', 'clamidia', 'chlamydia', 'uretrite', 'cervicite', 'corrimento', 'ist'],
+    groups: [
+      {
+        id: 'gon-im-ps',
+        label: 'Gonorreia — aplicar no PS (IM)',
+        options: [
+          {
+            id: 'gon-ceftri-im',
+            tier: '1ª linha',
+            label: 'Ceftriaxona IM dose única',
+            classes: ['antibiotic'],
+            noVoExpand: true,
+            meds: [
+              { id: 'gon-ceftri-500', text: 'Ceftriaxona 500 mg — 1 amp IM dose única (deltoide ou glúteo profundo)', classes: ['antibiotic'], exclusiveGroup: 'gon-ceftri-dose' },
+              { id: 'gon-ceftri-1g', text: 'Ceftriaxona 1 g — 1 amp IM dose única (se resistência local documentada)', classes: ['antibiotic'], exclusiveGroup: 'gon-ceftri-dose' }
+            ],
+            orientacoes: 'Aplicar no serviço — não consta na receita VO. Tratar clamídia concomitante (azitromicina abaixo).'
+          }
+        ]
+      },
+      {
+        id: 'gon-vo',
+        label: 'Clamídia — receita VO (alta)',
+        options: [
+          {
+            id: 'gon-azit',
+            tier: '1ª linha',
+            label: 'Azitromicina dose única (clamídia)',
+            classes: ['antibiotic'],
+            noVoExpand: true,
+            meds: [
+              { id: 'gon-azit-1g', text: MED_VO.azitromicina1g, classes: ['antibiotic'] }
+            ],
+            orientacoes: 'Tratar parceiros dos últimos 60 dias. Abstinência sexual até 7 dias após tratamento. Testar HIV e sífilis.'
+          }
+        ]
+      },
+      {
+        id: 'gon-alt-vo',
+        label: 'Alternativa 100% VO (sem ceftriaxona IM)',
+        options: [
+          {
+            id: 'gon-cefix',
+            tier: 'Alternativa',
+            label: 'Cefixima + azitromicina VO',
+            classes: ['antibiotic'],
+            noVoExpand: true,
+            meds: [
+              { id: 'gon-cefix-400', text: MED_VO.cefixima400 + ' (gonorreia)', classes: ['antibiotic'] },
+              { id: 'gon-azit-alt', text: MED_VO.azitromicina1g + ' (clamídia)', classes: ['antibiotic'] }
+            ],
+            orientacoes: 'Esquema oral alternativo quando ceftriaxona IM indisponível ou recusa. MS/CDC IST 2022.'
+          }
+        ]
+      }
+    ]
+  },
+  {
+    id: 'violencia-sexual-pep',
+    name: 'Violência sexual — PEP',
+    icon: '🛡️',
+    aliases: ['violencia sexual', 'estupro', 'pep', 'pep hiv', 'profilaxia pos exposicao', 'ist pos violencia'],
+    groups: [
+      {
+        id: 'vs-contracepcao',
+        label: 'Contracepção de emergência (até 72 h, ideal ≤ 24 h)',
+        options: [
+          {
+            id: 'vs-lng',
+            tier: '1ª linha',
+            label: 'Levonorgestrel VO',
+            classes: [],
+            noVoExpand: true,
+            meds: [
+              { id: 'vs-lng-15', text: MED_VO.levonorgestrel15, classes: [] }
+            ],
+            orientacoes: 'Eficácia decrescente após 72 h; DIU de cobre até 5 dias se disponível e desejado.'
+          }
+        ]
+      },
+      {
+        id: 'vs-ist-im',
+        label: 'Profilaxia IST — aplicar no PS (IM)',
+        options: [
+          {
+            id: 'vs-ceftri-im',
+            tier: '1ª linha',
+            label: 'Ceftriaxona IM (gonorreia)',
+            classes: ['antibiotic'],
+            noVoExpand: true,
+            meds: [
+              { id: 'vs-ceftri', text: 'Ceftriaxona 500 mg — 1 amp IM dose única (deltoide ou glúteo profundo)', classes: ['antibiotic'] }
+            ],
+            orientacoes: 'Aplicar no PS antes da alta. Gonorreia — MS protocolo violência sexual 2022.'
+          }
+        ]
+      },
+      {
+        id: 'vs-ist-vo',
+        label: 'Profilaxia IST — receita VO (alta)',
+        options: [
+          {
+            id: 'vs-ist-vo-combo',
+            tier: '1ª linha',
+            label: 'Azitromicina + metronidazol (clamídia + tricomoníase)',
+            classes: ['antibiotic'],
+            noVoExpand: true,
+            meds: [
+              { id: 'vs-azit', text: MED_VO.azitromicina1g + ' (clamídia)', classes: ['antibiotic'] },
+              { id: 'vs-metro', text: MED_VO.metronidazol2g + ' (tricomoníase)', classes: ['antibiotic'] }
+            ],
+            orientacoes: 'Esquema empírico combinado conforme MS. Tratar parceiro(s) se indicado.'
+          },
+          {
+            id: 'vs-ist-vo-oral',
+            tier: 'Alternativa (100% VO)',
+            label: 'Cefixima + azitromicina + metronidazol',
+            classes: ['antibiotic'],
+            noVoExpand: true,
+            meds: [
+              { id: 'vs-cefix', text: MED_VO.cefixima400 + ' (gonorreia)', classes: ['antibiotic'] },
+              { id: 'vs-azit2', text: MED_VO.azitromicina1g + ' (clamídia)', classes: ['antibiotic'] },
+              { id: 'vs-metro2', text: MED_VO.metronidazol2g + ' (tricomoníase)', classes: ['antibiotic'] }
+            ],
+            orientacoes: 'Se ceftriaxona IM não aplicada no PS. Evitar álcool 48 h após metronidazol.'
+          }
+        ]
+      },
+      {
+        id: 'vs-pep-hiv',
+        label: 'PEP HIV — iniciar ≤ 72 h (receita especial)',
+        options: [
+          {
+            id: 'vs-pep-tdf3tc',
+            tier: '1ª linha',
+            label: 'TDF/3TC/DTG — 28 dias',
+            classes: [],
+            noVoExpand: true,
+            meds: [
+              { id: 'vs-pep-combo', text: 'Tenofovir + lamivudina + dolutegravir (comprimido fixo TDF/3TC/DTG) — 1 comprimido VO 24/24 h por 28 dias consecutivos', classes: [] }
+            ],
+            orientacoes: 'Receita especial. Sorologias baseline (HIV, sífilis, HBsAg, anti-HCV, β-hCG). Retorno 7, 14 e 30 dias; reteste em 3 e 6 meses. Não interromper antes de 28 dias.'
+          },
+          {
+            id: 'vs-pep-tdftc',
+            tier: 'Alternativa',
+            label: 'TDF/FTC/DTG — 28 dias',
+            classes: [],
+            noVoExpand: true,
+            meds: [
+              { id: 'vs-pep-combo2', text: 'Tenofovir + emtricitabina + dolutegravir (comprimido fixo TDF/FTC/DTG) — 1 comprimido VO 24/24 h por 28 dias consecutivos', classes: [] }
+            ],
+            orientacoes: 'Alternativa de 1ª linha. Mesmas orientações de acompanhamento da PEP.'
+          }
+        ]
+      }
+    ]
   }
 ];
 
@@ -434,6 +596,8 @@ function rxGetOptionMeds (option, groupLabel) {
   if (option._voExpanded && option.meds) return option.meds;
 
   let meds;
+
+  if (option.noVoExpand && option.meds) return option.meds;
 
   if (option.meds) {
     meds = option.meds;
