@@ -430,7 +430,9 @@ function rxInferMedClasses (text) {
   return classes;
 }
 
-function rxGetOptionMeds (option) {
+function rxGetOptionMeds (option, groupLabel) {
+  if (option._voExpanded && option.meds) return option.meds;
+
   let meds;
 
   if (option.meds) {
@@ -470,7 +472,7 @@ function rxGetOptionMeds (option) {
   if (typeof medVoExpandMeds === 'function') {
     return medVoExpandMeds(meds, {
       optionClasses: option.classes || [],
-      label: [option.label, option.tier].filter(Boolean).join(' — '),
+      label: [groupLabel, option.label, option.tier].filter(Boolean).join(' — '),
       idPrefix: option.id
     });
   }
@@ -481,7 +483,7 @@ function rxGetOptionMeds (option) {
 function rxFindMed (condition, medId) {
   for (const group of condition.groups) {
     for (const option of group.options) {
-      const med = rxGetOptionMeds(option).find(m => m.id === medId);
+      const med = rxGetOptionMeds(option, group.label).find(m => m.id === medId);
       if (med) return { group, option, med };
     }
   }
@@ -531,8 +533,8 @@ function rxValidateMeds (selectedMedEntries) {
 
 function rxExclusiveGroupsComplete (condition, selectedOptionIds, selectedMedIds) {
   const selections = rxCollectSelectedOptions(condition, selectedOptionIds);
-  return selections.every(({ option }) => {
-    const meds = rxGetOptionMeds(option);
+  return selections.every(({ group, option }) => {
+    const meds = rxGetOptionMeds(option, group.label);
     const groups = [...new Set(meds.filter(m => m.exclusiveGroup).map(m => m.exclusiveGroup))];
     return groups.every(g => meds.some(m => m.exclusiveGroup === g && selectedMedIds.has(m.id)));
   });

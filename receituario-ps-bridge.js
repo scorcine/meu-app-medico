@@ -86,16 +86,8 @@ function rxParseLabelToMeds (optId, label) {
 
 function rxPsMedToRxOption (conditionId, psMed) {
   const optId = `rxps-${conditionId}-${psMed.id}`;
-  let meds = rxParseLabelToMeds(optId, psMed.label);
+  const meds = rxParseLabelToMeds(optId, psMed.label);
   const optionClasses = rxInferClassesFromPsDrugs(psMed.drugs);
-
-  if (typeof medVoExpandMeds === 'function') {
-    meds = medVoExpandMeds(meds, {
-      optionClasses,
-      label: [psMed.tier, psMed.label].filter(Boolean).join(': '),
-      idPrefix: optId
-    });
-  }
 
   return {
     id: optId,
@@ -133,7 +125,7 @@ function rxParseGroupedMedsFromHtml (conditionId, html) {
   const groups = [];
   let optIdx = 0;
 
-  const addSection = (sectionLabel, container) => {
+  const addOptionsFromContainer = (sectionLabel, container) => {
     if (!container) return;
     const options = [];
     container.querySelectorAll('.ps-med-options li').forEach(li => {
@@ -163,11 +155,48 @@ function rxParseGroupedMedsFromHtml (conditionId, html) {
     const heading = li.querySelector(':scope > strong');
     if (!heading) return;
     const sectionLabel = heading.textContent.replace(/:\s*$/, '').trim();
-    if (li.querySelector('.ps-med-options')) addSection(sectionLabel, li);
+    if (li.querySelector('.ps-med-options')) {
+      addOptionsFromContainer(sectionLabel, li);
+    } else {
+      const subItems = [];
+      li.querySelectorAll(':scope > ul > li').forEach(subLi => {
+        const text = subLi.textContent.replace(/\s+/g, ' ').trim();
+        if (!text || !/<strong>/i.test(subLi.innerHTML)) return;
+        subItems.push(subLi);
+      });
+      if (subItems.length) {
+        const options = [];
+        subItems.forEach(subLi => {
+          const text = subLi.textContent.replace(/\s+/g, ' ').trim();
+          const { tier, label } = psParseTier(text);
+          if (/evitar/i.test(tier)) return;
+          options.push(rxPsMedToRxOption(conditionId, {
+            id: `${conditionId}-opt-${optIdx++}`,
+            tier,
+            label: label.length > 240 ? label.slice(0, 237) + '…' : label,
+            drugs: typeof psExtractDrugsFromText === 'function'
+              ? psExtractDrugsFromText(text).map(id => ({ id }))
+              : []
+          }));
+        });
+        if (options.length) {
+          groups.push({
+            id: rxNormText(sectionLabel).replace(/[^a-z0-9]+/g, '-'),
+            label: sectionLabel,
+            options
+          });
+        }
+      }
+    }
+  });
+
+  div.querySelectorAll(':scope > .ps-med-options, :scope > p + .ps-med-options, :scope > h4 + .ps-med-options').forEach(ul => {
+    if (ul.closest('.emerg-steps')) return;
+    addOptionsFromContainer('Protocolo resumido', ul);
   });
 
   if (!groups.length) {
-    addSection('Protocolo', div);
+    addOptionsFromContainer('Protocolo', div);
   }
 
   return groups.length ? rxSortGroups(groups) : null;
@@ -267,6 +296,10 @@ function rxBuildFullCatalog () {
   }
 
   full.sort((a, b) => a.name.localeCompare(b.name, 'pt-BR'));
+
+  if (typeof medVoExpandCondition === 'function') {
+    return full.map(medVoExpandCondition);
+  }
   return full;
 }
 

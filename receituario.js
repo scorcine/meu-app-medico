@@ -46,13 +46,13 @@ function rxRemoveMedsForOption (optionId) {
   condition.groups.forEach(group => {
     group.options.forEach(option => {
       if (option.id !== optionId) return;
-      rxGetOptionMeds(option).forEach(m => rxSelectedMedIds.delete(m.id));
+      rxGetOptionMeds(option, group.label).forEach(m => rxSelectedMedIds.delete(m.id));
     });
   });
 }
 
-function rxAutoSelectMedsForOption (option) {
-  rxGetOptionMeds(option).forEach(m => {
+function rxAutoSelectMedsForOption (option, groupLabel) {
+  rxGetOptionMeds(option, groupLabel).forEach(m => {
     if (!m.exclusiveGroup) rxSelectedMedIds.add(m.id);
   });
 }
@@ -199,7 +199,7 @@ function rxRenderMedsPanel () {
     <h3 class="rx-meds-title">Escolha os medicamentos</h3>
     <p class="muted rx-meds-hint">Onde houver alternativas (OU), marque <strong>apenas uma</strong> opção — ex.: naproxeno <em>ou</em> ibuprofeno.</p>
     ${selections.map(({ group, option }) => {
-      const meds = rxGetOptionMeds(option);
+      const meds = rxGetOptionMeds(option, group.label);
       const grouped = {};
       const standalone = [];
       meds.forEach(m => {
@@ -295,8 +295,8 @@ function rxUpdateSelectionBar () {
 
   if (!groupsOk && condition && rxSelectedOptionIds.size) {
     const pending = [];
-    rxCollectSelectedOptions(condition, rxSelectedOptionIds).forEach(({ option }) => {
-      const meds = rxGetOptionMeds(option);
+    rxCollectSelectedOptions(condition, rxSelectedOptionIds).forEach(({ group, option }) => {
+      const meds = rxGetOptionMeds(option, group.label);
       const groups = [...new Set(meds.filter(m => m.exclusiveGroup).map(m => m.exclusiveGroup))];
       groups.forEach(g => {
         if (!meds.some(m => m.exclusiveGroup === g && rxSelectedMedIds.has(m.id))) {
@@ -321,8 +321,14 @@ function rxToggleOption (optId) {
   if (!condition) return;
 
   let option = null;
+  let groupLabel = '';
   condition.groups.forEach(g => {
-    g.options.forEach(o => { if (o.id === optId) option = o; });
+    g.options.forEach(o => {
+      if (o.id === optId) {
+        option = o;
+        groupLabel = g.label;
+      }
+    });
   });
   if (!option) return;
 
@@ -331,7 +337,7 @@ function rxToggleOption (optId) {
     rxRemoveMedsForOption(optId);
   } else {
     rxSelectedOptionIds.add(optId);
-    rxAutoSelectMedsForOption(option);
+    rxAutoSelectMedsForOption(option, groupLabel);
   }
 
   document.querySelectorAll('.rx-option-card').forEach(card => {
@@ -478,7 +484,7 @@ function rxShowCondition (conditionId) {
       <legend>${group.label}</legend>
       <div class="rx-option-list">
         ${group.options.map(opt => {
-          const medCount = rxGetOptionMeds(opt).length;
+          const medCount = rxGetOptionMeds(opt, group.label).length;
           return `
           <button type="button" class="rx-option-card" data-opt-id="${opt.id}" aria-pressed="false">
             <span class="rx-option-card-head">

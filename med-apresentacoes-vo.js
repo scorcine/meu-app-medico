@@ -170,6 +170,10 @@ function medVoDetectExpandGroups (optionClasses, label, meds) {
   (optionClasses || []).forEach(c => groups.add(c));
   meds.forEach(m => (m.classes || []).forEach(c => groups.add(c)));
 
+  if (/sintomatic|analgesia|analges|suporte|viral|adjuvante|dor(?! de cabeca)/.test(norm)) {
+    groups.add('analgesic_non_opioid');
+    groups.add('nsaid');
+  }
   if (/aine|nsaid|anti-?inflamat|ibuprofeno|naproxeno|diclofenac|cetoprofeno|nimesulid/.test(norm)) groups.add('nsaid');
   if (/analges|dipirona|paracetamol|acetaminofen/.test(norm)) groups.add('analgesic_non_opioid');
   if (/relaxante muscular|ciclobenzaprina|tizanidina/.test(norm)) groups.add('muscle_relaxant');
@@ -224,9 +228,11 @@ function medVoExpandMeds (meds, opts) {
   const idPrefix = (opts && opts.idPrefix) || 'med';
   const suffix = medVoDetectSuffix(meds);
   const exclusiveGroup = medVoDetectExclusiveGroup(meds, idPrefix);
+  const detectedGroups = medVoDetectExpandGroups(optionClasses, label, meds);
   const fullClassExpand = exclusiveGroup
     || /escolha (um|uma|apresent)/.test(medVoNorm(label))
-    || /escolher na etapa/.test(medVoNorm(label));
+    || /escolher na etapa/.test(medVoNorm(label))
+    || detectedGroups.size > 0;
 
   const result = new Map();
 
@@ -237,7 +243,7 @@ function medVoExpandMeds (meds, opts) {
   const keysToAdd = new Set();
 
   if (fullClassExpand) {
-    medVoDetectExpandGroups(optionClasses, label, meds).forEach(groupKey => {
+    detectedGroups.forEach(groupKey => {
       (MED_VO_GROUPS[groupKey] || []).forEach(k => keysToAdd.add(k));
     });
   }
@@ -246,7 +252,9 @@ function medVoExpandMeds (meds, opts) {
     medVoInferFamilyKeys(text).forEach(k => keysToAdd.add(k));
   });
 
-  if (!keysToAdd.size && !fullClassExpand) return meds;
+  if (!keysToAdd.size) {
+    return result.size ? [...result.values()] : meds;
+  }
 
   keysToAdd.forEach(key => {
     const id = `${idPrefix}-${key}`;
@@ -258,6 +266,31 @@ function medVoExpandMeds (meds, opts) {
     });
   });
 
-  if (!keysToAdd.size) return meds;
   return [...result.values()];
+}
+
+function medVoExpandOption (option, groupLabel) {
+  if (!option || typeof medVoExpandMeds !== 'function') return option;
+  const rawMeds = option.meds || [];
+  if (!rawMeds.length) return option;
+  return {
+    ...option,
+    _voExpanded: true,
+    meds: medVoExpandMeds(rawMeds, {
+      optionClasses: option.classes || [],
+      label: [groupLabel, option.label, option.tier].filter(Boolean).join(' — '),
+      idPrefix: option.id
+    })
+  };
+}
+
+function medVoExpandCondition (condition) {
+  if (!condition || !condition.groups) return condition;
+  return {
+    ...condition,
+    groups: condition.groups.map(group => ({
+      ...group,
+      options: (group.options || []).map(opt => medVoExpandOption(opt, group.label))
+    }))
+  };
 }
