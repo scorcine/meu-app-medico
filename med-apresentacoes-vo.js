@@ -5,6 +5,7 @@ const MED_VO = {
   dipirona1g: 'Dipirona 1 g — 1 comprimido VO 6/6 horas, se dor',
   paracetamol500: 'Paracetamol 500 mg — 1 comprimido VO 6/6 horas, se dor',
   paracetamol750: 'Paracetamol 750 mg — 1 comprimido VO 6/6 horas, se dor',
+  paracetamol1g: 'Paracetamol 1 g — 1 comprimido VO 6/6 horas, se dor (máx. 3 g/dia)',
 
   naproxeno500: 'Naproxeno 500 mg — 1 comprimido VO 12/12 horas',
   ibuprofeno200: 'Ibuprofeno 200 mg — 2 comprimidos VO 8/8 horas',
@@ -15,14 +16,14 @@ const MED_VO = {
   cetoprofeno100: 'Cetoprofeno 100 mg — 1 comprimido VO 12/12 horas',
   nimesulida100: 'Nimesulida 100 mg — 1 comprimido VO 12/12 horas',
 
-  ciclobenzaprina5: 'Ciclobenzaprina 5 mg — 1 comprimido VO à noite',
-  ciclobenzaprina10: 'Ciclobenzaprina 10 mg — 1 comprimido VO à noite',
+  ciclobenzaprina5: 'Ciclobenzaprina 5 mg — 1 comprimido VO 8/8 horas ou à noite, por 5 dias',
+  ciclobenzaprina10: 'Ciclobenzaprina 10 mg — 1 comprimido VO 8/8 horas ou à noite, por 5 dias',
   tizanidina2: 'Tizanidina 2 mg — 1 comprimido VO 8/8 horas',
 
   tramadol50: 'Tramadol 50 mg — 1 comprimido VO 6/6 horas, se dor intensa',
 
   sumatriptano50: 'Sumatriptano 50 mg — 1 comprimido VO ao início da crise (repetir 50 mg após 2 h; máx. 200 mg/dia)',
-  sumatriptano100: 'Sumatriptano 100 mg — 1 comprimido VO ao início da crise (repetir 50 mg após 2 h; máx. 200 mg/dia)',
+  sumatriptano100: 'Sumatriptano 100 mg — 1 comprimido VO ao início da crise (repetir 50–100 mg após 2 h; máx. 200 mg/dia)',
   sumatriptanoSc6: 'Sumatriptano 6 mg — 1 aplicação SC ao início da crise (repetir após 1 h se necessário; máx. 12 mg/24 h)',
   zolmitriptano25: 'Zolmitriptano 2,5 mg — 1 comprimido VO ao início da crise (pode repetir 2,5 mg após 2 h)',
   zolmitriptanoNas5: 'Zolmitriptano 5 mg — 1 spray nasal ao início da crise',
@@ -55,7 +56,7 @@ const MED_VO = {
 
 /* Grupos de apresentações — fonte única para listar todas as opções VO */
 const MED_VO_GROUPS = {
-  analgesic_non_opioid: ['dipirona500', 'dipirona1g', 'paracetamol500', 'paracetamol750'],
+  analgesic_non_opioid: ['dipirona500', 'dipirona1g', 'paracetamol500', 'paracetamol750', 'paracetamol1g'],
   nsaid: ['naproxeno250', 'naproxeno500', 'ibuprofeno200', 'ibuprofeno400', 'ibuprofeno600', 'diclofenaco50', 'cetoprofeno50', 'cetoprofeno100', 'nimesulida100'],
   muscle_relaxant: ['ciclobenzaprina5', 'ciclobenzaprina10', 'tizanidina2'],
   triptan: ['sumatriptano50', 'sumatriptano100', 'sumatriptanoSc6', 'zolmitriptano25', 'zolmitriptanoNas5'],
@@ -75,7 +76,7 @@ const MED_VO_GROUPS = {
 
 const MED_VO_FAMILIES = {
   dipirona: ['dipirona500', 'dipirona1g'],
-  paracetamol: ['paracetamol500', 'paracetamol750'],
+  paracetamol: ['paracetamol500', 'paracetamol750', 'paracetamol1g'],
   naproxeno: ['naproxeno250', 'naproxeno500'],
   ibuprofeno: ['ibuprofeno200', 'ibuprofeno400', 'ibuprofeno600'],
   diclofenaco: ['diclofenaco50'],

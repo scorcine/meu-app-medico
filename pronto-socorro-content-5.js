@@ -293,7 +293,7 @@ const PS_CONTENT_5 = {
         <ul class="ps-med-options">
           <li><strong>1ª linha:</strong> prednisona 20–40 mg VO 24/24 h · 5–7 dias.</li>
           <li><strong>Alternativa:</strong> prednisolona 30 mg VO 24/24 h · 5 dias.</li>
-          <li><strong>Alérgico:</strong> naproxeno 500 mg VO 12/12 h (se sem contraindicação e dengue descartada).</li>
+          <li><strong>Alternativa (dengue descartada):</strong> naproxeno 500 mg VO 12/12 h (se sem contraindicação).</li>
           <li><strong>Refractário:</strong> hidroxicloroquina 400 mg VO 24/24 h (artrite crônica — reumatologia).</li>
         </ul>
       </li>

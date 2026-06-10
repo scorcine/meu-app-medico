@@ -269,7 +269,10 @@ function rxGetValidationState () {
   const optionMessages = rxValidateSchemes(condition, rxSelectedOptionIds);
   const medEntries = rxCollectSelectedMeds(condition, rxSelectedMedIds);
   const medMessages = rxValidateMeds(medEntries);
-  const messages = [...optionMessages, ...medMessages];
+  const conditionMessages = typeof rxValidateConditionMeds === 'function'
+    ? rxValidateConditionMeds(condition, medEntries)
+    : [];
+  const messages = [...optionMessages, ...medMessages, ...conditionMessages];
   const groupsOk = rxExclusiveGroupsComplete(condition, rxSelectedOptionIds, rxSelectedMedIds);
   const hasMeds = medEntries.length > 0;
   const canGenerate = hasMeds && groupsOk && !rxHasValidationErrors(messages);

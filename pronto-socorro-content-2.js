@@ -251,7 +251,7 @@ const PS_CONTENT_2 = {
     <ul class="ps-med-options">
       <li><strong>1ª linha:</strong> paracetamol 500–750 mg VO 6/6 h (máx. 3 g/dia) — único antitérmico/analgésico permitido.</li>
       <li><strong>Alternativa (hidratação por grupo):</strong> Grupo A — SRO oral 60 mL/kg/dia; Grupo B — 60–80 mL/kg/dia sob supervisão; Grupo C/D — SF 0,9% 10 mL/kg/h EV (bolus 20 mL/kg se choque).</li>
-      <li><strong>Alérgico / contraindicação:</strong> <strong>contraindicado AAS, ibuprofeno, diclofenaco, naproxeno</strong> (risco de sangramento); evitar corticoide de rotina, profilaxia plaquetária e transfusão profilática.</li>
+      <li><strong>Evitar:</strong> <strong>AAS, ibuprofeno, diclofenaco, naproxeno</strong> (risco de sangramento); corticoide de rotina, profilaxia plaquetária e transfusão profilática de plaquetas.</li>
     </ul>
     <h4>Prescrições de pronto-socorro</h4>
     <ol class="emerg-steps">

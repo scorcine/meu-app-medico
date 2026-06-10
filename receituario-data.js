@@ -140,7 +140,7 @@ const RX_CATALOG_MANUAL = [
             meds: [
               { id: 'cef-enx-cort-dexa', text: MED_VO.dexametasona4, classes: ['corticosteroid'] }
             ],
-            orientacoes: 'Considerar após crise refratária ou status migrainoso. Reavaliar glicemia e infecção.'
+            orientacoes: 'Considerar após crise refratária ou status migrainoso. PS: dexametasona 10 mg IV — adaptar 8 mg VO na alta se indicado. Reavaliar glicemia e infecção.'
           },
           {
             id: 'cef-enx-profilaxia',
@@ -317,24 +317,24 @@ const RX_CATALOG_MANUAL = [
           {
             id: 'itu-1',
             tier: '1ª linha',
-            label: 'Fosfomicina dose única',
-            classes: ['antibiotic_misc'],
-            items: [],
-            meds: [
-              { id: 'itu-fosfo', text: MED_VO.fosfomicina3g, classes: ['antibiotic_misc'] }
-            ],
-            orientacoes: 'Hidratação abundante. Retorno se febre, dor lombar ou piora em 48 h (pielonefrite).'
-          },
-          {
-            id: 'itu-2',
-            tier: 'Alternativa',
             label: 'Nitrofurantoína',
             classes: ['nitrofuran'],
             items: [],
             meds: [
               { id: 'itu-nitro', text: MED_VO.nitrofurantoina100, classes: ['nitrofuran'] }
             ],
-            orientacoes: 'Evitar se TFG < 30 mL/min. Urina pode ficar amarelada — orientar paciente.'
+            orientacoes: 'Evitar se TFG < 30 mL/min. Urina pode ficar amarelada — orientar paciente. Hidratação abundante.'
+          },
+          {
+            id: 'itu-2',
+            tier: 'Alternativa',
+            label: 'Fosfomicina dose única',
+            classes: ['antibiotic_misc'],
+            items: [],
+            meds: [
+              { id: 'itu-fosfo', text: MED_VO.fosfomicina3g, classes: ['antibiotic_misc'] }
+            ],
+            orientacoes: 'Alternativa de 1ª linha (dose única). Retorno se febre, dor lombar ou piora em 48 h (pielonefrite).'
           }
         ]
       }
@@ -680,6 +680,32 @@ function rxValidateSchemes (condition, selectedIds) {
     messages.push({
       severity: 'warning',
       text: 'Dois antibióticos para ITU — escolha monoterapia (fosfomicina OU nitrofurantoína).'
+    });
+  }
+
+  return messages;
+}
+
+function rxValidateConditionMeds (condition, medEntries) {
+  const messages = [];
+  if (!condition || !medEntries.length) return messages;
+
+  const id = condition.id || '';
+  const arbovirusWarnIds = ['chikungunya', 'zika'];
+  const hasNsaid = medEntries.some(({ med }) => (med.classes || []).includes('nsaid'));
+  const hasAas = medEntries.some(({ med }) => /aas|aspirin|acetilsalicilico|acido acetilsalicilico/i.test(med.text || ''));
+
+  if (/^dengue(-|$)/.test(id)) {
+    if (hasNsaid || hasAas) {
+      messages.push({
+        severity: 'error',
+        text: 'Dengue — AAS/AINE contraindicado (risco de sangramento). Use apenas paracetamol conforme protocolo MS.'
+      });
+    }
+  } else if (arbovirusWarnIds.includes(id) && hasNsaid) {
+    messages.push({
+      severity: 'warning',
+      text: 'Arbovirose — confirme exclusão de dengue antes de prescrever AINE. Nas primeiras 48 h, preferir paracetamol.'
     });
   }
 

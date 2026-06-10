@@ -30,6 +30,25 @@ function rxGenerateAliasesFromPs (psCondition) {
   return [...aliases];
 }
 
+function rxShouldSkipPsMedLine (tier, label, fullText) {
+  const t = (tier || '').toLowerCase();
+  const norm = rxNormText(fullText || label || '');
+
+  if (/evitar/i.test(t)) return true;
+
+  if (/contraindicad/i.test(norm)) {
+    if (/ibuprofeno|diclofenac|naproxeno|cetoprofeno|nimesulid|aas|aspirin|acetilsalicilico|\baine\b/.test(norm)) {
+      return true;
+    }
+  }
+
+  if (/contraindica/.test(t) && /ibuprofeno|diclofenac|naproxeno|aas|aspirin/.test(norm)) {
+    return true;
+  }
+
+  return false;
+}
+
 function rxNormalizeVoText (text) {
   const t = (text || '').trim();
   if (!t) return t;
@@ -37,8 +56,9 @@ function rxNormalizeVoText (text) {
   if (typeof MED_VO !== 'undefined') {
     if (/dipirona.*500.*vo/i.test(t)) return MED_VO.dipirona500;
     if (/dipirona.*(1\s*g|1000).*vo/i.test(t)) return MED_VO.dipirona1g;
-    if (/paracetamol.*500.*vo/i.test(t)) return MED_VO.paracetamol500;
     if (/paracetamol.*750.*vo/i.test(t)) return MED_VO.paracetamol750;
+    if (/paracetamol.*(1\s*g|1000).*vo/i.test(t)) return MED_VO.paracetamol1g;
+    if (/paracetamol.*500.*vo/i.test(t)) return MED_VO.paracetamol500;
     if (/naproxeno.*250/i.test(t)) return MED_VO.naproxeno250;
     if (/naproxeno.*500/i.test(t)) return MED_VO.naproxeno500;
     if (/ibuprofeno.*600/i.test(t)) return MED_VO.ibuprofeno600;
@@ -132,7 +152,7 @@ function rxParseGroupedMedsFromHtml (conditionId, html) {
       const text = li.textContent.replace(/\s+/g, ' ').trim();
       if (!text) return;
       const { tier, label } = psParseTier(text);
-      if (/evitar/i.test(tier)) return;
+      if (rxShouldSkipPsMedLine(tier, label, text)) return;
       options.push(rxPsMedToRxOption(conditionId, {
         id: `${conditionId}-opt-${optIdx++}`,
         tier,
@@ -169,7 +189,7 @@ function rxParseGroupedMedsFromHtml (conditionId, html) {
         subItems.forEach(subLi => {
           const text = subLi.textContent.replace(/\s+/g, ' ').trim();
           const { tier, label } = psParseTier(text);
-          if (/evitar/i.test(tier)) return;
+          if (rxShouldSkipPsMedLine(tier, label, text)) return;
           options.push(rxPsMedToRxOption(conditionId, {
             id: `${conditionId}-opt-${optIdx++}`,
             tier,
@@ -224,7 +244,7 @@ function rxBuildConditionFromPs (psCondition) {
 
   const tierGroups = {};
   config.medications.forEach(med => {
-    if (/evitar/i.test(med.tier || '')) return;
+    if (rxShouldSkipPsMedLine(med.tier, med.label, med.label)) return;
     const tier = med.tier || 'Protocolo';
     if (!tierGroups[tier]) tierGroups[tier] = [];
     tierGroups[tier].push(rxPsMedToRxOption(psCondition.id, med));
