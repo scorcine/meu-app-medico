@@ -472,7 +472,7 @@ function rxGetOptionMeds (option, groupLabel) {
   if (typeof medVoExpandMeds === 'function') {
     return medVoExpandMeds(meds, {
       optionClasses: option.classes || [],
-      label: [groupLabel, option.label, option.tier].filter(Boolean).join(' — '),
+      label: [option.label, option.tier].filter(Boolean).join(' — '),
       idPrefix: option.id
     });
   }

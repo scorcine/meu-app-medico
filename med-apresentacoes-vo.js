@@ -156,6 +156,13 @@ function medVoDetectSuffix (meds) {
   return '';
 }
 
+function medVoKeyVoGroup (key) {
+  for (const [group, keys] of Object.entries(MED_VO_GROUPS)) {
+    if (keys.includes(key)) return group;
+  }
+  return null;
+}
+
 function medVoDetectExclusiveGroup (meds, idPrefix) {
   const existing = meds.find(m => m.exclusiveGroup);
   if (existing) return existing.exclusiveGroup;
@@ -163,19 +170,38 @@ function medVoDetectExclusiveGroup (meds, idPrefix) {
   return null;
 }
 
-function medVoDetectExpandGroups (optionClasses, label, meds) {
+function medVoDetectExpandGroups (optionClasses, optionLabel, meds) {
   const groups = new Set();
-  const norm = medVoNorm(label);
+  const norm = medVoNorm(optionLabel);
 
-  (optionClasses || []).forEach(c => groups.add(c));
-  meds.forEach(m => (m.classes || []).forEach(c => groups.add(c)));
+  (optionClasses || []).forEach(c => {
+    if (MED_VO_GROUPS[c]) groups.add(c);
+  });
 
-  if (/sintomatic|analgesia|analges|suporte|viral|adjuvante|dor(?! de cabeca)/.test(norm)) {
-    groups.add('analgesic_non_opioid');
+  if (groups.size > 0) {
+    if (groups.has('penicillin_clavulanate')) groups.delete('penicillin');
+    if (groups.has('antibiotic_alternative')) {
+      groups.delete('penicillin');
+      groups.delete('penicillin_clavulanate');
+    }
+    return groups;
+  }
+
+  meds.forEach(m => (m.classes || []).forEach(c => {
+    if (MED_VO_GROUPS[c]) groups.add(c);
+  }));
+
+  if (groups.size > 0) {
+    if (groups.has('penicillin_clavulanate')) groups.delete('penicillin');
+    return groups;
+  }
+
+  if (/\baine\b|nsaid|anti-?inflamat|ibuprofeno|naproxeno|diclofenac|cetoprofeno|nimesulid/.test(norm)) {
     groups.add('nsaid');
   }
-  if (/aine|nsaid|anti-?inflamat|ibuprofeno|naproxeno|diclofenac|cetoprofeno|nimesulid/.test(norm)) groups.add('nsaid');
-  if (/analges|dipirona|paracetamol|acetaminofen/.test(norm)) groups.add('analgesic_non_opioid');
+  if (/analgesico simples|analges simples|analges adjuv|dipirona|paracetamol|acetaminofen/.test(norm)) {
+    groups.add('analgesic_non_opioid');
+  }
   if (/relaxante muscular|ciclobenzaprina|tizanidina/.test(norm)) groups.add('muscle_relaxant');
   if (/triptan|sumatriptano|zolmitriptano/.test(norm)) groups.add('triptan');
   if (/antiemet|metoclopramid|ondansetrona/.test(norm)) groups.add('antiemetic');
@@ -187,13 +213,12 @@ function medVoDetectExpandGroups (optionClasses, label, meds) {
   if (/tramadol|opioide|morfina/.test(norm)) groups.add('opioid');
 
   if (/alergic.*penicilina|alergico.*penicilina/.test(norm)) {
-    groups.delete('penicillin');
-    groups.delete('penicillin_clavulanate');
+    groups.clear();
     groups.add('antibiotic_alternative');
   } else if (/clavulanato|amox.*clav/.test(norm)) {
     groups.add('penicillin_clavulanate');
     groups.delete('penicillin');
-  } else if (/amoxicilina|penicilina/.test(norm)) {
+  } else if (/amoxicilina(?!.*clav)|penicilina(?!.*clav)/.test(norm)) {
     groups.add('penicillin');
   }
 
@@ -201,11 +226,17 @@ function medVoDetectExpandGroups (optionClasses, label, meds) {
   if (/nitrofurantoina/.test(norm)) groups.add('nitrofuran');
   if (/azitromicina|clindamicina/.test(norm)) groups.add('antibiotic_alternative');
 
-  if ((optionClasses || []).includes('penicillin_clavulanate') && !(optionClasses || []).includes('penicillin')) {
-    groups.delete('penicillin');
-  }
-
   return groups;
+}
+
+function medVoFilterKeysByGroups (keys, allowedGroups) {
+  if (!allowedGroups || !allowedGroups.size) return keys;
+  const out = new Set();
+  keys.forEach(key => {
+    const g = medVoKeyVoGroup(key);
+    if (g && allowedGroups.has(g)) out.add(key);
+  });
+  return out;
 }
 
 function medVoMeds (idPrefix, groupKey, opts) {
@@ -224,15 +255,14 @@ function medVoExpandMeds (meds, opts) {
   if (!meds || !meds.length || typeof MED_VO === 'undefined') return meds || [];
 
   const optionClasses = (opts && opts.optionClasses) || [];
-  const label = (opts && opts.label) || '';
+  const optionLabel = (opts && opts.label) || '';
   const idPrefix = (opts && opts.idPrefix) || 'med';
   const suffix = medVoDetectSuffix(meds);
   const exclusiveGroup = medVoDetectExclusiveGroup(meds, idPrefix);
-  const detectedGroups = medVoDetectExpandGroups(optionClasses, label, meds);
+  const detectedGroups = medVoDetectExpandGroups(optionClasses, optionLabel, meds);
   const fullClassExpand = exclusiveGroup
-    || /escolha (um|uma|apresent)/.test(medVoNorm(label))
-    || /escolher na etapa/.test(medVoNorm(label))
-    || detectedGroups.size > 0;
+    || /escolha (um|uma|apresent)/.test(medVoNorm(optionLabel))
+    || /escolher na etapa/.test(medVoNorm(optionLabel));
 
   const result = new Map();
 
@@ -240,17 +270,19 @@ function medVoExpandMeds (meds, opts) {
     if (!medVoIsCatalogText(m.text)) result.set(m.id, m);
   });
 
-  const keysToAdd = new Set();
+  let keysToAdd = new Set();
 
-  if (fullClassExpand) {
+  if (fullClassExpand && detectedGroups.size > 0) {
     detectedGroups.forEach(groupKey => {
       (MED_VO_GROUPS[groupKey] || []).forEach(k => keysToAdd.add(k));
     });
   }
 
-  [label, ...meds.map(m => m.text)].forEach(text => {
+  [optionLabel, ...meds.map(m => m.text)].forEach(text => {
     medVoInferFamilyKeys(text).forEach(k => keysToAdd.add(k));
   });
+
+  keysToAdd = medVoFilterKeysByGroups(keysToAdd, detectedGroups);
 
   if (!keysToAdd.size) {
     return result.size ? [...result.values()] : meds;
@@ -269,7 +301,7 @@ function medVoExpandMeds (meds, opts) {
   return [...result.values()];
 }
 
-function medVoExpandOption (option, groupLabel) {
+function medVoExpandOption (option) {
   if (!option || typeof medVoExpandMeds !== 'function') return option;
   const rawMeds = option.meds || [];
   if (!rawMeds.length) return option;
@@ -278,7 +310,7 @@ function medVoExpandOption (option, groupLabel) {
     _voExpanded: true,
     meds: medVoExpandMeds(rawMeds, {
       optionClasses: option.classes || [],
-      label: [groupLabel, option.label, option.tier].filter(Boolean).join(' — '),
+      label: [option.label, option.tier].filter(Boolean).join(' — '),
       idPrefix: option.id
     })
   };
@@ -290,7 +322,7 @@ function medVoExpandCondition (condition) {
     ...condition,
     groups: condition.groups.map(group => ({
       ...group,
-      options: (group.options || []).map(opt => medVoExpandOption(opt, group.label))
+      options: (group.options || []).map(opt => medVoExpandOption(opt))
     }))
   };
 }
