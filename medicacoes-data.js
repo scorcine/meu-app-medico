@@ -1,7 +1,7 @@
 /* Medicações — catálogo clínico (gerado + revisado jun/2026) */
 /* eslint-disable max-len */
 
-const MEDHUB_MED_BUILD = 'med-v2-gaps';
+const MEDHUB_MED_BUILD = 'med-v3-rename';
 
 const MED_EXTRA_DRUGS = {
   "nitrofurantoina": {

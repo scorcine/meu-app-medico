@@ -41,8 +41,9 @@
   <script defer src="pronto-socorro-interactive-core.js?v=ps-interactive-rx-v3"></script>
   <script defer src="pronto-socorro.js?v=ps-interactive-rx-v3"></script>
   <script defer src="medicacoes-classes.js?v=med-v2-gaps"></script>
-  <script defer src="medicacoes-data.js?v=med-v2-gaps"></script>
-  <script defer src="medicacoes.js?v=med-v2-gaps"></script>
+  <script defer src="medicacoes-data.js?v=med-v3-rename"></script>
+  <script defer src="medicacoes-rename-data.js?v=med-v3-rename"></script>
+  <script defer src="medicacoes.js?v=med-v3-rename"></script>
   <script defer src="med-apresentacoes-vo.js?v=ist-pep-v1"></script>
   <script defer src="receituario-data.js?v=rx-multi-v1"></script>
   <script defer src="receituario-ps-bridge.js?v=rx-multi-v1"></script>
@@ -135,7 +136,7 @@
               </li>
               <li>
                 <strong>💊 Guia de medicações</strong>
-                <span>200+ fichas com indicação, contraindicações, apresentações e posologia VO/hospitalar — alinhadas aos protocolos do app.</span>
+                <span>200+ fichas MedHub + 200+ referência RENAME — busca lazy com link ao Bulário ANVISA.</span>
               </li>
               <li>
                 <strong>📝 Anamnese e histórico local</strong>
@@ -224,14 +225,21 @@
         <div class="card dashboard-card med-wrap">
           <div id="med-list-view">
             <h2>Medicações</h2>
-            <p class="muted">Fichas clínicas dos medicamentos usados nos protocolos MedHub — indicações, contraindicações e posologia (VO e hospitalar). Apresentações usuais no Brasil. Revisado jun/2026.</p>
+            <p class="muted">Dois níveis: <strong>fichas MedHub</strong> (protocolos PS, revisadas) e <strong>referência RENAME</strong> (MS/SUS, consulta + link ANVISA). Busque pelo nome — referência RENAME entra com 2+ letras.</p>
             <label class="ps-search-label" for="med-search">Buscar medicamento</label>
-            <input id="med-search" class="ps-search" type="search" placeholder="Ex.: dipirona, ceftriaxona, omeprazol, enoxaparina…" autocomplete="off">
-            <label class="ps-search-label" for="med-filter-class">Filtrar por classe</label>
+            <input id="med-search" class="ps-search" type="search" placeholder="Ex.: dipirona, ritonavir, mesalazina, dabigatrana…" autocomplete="off">
+            <label class="ps-search-label" for="med-filter-tier">Catálogo</label>
+            <select id="med-filter-tier" class="ps-search med-filter-select">
+              <option value="">Fichas MedHub (protocolos)</option>
+              <option value="reference">Referência RENAME</option>
+              <option value="all">Todos (busca combinada)</option>
+            </select>
+            <label class="ps-search-label" for="med-filter-class">Filtrar por classe (MedHub)</label>
             <select id="med-filter-class" class="ps-search med-filter-select">
               <option value="">Todas as classes</option>
             </select>
             <p id="med-count" class="ps-count muted"></p>
+            <p id="med-search-hint" class="med-search-hint muted" hidden></p>
             <div id="med-drug-grid" class="calc-category-grid med-drug-grid"></div>
             <p id="med-empty" class="ps-placeholder" hidden>Nenhum medicamento encontrado.</p>
             <p class="ps-rx-disclaimer">Catálogo educacional — não inclui todas as especialidades farmacêuticas registradas na ANVISA. Confirme bula e protocolo institucional.</p>
