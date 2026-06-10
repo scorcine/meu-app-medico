@@ -411,6 +411,20 @@ body.app-page {
   gap: 0.25rem;
 }
 
+.sidebar-group {
+  margin: 0.85rem 1.25rem 0.15rem;
+  padding: 0;
+  font-size: 0.68rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-faint);
+}
+
+.sidebar-group:first-of-type {
+  margin-top: 0.35rem;
+}
+
 .sidebar-link {
   display: block;
   width: 100%;
@@ -1734,6 +1748,10 @@ body.emerg-ecg-lightbox-open {
     flex-direction: row;
     overflow-x: auto;
     padding: 0 0.75rem;
+  }
+
+  .sidebar-group {
+    display: none;
   }
 
   .sidebar-link {

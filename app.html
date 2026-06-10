@@ -9,7 +9,7 @@
   <title>MedHub</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <script src="theme.js"></script>
-  <link rel="stylesheet" href="style.css?v=rx-v11">
+  <link rel="stylesheet" href="style.css?v=nav-v1">
   <script defer src="calculators-risco.js"></script>
   <script defer src="calculators-cardio.js"></script>
   <script defer src="calculators-pneumo.js?v=rsi-patient"></script>
@@ -62,17 +62,25 @@
       <p class="sidebar-title">Menu</p>
       <nav class="sidebar-nav">
         <button type="button" class="sidebar-link active" data-section="inicio">Início</button>
-        <button type="button" class="sidebar-link" data-section="tratamento-hospitalar">Tratamento hospitalar</button>
-        <button type="button" class="sidebar-link" data-section="receituario">Receituário</button>
-        <button type="button" class="sidebar-link" data-section="exames">Exames</button>
-        <button type="button" class="sidebar-link" data-section="interpretacao-exame">Interpretação do exame</button>
-        <button type="button" class="sidebar-link" data-section="guia-emergencia">Guia rápido de emergência</button>
-        <button type="button" class="sidebar-link" data-section="pronto-socorro">Prescrições de Pronto Socorro</button>
-        <button type="button" class="sidebar-link" data-section="calc-pediatrica">Calculadora pediátrica</button>
-        <button type="button" class="sidebar-link" data-section="calc-essenciais">Calculadoras essenciais</button>
+
+        <p class="sidebar-group">Atendimento</p>
         <button type="button" class="sidebar-link" data-section="pacientes">Pacientes</button>
         <button type="button" class="sidebar-link" data-section="anamnese">Anamnese</button>
         <button type="button" class="sidebar-link" data-section="consultas">Consultas</button>
+
+        <p class="sidebar-group">Prescrição &amp; exames</p>
+        <button type="button" class="sidebar-link" data-section="receituario">Receituário</button>
+        <button type="button" class="sidebar-link" data-section="exames">Exames</button>
+        <button type="button" class="sidebar-link" data-section="interpretacao-exame">Interpretação do exame</button>
+
+        <p class="sidebar-group">Emergência &amp; internação</p>
+        <button type="button" class="sidebar-link" data-section="guia-emergencia">Guia rápido de emergência</button>
+        <button type="button" class="sidebar-link" data-section="pronto-socorro">Prescrições de Pronto Socorro</button>
+        <button type="button" class="sidebar-link" data-section="tratamento-hospitalar">Tratamento hospitalar</button>
+
+        <p class="sidebar-group">Calculadoras &amp; apoio</p>
+        <button type="button" class="sidebar-link" data-section="calc-essenciais">Calculadoras essenciais</button>
+        <button type="button" class="sidebar-link" data-section="calc-pediatrica">Calculadora pediátrica</button>
         <button type="button" class="sidebar-link" data-section="ferramentas">Ferramentas</button>
       </nav>
       <p class="sidebar-build" id="app-build" title="Confira se esta versão bate com a última atualização do projeto">Build 2026.06.08 · Receituário integrado ✓</p>
