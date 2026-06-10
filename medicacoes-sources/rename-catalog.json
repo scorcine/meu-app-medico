@@ -408,40 +408,6 @@
     "searchText": "ácido ascórbico rename a11ga01 aparelho digestivo e metabolismo · rename"
   },
   {
-    "id": "ref-acido_folico",
-    "tier": "reference",
-    "rename": true,
-    "name": "Ácido fólico",
-    "dcb": "Ácido fólico",
-    "atc": "B03BB01",
-    "renameComponent": "Básico",
-    "classes": [
-      "discharge_only"
-    ],
-    "classLabel": "Sangue e hematologia · RENAME",
-    "indications": [
-      "Medicamento listado na RENAME 2024 (MS/SUS). Consulte PCDT, bula ANVISA e protocolo institucional."
-    ],
-    "ciAbs": [
-      "Consultar bula ANVISA — contraindicações variam por apresentação e indicação."
-    ],
-    "ciRel": [
-      "Gestação, lactação, DRC, hepatopatia — ajustar conforme bula e diretriz."
-    ],
-    "presentations": [
-      "Ver concentrações e formas na RENAME 2024 / Bulário eletrônico ANVISA."
-    ],
-    "posologyVo": [
-      "Posologia conforme bula ANVISA e diretriz do Ministério da Saúde."
-    ],
-    "posologyHosp": [
-      "—"
-    ],
-    "notes": "Ficha de referência (nível B) — não revisada manualmente pelo MedHub. Financiamento SUS: Básico.",
-    "bulaUrl": "https://consultas.anvisa.gov.br/#/bulario/q/?nomeProduto=%C3%81cido%20f%C3%B3lico",
-    "searchText": "ácido fólico rename b03bb01 sangue e hematologia · rename"
-  },
-  {
     "id": "ref-acido_ursodesoxicolico",
     "tier": "reference",
     "rename": true,
@@ -547,10 +513,10 @@
     "id": "ref-alfa_agalsidase",
     "tier": "reference",
     "rename": true,
-    "name": "alfa-agalsidase",
-    "dcb": "alfa-agalsidase",
+    "name": "Alfa-agalsidase",
+    "dcb": "Alfa-agalsidase",
     "atc": "A16AB03",
-    "renameComponent": "RENAME",
+    "renameComponent": "Especializado",
     "classes": [
       "discharge_only"
     ],
@@ -573,18 +539,18 @@
     "posologyHosp": [
       "—"
     ],
-    "notes": "Ficha de referência (nível B) — não revisada manualmente pelo MedHub. Financiamento SUS: RENAME.",
-    "bulaUrl": "https://consultas.anvisa.gov.br/#/bulario/q/?nomeProduto=alfa-agalsidase",
+    "notes": "Ficha de referência (nível B) — não revisada manualmente pelo MedHub. Financiamento SUS: Especializado.",
+    "bulaUrl": "https://consultas.anvisa.gov.br/#/bulario/q/?nomeProduto=Alfa-agalsidase",
     "searchText": "alfa-agalsidase rename a16ab03 aparelho digestivo e metabolismo · rename"
   },
   {
     "id": "ref-alfacerliponase",
     "tier": "reference",
     "rename": true,
-    "name": "alfacerliponase",
-    "dcb": "alfacerliponase",
+    "name": "Alfacerliponase",
+    "dcb": "Alfacerliponase",
     "atc": "A16AB17",
-    "renameComponent": "RENAME",
+    "renameComponent": "Especializado",
     "classes": [
       "discharge_only"
     ],
@@ -607,18 +573,18 @@
     "posologyHosp": [
       "—"
     ],
-    "notes": "Ficha de referência (nível B) — não revisada manualmente pelo MedHub. Financiamento SUS: RENAME.",
-    "bulaUrl": "https://consultas.anvisa.gov.br/#/bulario/q/?nomeProduto=alfacerliponase",
+    "notes": "Ficha de referência (nível B) — não revisada manualmente pelo MedHub. Financiamento SUS: Especializado.",
+    "bulaUrl": "https://consultas.anvisa.gov.br/#/bulario/q/?nomeProduto=Alfacerliponase",
     "searchText": "alfacerliponase rename a16ab17 aparelho digestivo e metabolismo · rename"
   },
   {
     "id": "ref-alfaelosulfase",
     "tier": "reference",
     "rename": true,
-    "name": "alfaelosulfase",
-    "dcb": "alfaelosulfase",
+    "name": "Alfaelosulfase",
+    "dcb": "Alfaelosulfase",
     "atc": "A16AB12",
-    "renameComponent": "RENAME",
+    "renameComponent": "Especializado",
     "classes": [
       "discharge_only"
     ],
@@ -641,8 +607,8 @@
     "posologyHosp": [
       "—"
     ],
-    "notes": "Ficha de referência (nível B) — não revisada manualmente pelo MedHub. Financiamento SUS: RENAME.",
-    "bulaUrl": "https://consultas.anvisa.gov.br/#/bulario/q/?nomeProduto=alfaelosulfase",
+    "notes": "Ficha de referência (nível B) — não revisada manualmente pelo MedHub. Financiamento SUS: Especializado.",
+    "bulaUrl": "https://consultas.anvisa.gov.br/#/bulario/q/?nomeProduto=Alfaelosulfase",
     "searchText": "alfaelosulfase rename a16ab12 aparelho digestivo e metabolismo · rename"
   },
   {
@@ -751,82 +717,14 @@
     "id": "ref-alfavestronidase",
     "tier": "reference",
     "rename": true,
-    "name": "alfavestronidase",
-    "dcb": "alfavestronidase",
+    "name": "Alfavestronidase",
+    "dcb": "Alfavestronidase",
     "atc": "A16AB18",
-    "renameComponent": "RENAME",
-    "classes": [
-      "discharge_only"
-    ],
-    "classLabel": "Aparelho digestivo e metabolismo · RENAME",
-    "indications": [
-      "Medicamento listado na RENAME 2024 (MS/SUS). Consulte PCDT, bula ANVISA e protocolo institucional."
-    ],
-    "ciAbs": [
-      "Consultar bula ANVISA — contraindicações variam por apresentação e indicação."
-    ],
-    "ciRel": [
-      "Gestação, lactação, DRC, hepatopatia — ajustar conforme bula e diretriz."
-    ],
-    "presentations": [
-      "Ver concentrações e formas na RENAME 2024 / Bulário eletrônico ANVISA."
-    ],
-    "posologyVo": [
-      "Posologia conforme bula ANVISA e diretriz do Ministério da Saúde."
-    ],
-    "posologyHosp": [
-      "—"
-    ],
-    "notes": "Ficha de referência (nível B) — não revisada manualmente pelo MedHub. Financiamento SUS: RENAME.",
-    "bulaUrl": "https://consultas.anvisa.gov.br/#/bulario/q/?nomeProduto=alfavestronidase",
-    "searchText": "alfavestronidase rename a16ab18 aparelho digestivo e metabolismo · rename"
-  },
-  {
-    "id": "ref-atenolol",
-    "tier": "reference",
-    "rename": true,
-    "name": "Atenolol",
-    "dcb": "Atenolol",
-    "atc": "C07AB03",
-    "renameComponent": "Básico",
-    "classes": [
-      "discharge_only"
-    ],
-    "classLabel": "Sistema cardiovascular · RENAME",
-    "indications": [
-      "Medicamento listado na RENAME 2024 (MS/SUS). Consulte PCDT, bula ANVISA e protocolo institucional."
-    ],
-    "ciAbs": [
-      "Consultar bula ANVISA — contraindicações variam por apresentação e indicação."
-    ],
-    "ciRel": [
-      "Gestação, lactação, DRC, hepatopatia — ajustar conforme bula e diretriz."
-    ],
-    "presentations": [
-      "Ver concentrações e formas na RENAME 2024 / Bulário eletrônico ANVISA."
-    ],
-    "posologyVo": [
-      "Posologia conforme bula ANVISA e diretriz do Ministério da Saúde."
-    ],
-    "posologyHosp": [
-      "—"
-    ],
-    "notes": "Ficha de referência (nível B) — não revisada manualmente pelo MedHub. Financiamento SUS: Básico.",
-    "bulaUrl": "https://consultas.anvisa.gov.br/#/bulario/q/?nomeProduto=Atenolol",
-    "searchText": "atenolol rename c07ab03 sistema cardiovascular · rename"
-  },
-  {
-    "id": "ref-azatioprina",
-    "tier": "reference",
-    "rename": true,
-    "name": "Azatioprina",
-    "dcb": "Azatioprina",
-    "atc": "L04AX01",
     "renameComponent": "Especializado",
     "classes": [
       "discharge_only"
     ],
-    "classLabel": "Antineoplásicos e imunomoduladores · RENAME",
+    "classLabel": "Aparelho digestivo e metabolismo · RENAME",
     "indications": [
       "Medicamento listado na RENAME 2024 (MS/SUS). Consulte PCDT, bula ANVISA e protocolo institucional."
     ],
@@ -846,76 +744,8 @@
       "—"
     ],
     "notes": "Ficha de referência (nível B) — não revisada manualmente pelo MedHub. Financiamento SUS: Especializado.",
-    "bulaUrl": "https://consultas.anvisa.gov.br/#/bulario/q/?nomeProduto=Azatioprina",
-    "searchText": "azatioprina rename l04ax01 antineoplásicos e imunomoduladores · rename"
-  },
-  {
-    "id": "ref-basico_a04aa01",
-    "tier": "reference",
-    "rename": true,
-    "name": "Básico A04AA01",
-    "dcb": "Básico A04AA01",
-    "atc": "A04AA01",
-    "renameComponent": "RENAME",
-    "classes": [
-      "discharge_only"
-    ],
-    "classLabel": "Aparelho digestivo e metabolismo · RENAME",
-    "indications": [
-      "Medicamento listado na RENAME 2024 (MS/SUS). Consulte PCDT, bula ANVISA e protocolo institucional."
-    ],
-    "ciAbs": [
-      "Consultar bula ANVISA — contraindicações variam por apresentação e indicação."
-    ],
-    "ciRel": [
-      "Gestação, lactação, DRC, hepatopatia — ajustar conforme bula e diretriz."
-    ],
-    "presentations": [
-      "Ver concentrações e formas na RENAME 2024 / Bulário eletrônico ANVISA."
-    ],
-    "posologyVo": [
-      "Posologia conforme bula ANVISA e diretriz do Ministério da Saúde."
-    ],
-    "posologyHosp": [
-      "—"
-    ],
-    "notes": "Ficha de referência (nível B) — não revisada manualmente pelo MedHub. Financiamento SUS: RENAME.",
-    "bulaUrl": "https://consultas.anvisa.gov.br/#/bulario/q/?nomeProduto=B%C3%A1sico%20A04AA01",
-    "searchText": "básico a04aa01 rename a04aa01 aparelho digestivo e metabolismo · rename"
-  },
-  {
-    "id": "ref-beclometasona",
-    "tier": "reference",
-    "rename": true,
-    "name": "Beclometasona",
-    "dcb": "Beclometasona",
-    "atc": "R03BA01",
-    "renameComponent": "Básico",
-    "classes": [
-      "discharge_only"
-    ],
-    "classLabel": "Sistema respiratório · RENAME",
-    "indications": [
-      "Medicamento listado na RENAME 2024 (MS/SUS). Consulte PCDT, bula ANVISA e protocolo institucional."
-    ],
-    "ciAbs": [
-      "Consultar bula ANVISA — contraindicações variam por apresentação e indicação."
-    ],
-    "ciRel": [
-      "Gestação, lactação, DRC, hepatopatia — ajustar conforme bula e diretriz."
-    ],
-    "presentations": [
-      "Ver concentrações e formas na RENAME 2024 / Bulário eletrônico ANVISA."
-    ],
-    "posologyVo": [
-      "Posologia conforme bula ANVISA e diretriz do Ministério da Saúde."
-    ],
-    "posologyHosp": [
-      "—"
-    ],
-    "notes": "Ficha de referência (nível B) — não revisada manualmente pelo MedHub. Financiamento SUS: Básico.",
-    "bulaUrl": "https://consultas.anvisa.gov.br/#/bulario/q/?nomeProduto=Beclometasona",
-    "searchText": "beclometasona rename r03ba01 sistema respiratório · rename"
+    "bulaUrl": "https://consultas.anvisa.gov.br/#/bulario/q/?nomeProduto=Alfavestronidase",
+    "searchText": "alfavestronidase rename a16ab18 aparelho digestivo e metabolismo · rename"
   },
   {
     "id": "ref-benzilpenicilina_benzatina",
@@ -1023,10 +853,10 @@
     "id": "ref-beta_agalsidase",
     "tier": "reference",
     "rename": true,
-    "name": "beta-agalsidase",
-    "dcb": "beta-agalsidase",
+    "name": "Beta-agalsidase",
+    "dcb": "Beta-agalsidase",
     "atc": "A16AB04",
-    "renameComponent": "RENAME",
+    "renameComponent": "Especializado",
     "classes": [
       "discharge_only"
     ],
@@ -1049,8 +879,8 @@
     "posologyHosp": [
       "—"
     ],
-    "notes": "Ficha de referência (nível B) — não revisada manualmente pelo MedHub. Financiamento SUS: RENAME.",
-    "bulaUrl": "https://consultas.anvisa.gov.br/#/bulario/q/?nomeProduto=beta-agalsidase",
+    "notes": "Ficha de referência (nível B) — não revisada manualmente pelo MedHub. Financiamento SUS: Especializado.",
+    "bulaUrl": "https://consultas.anvisa.gov.br/#/bulario/q/?nomeProduto=Beta-agalsidase",
     "searchText": "beta-agalsidase rename a16ab04 aparelho digestivo e metabolismo · rename"
   },
   {
@@ -1122,40 +952,6 @@
     "searchText": "biotina rename a11ha05 aparelho digestivo e metabolismo · rename"
   },
   {
-    "id": "ref-bromazepam",
-    "tier": "reference",
-    "rename": true,
-    "name": "Bromazepam",
-    "dcb": "Bromazepam",
-    "atc": "N05BA08",
-    "renameComponent": "Especializado",
-    "classes": [
-      "discharge_only"
-    ],
-    "classLabel": "Sistema nervoso · RENAME",
-    "indications": [
-      "Medicamento listado na RENAME 2024 (MS/SUS). Consulte PCDT, bula ANVISA e protocolo institucional."
-    ],
-    "ciAbs": [
-      "Consultar bula ANVISA — contraindicações variam por apresentação e indicação."
-    ],
-    "ciRel": [
-      "Gestação, lactação, DRC, hepatopatia — ajustar conforme bula e diretriz."
-    ],
-    "presentations": [
-      "Ver concentrações e formas na RENAME 2024 / Bulário eletrônico ANVISA."
-    ],
-    "posologyVo": [
-      "Posologia conforme bula ANVISA e diretriz do Ministério da Saúde."
-    ],
-    "posologyHosp": [
-      "—"
-    ],
-    "notes": "Ficha de referência (nível B) — não revisada manualmente pelo MedHub. Financiamento SUS: Especializado.",
-    "bulaUrl": "https://consultas.anvisa.gov.br/#/bulario/q/?nomeProduto=Bromazepam",
-    "searchText": "bromazepam rename n05ba08 sistema nervoso · rename"
-  },
-  {
     "id": "ref-brometo_de_ipratropio",
     "tier": "reference",
     "rename": true,
@@ -1188,40 +984,6 @@
     "notes": "Ficha de referência (nível B) — não revisada manualmente pelo MedHub. Financiamento SUS: Básico.",
     "bulaUrl": "https://consultas.anvisa.gov.br/#/bulario/q/?nomeProduto=Brometo%20de%20ipratr%C3%B3pio",
     "searchText": "brometo de ipratrópio rename r03bb01 sistema respiratório · rename"
-  },
-  {
-    "id": "ref-bumetanida",
-    "tier": "reference",
-    "rename": true,
-    "name": "Bumetanida",
-    "dcb": "Bumetanida",
-    "atc": "C03CA02",
-    "renameComponent": "Básico",
-    "classes": [
-      "discharge_only"
-    ],
-    "classLabel": "Sistema cardiovascular · RENAME",
-    "indications": [
-      "Medicamento listado na RENAME 2024 (MS/SUS). Consulte PCDT, bula ANVISA e protocolo institucional."
-    ],
-    "ciAbs": [
-      "Consultar bula ANVISA — contraindicações variam por apresentação e indicação."
-    ],
-    "ciRel": [
-      "Gestação, lactação, DRC, hepatopatia — ajustar conforme bula e diretriz."
-    ],
-    "presentations": [
-      "Ver concentrações e formas na RENAME 2024 / Bulário eletrônico ANVISA."
-    ],
-    "posologyVo": [
-      "Posologia conforme bula ANVISA e diretriz do Ministério da Saúde."
-    ],
-    "posologyHosp": [
-      "—"
-    ],
-    "notes": "Ficha de referência (nível B) — não revisada manualmente pelo MedHub. Financiamento SUS: Básico.",
-    "bulaUrl": "https://consultas.anvisa.gov.br/#/bulario/q/?nomeProduto=Bumetanida",
-    "searchText": "bumetanida rename c03ca02 sistema cardiovascular · rename"
   },
   {
     "id": "ref-bupropiona",
@@ -1360,74 +1122,6 @@
     "searchText": "candesartana cilexetila rename c09ca06 sistema cardiovascular · rename"
   },
   {
-    "id": "ref-capsula",
-    "tier": "reference",
-    "rename": true,
-    "name": "cápsula",
-    "dcb": "cápsula",
-    "atc": "A11CA01",
-    "renameComponent": "RENAME",
-    "classes": [
-      "discharge_only"
-    ],
-    "classLabel": "Aparelho digestivo e metabolismo · RENAME",
-    "indications": [
-      "Medicamento listado na RENAME 2024 (MS/SUS). Consulte PCDT, bula ANVISA e protocolo institucional."
-    ],
-    "ciAbs": [
-      "Consultar bula ANVISA — contraindicações variam por apresentação e indicação."
-    ],
-    "ciRel": [
-      "Gestação, lactação, DRC, hepatopatia — ajustar conforme bula e diretriz."
-    ],
-    "presentations": [
-      "Ver concentrações e formas na RENAME 2024 / Bulário eletrônico ANVISA."
-    ],
-    "posologyVo": [
-      "Posologia conforme bula ANVISA e diretriz do Ministério da Saúde."
-    ],
-    "posologyHosp": [
-      "—"
-    ],
-    "notes": "Ficha de referência (nível B) — não revisada manualmente pelo MedHub. Financiamento SUS: RENAME.",
-    "bulaUrl": "https://consultas.anvisa.gov.br/#/bulario/q/?nomeProduto=c%C3%A1psula",
-    "searchText": "cápsula rename a11ca01 aparelho digestivo e metabolismo · rename"
-  },
-  {
-    "id": "ref-carbamazepina",
-    "tier": "reference",
-    "rename": true,
-    "name": "Carbamazepina",
-    "dcb": "Carbamazepina",
-    "atc": "N03AF01",
-    "renameComponent": "Especializado",
-    "classes": [
-      "discharge_only"
-    ],
-    "classLabel": "Sistema nervoso · RENAME",
-    "indications": [
-      "Medicamento listado na RENAME 2024 (MS/SUS). Consulte PCDT, bula ANVISA e protocolo institucional."
-    ],
-    "ciAbs": [
-      "Consultar bula ANVISA — contraindicações variam por apresentação e indicação."
-    ],
-    "ciRel": [
-      "Gestação, lactação, DRC, hepatopatia — ajustar conforme bula e diretriz."
-    ],
-    "presentations": [
-      "Ver concentrações e formas na RENAME 2024 / Bulário eletrônico ANVISA."
-    ],
-    "posologyVo": [
-      "Posologia conforme bula ANVISA e diretriz do Ministério da Saúde."
-    ],
-    "posologyHosp": [
-      "—"
-    ],
-    "notes": "Ficha de referência (nível B) — não revisada manualmente pelo MedHub. Financiamento SUS: Especializado.",
-    "bulaUrl": "https://consultas.anvisa.gov.br/#/bulario/q/?nomeProduto=Carbamazepina",
-    "searchText": "carbamazepina rename n03af01 sistema nervoso · rename"
-  },
-  {
     "id": "ref-carbonato_de_calcio",
     "tier": "reference",
     "rename": true,
@@ -1499,10 +1193,10 @@
     "id": "ref-carvao_vegetal_ativado",
     "tier": "reference",
     "rename": true,
-    "name": "carvão vegetal ativado",
-    "dcb": "carvão vegetal ativado",
+    "name": "Carvão vegetal ativado",
+    "dcb": "Carvão vegetal ativado",
     "atc": "A07BA01",
-    "renameComponent": "RENAME",
+    "renameComponent": "Básico",
     "classes": [
       "discharge_only"
     ],
@@ -1525,8 +1219,8 @@
     "posologyHosp": [
       "—"
     ],
-    "notes": "Ficha de referência (nível B) — não revisada manualmente pelo MedHub. Financiamento SUS: RENAME.",
-    "bulaUrl": "https://consultas.anvisa.gov.br/#/bulario/q/?nomeProduto=carv%C3%A3o%20vegetal%20ativado",
+    "notes": "Ficha de referência (nível B) — não revisada manualmente pelo MedHub. Financiamento SUS: Básico.",
+    "bulaUrl": "https://consultas.anvisa.gov.br/#/bulario/q/?nomeProduto=Carv%C3%A3o%20vegetal%20ativado",
     "searchText": "carvão vegetal ativado rename a07ba01 aparelho digestivo e metabolismo · rename"
   },
   {
@@ -1800,74 +1494,6 @@
     "notes": "Ficha de referência (nível B) — não revisada manualmente pelo MedHub. Financiamento SUS: Especializado.",
     "bulaUrl": "https://consultas.anvisa.gov.br/#/bulario/q/?nomeProduto=Ciproeptadina",
     "searchText": "ciproeptadina rename r06ax02 sistema respiratório · rename"
-  },
-  {
-    "id": "ref-citalopram",
-    "tier": "reference",
-    "rename": true,
-    "name": "Citalopram",
-    "dcb": "Citalopram",
-    "atc": "N06AB04",
-    "renameComponent": "Especializado",
-    "classes": [
-      "discharge_only"
-    ],
-    "classLabel": "Sistema nervoso · RENAME",
-    "indications": [
-      "Medicamento listado na RENAME 2024 (MS/SUS). Consulte PCDT, bula ANVISA e protocolo institucional."
-    ],
-    "ciAbs": [
-      "Consultar bula ANVISA — contraindicações variam por apresentação e indicação."
-    ],
-    "ciRel": [
-      "Gestação, lactação, DRC, hepatopatia — ajustar conforme bula e diretriz."
-    ],
-    "presentations": [
-      "Ver concentrações e formas na RENAME 2024 / Bulário eletrônico ANVISA."
-    ],
-    "posologyVo": [
-      "Posologia conforme bula ANVISA e diretriz do Ministério da Saúde."
-    ],
-    "posologyHosp": [
-      "—"
-    ],
-    "notes": "Ficha de referência (nível B) — não revisada manualmente pelo MedHub. Financiamento SUS: Especializado.",
-    "bulaUrl": "https://consultas.anvisa.gov.br/#/bulario/q/?nomeProduto=Citalopram",
-    "searchText": "citalopram rename n06ab04 sistema nervoso · rename"
-  },
-  {
-    "id": "ref-clonidina",
-    "tier": "reference",
-    "rename": true,
-    "name": "Clonidina",
-    "dcb": "Clonidina",
-    "atc": "C02AC01",
-    "renameComponent": "Básico",
-    "classes": [
-      "discharge_only"
-    ],
-    "classLabel": "Sistema cardiovascular · RENAME",
-    "indications": [
-      "Medicamento listado na RENAME 2024 (MS/SUS). Consulte PCDT, bula ANVISA e protocolo institucional."
-    ],
-    "ciAbs": [
-      "Consultar bula ANVISA — contraindicações variam por apresentação e indicação."
-    ],
-    "ciRel": [
-      "Gestação, lactação, DRC, hepatopatia — ajustar conforme bula e diretriz."
-    ],
-    "presentations": [
-      "Ver concentrações e formas na RENAME 2024 / Bulário eletrônico ANVISA."
-    ],
-    "posologyVo": [
-      "Posologia conforme bula ANVISA e diretriz do Ministério da Saúde."
-    ],
-    "posologyHosp": [
-      "—"
-    ],
-    "notes": "Ficha de referência (nível B) — não revisada manualmente pelo MedHub. Financiamento SUS: Básico.",
-    "bulaUrl": "https://consultas.anvisa.gov.br/#/bulario/q/?nomeProduto=Clonidina",
-    "searchText": "clonidina rename c02ac01 sistema cardiovascular · rename"
   },
   {
     "id": "ref-cloranfenicol",
@@ -2247,10 +1873,10 @@
     "id": "ref-cloridrato_de_piridoxina",
     "tier": "reference",
     "rename": true,
-    "name": "cloridrato de piridoxina",
-    "dcb": "cloridrato de piridoxina",
+    "name": "Cloridrato de piridoxina",
+    "dcb": "Cloridrato de piridoxina",
     "atc": "A11HA02",
-    "renameComponent": "RENAME",
+    "renameComponent": "Básico",
     "classes": [
       "discharge_only"
     ],
@@ -2273,8 +1899,8 @@
     "posologyHosp": [
       "—"
     ],
-    "notes": "Ficha de referência (nível B) — não revisada manualmente pelo MedHub. Financiamento SUS: RENAME.",
-    "bulaUrl": "https://consultas.anvisa.gov.br/#/bulario/q/?nomeProduto=cloridrato%20de%20piridoxina",
+    "notes": "Ficha de referência (nível B) — não revisada manualmente pelo MedHub. Financiamento SUS: Básico.",
+    "bulaUrl": "https://consultas.anvisa.gov.br/#/bulario/q/?nomeProduto=Cloridrato%20de%20piridoxina",
     "searchText": "cloridrato de piridoxina rename a11ha02 aparelho digestivo e metabolismo · rename"
   },
   {
@@ -2349,10 +1975,10 @@
     "id": "ref-cloridrato_de_tiamina",
     "tier": "reference",
     "rename": true,
-    "name": "cloridrato de tiamina",
-    "dcb": "cloridrato de tiamina",
+    "name": "Cloridrato de tiamina",
+    "dcb": "Cloridrato de tiamina",
     "atc": "A11DA01",
-    "renameComponent": "RENAME",
+    "renameComponent": "Básico",
     "classes": [
       "discharge_only"
     ],
@@ -2375,8 +2001,8 @@
     "posologyHosp": [
       "—"
     ],
-    "notes": "Ficha de referência (nível B) — não revisada manualmente pelo MedHub. Financiamento SUS: RENAME.",
-    "bulaUrl": "https://consultas.anvisa.gov.br/#/bulario/q/?nomeProduto=cloridrato%20de%20tiamina",
+    "notes": "Ficha de referência (nível B) — não revisada manualmente pelo MedHub. Financiamento SUS: Básico.",
+    "bulaUrl": "https://consultas.anvisa.gov.br/#/bulario/q/?nomeProduto=Cloridrato%20de%20tiamina",
     "searchText": "cloridrato de tiamina rename a11da01 aparelho digestivo e metabolismo · rename"
   },
   {
@@ -2548,40 +2174,6 @@
     "notes": "Ficha de referência (nível B) — não revisada manualmente pelo MedHub. Financiamento SUS: Especializado.",
     "bulaUrl": "https://consultas.anvisa.gov.br/#/bulario/q/?nomeProduto=Complexo%20protromb%C3%ADnico",
     "searchText": "complexo protrombínico rename b02bd01 sangue e hematologia · rename"
-  },
-  {
-    "id": "ref-dexclorfeniramina",
-    "tier": "reference",
-    "rename": true,
-    "name": "Dexclorfeniramina",
-    "dcb": "Dexclorfeniramina",
-    "atc": "R06AB02",
-    "renameComponent": "Básico",
-    "classes": [
-      "discharge_only"
-    ],
-    "classLabel": "Sistema respiratório · RENAME",
-    "indications": [
-      "Medicamento listado na RENAME 2024 (MS/SUS). Consulte PCDT, bula ANVISA e protocolo institucional."
-    ],
-    "ciAbs": [
-      "Consultar bula ANVISA — contraindicações variam por apresentação e indicação."
-    ],
-    "ciRel": [
-      "Gestação, lactação, DRC, hepatopatia — ajustar conforme bula e diretriz."
-    ],
-    "presentations": [
-      "Ver concentrações e formas na RENAME 2024 / Bulário eletrônico ANVISA."
-    ],
-    "posologyVo": [
-      "Posologia conforme bula ANVISA e diretriz do Ministério da Saúde."
-    ],
-    "posologyHosp": [
-      "—"
-    ],
-    "notes": "Ficha de referência (nível B) — não revisada manualmente pelo MedHub. Financiamento SUS: Básico.",
-    "bulaUrl": "https://consultas.anvisa.gov.br/#/bulario/q/?nomeProduto=Dexclorfeniramina",
-    "searchText": "dexclorfeniramina rename r06ab02 sistema respiratório · rename"
   },
   {
     "id": "ref-dextropropoxifeno",
@@ -2757,10 +2349,10 @@
     "id": "ref-dicloridrato_de_trientina",
     "tier": "reference",
     "rename": true,
-    "name": "dicloridrato de trientina",
-    "dcb": "dicloridrato de trientina",
+    "name": "Dicloridrato de trientina",
+    "dcb": "Dicloridrato de trientina",
     "atc": "A16AX12",
-    "renameComponent": "RENAME",
+    "renameComponent": "Especializado",
     "classes": [
       "discharge_only"
     ],
@@ -2783,8 +2375,8 @@
     "posologyHosp": [
       "—"
     ],
-    "notes": "Ficha de referência (nível B) — não revisada manualmente pelo MedHub. Financiamento SUS: RENAME.",
-    "bulaUrl": "https://consultas.anvisa.gov.br/#/bulario/q/?nomeProduto=dicloridrato%20de%20trientina",
+    "notes": "Ficha de referência (nível B) — não revisada manualmente pelo MedHub. Financiamento SUS: Especializado.",
+    "bulaUrl": "https://consultas.anvisa.gov.br/#/bulario/q/?nomeProduto=Dicloridrato%20de%20trientina",
     "searchText": "dicloridrato de trientina rename a16ax12 aparelho digestivo e metabolismo · rename"
   },
   {
@@ -2856,6 +2448,40 @@
     "searchText": "dipirona sodica rename n02bb02 sistema nervoso · rename"
   },
   {
+    "id": "ref-doxazosina",
+    "tier": "reference",
+    "rename": true,
+    "name": "Doxazosina",
+    "dcb": "Doxazosina",
+    "atc": "C02CA04",
+    "renameComponent": "Básico",
+    "classes": [
+      "discharge_only"
+    ],
+    "classLabel": "Sistema cardiovascular · RENAME",
+    "indications": [
+      "Medicamento listado na RENAME 2024 (MS/SUS). Consulte PCDT, bula ANVISA e protocolo institucional."
+    ],
+    "ciAbs": [
+      "Consultar bula ANVISA — contraindicações variam por apresentação e indicação."
+    ],
+    "ciRel": [
+      "Gestação, lactação, DRC, hepatopatia — ajustar conforme bula e diretriz."
+    ],
+    "presentations": [
+      "Ver concentrações e formas na RENAME 2024 / Bulário eletrônico ANVISA."
+    ],
+    "posologyVo": [
+      "Posologia conforme bula ANVISA e diretriz do Ministério da Saúde."
+    ],
+    "posologyHosp": [
+      "—"
+    ],
+    "notes": "Ficha de referência (nível B) — não revisada manualmente pelo MedHub. Financiamento SUS: Básico.",
+    "bulaUrl": "https://consultas.anvisa.gov.br/#/bulario/q/?nomeProduto=Doxazosina",
+    "searchText": "doxazosina rename c02ca04 sistema cardiovascular · rename"
+  },
+  {
     "id": "ref-doxorrubicina",
     "tier": "reference",
     "rename": true,
@@ -2890,17 +2516,17 @@
     "searchText": "doxorrubicina rename l01db01 antineoplásicos e imunomoduladores · rename"
   },
   {
-    "id": "ref-enema",
+    "id": "ref-enalapril_maleato",
     "tier": "reference",
     "rename": true,
-    "name": "enema",
-    "dcb": "enema",
-    "atc": "A07EC02",
-    "renameComponent": "RENAME",
+    "name": "Enalapril maleato",
+    "dcb": "Enalapril maleato",
+    "atc": "C09AA02",
+    "renameComponent": "Básico",
     "classes": [
       "discharge_only"
     ],
-    "classLabel": "Aparelho digestivo e metabolismo · RENAME",
+    "classLabel": "Sistema cardiovascular · RENAME",
     "indications": [
       "Medicamento listado na RENAME 2024 (MS/SUS). Consulte PCDT, bula ANVISA e protocolo institucional."
     ],
@@ -2919,9 +2545,9 @@
     "posologyHosp": [
       "—"
     ],
-    "notes": "Ficha de referência (nível B) — não revisada manualmente pelo MedHub. Financiamento SUS: RENAME.",
-    "bulaUrl": "https://consultas.anvisa.gov.br/#/bulario/q/?nomeProduto=enema",
-    "searchText": "enema rename a07ec02 aparelho digestivo e metabolismo · rename"
+    "notes": "Ficha de referência (nível B) — não revisada manualmente pelo MedHub. Financiamento SUS: Básico.",
+    "bulaUrl": "https://consultas.anvisa.gov.br/#/bulario/q/?nomeProduto=Enalapril%20maleato",
+    "searchText": "enalapril maleato rename c09aa02 sistema cardiovascular · rename"
   },
   {
     "id": "ref-enoxaparina_sodica",
@@ -3366,40 +2992,6 @@
     "searchText": "filgrastim rename l03aa02 antineoplásicos e imunomoduladores · rename"
   },
   {
-    "id": "ref-finasterida",
-    "tier": "reference",
-    "rename": true,
-    "name": "Finasterida",
-    "dcb": "Finasterida",
-    "atc": "G04CB01",
-    "renameComponent": "Especializado",
-    "classes": [
-      "discharge_only"
-    ],
-    "classLabel": "Sistema geniturinário · RENAME",
-    "indications": [
-      "Medicamento listado na RENAME 2024 (MS/SUS). Consulte PCDT, bula ANVISA e protocolo institucional."
-    ],
-    "ciAbs": [
-      "Consultar bula ANVISA — contraindicações variam por apresentação e indicação."
-    ],
-    "ciRel": [
-      "Gestação, lactação, DRC, hepatopatia — ajustar conforme bula e diretriz."
-    ],
-    "presentations": [
-      "Ver concentrações e formas na RENAME 2024 / Bulário eletrônico ANVISA."
-    ],
-    "posologyVo": [
-      "Posologia conforme bula ANVISA e diretriz do Ministério da Saúde."
-    ],
-    "posologyHosp": [
-      "—"
-    ],
-    "notes": "Ficha de referência (nível B) — não revisada manualmente pelo MedHub. Financiamento SUS: Especializado.",
-    "bulaUrl": "https://consultas.anvisa.gov.br/#/bulario/q/?nomeProduto=Finasterida",
-    "searchText": "finasterida rename g04cb01 sistema geniturinário · rename"
-  },
-  {
     "id": "ref-fluoruracila",
     "tier": "reference",
     "rename": true,
@@ -3471,10 +3063,10 @@
     "id": "ref-galsulfase",
     "tier": "reference",
     "rename": true,
-    "name": "galsulfase",
-    "dcb": "galsulfase",
+    "name": "Galsulfase",
+    "dcb": "Galsulfase",
     "atc": "A16AB08",
-    "renameComponent": "RENAME",
+    "renameComponent": "Especializado",
     "classes": [
       "discharge_only"
     ],
@@ -3497,8 +3089,8 @@
     "posologyHosp": [
       "—"
     ],
-    "notes": "Ficha de referência (nível B) — não revisada manualmente pelo MedHub. Financiamento SUS: RENAME.",
-    "bulaUrl": "https://consultas.anvisa.gov.br/#/bulario/q/?nomeProduto=galsulfase",
+    "notes": "Ficha de referência (nível B) — não revisada manualmente pelo MedHub. Financiamento SUS: Especializado.",
+    "bulaUrl": "https://consultas.anvisa.gov.br/#/bulario/q/?nomeProduto=Galsulfase",
     "searchText": "galsulfase rename a16ab08 aparelho digestivo e metabolismo · rename"
   },
   {
@@ -3539,10 +3131,10 @@
     "id": "ref-glicerol",
     "tier": "reference",
     "rename": true,
-    "name": "glicerol",
-    "dcb": "glicerol",
+    "name": "Glicerol",
+    "dcb": "Glicerol",
     "atc": "A06AG04",
-    "renameComponent": "RENAME",
+    "renameComponent": "Básico",
     "classes": [
       "discharge_only"
     ],
@@ -3565,8 +3157,8 @@
     "posologyHosp": [
       "—"
     ],
-    "notes": "Ficha de referência (nível B) — não revisada manualmente pelo MedHub. Financiamento SUS: RENAME.",
-    "bulaUrl": "https://consultas.anvisa.gov.br/#/bulario/q/?nomeProduto=glicerol",
+    "notes": "Ficha de referência (nível B) — não revisada manualmente pelo MedHub. Financiamento SUS: Básico.",
+    "bulaUrl": "https://consultas.anvisa.gov.br/#/bulario/q/?nomeProduto=Glicerol",
     "searchText": "glicerol rename a06ag04 aparelho digestivo e metabolismo · rename"
   },
   {
@@ -3743,48 +3335,14 @@
     "id": "ref-hidroxido_de_aluminio",
     "tier": "reference",
     "rename": true,
-    "name": "hidróxido de alumínio",
-    "dcb": "hidróxido de alumínio",
+    "name": "Hidróxido de alumínio",
+    "dcb": "Hidróxido de alumínio",
     "atc": "A02AB01",
-    "renameComponent": "RENAME",
-    "classes": [
-      "discharge_only"
-    ],
-    "classLabel": "Aparelho digestivo e metabolismo · RENAME",
-    "indications": [
-      "Medicamento listado na RENAME 2024 (MS/SUS). Consulte PCDT, bula ANVISA e protocolo institucional."
-    ],
-    "ciAbs": [
-      "Consultar bula ANVISA — contraindicações variam por apresentação e indicação."
-    ],
-    "ciRel": [
-      "Gestação, lactação, DRC, hepatopatia — ajustar conforme bula e diretriz."
-    ],
-    "presentations": [
-      "Ver concentrações e formas na RENAME 2024 / Bulário eletrônico ANVISA."
-    ],
-    "posologyVo": [
-      "Posologia conforme bula ANVISA e diretriz do Ministério da Saúde."
-    ],
-    "posologyHosp": [
-      "—"
-    ],
-    "notes": "Ficha de referência (nível B) — não revisada manualmente pelo MedHub. Financiamento SUS: RENAME.",
-    "bulaUrl": "https://consultas.anvisa.gov.br/#/bulario/q/?nomeProduto=hidr%C3%B3xido%20de%20alum%C3%ADnio",
-    "searchText": "hidróxido de alumínio rename a02ab01 aparelho digestivo e metabolismo · rename"
-  },
-  {
-    "id": "ref-hidroxizina",
-    "tier": "reference",
-    "rename": true,
-    "name": "Hidroxizina",
-    "dcb": "Hidroxizina",
-    "atc": "N05BB01",
     "renameComponent": "Básico",
     "classes": [
       "discharge_only"
     ],
-    "classLabel": "Sistema nervoso · RENAME",
+    "classLabel": "Aparelho digestivo e metabolismo · RENAME",
     "indications": [
       "Medicamento listado na RENAME 2024 (MS/SUS). Consulte PCDT, bula ANVISA e protocolo institucional."
     ],
@@ -3804,17 +3362,17 @@
       "—"
     ],
     "notes": "Ficha de referência (nível B) — não revisada manualmente pelo MedHub. Financiamento SUS: Básico.",
-    "bulaUrl": "https://consultas.anvisa.gov.br/#/bulario/q/?nomeProduto=Hidroxizina",
-    "searchText": "hidroxizina rename n05bb01 sistema nervoso · rename"
+    "bulaUrl": "https://consultas.anvisa.gov.br/#/bulario/q/?nomeProduto=Hidr%C3%B3xido%20de%20alum%C3%ADnio",
+    "searchText": "hidróxido de alumínio rename a02ab01 aparelho digestivo e metabolismo · rename"
   },
   {
     "id": "ref-idursulfase",
     "tier": "reference",
     "rename": true,
-    "name": "idursulfase",
-    "dcb": "idursulfase",
+    "name": "Idursulfase",
+    "dcb": "Idursulfase",
     "atc": "A16AB09",
-    "renameComponent": "RENAME",
+    "renameComponent": "Especializado",
     "classes": [
       "discharge_only"
     ],
@@ -3837,18 +3395,18 @@
     "posologyHosp": [
       "—"
     ],
-    "notes": "Ficha de referência (nível B) — não revisada manualmente pelo MedHub. Financiamento SUS: RENAME.",
-    "bulaUrl": "https://consultas.anvisa.gov.br/#/bulario/q/?nomeProduto=idursulfase",
+    "notes": "Ficha de referência (nível B) — não revisada manualmente pelo MedHub. Financiamento SUS: Especializado.",
+    "bulaUrl": "https://consultas.anvisa.gov.br/#/bulario/q/?nomeProduto=Idursulfase",
     "searchText": "idursulfase rename a16ab09 aparelho digestivo e metabolismo · rename"
   },
   {
     "id": "ref-imiglucerase",
     "tier": "reference",
     "rename": true,
-    "name": "imiglucerase",
-    "dcb": "imiglucerase",
+    "name": "Imiglucerase",
+    "dcb": "Imiglucerase",
     "atc": "A16AB02",
-    "renameComponent": "RENAME",
+    "renameComponent": "Especializado",
     "classes": [
       "discharge_only"
     ],
@@ -3871,8 +3429,8 @@
     "posologyHosp": [
       "—"
     ],
-    "notes": "Ficha de referência (nível B) — não revisada manualmente pelo MedHub. Financiamento SUS: RENAME.",
-    "bulaUrl": "https://consultas.anvisa.gov.br/#/bulario/q/?nomeProduto=imiglucerase",
+    "notes": "Ficha de referência (nível B) — não revisada manualmente pelo MedHub. Financiamento SUS: Especializado.",
+    "bulaUrl": "https://consultas.anvisa.gov.br/#/bulario/q/?nomeProduto=Imiglucerase",
     "searchText": "imiglucerase rename a16ab02 aparelho digestivo e metabolismo · rename"
   },
   {
@@ -3942,40 +3500,6 @@
     "notes": "Ficha de referência (nível B) — não revisada manualmente pelo MedHub. Financiamento SUS: Especializado.",
     "bulaUrl": "https://consultas.anvisa.gov.br/#/bulario/q/?nomeProduto=Imipramina",
     "searchText": "imipramina rename n06aa02 sistema nervoso · rename"
-  },
-  {
-    "id": "ref-indometacina",
-    "tier": "reference",
-    "rename": true,
-    "name": "Indometacina",
-    "dcb": "Indometacina",
-    "atc": "M01AB01",
-    "renameComponent": "Básico",
-    "classes": [
-      "discharge_only"
-    ],
-    "classLabel": "Sistema musculoesquelético · RENAME",
-    "indications": [
-      "Medicamento listado na RENAME 2024 (MS/SUS). Consulte PCDT, bula ANVISA e protocolo institucional."
-    ],
-    "ciAbs": [
-      "Consultar bula ANVISA — contraindicações variam por apresentação e indicação."
-    ],
-    "ciRel": [
-      "Gestação, lactação, DRC, hepatopatia — ajustar conforme bula e diretriz."
-    ],
-    "presentations": [
-      "Ver concentrações e formas na RENAME 2024 / Bulário eletrônico ANVISA."
-    ],
-    "posologyVo": [
-      "Posologia conforme bula ANVISA e diretriz do Ministério da Saúde."
-    ],
-    "posologyHosp": [
-      "—"
-    ],
-    "notes": "Ficha de referência (nível B) — não revisada manualmente pelo MedHub. Financiamento SUS: Básico.",
-    "bulaUrl": "https://consultas.anvisa.gov.br/#/bulario/q/?nomeProduto=Indometacina",
-    "searchText": "indometacina rename m01ab01 sistema musculoesquelético · rename"
   },
   {
     "id": "ref-insulina_glargina",
@@ -4114,74 +3638,6 @@
     "searchText": "itraconazol rename j02ac02 anti-infecciosos sistêmicos · rename"
   },
   {
-    "id": "ref-ketoconazol",
-    "tier": "reference",
-    "rename": true,
-    "name": "Ketoconazol",
-    "dcb": "Ketoconazol",
-    "atc": "J02AB02",
-    "renameComponent": "Básico",
-    "classes": [
-      "discharge_only"
-    ],
-    "classLabel": "Anti-infecciosos sistêmicos · RENAME",
-    "indications": [
-      "Medicamento listado na RENAME 2024 (MS/SUS). Consulte PCDT, bula ANVISA e protocolo institucional."
-    ],
-    "ciAbs": [
-      "Consultar bula ANVISA — contraindicações variam por apresentação e indicação."
-    ],
-    "ciRel": [
-      "Gestação, lactação, DRC, hepatopatia — ajustar conforme bula e diretriz."
-    ],
-    "presentations": [
-      "Ver concentrações e formas na RENAME 2024 / Bulário eletrônico ANVISA."
-    ],
-    "posologyVo": [
-      "Posologia conforme bula ANVISA e diretriz do Ministério da Saúde."
-    ],
-    "posologyHosp": [
-      "—"
-    ],
-    "notes": "Ficha de referência (nível B) — não revisada manualmente pelo MedHub. Financiamento SUS: Básico.",
-    "bulaUrl": "https://consultas.anvisa.gov.br/#/bulario/q/?nomeProduto=Ketoconazol",
-    "searchText": "ketoconazol rename j02ab02 anti-infecciosos sistêmicos · rename"
-  },
-  {
-    "id": "ref-lactulose",
-    "tier": "reference",
-    "rename": true,
-    "name": "Lactulose",
-    "dcb": "Lactulose",
-    "atc": "A06AD11",
-    "renameComponent": "Básico",
-    "classes": [
-      "discharge_only"
-    ],
-    "classLabel": "Aparelho digestivo e metabolismo · RENAME",
-    "indications": [
-      "Medicamento listado na RENAME 2024 (MS/SUS). Consulte PCDT, bula ANVISA e protocolo institucional."
-    ],
-    "ciAbs": [
-      "Consultar bula ANVISA — contraindicações variam por apresentação e indicação."
-    ],
-    "ciRel": [
-      "Gestação, lactação, DRC, hepatopatia — ajustar conforme bula e diretriz."
-    ],
-    "presentations": [
-      "Ver concentrações e formas na RENAME 2024 / Bulário eletrônico ANVISA."
-    ],
-    "posologyVo": [
-      "Posologia conforme bula ANVISA e diretriz do Ministério da Saúde."
-    ],
-    "posologyHosp": [
-      "—"
-    ],
-    "notes": "Ficha de referência (nível B) — não revisada manualmente pelo MedHub. Financiamento SUS: Básico.",
-    "bulaUrl": "https://consultas.anvisa.gov.br/#/bulario/q/?nomeProduto=Lactulose",
-    "searchText": "lactulose rename a06ad11 aparelho digestivo e metabolismo · rename"
-  },
-  {
     "id": "ref-lamotrigina",
     "tier": "reference",
     "rename": true,
@@ -4216,13 +3672,13 @@
     "searchText": "lamotrigina rename n03ax09 sistema nervoso · rename"
   },
   {
-    "id": "ref-laronidase",
+    "id": "ref-lansoprazol",
     "tier": "reference",
     "rename": true,
-    "name": "laronidase",
-    "dcb": "laronidase",
-    "atc": "A16AB05",
-    "renameComponent": "RENAME",
+    "name": "Lansoprazol",
+    "dcb": "Lansoprazol",
+    "atc": "A02BC03",
+    "renameComponent": "Básico",
     "classes": [
       "discharge_only"
     ],
@@ -4245,8 +3701,42 @@
     "posologyHosp": [
       "—"
     ],
-    "notes": "Ficha de referência (nível B) — não revisada manualmente pelo MedHub. Financiamento SUS: RENAME.",
-    "bulaUrl": "https://consultas.anvisa.gov.br/#/bulario/q/?nomeProduto=laronidase",
+    "notes": "Ficha de referência (nível B) — não revisada manualmente pelo MedHub. Financiamento SUS: Básico.",
+    "bulaUrl": "https://consultas.anvisa.gov.br/#/bulario/q/?nomeProduto=Lansoprazol",
+    "searchText": "lansoprazol rename a02bc03 aparelho digestivo e metabolismo · rename"
+  },
+  {
+    "id": "ref-laronidase",
+    "tier": "reference",
+    "rename": true,
+    "name": "Laronidase",
+    "dcb": "Laronidase",
+    "atc": "A16AB05",
+    "renameComponent": "Especializado",
+    "classes": [
+      "discharge_only"
+    ],
+    "classLabel": "Aparelho digestivo e metabolismo · RENAME",
+    "indications": [
+      "Medicamento listado na RENAME 2024 (MS/SUS). Consulte PCDT, bula ANVISA e protocolo institucional."
+    ],
+    "ciAbs": [
+      "Consultar bula ANVISA — contraindicações variam por apresentação e indicação."
+    ],
+    "ciRel": [
+      "Gestação, lactação, DRC, hepatopatia — ajustar conforme bula e diretriz."
+    ],
+    "presentations": [
+      "Ver concentrações e formas na RENAME 2024 / Bulário eletrônico ANVISA."
+    ],
+    "posologyVo": [
+      "Posologia conforme bula ANVISA e diretriz do Ministério da Saúde."
+    ],
+    "posologyHosp": [
+      "—"
+    ],
+    "notes": "Ficha de referência (nível B) — não revisada manualmente pelo MedHub. Financiamento SUS: Especializado.",
+    "bulaUrl": "https://consultas.anvisa.gov.br/#/bulario/q/?nomeProduto=Laronidase",
     "searchText": "laronidase rename a16ab05 aparelho digestivo e metabolismo · rename"
   },
   {
@@ -4420,40 +3910,6 @@
     "searchText": "medazepam rename n05ba03 sistema nervoso · rename"
   },
   {
-    "id": "ref-meloxicam",
-    "tier": "reference",
-    "rename": true,
-    "name": "Meloxicam",
-    "dcb": "Meloxicam",
-    "atc": "M01AC06",
-    "renameComponent": "Básico",
-    "classes": [
-      "discharge_only"
-    ],
-    "classLabel": "Sistema musculoesquelético · RENAME",
-    "indications": [
-      "Medicamento listado na RENAME 2024 (MS/SUS). Consulte PCDT, bula ANVISA e protocolo institucional."
-    ],
-    "ciAbs": [
-      "Consultar bula ANVISA — contraindicações variam por apresentação e indicação."
-    ],
-    "ciRel": [
-      "Gestação, lactação, DRC, hepatopatia — ajustar conforme bula e diretriz."
-    ],
-    "presentations": [
-      "Ver concentrações e formas na RENAME 2024 / Bulário eletrônico ANVISA."
-    ],
-    "posologyVo": [
-      "Posologia conforme bula ANVISA e diretriz do Ministério da Saúde."
-    ],
-    "posologyHosp": [
-      "—"
-    ],
-    "notes": "Ficha de referência (nível B) — não revisada manualmente pelo MedHub. Financiamento SUS: Básico.",
-    "bulaUrl": "https://consultas.anvisa.gov.br/#/bulario/q/?nomeProduto=Meloxicam",
-    "searchText": "meloxicam rename m01ac06 sistema musculoesquelético · rename"
-  },
-  {
     "id": "ref-mercaptopurina",
     "tier": "reference",
     "rename": true,
@@ -4488,17 +3944,17 @@
     "searchText": "mercaptopurina rename l01bb02 antineoplásicos e imunomoduladores · rename"
   },
   {
-    "id": "ref-mesalazina",
+    "id": "ref-mesilato_de_doxazosina",
     "tier": "reference",
     "rename": true,
-    "name": "Mesalazina",
-    "dcb": "Mesalazina",
-    "atc": "A07EC02",
-    "renameComponent": "Especializado",
+    "name": "Mesilato de doxazosina",
+    "dcb": "Mesilato de doxazosina",
+    "atc": "C02CA04",
+    "renameComponent": "Básico",
     "classes": [
       "discharge_only"
     ],
-    "classLabel": "Aparelho digestivo e metabolismo · RENAME",
+    "classLabel": "Sistema cardiovascular · RENAME",
     "indications": [
       "Medicamento listado na RENAME 2024 (MS/SUS). Consulte PCDT, bula ANVISA e protocolo institucional."
     ],
@@ -4517,9 +3973,9 @@
     "posologyHosp": [
       "—"
     ],
-    "notes": "Ficha de referência (nível B) — não revisada manualmente pelo MedHub. Financiamento SUS: Especializado.",
-    "bulaUrl": "https://consultas.anvisa.gov.br/#/bulario/q/?nomeProduto=Mesalazina",
-    "searchText": "mesalazina rename a07ec02 aparelho digestivo e metabolismo · rename"
+    "notes": "Ficha de referência (nível B) — não revisada manualmente pelo MedHub. Financiamento SUS: Básico.",
+    "bulaUrl": "https://consultas.anvisa.gov.br/#/bulario/q/?nomeProduto=Mesilato%20de%20doxazosina",
+    "searchText": "mesilato de doxazosina rename c02ca04 sistema cardiovascular · rename"
   },
   {
     "id": "ref-metadona",
@@ -4588,176 +4044,6 @@
     "notes": "Ficha de referência (nível B) — não revisada manualmente pelo MedHub. Financiamento SUS: Básico.",
     "bulaUrl": "https://consultas.anvisa.gov.br/#/bulario/q/?nomeProduto=Metilergometrina",
     "searchText": "metilergometrina rename g02ab01 sistema geniturinário · rename"
-  },
-  {
-    "id": "ref-mg_capsula_basico_a02bc01",
-    "tier": "reference",
-    "rename": true,
-    "name": "mg cápsula Básico A02BC01",
-    "dcb": "mg cápsula Básico A02BC01",
-    "atc": "A09AA02",
-    "renameComponent": "RENAME",
-    "classes": [
-      "discharge_only"
-    ],
-    "classLabel": "Aparelho digestivo e metabolismo · RENAME",
-    "indications": [
-      "Medicamento listado na RENAME 2024 (MS/SUS). Consulte PCDT, bula ANVISA e protocolo institucional."
-    ],
-    "ciAbs": [
-      "Consultar bula ANVISA — contraindicações variam por apresentação e indicação."
-    ],
-    "ciRel": [
-      "Gestação, lactação, DRC, hepatopatia — ajustar conforme bula e diretriz."
-    ],
-    "presentations": [
-      "Ver concentrações e formas na RENAME 2024 / Bulário eletrônico ANVISA."
-    ],
-    "posologyVo": [
-      "Posologia conforme bula ANVISA e diretriz do Ministério da Saúde."
-    ],
-    "posologyHosp": [
-      "—"
-    ],
-    "notes": "Ficha de referência (nível B) — não revisada manualmente pelo MedHub. Financiamento SUS: RENAME.",
-    "bulaUrl": "https://consultas.anvisa.gov.br/#/bulario/q/?nomeProduto=mg%20c%C3%A1psula%20B%C3%A1sico%20A02BC01",
-    "searchText": "mg cápsula básico a02bc01 rename a09aa02 aparelho digestivo e metabolismo · rename"
-  },
-  {
-    "id": "ref-mg_comprimido_especializado_a05aa02",
-    "tier": "reference",
-    "rename": true,
-    "name": "mg comprimido Especializado A05AA02",
-    "dcb": "mg comprimido Especializado A05AA02",
-    "atc": "A05AA02",
-    "renameComponent": "RENAME",
-    "classes": [
-      "discharge_only"
-    ],
-    "classLabel": "Aparelho digestivo e metabolismo · RENAME",
-    "indications": [
-      "Medicamento listado na RENAME 2024 (MS/SUS). Consulte PCDT, bula ANVISA e protocolo institucional."
-    ],
-    "ciAbs": [
-      "Consultar bula ANVISA — contraindicações variam por apresentação e indicação."
-    ],
-    "ciRel": [
-      "Gestação, lactação, DRC, hepatopatia — ajustar conforme bula e diretriz."
-    ],
-    "presentations": [
-      "Ver concentrações e formas na RENAME 2024 / Bulário eletrônico ANVISA."
-    ],
-    "posologyVo": [
-      "Posologia conforme bula ANVISA e diretriz do Ministério da Saúde."
-    ],
-    "posologyHosp": [
-      "—"
-    ],
-    "notes": "Ficha de referência (nível B) — não revisada manualmente pelo MedHub. Financiamento SUS: RENAME.",
-    "bulaUrl": "https://consultas.anvisa.gov.br/#/bulario/q/?nomeProduto=mg%20comprimido%20Especializado%20A05AA02",
-    "searchText": "mg comprimido especializado a05aa02 rename a05aa02 aparelho digestivo e metabolismo · rename"
-  },
-  {
-    "id": "ref-mg_comprimido_especializado_a07ec01",
-    "tier": "reference",
-    "rename": true,
-    "name": "mg comprimido Especializado A07EC01",
-    "dcb": "mg comprimido Especializado A07EC01",
-    "atc": "A11HA02",
-    "renameComponent": "RENAME",
-    "classes": [
-      "discharge_only"
-    ],
-    "classLabel": "Aparelho digestivo e metabolismo · RENAME",
-    "indications": [
-      "Medicamento listado na RENAME 2024 (MS/SUS). Consulte PCDT, bula ANVISA e protocolo institucional."
-    ],
-    "ciAbs": [
-      "Consultar bula ANVISA — contraindicações variam por apresentação e indicação."
-    ],
-    "ciRel": [
-      "Gestação, lactação, DRC, hepatopatia — ajustar conforme bula e diretriz."
-    ],
-    "presentations": [
-      "Ver concentrações e formas na RENAME 2024 / Bulário eletrônico ANVISA."
-    ],
-    "posologyVo": [
-      "Posologia conforme bula ANVISA e diretriz do Ministério da Saúde."
-    ],
-    "posologyHosp": [
-      "—"
-    ],
-    "notes": "Ficha de referência (nível B) — não revisada manualmente pelo MedHub. Financiamento SUS: RENAME.",
-    "bulaUrl": "https://consultas.anvisa.gov.br/#/bulario/q/?nomeProduto=mg%20comprimido%20Especializado%20A07EC01",
-    "searchText": "mg comprimido especializado a07ec01 rename a11ha02 aparelho digestivo e metabolismo · rename"
-  },
-  {
-    "id": "ref-mg_comprimido_especializado_a07ec02",
-    "tier": "reference",
-    "rename": true,
-    "name": "mg comprimido Especializado A07EC02",
-    "dcb": "mg comprimido Especializado A07EC02",
-    "atc": "A07EC02",
-    "renameComponent": "RENAME",
-    "classes": [
-      "discharge_only"
-    ],
-    "classLabel": "Aparelho digestivo e metabolismo · RENAME",
-    "indications": [
-      "Medicamento listado na RENAME 2024 (MS/SUS). Consulte PCDT, bula ANVISA e protocolo institucional."
-    ],
-    "ciAbs": [
-      "Consultar bula ANVISA — contraindicações variam por apresentação e indicação."
-    ],
-    "ciRel": [
-      "Gestação, lactação, DRC, hepatopatia — ajustar conforme bula e diretriz."
-    ],
-    "presentations": [
-      "Ver concentrações e formas na RENAME 2024 / Bulário eletrônico ANVISA."
-    ],
-    "posologyVo": [
-      "Posologia conforme bula ANVISA e diretriz do Ministério da Saúde."
-    ],
-    "posologyHosp": [
-      "—"
-    ],
-    "notes": "Ficha de referência (nível B) — não revisada manualmente pelo MedHub. Financiamento SUS: RENAME.",
-    "bulaUrl": "https://consultas.anvisa.gov.br/#/bulario/q/?nomeProduto=mg%20comprimido%20Especializado%20A07EC02",
-    "searchText": "mg comprimido especializado a07ec02 rename a07ec02 aparelho digestivo e metabolismo · rename"
-  },
-  {
-    "id": "ref-mg_ml_solucao_injetavel_basico_a03fa01",
-    "tier": "reference",
-    "rename": true,
-    "name": "mg/ mL solução injetável Básico A03FA01",
-    "dcb": "mg/ mL solução injetável Básico A03FA01",
-    "atc": "A03FA01",
-    "renameComponent": "RENAME",
-    "classes": [
-      "discharge_only"
-    ],
-    "classLabel": "Aparelho digestivo e metabolismo · RENAME",
-    "indications": [
-      "Medicamento listado na RENAME 2024 (MS/SUS). Consulte PCDT, bula ANVISA e protocolo institucional."
-    ],
-    "ciAbs": [
-      "Consultar bula ANVISA — contraindicações variam por apresentação e indicação."
-    ],
-    "ciRel": [
-      "Gestação, lactação, DRC, hepatopatia — ajustar conforme bula e diretriz."
-    ],
-    "presentations": [
-      "Ver concentrações e formas na RENAME 2024 / Bulário eletrônico ANVISA."
-    ],
-    "posologyVo": [
-      "Posologia conforme bula ANVISA e diretriz do Ministério da Saúde."
-    ],
-    "posologyHosp": [
-      "—"
-    ],
-    "notes": "Ficha de referência (nível B) — não revisada manualmente pelo MedHub. Financiamento SUS: RENAME.",
-    "bulaUrl": "https://consultas.anvisa.gov.br/#/bulario/q/?nomeProduto=mg%2F%20mL%20solu%C3%A7%C3%A3o%20injet%C3%A1vel%20B%C3%A1sico%20A03FA01",
-    "searchText": "mg/ ml solução injetável básico a03fa01 rename a03fa01 aparelho digestivo e metabolismo · rename"
   },
   {
     "id": "ref-micofenolato_de_mofetila",
@@ -4831,10 +4117,10 @@
     "id": "ref-miglustate",
     "tier": "reference",
     "rename": true,
-    "name": "miglustate",
-    "dcb": "miglustate",
+    "name": "Miglustate",
+    "dcb": "Miglustate",
     "atc": "A16AX06",
-    "renameComponent": "RENAME",
+    "renameComponent": "Especializado",
     "classes": [
       "discharge_only"
     ],
@@ -4857,43 +4143,9 @@
     "posologyHosp": [
       "—"
     ],
-    "notes": "Ficha de referência (nível B) — não revisada manualmente pelo MedHub. Financiamento SUS: RENAME.",
-    "bulaUrl": "https://consultas.anvisa.gov.br/#/bulario/q/?nomeProduto=miglustate",
-    "searchText": "miglustate rename a16ax06 aparelho digestivo e metabolismo · rename"
-  },
-  {
-    "id": "ref-mirtazapina",
-    "tier": "reference",
-    "rename": true,
-    "name": "Mirtazapina",
-    "dcb": "Mirtazapina",
-    "atc": "N06AX11",
-    "renameComponent": "Especializado",
-    "classes": [
-      "discharge_only"
-    ],
-    "classLabel": "Sistema nervoso · RENAME",
-    "indications": [
-      "Medicamento listado na RENAME 2024 (MS/SUS). Consulte PCDT, bula ANVISA e protocolo institucional."
-    ],
-    "ciAbs": [
-      "Consultar bula ANVISA — contraindicações variam por apresentação e indicação."
-    ],
-    "ciRel": [
-      "Gestação, lactação, DRC, hepatopatia — ajustar conforme bula e diretriz."
-    ],
-    "presentations": [
-      "Ver concentrações e formas na RENAME 2024 / Bulário eletrônico ANVISA."
-    ],
-    "posologyVo": [
-      "Posologia conforme bula ANVISA e diretriz do Ministério da Saúde."
-    ],
-    "posologyHosp": [
-      "—"
-    ],
     "notes": "Ficha de referência (nível B) — não revisada manualmente pelo MedHub. Financiamento SUS: Especializado.",
-    "bulaUrl": "https://consultas.anvisa.gov.br/#/bulario/q/?nomeProduto=Mirtazapina",
-    "searchText": "mirtazapina rename n06ax11 sistema nervoso · rename"
+    "bulaUrl": "https://consultas.anvisa.gov.br/#/bulario/q/?nomeProduto=Miglustate",
+    "searchText": "miglustate rename a16ax06 aparelho digestivo e metabolismo · rename"
   },
   {
     "id": "ref-montelukaste_sodico",
@@ -5030,40 +4282,6 @@
     "notes": "Ficha de referência (nível B) — não revisada manualmente pelo MedHub. Financiamento SUS: Especializado.",
     "bulaUrl": "https://consultas.anvisa.gov.br/#/bulario/q/?nomeProduto=Nicotina",
     "searchText": "nicotina rename n07ba01 sistema nervoso · rename"
-  },
-  {
-    "id": "ref-nistatina",
-    "tier": "reference",
-    "rename": true,
-    "name": "Nistatina",
-    "dcb": "Nistatina",
-    "atc": "A07AA02",
-    "renameComponent": "Básico",
-    "classes": [
-      "discharge_only"
-    ],
-    "classLabel": "Aparelho digestivo e metabolismo · RENAME",
-    "indications": [
-      "Medicamento listado na RENAME 2024 (MS/SUS). Consulte PCDT, bula ANVISA e protocolo institucional."
-    ],
-    "ciAbs": [
-      "Consultar bula ANVISA — contraindicações variam por apresentação e indicação."
-    ],
-    "ciRel": [
-      "Gestação, lactação, DRC, hepatopatia — ajustar conforme bula e diretriz."
-    ],
-    "presentations": [
-      "Ver concentrações e formas na RENAME 2024 / Bulário eletrônico ANVISA."
-    ],
-    "posologyVo": [
-      "Posologia conforme bula ANVISA e diretriz do Ministério da Saúde."
-    ],
-    "posologyHosp": [
-      "—"
-    ],
-    "notes": "Ficha de referência (nível B) — não revisada manualmente pelo MedHub. Financiamento SUS: Básico.",
-    "bulaUrl": "https://consultas.anvisa.gov.br/#/bulario/q/?nomeProduto=Nistatina",
-    "searchText": "nistatina rename a07aa02 aparelho digestivo e metabolismo · rename"
   },
   {
     "id": "ref-noretisterona",
@@ -5273,10 +4491,10 @@
     "id": "ref-palmitato_de_retinol",
     "tier": "reference",
     "rename": true,
-    "name": "palmitato de retinol",
-    "dcb": "palmitato de retinol",
+    "name": "Palmitato de retinol",
+    "dcb": "Palmitato de retinol",
     "atc": "A11CA01",
-    "renameComponent": "RENAME",
+    "renameComponent": "Básico",
     "classes": [
       "discharge_only"
     ],
@@ -5299,8 +4517,8 @@
     "posologyHosp": [
       "—"
     ],
-    "notes": "Ficha de referência (nível B) — não revisada manualmente pelo MedHub. Financiamento SUS: RENAME.",
-    "bulaUrl": "https://consultas.anvisa.gov.br/#/bulario/q/?nomeProduto=palmitato%20de%20retinol",
+    "notes": "Ficha de referência (nível B) — não revisada manualmente pelo MedHub. Financiamento SUS: Básico.",
+    "bulaUrl": "https://consultas.anvisa.gov.br/#/bulario/q/?nomeProduto=Palmitato%20de%20retinol",
     "searchText": "palmitato de retinol rename a11ca01 aparelho digestivo e metabolismo · rename"
   },
   {
@@ -5336,40 +4554,6 @@
     "notes": "Ficha de referência (nível B) — não revisada manualmente pelo MedHub. Financiamento SUS: Básico.",
     "bulaUrl": "https://consultas.anvisa.gov.br/#/bulario/q/?nomeProduto=Pantoprazol%20sodico",
     "searchText": "pantoprazol sodico rename a02bc02 aparelho digestivo e metabolismo · rename"
-  },
-  {
-    "id": "ref-paroxetina",
-    "tier": "reference",
-    "rename": true,
-    "name": "Paroxetina",
-    "dcb": "Paroxetina",
-    "atc": "N06AB05",
-    "renameComponent": "Especializado",
-    "classes": [
-      "discharge_only"
-    ],
-    "classLabel": "Sistema nervoso · RENAME",
-    "indications": [
-      "Medicamento listado na RENAME 2024 (MS/SUS). Consulte PCDT, bula ANVISA e protocolo institucional."
-    ],
-    "ciAbs": [
-      "Consultar bula ANVISA — contraindicações variam por apresentação e indicação."
-    ],
-    "ciRel": [
-      "Gestação, lactação, DRC, hepatopatia — ajustar conforme bula e diretriz."
-    ],
-    "presentations": [
-      "Ver concentrações e formas na RENAME 2024 / Bulário eletrônico ANVISA."
-    ],
-    "posologyVo": [
-      "Posologia conforme bula ANVISA e diretriz do Ministério da Saúde."
-    ],
-    "posologyHosp": [
-      "—"
-    ],
-    "notes": "Ficha de referência (nível B) — não revisada manualmente pelo MedHub. Financiamento SUS: Especializado.",
-    "bulaUrl": "https://consultas.anvisa.gov.br/#/bulario/q/?nomeProduto=Paroxetina",
-    "searchText": "paroxetina rename n06ab05 sistema nervoso · rename"
   },
   {
     "id": "ref-penicilamina",
@@ -5438,40 +4622,6 @@
     "notes": "Ficha de referência (nível B) — não revisada manualmente pelo MedHub. Financiamento SUS: Básico.",
     "bulaUrl": "https://consultas.anvisa.gov.br/#/bulario/q/?nomeProduto=Piroxicam",
     "searchText": "piroxicam rename m01ac01 sistema musculoesquelético · rename"
-  },
-  {
-    "id": "ref-po_para_solucao_oral",
-    "tier": "reference",
-    "rename": true,
-    "name": "pó para solução oral",
-    "dcb": "pó para solução oral",
-    "atc": "A06AD04",
-    "renameComponent": "RENAME",
-    "classes": [
-      "discharge_only"
-    ],
-    "classLabel": "Aparelho digestivo e metabolismo · RENAME",
-    "indications": [
-      "Medicamento listado na RENAME 2024 (MS/SUS). Consulte PCDT, bula ANVISA e protocolo institucional."
-    ],
-    "ciAbs": [
-      "Consultar bula ANVISA — contraindicações variam por apresentação e indicação."
-    ],
-    "ciRel": [
-      "Gestação, lactação, DRC, hepatopatia — ajustar conforme bula e diretriz."
-    ],
-    "presentations": [
-      "Ver concentrações e formas na RENAME 2024 / Bulário eletrônico ANVISA."
-    ],
-    "posologyVo": [
-      "Posologia conforme bula ANVISA e diretriz do Ministério da Saúde."
-    ],
-    "posologyHosp": [
-      "—"
-    ],
-    "notes": "Ficha de referência (nível B) — não revisada manualmente pelo MedHub. Financiamento SUS: RENAME.",
-    "bulaUrl": "https://consultas.anvisa.gov.br/#/bulario/q/?nomeProduto=p%C3%B3%20para%20solu%C3%A7%C3%A3o%20oral",
-    "searchText": "pó para solução oral rename a06ad04 aparelho digestivo e metabolismo · rename"
   },
   {
     "id": "ref-pravastatina_sodica",
@@ -5712,40 +4862,6 @@
     "searchText": "protamina rename v03ab14 vários · rename"
   },
   {
-    "id": "ref-regular",
-    "tier": "reference",
-    "rename": true,
-    "name": "regular",
-    "dcb": "regular",
-    "atc": "A10AC01",
-    "renameComponent": "RENAME",
-    "classes": [
-      "discharge_only"
-    ],
-    "classLabel": "Aparelho digestivo e metabolismo · RENAME",
-    "indications": [
-      "Medicamento listado na RENAME 2024 (MS/SUS). Consulte PCDT, bula ANVISA e protocolo institucional."
-    ],
-    "ciAbs": [
-      "Consultar bula ANVISA — contraindicações variam por apresentação e indicação."
-    ],
-    "ciRel": [
-      "Gestação, lactação, DRC, hepatopatia — ajustar conforme bula e diretriz."
-    ],
-    "presentations": [
-      "Ver concentrações e formas na RENAME 2024 / Bulário eletrônico ANVISA."
-    ],
-    "posologyVo": [
-      "Posologia conforme bula ANVISA e diretriz do Ministério da Saúde."
-    ],
-    "posologyHosp": [
-      "—"
-    ],
-    "notes": "Ficha de referência (nível B) — não revisada manualmente pelo MedHub. Financiamento SUS: RENAME.",
-    "bulaUrl": "https://consultas.anvisa.gov.br/#/bulario/q/?nomeProduto=regular",
-    "searchText": "regular rename a10ac01 aparelho digestivo e metabolismo · rename"
-  },
-  {
     "id": "ref-remdesivir",
     "tier": "reference",
     "rename": true,
@@ -5982,74 +5098,6 @@
     "notes": "Ficha de referência (nível B) — não revisada manualmente pelo MedHub. Financiamento SUS: Especializado.",
     "bulaUrl": "https://consultas.anvisa.gov.br/#/bulario/q/?nomeProduto=Sildenafila",
     "searchText": "sildenafila rename g04be03 sistema geniturinário · rename"
-  },
-  {
-    "id": "ref-solucao_injetavel",
-    "tier": "reference",
-    "rename": true,
-    "name": "solução injetável",
-    "dcb": "solução injetável",
-    "atc": "A12CB01",
-    "renameComponent": "RENAME",
-    "classes": [
-      "discharge_only"
-    ],
-    "classLabel": "Aparelho digestivo e metabolismo · RENAME",
-    "indications": [
-      "Medicamento listado na RENAME 2024 (MS/SUS). Consulte PCDT, bula ANVISA e protocolo institucional."
-    ],
-    "ciAbs": [
-      "Consultar bula ANVISA — contraindicações variam por apresentação e indicação."
-    ],
-    "ciRel": [
-      "Gestação, lactação, DRC, hepatopatia — ajustar conforme bula e diretriz."
-    ],
-    "presentations": [
-      "Ver concentrações e formas na RENAME 2024 / Bulário eletrônico ANVISA."
-    ],
-    "posologyVo": [
-      "Posologia conforme bula ANVISA e diretriz do Ministério da Saúde."
-    ],
-    "posologyHosp": [
-      "—"
-    ],
-    "notes": "Ficha de referência (nível B) — não revisada manualmente pelo MedHub. Financiamento SUS: RENAME.",
-    "bulaUrl": "https://consultas.anvisa.gov.br/#/bulario/q/?nomeProduto=solu%C3%A7%C3%A3o%20injet%C3%A1vel",
-    "searchText": "solução injetável rename a12cb01 aparelho digestivo e metabolismo · rename"
-  },
-  {
-    "id": "ref-solucao_retal",
-    "tier": "reference",
-    "rename": true,
-    "name": "solução retal",
-    "dcb": "solução retal",
-    "atc": "A06AG04",
-    "renameComponent": "RENAME",
-    "classes": [
-      "discharge_only"
-    ],
-    "classLabel": "Aparelho digestivo e metabolismo · RENAME",
-    "indications": [
-      "Medicamento listado na RENAME 2024 (MS/SUS). Consulte PCDT, bula ANVISA e protocolo institucional."
-    ],
-    "ciAbs": [
-      "Consultar bula ANVISA — contraindicações variam por apresentação e indicação."
-    ],
-    "ciRel": [
-      "Gestação, lactação, DRC, hepatopatia — ajustar conforme bula e diretriz."
-    ],
-    "presentations": [
-      "Ver concentrações e formas na RENAME 2024 / Bulário eletrônico ANVISA."
-    ],
-    "posologyVo": [
-      "Posologia conforme bula ANVISA e diretriz do Ministério da Saúde."
-    ],
-    "posologyHosp": [
-      "—"
-    ],
-    "notes": "Ficha de referência (nível B) — não revisada manualmente pelo MedHub. Financiamento SUS: RENAME.",
-    "bulaUrl": "https://consultas.anvisa.gov.br/#/bulario/q/?nomeProduto=solu%C3%A7%C3%A3o%20retal",
-    "searchText": "solução retal rename a06ag04 aparelho digestivo e metabolismo · rename"
   },
   {
     "id": "ref-somatropina",
@@ -6290,40 +5338,6 @@
     "searchText": "sulfametoxazol + trimetoprima rename j01ee01 anti-infecciosos sistêmicos · rename"
   },
   {
-    "id": "ref-sulfasalazina",
-    "tier": "reference",
-    "rename": true,
-    "name": "Sulfasalazina",
-    "dcb": "Sulfasalazina",
-    "atc": "A07EC01",
-    "renameComponent": "Especializado",
-    "classes": [
-      "discharge_only"
-    ],
-    "classLabel": "Aparelho digestivo e metabolismo · RENAME",
-    "indications": [
-      "Medicamento listado na RENAME 2024 (MS/SUS). Consulte PCDT, bula ANVISA e protocolo institucional."
-    ],
-    "ciAbs": [
-      "Consultar bula ANVISA — contraindicações variam por apresentação e indicação."
-    ],
-    "ciRel": [
-      "Gestação, lactação, DRC, hepatopatia — ajustar conforme bula e diretriz."
-    ],
-    "presentations": [
-      "Ver concentrações e formas na RENAME 2024 / Bulário eletrônico ANVISA."
-    ],
-    "posologyVo": [
-      "Posologia conforme bula ANVISA e diretriz do Ministério da Saúde."
-    ],
-    "posologyHosp": [
-      "—"
-    ],
-    "notes": "Ficha de referência (nível B) — não revisada manualmente pelo MedHub. Financiamento SUS: Especializado.",
-    "bulaUrl": "https://consultas.anvisa.gov.br/#/bulario/q/?nomeProduto=Sulfasalazina",
-    "searchText": "sulfasalazina rename a07ec01 aparelho digestivo e metabolismo · rename"
-  },
-  {
     "id": "ref-sulfato_de_atropina",
     "tier": "reference",
     "rename": true,
@@ -6392,74 +5406,6 @@
     "searchText": "sulfato de zinco rename a12cb01 aparelho digestivo e metabolismo · rename"
   },
   {
-    "id": "ref-supositorio_retal",
-    "tier": "reference",
-    "rename": true,
-    "name": "supositório retal",
-    "dcb": "supositório retal",
-    "atc": "A07EC02",
-    "renameComponent": "RENAME",
-    "classes": [
-      "discharge_only"
-    ],
-    "classLabel": "Aparelho digestivo e metabolismo · RENAME",
-    "indications": [
-      "Medicamento listado na RENAME 2024 (MS/SUS). Consulte PCDT, bula ANVISA e protocolo institucional."
-    ],
-    "ciAbs": [
-      "Consultar bula ANVISA — contraindicações variam por apresentação e indicação."
-    ],
-    "ciRel": [
-      "Gestação, lactação, DRC, hepatopatia — ajustar conforme bula e diretriz."
-    ],
-    "presentations": [
-      "Ver concentrações e formas na RENAME 2024 / Bulário eletrônico ANVISA."
-    ],
-    "posologyVo": [
-      "Posologia conforme bula ANVISA e diretriz do Ministério da Saúde."
-    ],
-    "posologyHosp": [
-      "—"
-    ],
-    "notes": "Ficha de referência (nível B) — não revisada manualmente pelo MedHub. Financiamento SUS: RENAME.",
-    "bulaUrl": "https://consultas.anvisa.gov.br/#/bulario/q/?nomeProduto=suposit%C3%B3rio%20retal",
-    "searchText": "supositório retal rename a07ec02 aparelho digestivo e metabolismo · rename"
-  },
-  {
-    "id": "ref-suspensao_oral",
-    "tier": "reference",
-    "rename": true,
-    "name": "suspensão oral",
-    "dcb": "suspensão oral",
-    "atc": "A06AD11",
-    "renameComponent": "RENAME",
-    "classes": [
-      "discharge_only"
-    ],
-    "classLabel": "Aparelho digestivo e metabolismo · RENAME",
-    "indications": [
-      "Medicamento listado na RENAME 2024 (MS/SUS). Consulte PCDT, bula ANVISA e protocolo institucional."
-    ],
-    "ciAbs": [
-      "Consultar bula ANVISA — contraindicações variam por apresentação e indicação."
-    ],
-    "ciRel": [
-      "Gestação, lactação, DRC, hepatopatia — ajustar conforme bula e diretriz."
-    ],
-    "presentations": [
-      "Ver concentrações e formas na RENAME 2024 / Bulário eletrônico ANVISA."
-    ],
-    "posologyVo": [
-      "Posologia conforme bula ANVISA e diretriz do Ministério da Saúde."
-    ],
-    "posologyHosp": [
-      "—"
-    ],
-    "notes": "Ficha de referência (nível B) — não revisada manualmente pelo MedHub. Financiamento SUS: RENAME.",
-    "bulaUrl": "https://consultas.anvisa.gov.br/#/bulario/q/?nomeProduto=suspens%C3%A3o%20oral",
-    "searchText": "suspensão oral rename a06ad11 aparelho digestivo e metabolismo · rename"
-  },
-  {
     "id": "ref-tacrolimus",
     "tier": "reference",
     "rename": true,
@@ -6526,108 +5472,6 @@
     "notes": "Ficha de referência (nível B) — não revisada manualmente pelo MedHub. Financiamento SUS: Especializado.",
     "bulaUrl": "https://consultas.anvisa.gov.br/#/bulario/q/?nomeProduto=Tamoxifeno",
     "searchText": "tamoxifeno rename l02ba01 antineoplásicos e imunomoduladores · rename"
-  },
-  {
-    "id": "ref-teofilina",
-    "tier": "reference",
-    "rename": true,
-    "name": "Teofilina",
-    "dcb": "Teofilina",
-    "atc": "R03DA04",
-    "renameComponent": "Básico",
-    "classes": [
-      "discharge_only"
-    ],
-    "classLabel": "Sistema respiratório · RENAME",
-    "indications": [
-      "Medicamento listado na RENAME 2024 (MS/SUS). Consulte PCDT, bula ANVISA e protocolo institucional."
-    ],
-    "ciAbs": [
-      "Consultar bula ANVISA — contraindicações variam por apresentação e indicação."
-    ],
-    "ciRel": [
-      "Gestação, lactação, DRC, hepatopatia — ajustar conforme bula e diretriz."
-    ],
-    "presentations": [
-      "Ver concentrações e formas na RENAME 2024 / Bulário eletrônico ANVISA."
-    ],
-    "posologyVo": [
-      "Posologia conforme bula ANVISA e diretriz do Ministério da Saúde."
-    ],
-    "posologyHosp": [
-      "—"
-    ],
-    "notes": "Ficha de referência (nível B) — não revisada manualmente pelo MedHub. Financiamento SUS: Básico.",
-    "bulaUrl": "https://consultas.anvisa.gov.br/#/bulario/q/?nomeProduto=Teofilina",
-    "searchText": "teofilina rename r03da04 sistema respiratório · rename"
-  },
-  {
-    "id": "ref-terbinafina",
-    "tier": "reference",
-    "rename": true,
-    "name": "Terbinafina",
-    "dcb": "Terbinafina",
-    "atc": "D01BA02",
-    "renameComponent": "Básico",
-    "classes": [
-      "discharge_only"
-    ],
-    "classLabel": "Dermatológicos · RENAME",
-    "indications": [
-      "Medicamento listado na RENAME 2024 (MS/SUS). Consulte PCDT, bula ANVISA e protocolo institucional."
-    ],
-    "ciAbs": [
-      "Consultar bula ANVISA — contraindicações variam por apresentação e indicação."
-    ],
-    "ciRel": [
-      "Gestação, lactação, DRC, hepatopatia — ajustar conforme bula e diretriz."
-    ],
-    "presentations": [
-      "Ver concentrações e formas na RENAME 2024 / Bulário eletrônico ANVISA."
-    ],
-    "posologyVo": [
-      "Posologia conforme bula ANVISA e diretriz do Ministério da Saúde."
-    ],
-    "posologyHosp": [
-      "—"
-    ],
-    "notes": "Ficha de referência (nível B) — não revisada manualmente pelo MedHub. Financiamento SUS: Básico.",
-    "bulaUrl": "https://consultas.anvisa.gov.br/#/bulario/q/?nomeProduto=Terbinafina",
-    "searchText": "terbinafina rename d01ba02 dermatológicos · rename"
-  },
-  {
-    "id": "ref-timolol",
-    "tier": "reference",
-    "rename": true,
-    "name": "Timolol",
-    "dcb": "Timolol",
-    "atc": "C07AA06",
-    "renameComponent": "Básico",
-    "classes": [
-      "discharge_only"
-    ],
-    "classLabel": "Sistema cardiovascular · RENAME",
-    "indications": [
-      "Medicamento listado na RENAME 2024 (MS/SUS). Consulte PCDT, bula ANVISA e protocolo institucional."
-    ],
-    "ciAbs": [
-      "Consultar bula ANVISA — contraindicações variam por apresentação e indicação."
-    ],
-    "ciRel": [
-      "Gestação, lactação, DRC, hepatopatia — ajustar conforme bula e diretriz."
-    ],
-    "presentations": [
-      "Ver concentrações e formas na RENAME 2024 / Bulário eletrônico ANVISA."
-    ],
-    "posologyVo": [
-      "Posologia conforme bula ANVISA e diretriz do Ministério da Saúde."
-    ],
-    "posologyHosp": [
-      "—"
-    ],
-    "notes": "Ficha de referência (nível B) — não revisada manualmente pelo MedHub. Financiamento SUS: Básico.",
-    "bulaUrl": "https://consultas.anvisa.gov.br/#/bulario/q/?nomeProduto=Timolol",
-    "searchText": "timolol rename c07aa06 sistema cardiovascular · rename"
   },
   {
     "id": "ref-tiotropio_brometo",
@@ -6902,6 +5746,40 @@
     "searchText": "verapamil cloridrato rename c08da01 sistema cardiovascular · rename"
   },
   {
+    "id": "ref-vitamina_d3",
+    "tier": "reference",
+    "rename": true,
+    "name": "Vitamina D3",
+    "dcb": "Vitamina D3",
+    "atc": "A11CC05",
+    "renameComponent": "Básico",
+    "classes": [
+      "discharge_only"
+    ],
+    "classLabel": "Aparelho digestivo e metabolismo · RENAME",
+    "indications": [
+      "Medicamento listado na RENAME 2024 (MS/SUS). Consulte PCDT, bula ANVISA e protocolo institucional."
+    ],
+    "ciAbs": [
+      "Consultar bula ANVISA — contraindicações variam por apresentação e indicação."
+    ],
+    "ciRel": [
+      "Gestação, lactação, DRC, hepatopatia — ajustar conforme bula e diretriz."
+    ],
+    "presentations": [
+      "Ver concentrações e formas na RENAME 2024 / Bulário eletrônico ANVISA."
+    ],
+    "posologyVo": [
+      "Posologia conforme bula ANVISA e diretriz do Ministério da Saúde."
+    ],
+    "posologyHosp": [
+      "—"
+    ],
+    "notes": "Ficha de referência (nível B) — não revisada manualmente pelo MedHub. Financiamento SUS: Básico.",
+    "bulaUrl": "https://consultas.anvisa.gov.br/#/bulario/q/?nomeProduto=Vitamina%20D3",
+    "searchText": "vitamina d3 rename a11cc05 aparelho digestivo e metabolismo · rename"
+  },
+  {
     "id": "ref-voriconazol",
     "tier": "reference",
     "rename": true,
@@ -6968,74 +5846,6 @@
     "notes": "Ficha de referência (nível B) — não revisada manualmente pelo MedHub. Financiamento SUS: Básico.",
     "bulaUrl": "https://consultas.anvisa.gov.br/#/bulario/q/?nomeProduto=Warfarina%20sodica",
     "searchText": "warfarina sodica rename b01aa03 sangue e hematologia · rename"
-  },
-  {
-    "id": "ref-xarope",
-    "tier": "reference",
-    "rename": true,
-    "name": "xarope",
-    "dcb": "xarope",
-    "atc": "A12CB01",
-    "renameComponent": "RENAME",
-    "classes": [
-      "discharge_only"
-    ],
-    "classLabel": "Aparelho digestivo e metabolismo · RENAME",
-    "indications": [
-      "Medicamento listado na RENAME 2024 (MS/SUS). Consulte PCDT, bula ANVISA e protocolo institucional."
-    ],
-    "ciAbs": [
-      "Consultar bula ANVISA — contraindicações variam por apresentação e indicação."
-    ],
-    "ciRel": [
-      "Gestação, lactação, DRC, hepatopatia — ajustar conforme bula e diretriz."
-    ],
-    "presentations": [
-      "Ver concentrações e formas na RENAME 2024 / Bulário eletrônico ANVISA."
-    ],
-    "posologyVo": [
-      "Posologia conforme bula ANVISA e diretriz do Ministério da Saúde."
-    ],
-    "posologyHosp": [
-      "—"
-    ],
-    "notes": "Ficha de referência (nível B) — não revisada manualmente pelo MedHub. Financiamento SUS: RENAME.",
-    "bulaUrl": "https://consultas.anvisa.gov.br/#/bulario/q/?nomeProduto=xarope",
-    "searchText": "xarope rename a12cb01 aparelho digestivo e metabolismo · rename"
-  },
-  {
-    "id": "ref-zolpidem",
-    "tier": "reference",
-    "rename": true,
-    "name": "Zolpidem",
-    "dcb": "Zolpidem",
-    "atc": "N05CF02",
-    "renameComponent": "Especializado",
-    "classes": [
-      "discharge_only"
-    ],
-    "classLabel": "Sistema nervoso · RENAME",
-    "indications": [
-      "Medicamento listado na RENAME 2024 (MS/SUS). Consulte PCDT, bula ANVISA e protocolo institucional."
-    ],
-    "ciAbs": [
-      "Consultar bula ANVISA — contraindicações variam por apresentação e indicação."
-    ],
-    "ciRel": [
-      "Gestação, lactação, DRC, hepatopatia — ajustar conforme bula e diretriz."
-    ],
-    "presentations": [
-      "Ver concentrações e formas na RENAME 2024 / Bulário eletrônico ANVISA."
-    ],
-    "posologyVo": [
-      "Posologia conforme bula ANVISA e diretriz do Ministério da Saúde."
-    ],
-    "posologyHosp": [
-      "—"
-    ],
-    "notes": "Ficha de referência (nível B) — não revisada manualmente pelo MedHub. Financiamento SUS: Especializado.",
-    "bulaUrl": "https://consultas.anvisa.gov.br/#/bulario/q/?nomeProduto=Zolpidem",
-    "searchText": "zolpidem rename n05cf02 sistema nervoso · rename"
   },
   {
     "id": "ref-zopiclona",

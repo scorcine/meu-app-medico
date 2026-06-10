@@ -23,6 +23,7 @@ const PROTOCOL_FILES = [
   'emergency-guide.js',
   'medicacoes-classes.js',
   'ps-drug-meta-gaps.js',
+  'med-promoted-meta.js',
   'pronto-socorro-interactive-drugs.js',
   'medicacoes-data.js',
   'medicacoes-rename-loader.js'
@@ -81,6 +82,11 @@ function isValidRenameName (name) {
   const n = (name || '').trim();
   if (n.length < 4) return false;
   if (/código atc/i.test(n)) return false;
+  if (/^básico\s+a\d{2}/i.test(n)) return false;
+  if (/\b(básico|especializado|estratégico)\s+a\d{2}[a-z]{2}\d{2}\b/i.test(n)) return false;
+  if (/mg\s*(comprimido|cápsula|\/)/i.test(n)) return false;
+  if (/^(cápsula|capsula|comprimido|solução|solucao|xarope|pomada|creme|gel|spray|injetável|injetavel|suspensão|suspensao|supositório|supositorio|enema|regular)$/i.test(n)) return false;
+  if (/^(solução|suspensão|supositório|enema|pó para)\b/i.test(n)) return false;
   if (/^\d[\d,\.\s]*(mg|mcg|g|UI|U)\b/i.test(n)) return false;
   if (!/[a-záàâãéêíóúç]{3,}/i.test(n)) return false;
   return true;

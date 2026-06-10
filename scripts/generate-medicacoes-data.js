@@ -4,6 +4,11 @@
 const fs = require('fs');
 const path = require('path');
 
+const monographsPath = path.join(__dirname, '..', 'medicacoes-sources', 'monographs-a.json');
+const MONO_A = fs.existsSync(monographsPath)
+  ? JSON.parse(fs.readFileSync(monographsPath, 'utf8'))
+  : { promote: {}, enrich: {} };
+
 const HOSP = {
   dipirona: ['1 g/2 mL amp — 1 amp IM ou EV 6/6 h (máx. 4 g/dia metamizol)', 'EV: diluir e infundir 15–30 min'],
   paracetamol: ['750 mg/100 mL EV 6/6 h (máx. 4 g/dia)', '500–750 mg VO 6/6 h'],
@@ -247,6 +252,36 @@ const EXTRA = {
   fenilefrina: { name: 'Fenilefrina', classes: ['vasopressor'], indications: ['Hipotensão (anestesia)', 'Rinite (tópica)'], ciAbs: ['Taquiarritmia', 'Feocromocitoma'], ciRel: ['HAS', 'Doença coronariana'], presentations: ['10 mg/mL ampola EV', 'gotas nasais OTC'], posologyHosp: ['50–200 mcg EV bolus; infusão titulada'], posologyVo: ['Uso sistêmico VO não usual'], notes: 'Vasoconstrictor alfa — preferir noradrenalina no choque séptico.' }
 };
 
+Object.entries(MONO_A.promote || {}).forEach(([id, drug]) => {
+  EXTRA[id] = {
+    name: drug.name,
+    classes: drug.classes || [],
+    indications: drug.indications,
+    ciAbs: drug.ciAbs,
+    ciRel: drug.ciRel,
+    presentations: drug.presentations,
+    posologyVo: drug.posologyVo,
+    posologyHosp: drug.posologyHosp,
+    notes: drug.notes
+  };
+  if (drug.posologyHosp && !HOSP[id]) HOSP[id] = drug.posologyHosp;
+});
+
+Object.assign(OVERRIDE, MONO_A.enrich || {});
+
+Object.entries(MONO_A.enrich || {}).forEach(([id, drug]) => {
+  if (drug.posologyHosp && !HOSP[id]) HOSP[id] = drug.posologyHosp;
+});
+
+const promotedMeta = {};
+const promotedAliases = [];
+Object.entries(MONO_A.promote || {}).forEach(([id, drug]) => {
+  promotedMeta[id] = { name: drug.name, classes: drug.classes || [] };
+  const terms = [drug.name.toLowerCase(), id.replace(/_/g, ' ')];
+  if (drug.alias) drug.alias.forEach(a => terms.push(a));
+  promotedAliases.push([id, [...new Set(terms)]]);
+});
+
 const VO_FAMILY = {
   dipirona: 'dipirona', paracetamol: 'paracetamol', naproxeno: 'naproxeno', ibuprofeno: 'ibuprofeno',
   diclofenaco: 'diclofenaco', cetoprofeno: 'cetoprofeno', nimesulida: 'nimesulida', ciclobenzaprina: 'ciclobenzaprina',
@@ -259,7 +294,7 @@ const VO_FAMILY = {
 const out = `/* Medicações — catálogo clínico (gerado + revisado jun/2026) */
 /* eslint-disable max-len */
 
-const MEDHUB_MED_BUILD = 'med-v4-pipeline';
+const MEDHUB_MED_BUILD = 'med-v5-monographs-a';
 
 const MED_EXTRA_DRUGS = ${JSON.stringify(EXTRA, null, 2)};
 
@@ -358,4 +393,15 @@ function medGetCatalog () {
 `;
 
 fs.writeFileSync(path.join(__dirname, '..', 'medicacoes-data.js'), out, 'utf8');
+
+const promotedOut = `/* Fármacos promovidos RENAME → ficha MedHub A (gerado) */
+const PS_DRUG_META_PROMOTED = ${JSON.stringify(promotedMeta, null, 2)};
+
+const PS_DRUG_ALIASES_PROMOTED = ${JSON.stringify(promotedAliases, null, 2)};
+`;
+fs.writeFileSync(path.join(__dirname, '..', 'med-promoted-meta.js'), promotedOut, 'utf8');
+
 console.log('Written medicacoes-data.js');
+console.log('Promoted to level A:', Object.keys(promotedMeta).length);
+console.log('Enriched entries:', Object.keys(MONO_A.enrich || {}).length);
+console.log('Written med-promoted-meta.js');

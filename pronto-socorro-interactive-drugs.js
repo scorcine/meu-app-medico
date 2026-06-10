@@ -127,6 +127,10 @@ if (typeof PS_DRUG_META_GAPS !== 'undefined') {
   Object.assign(PS_DRUG_META, PS_DRUG_META_GAPS);
 }
 
+if (typeof PS_DRUG_META_PROMOTED !== 'undefined') {
+  Object.assign(PS_DRUG_META, PS_DRUG_META_PROMOTED);
+}
+
 const PS_DRUG_ALIASES = [
   ['amoxicilina_clavulanato', ['amoxicilina-clavulanato', 'amoxicilina clavulanato', 'clavulin']],
   ['ampicilina_sulbactam', ['ampicilina-sulbactam', 'ampicilina sulbactam', 'unasyn']],
@@ -186,6 +190,10 @@ const PS_DRUG_ALIASES = [
   ['gabapentina', ['gabapentina']],
   ['pregabalina', ['pregabalina', 'lyrica']]
 ];
+
+if (typeof PS_DRUG_ALIASES_PROMOTED !== 'undefined') {
+  PS_DRUG_ALIASES_PROMOTED.forEach(entry => PS_DRUG_ALIASES.push(entry));
+}
 
 Object.keys(PS_DRUG_META).forEach(id => {
   if (!PS_DRUG_ALIASES.some(a => a[0] === id)) {

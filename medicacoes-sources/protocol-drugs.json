@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-06-10T13:56:35.736Z",
+  "generatedAt": "2026-06-10T14:44:44.280Z",
   "protocolBlocks": 195,
-  "drugCount": 193,
-  "inCatalog": 193,
+  "drugCount": 201,
+  "inCatalog": 201,
   "gaps": 0,
   "drugs": [
     {
@@ -1943,6 +1943,22 @@
       "tier": "full"
     },
     {
+      "id": "nistatina",
+      "name": "Nistatina",
+      "sources": [
+        "PS:afta-estomatite",
+        "PS:candidiase",
+        "PS:micoses-superficiais",
+        "PS:queilite",
+        "PS:vulvovaginites"
+      ],
+      "sourceCount": 5,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
       "id": "oxacilina",
       "name": "Oxacilina",
       "sources": [
@@ -2081,6 +2097,21 @@
       "tier": "full"
     },
     {
+      "id": "dexclorfeniramina",
+      "name": "Dexclorfeniramina",
+      "sources": [
+        "PS:alergia-anafilaxia",
+        "PS:conjuntivite",
+        "PS:edema-angioneurotico",
+        "PS:escabiose"
+      ],
+      "sourceCount": 4,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
       "id": "digoxina",
       "name": "Digoxina",
       "sources": [
@@ -2118,6 +2149,21 @@
         "PS:gonorreia-clamidia",
         "TH:gonorreia-ist",
         "TH:pielonefrite"
+      ],
+      "sourceCount": 4,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "hidroxizina",
+      "name": "Hidroxizina",
+      "sources": [
+        "PS:ansiedade-crise",
+        "PS:escabiose",
+        "PS:tinea",
+        "TH:anafilaxia"
       ],
       "sourceCount": 4,
       "inMeta": true,
@@ -2443,6 +2489,20 @@
       "tier": "full"
     },
     {
+      "id": "lactulose",
+      "name": "Lactulose",
+      "sources": [
+        "PS:constipacao",
+        "PS:fissura-anal",
+        "PS:hemorroidas"
+      ],
+      "sourceCount": 3,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
       "id": "mebendazol",
       "name": "Mebendazol",
       "sources": [
@@ -2519,6 +2579,20 @@
         "PS:queimaduras",
         "PS:violencia-sexual-pep",
         "TH:profilaxia-tetano"
+      ],
+      "sourceCount": 3,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "terbinafina",
+      "name": "Terbinafina",
+      "sources": [
+        "PS:frieira",
+        "PS:micoses-superficiais",
+        "PS:tinea"
       ],
       "sourceCount": 3,
       "inMeta": true,
@@ -2954,6 +3028,30 @@
       "tier": "full"
     },
     {
+      "id": "citalopram",
+      "name": "Citalopram",
+      "sources": [
+        "PS:ansiedade-crise"
+      ],
+      "sourceCount": 1,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "clonidina",
+      "name": "Clonidina",
+      "sources": [
+        "TH:crise-hipertensiva"
+      ],
+      "sourceCount": 1,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
       "id": "dolutegravir",
       "name": "Dolutegravir",
       "sources": [
@@ -3234,6 +3332,18 @@
       "name": "Mefloquina",
       "sources": [
         "PS:malaria"
+      ],
+      "sourceCount": 1,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "mesalazina",
+      "name": "Mesalazina",
+      "sources": [
+        "PS:diverticulite"
       ],
       "sourceCount": 1,
       "inMeta": true,

@@ -1,0 +1,467 @@
+{
+  "version": "monographs-a-v1",
+  "promote": {
+    "nistatina": {
+      "name": "Nistatina",
+      "classes": ["antibiotic"],
+      "indications": ["Candidíase oral (sapinho)", "Candidíase vulvovaginal leve", "Intertrigo por Candida"],
+      "ciAbs": ["Hipersensibilidade"],
+      "ciRel": ["Insuficiência hepática grave (uso sistêmico prolongado)"],
+      "presentations": ["100.000 UI/mL suspensão oral", "100.000 UI comprimido vaginal", "Creme tópico 100.000 UI/g"],
+      "posologyVo": ["Suspensão: gargarejar e deglutir 4–6 mL 6/6 h × 7–14 dias", "Óvulo vaginal 100.000 UI 24/24 h × 14 dias"],
+      "posologyHosp": ["Preferir VO/tópico; suspensão oral igual ambulatorial"],
+      "notes": "Não absorvida VO — segura na gestação para uso tópico/oral local. Candidíase esofágica grave: fluconazol."
+    },
+    "terbinafina": {
+      "name": "Terbinafina",
+      "classes": ["antibiotic"],
+      "indications": ["Tinea corporis/capitis/cruris/pedis", "Onicomicose dermatofítica"],
+      "ciAbs": ["Insuficiência hepática ativa", "Hipersensibilidade"],
+      "ciRel": ["DRC — ajustar dose", "Interação com inibidores CYP2D6", "Psoríase (piora possível)"],
+      "presentations": ["250 mg comprimido", "Creme 1%", "Solução tópica 1%"],
+      "posologyVo": ["250 mg VO 24/24 h × 2 sem (corporal/pedis)", "250 mg VO 24/24 h × 6–12 sem (unha)", "Creme 1% tópico 12/12 h × 1–2 sem"],
+      "posologyHosp": ["VO preferível; EV não usual no PS"],
+      "notes": "Monitorizar transaminases se curso > 6 sem. Alternativa tópica se infecção limitada."
+    },
+    "hidroxizina": {
+      "name": "Hidroxizina",
+      "classes": ["antihistamine"],
+      "indications": ["Prurido", "Urticária aguda", "Ansiedade adjuvante", "Sedação pré-procedimento leve"],
+      "ciAbs": ["Prolongamento QT congênito", "Porfiria", "Gestação 1º trimestre (relativo)"],
+      "ciRel": ["Idoso", "Glaucoma de ângulo fechado", "Retenção urinária", "Uso com outros sedativos"],
+      "presentations": ["25 mg comprimido", "2 mg/mL xarope"],
+      "posologyVo": ["25 mg VO 6/8 h (prurido/urticária)", "25–50 mg VO à noite (ansiedade/prurido noturno)"],
+      "posologyHosp": ["25–50 mg VO/IM (prurido pós-opiáceo)", "EV profundo se VO indisponível — cautela QT"],
+      "notes": "Anticolinérgico — evitar em idoso frágil. Preferir anti-H1 2ª geração se sedação indesejada."
+    },
+    "lactulose": {
+      "name": "Lactulose",
+      "classes": ["antispasmodic"],
+      "indications": ["Constipação funcional", "Encefalopatia hepática (adjuvante)", "Preparo intestinal leve"],
+      "ciAbs": ["Galactosemia", "Obstrução intestinal"],
+      "ciRel": ["Diabetes (contém lactose/galactose)", "Desidratação"],
+      "presentations": ["667 mg/mL solução oral (10 g/15 mL)", "Sachê 10 g"],
+      "posologyVo": ["15–30 mL VO 12/12 h; titular até 2–3 evacuações/dia", "Encefalopatia: 30–45 mL 8/8 h (protocolo hepatologia)"],
+      "posologyHosp": ["VO preferível; mesmo esquema ambulatorial"],
+      "notes": "Efeito em 24–48 h. Flatulência comum no início."
+    },
+    "mesalazina": {
+      "name": "Mesalazina",
+      "classes": ["antiinflammatory"],
+      "indications": ["Doença inflamatória intestinal (retocolite ulcerativa)", "Profilaxia recorrência diverticulite (selecionado)"],
+      "ciAbs": ["Insuficiência renal grave (DFG < 30)", "Hipersensibilidade salicilatos"],
+      "ciRel": ["Asma/intolerância AAS", "Monitorizar função renal e hematológica"],
+      "presentations": ["400 mg, 800 mg comprimido", "500 mg supositório/retenção", "1–4 g/sachê granulado"],
+      "posologyVo": ["2–4 g/dia VO dividido (DII leve-moderada)", "Supositório 500 mg–1 g 24/24 h (proctite)"],
+      "posologyHosp": ["VO preferível; manter dose habitual se internado por DII"],
+      "notes": "Não usar como monoterapia na diverticulite aguda complicada."
+    },
+    "sulfasalazina": {
+      "name": "Sulfasalazina",
+      "classes": ["antiinflammatory"],
+      "indications": ["Artrite reumatoide", "Doença inflamatória intestinal", "Espondiloartrite"],
+      "ciAbs": ["Porfiria", "Obstrução urinária/intestinal", "Hipersensibilidade sulfonamidas", "Deficiência G6PD"],
+      "ciRel": ["Gestação/lactação", "Alergia AAS", "Monitorizar hemograma e transaminases"],
+      "presentations": ["500 mg comprimido"],
+      "posologyVo": ["500 mg VO 12/12 h × 1 sem; titular até 2–3 g/dia dividido", "Iniciar baixo — rash e náusea comuns"],
+      "posologyHosp": ["VO preferível; suspender se reação grave"],
+      "notes": "Suplementar ácido fólico 5 mg/dia. Reação idiossincrática febre/rash — suspender."
+    },
+    "meloxicam": {
+      "name": "Meloxicam",
+      "classes": ["nsaid"],
+      "indications": ["Osteoartrite", "Artrite reumatoide", "Dor musculoesquelética"],
+      "ciAbs": ["Úlcera GI ativa", "Insuficiência renal/hepática grave", "3º trimestre gestação", "DRC terminal"],
+      "ciRel": ["DRC", "IC", "HAS", "Idoso", "Anticoagulação", "Dengue — evitar"],
+      "presentations": ["7,5 mg, 15 mg comprimido"],
+      "posologyVo": ["7,5–15 mg VO 24/24 h", "Usar menor dose eficaz e menor tempo possível"],
+      "posologyHosp": ["15 mg VO 24/24 h curto prazo se sem contraindicação"],
+      "notes": "Preferir AINE alternativo se risco GI elevado; IBP se necessário."
+    },
+    "indometacina": {
+      "name": "Indometacina",
+      "classes": ["nsaid"],
+      "indications": ["Gota aguda", "Pericardite (contexto específico)", "Dor inflamatória intensa"],
+      "ciAbs": ["Úlcera GI ativa", "Insuficiência renal grave", "Gestação 3º trimestre"],
+      "ciRel": ["HAS", "IC", "Idoso", "Epilepsia", "DRC"],
+      "presentations": ["25 mg, 50 mg cápsula", "75 mg supositório"],
+      "posologyVo": ["Gota: 50 mg VO 8/8 h × 2 dias; depois reduzir", "25 mg VO 8/8 h (dor moderada)"],
+      "posologyHosp": ["50 mg VO/retal 8/8 h (gota/cólica) — evitar EV"],
+      "notes": "Mais efeitos adversos que outros AINEs — usar curso curto na gota."
+    },
+    "atenolol": {
+      "name": "Atenolol",
+      "classes": ["beta_blocker"],
+      "indications": ["Hipertensão arterial", "Angina estável", "Controle FC (FA/flutter — alternativa)"],
+      "ciAbs": ["Asma/broncoespasmo grave", "BAV 2º/3º grau", "Bradicardia sintomática", "IC descompensada aguda"],
+      "ciRel": ["DPOC", "Diabetes (mascara hipoglicemia)", "DRC — acumula", "Depressão"],
+      "presentations": ["25 mg, 50 mg, 100 mg comprimido"],
+      "posologyVo": ["25–50 mg VO 24/24 h (HAS); titular até 100 mg", "50 mg VO 24/24 h (angina)"],
+      "posologyHosp": ["5 mg EV lento (FA — se protocolo institucional)", "Manter VO se estável"],
+      "notes": "Betabloqueador cardioseletivo. Não suspender abruptamente."
+    },
+    "bromazepam": {
+      "name": "Bromazepam",
+      "classes": ["benzodiazepine"],
+      "indications": ["Ansiedade aguda", "Insônia situacional", "Sedação leve ambulatorial"],
+      "ciAbs": ["Miastenia gravis", "Apneia do sono grave", "Insuficiência respiratória grave"],
+      "ciRel": ["Idoso", "Gestação/lactação", "Dependência prévia", "Uso concomitante opioides/alcohol"],
+      "presentations": ["3 mg, 6 mg comprimido"],
+      "posologyVo": ["3–6 mg VO 8/8 h (ansiedade)", "3–6 mg VO à noite (insônia) — curto prazo ≤ 2–4 sem"],
+      "posologyHosp": ["Preferir diazepam/lorazepam EV se sedação hospitalar"],
+      "notes": "Receita B1. Evitar uso crônico; risco de dependência."
+    },
+    "candesartana": {
+      "name": "Candesartana",
+      "classes": ["arb"],
+      "indications": ["Hipertensão arterial", "Insuficiência cardíaca (adjuvante)", "Nefroproteção em DRC/diabetes"],
+      "ciAbs": ["Gestação 2º/3º trimestre", "Estenose bilateral artéria renal"],
+      "ciRel": ["DRC", "Hipercalemia", "Estenose aórtica hemodinamicamente significativa"],
+      "presentations": ["8 mg, 16 mg, 32 mg comprimido"],
+      "posologyVo": ["8–16 mg VO 24/24 h (HAS)", "Titular até 32 mg 24/24 h"],
+      "posologyHosp": ["Manter dose VO habitual se internado"],
+      "notes": "Monitorizar K+ e creatinina ao iniciar."
+    },
+    "ketoconazol": {
+      "name": "Ketoconazol",
+      "classes": ["antibiotic"],
+      "indications": ["Dermatofitoses extensas (alternativa)", "Candidíase cutânea/mucosa (tópico preferível)"],
+      "ciAbs": ["Insuficiência hepática", "Gestação", "Uso com quinidina/cisaprida/lovastatina"],
+      "ciRel": ["Interações CYP3A4 extensas", "Monitorizar transaminases se VO"],
+      "presentations": ["200 mg comprimido", "Creme/shampoo 2%"],
+      "posologyVo": ["200 mg VO 24/24 h × 2–4 sem (micose sistêmica — preferir itraconazol/fluconazol hoje)", "Shampoo 2% tópico 2×/sem (caspa)"],
+      "posologyHosp": ["VO preferível; evitar VO sistêmico se alternativa"],
+      "notes": "Uso sistêmico em declínio — hepatotoxicidade. Preferir terbinafina/fluconazol conforme indicação."
+    },
+    "finasterida": {
+      "name": "Finasterida",
+      "classes": ["hormone"],
+      "indications": ["Hiperplasia prostática benigna (HPB)", "Alopecia androgenética masculina"],
+      "ciAbs": ["Gestação (teratogênico — mulheres grávidas não manipular)", "Hipersensibilidade"],
+      "ciRel": ["Função hepática alterada", "Câncer de próstata — avaliar PSA"],
+      "presentations": ["5 mg comprimido (HPB)", "1 mg comprimido (alopecia)"],
+      "posologyVo": ["5 mg VO 24/24 h (HPB)", "1 mg VO 24/24 h (alopecia) — efeito em meses"],
+      "posologyHosp": ["VO preferível"],
+      "notes": "Efeito na HPB em 3–6 meses. Risco sexual (libido, disfunção erétil) — informar paciente."
+    },
+    "zolpidem": {
+      "name": "Zolpidem",
+      "classes": ["benzodiazepine"],
+      "indications": ["Insônia de conciliação (curto prazo)"],
+      "ciAbs": ["Apneia do sono grave", "Insuficiência hepática grave", "Miastenia gravis"],
+      "ciRel": ["Idoso — reduzir dose", "Uso concomitante de depressores SNC", "Histórico de sonambulismo/complex sleep behaviors"],
+      "presentations": ["5 mg, 10 mg comprimido", "SL 5 mg, 10 mg"],
+      "posologyVo": ["5–10 mg VO à noite imediatamente antes de deitar (máx. 10 mg)", "Idoso: iniciar 5 mg"],
+      "posologyHosp": ["Evitar no PS salvo insônia aguda — curto prazo"],
+      "notes": "Receita B1. Máximo 2–4 semanas. Não usar com álcool."
+    },
+    "timolol": {
+      "name": "Timolol",
+      "classes": ["beta_blocker"],
+      "indications": ["Hipertensão ocular (glaucoma)", "Profilaxia enxaqueca (VO)", "Controle FC/HAS (VO — menos usado)"],
+      "ciAbs": ["Asma grave", "BAV avançado", "IC descompensada"],
+      "ciRel": ["DPOC", "Diabetes", "Depressão", "Uso tópico ocular — absorção sistêmica"],
+      "presentations": ["0,5% colírio", "5 mg, 10 mg comprimido VO"],
+      "posologyVo": ["Colírio: 1 gota 12/12 h no olho afetado", "Profilaxia enxaqueca: 10–20 mg VO 12/12 h"],
+      "posologyHosp": ["Colírio ou manter VO se indicado"],
+      "notes": "Colírio pode causar broncoespasmo sistêmico — pressionar saco lagrimal após instilação."
+    },
+    "bumetanida": {
+      "name": "Bumetanida",
+      "classes": ["diuretic"],
+      "indications": ["Edema por IC/insuficiência renal", "Edema agudo pulmão (adjuvante)"],
+      "ciAbs": ["Anúria", "Hipovolemia grave", "Hiponatremia severa"],
+      "ciRel": ["Hipocalemia", "Gota", "Gestação", "Uso com aminoglicosídeos (ototoxicidade)"],
+      "presentations": ["0,5 mg, 1 mg, 2 mg comprimido", "0,25 mg/mL ampola IM/EV"],
+      "posologyVo": ["0,5–2 mg VO 24/24 h; titular conforme diurese"],
+      "posologyHosp": ["0,5–1 mg EV/IM; repetir conforme resposta", "Potência ~40× furosemida mg por mg"],
+      "notes": "Monitorizar eletrólitos e função renal."
+    },
+    "clonidina": {
+      "name": "Clonidina",
+      "classes": ["vasodilator"],
+      "indications": ["Hipertensão arterial", "Síndrome de abstinência opioide/álcool (adjuvante)", "Crise hipertensiva selecionada (VO)"],
+      "ciAbs": ["Bradicardia sinusal", "BAV 2º/3º grau"],
+      "ciRel": ["Depressão", "Doença vascular periférica", "Nunca suspender abruptamente — crise adrenérgica"],
+      "presentations": ["0,1 mg, 0,2 mg comprimido", "150 mcg/mL solução oral"],
+      "posologyVo": ["0,1 mg VO 12/12 h; titular 0,2–0,6 mg/dia", "Abstinência: esquema taper conforme protocolo"],
+      "posologyHosp": ["0,1–0,2 mg VO/SL (urgência HAS selecionada)", "Patch transdérmico em alguns serviços"],
+      "notes": "Sedação e boca seca comuns. Rebound HTN se suspensão brusca."
+    },
+    "citalopram": {
+      "name": "Citalopram",
+      "classes": ["antidepressant"],
+      "indications": ["Depressão maior", "Transtorno de ansiedade", "Transtorno de pânico"],
+      "ciAbs": ["Uso concomitante IMAO (14 dias)", "Prolongamento QT congênito"],
+      "ciRel": ["Idoso — máx. 20 mg/dia (QT)", "Epilepsia", "Gestação/lactação", "Uso com outros QT-prolongadores"],
+      "presentations": ["20 mg, 40 mg comprimido"],
+      "posologyVo": ["20 mg VO 24/24 h; titular até 40 mg (máx. 20 mg se > 60 anos)"],
+      "posologyHosp": ["VO preferível; efeito em 2–4 semanas"],
+      "notes": "Receita B1. Risco de síndrome serotoninérgica com triptanos/IRSN em altas doses."
+    },
+    "paroxetina": {
+      "name": "Paroxetina",
+      "classes": ["antidepressant"],
+      "indications": ["Depressão", "Ansiedade", "TOC", "TEPT", "Transtorno de pânico"],
+      "ciAbs": ["IMAO concomitante", "Gestação 1º trimestre (relativo — avaliar risco)"],
+      "ciRel": ["Epilepsia", "Sangramento GI (ISRS)", "Descontinuação — taper lento (sintomas abstinência)"],
+      "presentations": ["20 mg, 30 mg comprimido"],
+      "posologyVo": ["20 mg VO pela manhã 24/24 h; titular até 40–50 mg se necessário"],
+      "posologyHosp": ["VO preferível"],
+      "notes": "Receita B1. Inibidor potente CYP2D6 — checar interações."
+    },
+    "mirtazapina": {
+      "name": "Mirtazapina",
+      "classes": ["antidepressant"],
+      "indications": ["Depressão com insônia/hiporexia", "Náusea por quimioterapia (off-label baixa dose)"],
+      "ciAbs": ["Uso concomitante IMAO"],
+      "ciRel": ["Idoso", "Sedação", "Ganho de peso", "Neutropenia rara"],
+      "presentations": ["15 mg, 30 mg, 45 mg comprimido ODT"],
+      "posologyVo": ["15 mg VO à noite; titular 15 mg/semana até 30–45 mg"],
+      "posologyHosp": ["15 mg VO à noite (depressão com insônia internado)"],
+      "notes": "Receita B1. Menos efeito sexual que outros antidepressivos."
+    },
+    "montelukaste": {
+      "name": "Montelukaste",
+      "classes": ["bronchodilator"],
+      "indications": ["Asma persistente leve-moderada (adjuvante)", "Rinite alérgica", "Profilaxia asma induzida por exercício"],
+      "ciAbs": ["Hipersensibilidade"],
+      "ciRel": ["Alterações neuropsiquiátricas (sonhos vívidos, agitação — ANVISA alerta)", "Doença hepática"],
+      "presentations": ["10 mg comprimido (adulto)", "4 mg, 5 mg (pediátrico)"],
+      "posologyVo": ["10 mg VO 24/24 h à noite", "Tomar 2 h antes ou 2 h após refeição rica em gordura"],
+      "posologyHosp": ["VO preferível; não usar como broncodilatador agudo"],
+      "notes": "Não trata crise asmática aguda — usar salbutamol."
+    },
+    "teofilina": {
+      "name": "Teofilina",
+      "classes": ["bronchodilator"],
+      "indications": ["Asma/DPOC refratária (adjuvante)", "Apneia do sono infantil (contexto específico)"],
+      "ciAbs": ["Hipersensibilidade xantinas", "Arritmia aguda"],
+      "ciRel": ["Estreita janela terapêutica", "Interações (macrolídeos, ciprofloxacino, fumo)", "Monitorizar níveis séricos"],
+      "presentations": ["100 mg, 200 mg comprimido retard", "Solução oral"],
+      "posologyVo": ["200 mg VO 12/12 h; titular conforme nível (5–15 mcg/mL)"],
+      "posologyHosp": ["240 mg EV em 20 min (ataque) + manutenção conforme nível — serviço especializado"],
+      "notes": "Uso em declínio — preferir LABA/ICS. Toxicidade: náusea, arritmia, convulsão."
+    },
+    "tiotropio": {
+      "name": "Tiotropio",
+      "classes": ["bronchodilator"],
+      "indications": ["DPOC manutenção", "Asma grave (adjuvante — contexto específico)"],
+      "ciAbs": ["Hipersensibilidade atropínicos", "Glaucoma de ângulo fechado agudo (relativo a contato)"],
+      "ciRel": ["HPB/retention urinária", "Não usar na crise aguda"],
+      "presentations": ["18 mcg cápsula inalatória (HandiHaler)", "2,5 mcg/puff dispositivo Respimat"],
+      "posologyVo": ["18 mcg inalado 24/24 h (1 cápsula/dia)", "Respimat: 2 jatos 24/24 h"],
+      "posologyHosp": ["Manter inalador se paciente traz de casa; não substituir nebulização aguda"],
+      "notes": "Anticolinérgico longa ação — enxague oral após uso (candidíase oral)."
+    },
+    "beclometasona": {
+      "name": "Beclometasona",
+      "classes": ["corticosteroid"],
+      "indications": ["Asma persistente (controlador)", "Rinite alérgica (spray nasal)"],
+      "ciAbs": ["Infecção respiratória fúngica não tratada"],
+      "ciRel": ["DPOC com pneumonia frequente (risco se altas doses)", "Candidíase oral — enxaguar boca"],
+      "presentations": ["50 mcg/jato aerossol", "100 mcg/jato HFA", "Spray nasal 50 mcg/jato"],
+      "posologyVo": ["200–400 mcg inalados 12/12 h (asma)", "Spray nasal 2 jatos/narina 12/12 h"],
+      "posologyHosp": ["Manter dose de controle se internado por outra causa"],
+      "notes": "Não usar isolado na crise — associar SABA."
+    },
+    "dexclorfeniramina": {
+      "name": "Dexclorfeniramina",
+      "classes": ["antihistamine"],
+      "indications": ["Rinite alérgica", "Urticária aguda", "Prurido"],
+      "ciAbs": ["Neonatos/prematuros", "Uso concomitante IMAO"],
+      "ciRel": ["Idoso", "Glaucoma", "HPB", "Sedação — evitar dirigir"],
+      "presentations": ["2 mg comprimido", "0,4 mg/mL xarope", "0,4 mg/mL solução oral"],
+      "posologyVo": ["2 mg VO 8/8 h (adulto)", "2 mg VO à noite se sedação indesejada de dia"],
+      "posologyHosp": ["2 mg VO/IM 8/8 h (urticária/prurido)"],
+      "notes": "Anti-H1 1ª geração — sedação e anticolinérgico."
+    },
+    "acido_folico": {
+      "name": "Ácido fólico",
+      "classes": ["vitamin"],
+      "indications": ["Anemia megaloblástica por deficiência de folato", "Suplementação gestação", "Uso com metotrexato/sulfasalazina"],
+      "ciAbs": ["Anemia não investigada (pode mascarar B12)"],
+      "ciRel": ["Deficiência B12 concomitante — suplementar B12 antes/isoladamente"],
+      "presentations": ["5 mg comprimido", "0,4 mg comprimido (gestação)"],
+      "posologyVo": ["5 mg VO 24/24 h (deficiência)", "0,4–5 mg VO 24/24 h (gestação/planejamento)", "5 mg/semana com metotrexato"],
+      "posologyHosp": ["VO preferível"],
+      "notes": "Investigar B12 se anemia macrocítica."
+    },
+    "risperidona": {
+      "name": "Risperidona",
+      "classes": ["antipsychotic"],
+      "indications": ["Psicose aguda", "Agitação psicótica (baixa dose)", "Esquizofrenia manutenção"],
+      "ciAbs": ["Hipersensibilidade"],
+      "ciRel": ["Prolongamento QT", "Epilepsia", "Idoso com demência (risco AVC/mortalidade)", "Parkinson — piora motora"],
+      "presentations": ["1 mg, 2 mg, 3 mg comprimido", "1 mg/mL solução", "25 mg/2 sem IM LAI"],
+      "posologyVo": ["1–2 mg VO 12/12 h (agitação/psicose aguda); titular", "0,5–1 mg VO à noite (idoso frágil)"],
+      "posologyHosp": ["1–2 mg VO/IM (agitação — preferir haloperidol no delirium puro)"],
+      "notes": "Receita B1. Monitorizar glicemia e prolactina se uso crônico."
+    },
+    "carbamazepina": {
+      "name": "Carbamazepina",
+      "classes": ["anticonvulsant"],
+      "indications": ["Epilepsia", "Neuralgia do trigêmeo", "Estabilizador de humor (bipolar — contexto específico)"],
+      "ciAbs": ["Bloqueio AV", "Porfiria aguda", "Uso concomitante IMAO ou voriconazol"],
+      "ciRel": ["HLA-B*1502 (risco Stevens-Johnson — populações asiáticas)", "Indutor CYP — interações", "Monitorizar sódio (SIADH)"],
+      "presentations": ["200 mg, 400 mg comprimido", "20 mg/mL suspensão"],
+      "posologyVo": ["200 mg VO 12/12 h; titular 200 mg/semana até 800–1200 mg/dia", "Neuralgia: 100 mg VO 12/12 h; titular"],
+      "posologyHosp": ["VO preferível; EV não disponível comercialmente no BR usual"],
+      "notes": "Receita B1. Iniciar lento — rash e leucopenia."
+    },
+    "azatioprina": {
+      "name": "Azatioprina",
+      "classes": ["antiinflammatory"],
+      "indications": ["Doença inflamatória intestinal", "Transplante (imunossupressor)", "Doenças autoimunes"],
+      "ciAbs": ["Gestação (relativo — avaliar)", "Deficiência TPMT severa"],
+      "ciRel": ["Infecção ativa", "Neoplasia", "Monitorizar hemograma e transaminases"],
+      "presentations": ["50 mg comprimido"],
+      "posologyVo": ["2–2,5 mg/kg/dia VO (DII)", "Iniciar baixo se TPMT desconhecido"],
+      "posologyHosp": ["VO preferível; manter dose se internado"],
+      "notes": "Efeito imunossupressor tardio (semanas). Risco linfoma/leucemia com uso prolongado."
+    }
+  },
+  "enrich": {
+    "escitalopram": {
+      "indications": ["Depressão maior", "Transtorno de ansiedade generalizada", "Pânico", "Ansiedade aguda (titulação lenta)"],
+      "ciAbs": ["IMAO concomitante (14 dias)"],
+      "ciRel": ["Idoso", "Prolongamento QT em altas doses", "Gestação/lactação"],
+      "presentations": ["10 mg, 20 mg comprimido"],
+      "posologyVo": ["10 mg VO 24/24 h; titular até 20 mg após 2–4 sem", "Idoso: 5–10 mg 24/24 h"],
+      "notes": "Receita B1. Efeito terapêutico em 2–4 semanas."
+    },
+    "venlafaxina": {
+      "indications": ["Depressão", "Ansiedade", "Enxaqueca profilática (off-label)"],
+      "presentations": ["37,5 mg, 75 mg, 150 mg comprimido"],
+      "posologyVo": ["37,5–75 mg VO 24/24 h; titular até 150–225 mg", "Descontinuar gradualmente — síndrome abstinência"],
+      "ciRel": ["HAS — monitorizar PA", "Prolongamento QT"],
+      "notes": "Receita B1. IRSN — evitar com IMAO."
+    },
+    "sertralina": {
+      "indications": ["Depressão", "TOC", "TEPT", "Fobia social", "Pânico"],
+      "presentations": ["50 mg, 100 mg comprimido"],
+      "posologyVo": ["50 mg VO 24/24 h; titular 50 mg/semana até 200 mg", "TOC: frequentemente 100–200 mg/dia"],
+      "notes": "Receita B1. Menor interação CYP que paroxetina."
+    },
+    "bromoprida": {
+      "indications": ["Náusea/vômito", "Gastroparesia leve", "Refluxo com sintomas dispépticos"],
+      "presentations": ["10 mg comprimido", "10 mg/mL gotas", "5 mg/mL ampola IM/EV"],
+      "posologyVo": ["10 mg VO 8/8 h antes refeições", "20–40 gotas VO 8/8 h"],
+      "posologyHosp": ["10 mg IM/EV lento 8/8 h", "EV lento — risco extrapyramidal se bolus rápido"],
+      "ciRel": ["Parkinson", "Prolongamento QT", "Epilepsia"],
+      "notes": "Procinético — evitar uso crônico (> 12 sem) por risco tardive dyskinesia."
+    },
+    "domperidona": {
+      "indications": ["Náusea/vômito funcional", "Refluxo com sintomas dispépticos"],
+      "presentations": ["10 mg comprimido", "1 mg/mL suspensão"],
+      "posologyVo": ["10 mg VO 8/8 h 15–30 min antes refeições", "Máx. 30 mg/dia"],
+      "posologyHosp": ["10 mg VO 8/8 h — preferir VO (menor risco cardíaco que EV)"],
+      "ciRel": ["Prolongamento QT", "Insuficiência hepática", "Uso > 7 dias — risco arrítmia"],
+      "notes": "Suspensa comercialização em alguns países — usar menor tempo possível."
+    },
+    "linezolida": {
+      "indications": ["Infecção por MRSA/VRE", "Pneumonia nosocomial", "Pele complicada resistente"],
+      "presentations": ["600 mg comprimido", "2 mg/mL bolsa EV 300 mL"],
+      "posologyVo": ["600 mg VO 12/12 h × 10–14 dias"],
+      "posologyHosp": ["600 mg EV 12/12 h infundir 30–120 min", "Inibidor MAO fraco — evitar tiramina/ISRS concomitante"],
+      "ciRel": ["Trombocitopenia", "Neuropatia periférica se > 28 dias", "Síndrome serotoninérgica com ISRS"],
+      "notes": "Antibiótico reserva — uso curto e dirigido."
+    },
+    "ertapenem": {
+      "indications": ["Infecção intra-abdominal complicada", "Pneumonia comunitária (internação)", "ITU complicada", "ESBL selecionado"],
+      "presentations": ["1 g pó liofilizado IM/EV"],
+      "posologyVo": ["Não disponível VO"],
+      "posologyHosp": ["1 g EV 24/24 h × 5–14 dias", "1 g IM profundo 24/24 h (alternativa ambulatorial)"],
+      "ciRel": ["Epilepsia — reduz limiar convulsivo", "Alergia penicilina grave — avaliar reatividade cruzada"],
+      "notes": "Não cobre Pseudomonas. Ajustar DFG < 30."
+    },
+    "levetiracetam": {
+      "indications": ["Status epilepticus (adjuvante)", "Crise convulsiva aguda (manutenção)", "Epilepsia manutenção"],
+      "presentations": ["250 mg, 500 mg, 750 mg comprimido", "100 mg/mL solução", "500 mg/5 mL ampola EV"],
+      "posologyVo": ["500 mg VO 12/12 h; titular até 1500 mg 12/12 h", "750 mg VO dose de ataque ambulatorial se orientado"],
+      "notes": "Menos interações que fenitoína/carbamazepina. Ajustar DRC."
+    },
+    "pregabalina": {
+      "indications": ["Neuropatia periférica dolorosa", "Fibromialgia", "Epilepsia adjuvante", "Ansiedade generalizada (registro variável)"],
+      "presentations": ["75 mg, 150 mg, 300 mg cápsula"],
+      "posologyVo": ["75 mg VO 12/12 h; titular até 150–300 mg 12/12 h", "Neuropatia: iniciar 75 mg 12/12 h"],
+      "ciRel": ["Insuficiência renal — ajustar dose", "Abuso/dependência em altas doses", "Edema periférico"],
+      "notes": "Receita B1 em alguns estados — ver legislação local. Descontinuar gradualmente."
+    },
+    "gabapentina": {
+      "indications": ["Neuropatia periférica", "Neuralgia pós-herpética", "Crise convulsiva adjuvante"],
+      "presentations": ["300 mg, 400 mg cápsula", "600 mg comprimido"],
+      "posologyVo": ["300 mg VO 8/8 h; titular até 1800–3600 mg/dia dividido", "Neuralgia: 300 mg dia 1; 600 mg dia 2; 900 mg dia 3; depois titular"],
+      "ciRel": ["DRC — ajustar intervalo/dose", "Sedação", "Abuso reportado"],
+      "notes": "Não interage fortemente via CYP. Efeito analgésico em dias-semanas."
+    },
+    "amiodarona": {
+      "indications": ["FA/flutter (controle ritmo/frequência)", "TV/FV recorrente", "Controle FC na SCA (alternativa)"],
+      "presentations": ["200 mg comprimido", "150 mg/3 mL ampola EV"],
+      "posologyVo": ["200 mg VO 8/8 h × 1 sem (ataque); 200 mg 12/12 h × 1 sem; 200 mg 24/24 h manutenção"],
+      "ciRel": ["Tireotoxicidade/hipotireoidismo", "Pulmonite intersticial", "Prolongamento QT", "Interações (warfarina, digoxina, estatinas)"],
+      "notes": "Monitorizar TSH, função hepática e Rx tórax basal. Fotossensibilidade."
+    },
+    "fluconazol": {
+      "indications": ["Candidíase mucocutânea", "Candidíase esofágica", "Profilaxia criptococo (contexto HIV)"],
+      "presentations": ["150 mg cápsula", "200 mg cápsula", "2 mg/mL solução EV"],
+      "posologyVo": ["150 mg VO dose única (vaginal)", "200 mg VO 24/24 h × 14 dias (esofágica)", "100–200 mg VO 24/24 h (cutânea extensa)"],
+      "ciRel": ["Prolongamento QT", "Gravidez alta dose", "Interações CYP (estatinas, warfarina)"],
+      "notes": "Ajustar DFG. Candida krusei frequentemente resistente."
+    },
+    "dabigatrana": {
+      "indications": ["FA não valvar (anticoagulação)", "TEV/EP (registro variável)"],
+      "presentations": ["110 mg, 150 mg cápsula"],
+      "posologyVo": ["150 mg VO 12/12 h (FA; reduzir 110 mg se idoso/DRC)", "Não abrir/esmagar cápsula"],
+      "ciRel": ["DRC", "Sangramento ativo", "Prótese mecânica — contraindicado"],
+      "notes": "Antídoto: idarucizumab (serviços selecionados). Suspender 24–48 h antes cirurgia eletiva."
+    },
+    "apixabana": {
+      "indications": ["FA (anticoagulação)", "TEV/EP tratamento e profilaxia"],
+      "presentations": ["2,5 mg, 5 mg comprimido"],
+      "posologyVo": ["5 mg VO 12/12 h (FA)", "2,5 mg 12/12 h se ≥ 2 critérios (idade ≥ 80, peso ≤ 60, creatinina ≥ 1,5)"],
+      "ciRel": ["Sangramento ativo", "Prótese valvar mecânica", "DRC grave — cautela"],
+      "notes": "Suspender conforme risco cirúrgico. Não monitorizar INR."
+    },
+    "metoprolol": {
+      "indications": ["Hipertensão", "Angina", "IC com FE reduzida (succinato)", "Controle FC pós-IAM/FA"],
+      "presentations": ["25 mg, 50 mg, 100 mg comprimido", "Succinato 25–200 mg (liberação prolongada)"],
+      "posologyVo": ["50 mg VO 12/12 h (HAS/angina)", "25–50 mg 12/12 h (IC — succinato titular)"],
+      "posologyHosp": ["5 mg EV 5 min (SCA/FA — monitorizado)", "Manter VO assim que possível"],
+      "ciRel": ["Asma", "BAV", "Bradicardia", "Não suspender abruptamente"],
+      "notes": "Succinato para IC; tartrato para HAS/angina aguda."
+    },
+    "colchicina": {
+      "indications": ["Gota aguda", "Profilaxia gota", "Pericardite aguda/recorrente"],
+      "presentations": ["0,5 mg comprimido"],
+      "posologyVo": ["Gota aguda: 1 mg VO depois 0,5 mg 1 h depois; ou 0,5 mg 8/8 h", "Profilaxia: 0,5–1 mg VO 24/24 h"],
+      "ciRel": ["DRC — reduzir dose", "Interação macrolídeos/estatinas (miopatia)", "Diarreia comum"],
+      "notes": "Evitar em DFG < 30 ou usar dose reduzida."
+    },
+    "piridoxina": {
+      "indications": ["Profilaxia neuropatia por isoniazida", "Deficiência de vitamina B6", "Nausea gravidez (off-label baixa dose)"],
+      "presentations": ["10 mg, 25 mg, 50 mg comprimido"],
+      "posologyVo": ["25–50 mg VO 24/24 h com isoniazida (TB)", "50 mg 24/24 h (deficiência)"],
+      "notes": "Incluir em esquemas TB com isoniazida."
+    },
+    "esomeprazol": {
+      "indications": ["DRGE", "Úlcera péptica", "Profilaxia úlcera por AINE", "Erradicação H. pylori (tripla)"],
+      "presentations": ["20 mg, 40 mg comprimido", "40 mg pó EV"],
+      "posologyVo": ["20–40 mg VO 24/24 h antes refeição", "40 mg VO 12/12 h (úlcera)"],
+      "posologyHosp": ["40 mg EV 24/24 h (HDA profilaxia/úlcera)"],
+      "notes": "Uso prolongado — risco deficiência Mg/B12 e infecção C. difficile."
+    },
+    "budesonida": {
+      "indications": ["Asma controlador", "DPOC (formulacao específica)", "Retocolite leve (enema/forma local)"],
+      "presentations": ["200 mcg/jato inalador", "3 mg cápsula (Entocort — contexto específico)"],
+      "posologyVo": ["200–400 mcg inalados 12/12 h", "Enxaguar boca após inalação"],
+      "notes": "Menor supressão adrenal sistêmica que prednisona em baixas doses inaladas."
+    },
+    "fluticasona": {
+      "indications": ["Asma controlador", "Rinite alérgica (spray nasal)", "DPOC (triple therapy)"],
+      "presentations": ["50 mcg/jato HFA", "Spray nasal 50 mcg/jato"],
+      "posologyVo": ["100–250 mcg inalados 12/12 h (asma)", "2 jatos/narina 24/24 h (rinite)"],
+      "notes": "Associar sempre SABA para resgate na asma."
+    }
+  }
+}
