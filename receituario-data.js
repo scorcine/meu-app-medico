@@ -557,6 +557,92 @@ const RX_CATALOG_MANUAL = [
             orientacoes: 'Alternativa de 1ª linha. Mesmas orientações de acompanhamento da PEP.'
           }
         ]
+      },
+      {
+        id: 'vs-sifilis',
+        label: 'Sífilis — profilaxia/tratamento empírico (PS, IM)',
+        options: [
+          {
+            id: 'vs-sif-benz',
+            tier: '1ª linha',
+            label: 'Penicilina benzatina dose única',
+            classes: ['penicillin'],
+            noVoExpand: true,
+            meds: [
+              { id: 'vs-sif-benz24', text: 'Penicilina benzatina 2,4 milhões UI — 1,2 milhão UI IM em cada glúteo (dose única, profilaxia/tratamento empírico de sífilis)', classes: ['penicillin'] }
+            ],
+            orientacoes: 'Aplicar no PS. VDRL baseline; reteste em 3 e 6 meses. Gestação: penicilina é tratamento de escolha (MS 2022).'
+          },
+          {
+            id: 'vs-sif-doxi',
+            tier: 'Alérgico (sem anafilaxia)',
+            label: 'Doxiciclina VO — alternativa',
+            classes: ['antibiotic'],
+            noVoExpand: true,
+            meds: [
+              { id: 'vs-sif-dox', text: 'Doxiciclina 100 mg — 1 comprimido VO 12/12 h por 14 dias', classes: ['antibiotic'] }
+            ],
+            orientacoes: 'Somente se alergia documentada à penicilina sem anafilaxia. Contraindicada na gestação e lactação.'
+          }
+        ]
+      },
+      {
+        id: 'vs-hepb',
+        label: 'Hepatite B — profilaxia pós-exposição (PS, IM)',
+        options: [
+          {
+            id: 'vs-hb-vac-ig',
+            tier: '1ª linha',
+            label: 'Não vacinado ou esquema incompleto',
+            classes: [],
+            noVoExpand: true,
+            meds: [
+              { id: 'vs-hb-vac', text: 'Vacina hepatite B recombinante — 1ª dose 1 mL IM (deltoide); completar esquema 0-1-6 meses', classes: [] },
+              { id: 'vs-hb-ig', text: 'Imunoglobulina anti-HBs — 0,06 mL/kg IM (máx. 500 UI), preferencialmente nas primeiras 24 h (até 7 dias)', classes: [] }
+            ],
+            orientacoes: 'Checar HBsAg e anti-HBs baseline. Se HBsAg positivo → encaminhar hepatologia (não usar IG anti-HBs isolada).'
+          },
+          {
+            id: 'vs-hb-reforco',
+            tier: 'Alternativa',
+            label: 'Vacinado — anti-HBs desconhecido ou < 10 mUI/mL',
+            classes: [],
+            noVoExpand: true,
+            meds: [
+              { id: 'vs-hb-vac2', text: 'Vacina hepatite B recombinante — 1 dose IM (deltoide) + imunoglobulina anti-HBs conforme peso (até 500 UI IM)', classes: [] }
+            ],
+            orientacoes: 'Reforço ou completar esquema conforme anti-HBs e histórico vacinal.'
+          }
+        ]
+      },
+      {
+        id: 'vs-tetano',
+        label: 'Profilaxia antitetânica (se feridas — PS, IM)',
+        options: [
+          {
+            id: 'vs-tet-reforco',
+            tier: '1ª linha',
+            label: 'Reforço vacinal (ferida limpa)',
+            classes: [],
+            noVoExpand: true,
+            meds: [
+              { id: 'vs-tet-dt', text: 'Vacina antitetânica (dT ou dTpa) 0,5 mL — 1 dose IM deltoide se última dose há mais de 10 anos', classes: [] }
+            ],
+            orientacoes: 'Conferir carteira vacinal. Ferida limpa: reforço se > 10 anos desde última dose.'
+          },
+          {
+            id: 'vs-tet-ig',
+            tier: 'Ferida tetanígena / vacinação incompleta',
+            label: 'Vacina + imunoglobulina antitetânica',
+            classes: [],
+            noVoExpand: true,
+            meds: [
+              { id: 'vs-tet-vac', text: 'Vacina antitetânica (dT ou dTpa) 0,5 mL IM deltoide', classes: [] },
+              { id: 'vs-tet-igh', text: 'Imunoglobulina antitetânica humana 250 UI IM (sítio diferente da vacina)', classes: [] }
+            ],
+            orientacoes: 'Ferida tetanígena ou vacinação incompleta/desconhecida. Lavagem abundante das feridas. SAT 500 UI se Ig humana indisponível (protocolo local).'
+          }
+        ]
       }
     ]
   }

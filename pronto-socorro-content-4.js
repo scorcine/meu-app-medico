@@ -815,8 +815,31 @@ const PS_CONTENT_4 = {
           <li><strong>Refractário:</strong> ajustar conforme resistência do parceiro (se conhecida); adesão rigorosa 28 dias.</li>
         </ul>
       </li>
-      <li><strong>Hepatite B</strong> — vacina + imunoglobulina anti-HBs se não vacinado ou esquema incompleto.</li>
-      <li><strong>Suporte</strong> — profilaxia tétano se feridas; analgesia; encaminhamento psicossocial (CRAS, delegacia especializada se desejado).</li>
+      <li><strong>Sífilis (profilaxia/tratamento empírico)</strong> — VDRL baseline; tratar empiricamente se exposição de risco
+        <ul class="ps-med-options">
+          <li><strong>1ª linha:</strong> penicilina benzatina 2,4 milhões UI IM dose única (1,2 milhão UI em cada glúteo).</li>
+          <li><strong>Alternativa:</strong> penicilina benzatina 2,4 milhões UI IM semanal · 3 semanas (se sífilis secundária confirmada).</li>
+          <li><strong>Alérgico:</strong> doxiciclina 100 mg VO 12/12h · 14 dias (sem anafilaxia à penicilina — contraindicada na gestação).</li>
+          <li><strong>Refractário:</strong> repetir penicilina benzatina; VDRL controle em 3 e 6 meses.</li>
+        </ul>
+      </li>
+      <li><strong>Hepatite B</strong> — checar HBsAg e anti-HBs; profilaxia se não vacinado ou esquema incompleto
+        <ul class="ps-med-options">
+          <li><strong>1ª linha:</strong> vacina hepatite B recombinante 1 mL IM (1ª dose) + imunoglobulina anti-HBs 0,06 mL/kg IM (máx. 500 UI) — ideal ≤ 24 h (até 7 dias).</li>
+          <li><strong>Alternativa:</strong> esquema acelerado vacina (0, 1, 2 meses) se protocolo local; completar 3 doses.</li>
+          <li><strong>Alérgico:</strong> vacina recombinante com observação 30 min; IG anti-HBs se indicada independentemente.</li>
+          <li><strong>Refractário:</strong> se HBsAg positivo → encaminhar hepatologia/infectologia (não usar IG anti-HBs isolada).</li>
+        </ul>
+      </li>
+      <li><strong>Profilaxia antitetânica</strong> — se feridas; conforme carteira vacinal
+        <ul class="ps-med-options">
+          <li><strong>1ª linha:</strong> vacina antitetânica (dT/dTpa) 0,5 mL IM deltoide se última dose há &gt; 10 anos (ferida limpa) ou &gt; 5 anos (ferida tetanígena).</li>
+          <li><strong>Alternativa:</strong> ferida tetanígena + vacinação incompleta/desconhecida — vacina dT/dTpa IM + imunoglobulina antitetânica humana 250 UI IM (sítios diferentes).</li>
+          <li><strong>Alérgico:</strong> Ig antitetânica humana 250 UI IM se vacina contraindicada; avaliar risco-benefício da vacina.</li>
+          <li><strong>Refractário:</strong> soro antitetânico 500 UI IM/IV se Ig humana indisponível (protocolo local).</li>
+        </ul>
+      </li>
+      <li><strong>Suporte</strong> — analgesia; encaminhamento psicossocial (CRAS, delegacia especializada se desejado).</li>
     </ol>
     <h4>Alta / ambulatorial</h4>
     <ul>

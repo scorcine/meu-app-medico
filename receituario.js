@@ -88,8 +88,11 @@ function rxUpdateQueixaHint () {
 
 function rxClassifyMedRoute (text) {
   const t = (text || '').toLowerCase();
-  if (/^hidratacao|soro de reidratacao|repouso relativo/.test(t)) return 'geral';
-  if (/\b(im|intramuscular)\b/.test(t) && !/\bvo\b/.test(t)) return 'im';
+  if (/^hidratacao|soro de reidratacao|repouso relativo|reforco vacinal nao necessario/.test(t)) return 'geral';
+  if (/\b(im|intramuscular)\b/.test(t) || /vacina.*\bim\b|imunoglobulina|penicilina benzatina|soro antitetanico/.test(t)) {
+    if (/\bvo\b/.test(t) && !/\bim\b/.test(t)) return 'vo';
+    return 'im';
+  }
   if (/tenofovir|dolutegravir|emtricitabina|raltegravir|zidovudina|tdf\/|pep hiv|tarv/.test(t)) return 'tarv';
   return 'vo';
 }
