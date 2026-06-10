@@ -283,7 +283,7 @@ const PS_CONTENT_5 = {
       <li><strong>Excluir dengue grave</strong> — prova do laço, plaquetas, hematócrito; se dengue possível → paracetamol apenas nas primeiras 48 h.</li>
       <li><strong>Analgesia</strong>
         <ul class="ps-med-options">
-          <li><strong>1ª linha:</strong> paracetamol 750 mg–1 g VO 6/6 h (máx. 3 g/dia) — sempre nas primeiras 48 h (dengue não descartada).</li>
+          <li><strong>1ª linha:</strong> paracetamol 500 mg ou 750 mg VO 6/6 h (máx. 3 g/dia) — sempre nas primeiras 48 h (dengue não descartada).</li>
           <li><strong>Alternativa:</strong> dipirona 1 g VO 6/6 h (após exclusão de dengue).</li>
           <li><strong>Alérgico:</strong> paracetamol VO (evitar AINE/AAS se dengue possível).</li>
           <li><strong>Refractário:</strong> naproxeno 500 mg VO 12/12 h + prednisona 20 mg VO 24/24 h · 5 dias se artrite incapacitante.</li>

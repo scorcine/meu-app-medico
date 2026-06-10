@@ -46,5 +46,9 @@ const MED_VO = {
   amoxClav500: 'Amoxicilina + clavulanato 500/125 mg — 1 comprimido VO 8/8 horas, por 10 dias',
 
   fosfomicina3g: 'Fosfomicina trometamol 3 g — 1 envelope VO dose única (dissolver em meio copo de água)',
-  nitrofurantoina100: 'Nitrofurantoína 100 mg — 1 comprimido VO 12/12 horas, por 5 dias'
+  nitrofurantoina100: 'Nitrofurantoína 100 mg — 1 comprimido VO 12/12 horas, por 5 dias',
+
+  azitromicina500: 'Azitromicina 500 mg — 1 comprimido VO 24/24 horas, por 5 dias',
+  clindamicina300: 'Clindamicina 300 mg — 1 comprimido VO 6/6 horas, por 10 dias',
+  naproxeno250: 'Naproxeno 250 mg — 1 comprimido VO 12/12 horas, se dor'
 };

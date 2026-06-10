@@ -192,16 +192,61 @@ const RX_CATALOG_MANUAL = [
   },
   {
     id: 'amigdalite-bacteriana',
-    name: 'Amigdalite bacteriana',
+    name: 'Dor de garganta / faringite',
     icon: '🦠',
-    aliases: ['amigdalite', 'faringite', 'faringoamigdalite', 'dor de garganta', 'odinofagia'],
+    aliases: ['dor de garganta', 'garganta', 'faringite', 'faringoamigdalite', 'odinofagia', 'amigdalite', 'amigdalite bacteriana'],
     groups: [
       {
-        id: 'atb',
-        label: 'Antibiótico',
+        id: 'sintomatico',
+        label: 'Tratamento sintomático — faringite viral ou adjuvante',
         options: [
           {
-            id: 'amig-1',
+            id: 'amig-sint-analgesic',
+            tier: '1ª linha',
+            label: 'Analgésico simples — escolha um',
+            classes: ['analgesic_non_opioid'],
+            items: [],
+            meds: [
+              { id: 'amig-sint-dip500', text: MED_VO.dipirona500 + ', por 3 a 5 dias', classes: ['analgesic_non_opioid'], exclusiveGroup: 'amig-sint-analgesic' },
+              { id: 'amig-sint-dip1g', text: MED_VO.dipirona1g + ', por 3 a 5 dias', classes: ['analgesic_non_opioid'], exclusiveGroup: 'amig-sint-analgesic' },
+              { id: 'amig-sint-par500', text: MED_VO.paracetamol500 + ', por 3 a 5 dias', classes: ['analgesic_non_opioid'], exclusiveGroup: 'amig-sint-analgesic' },
+              { id: 'amig-sint-par750', text: MED_VO.paracetamol750 + ', por 3 a 5 dias', classes: ['analgesic_non_opioid'], exclusiveGroup: 'amig-sint-analgesic' }
+            ],
+            orientacoes: 'Maioria das faringites é viral — tratamento sintomático e observação. Hidratação, gargarejos com água morna e sal.'
+          },
+          {
+            id: 'amig-sint-aine',
+            tier: 'Alternativa',
+            label: 'AINE — escolha um (adulto; cautela em crianças)',
+            classes: ['nsaid'],
+            items: [],
+            meds: [
+              { id: 'amig-sint-ibu400', text: MED_VO.ibuprofeno400 + ', por 3 a 5 dias', classes: ['nsaid'], exclusiveGroup: 'amig-sint-aine' },
+              { id: 'amig-sint-nap250', text: MED_VO.naproxeno250 + ', por 3 a 5 dias', classes: ['nsaid'], exclusiveGroup: 'amig-sint-aine' },
+              { id: 'amig-sint-nap500', text: MED_VO.naproxeno500 + ', por 3 a 5 dias', classes: ['nsaid'], exclusiveGroup: 'amig-sint-aine' }
+            ],
+            orientacoes: 'Anti-inflamatório para odinofagia. Apenas um AINE por receita. Evitar AINE em crianças pequenas sem orientação.'
+          },
+          {
+            id: 'amig-sint-suporte',
+            tier: 'Suporte',
+            label: 'Medidas não medicamentosas',
+            classes: [],
+            items: [],
+            meds: [
+              { id: 'amig-sint-garg', text: 'Gargarejo com água morna e sal — 3 a 4 vezes ao dia', classes: [] },
+              { id: 'amig-sint-hid', text: 'Hidratação oral abundante — água, sopas, gelatina', classes: [] }
+            ],
+            orientacoes: 'Repouso vocal relativo. Retorno se febre > 39 °C > 3 dias, trismo, voz abafada ou piora unilateral.'
+          }
+        ]
+      },
+      {
+        id: 'atb',
+        label: 'Antibiótico — somente se faringite estreptocócica (Centor ≥3 ou teste +)',
+        options: [
+          {
+            id: 'amig-atb-amox',
             tier: '1ª linha',
             label: 'Amoxicilina — escolha apresentação',
             classes: ['penicillin'],
@@ -210,10 +255,10 @@ const RX_CATALOG_MANUAL = [
               { id: 'amig-amox500', text: MED_VO.amoxicilina500, classes: ['penicillin'], exclusiveGroup: 'amig-amox' },
               { id: 'amig-amox875', text: MED_VO.amoxicilina875, classes: ['penicillin'], exclusiveGroup: 'amig-amox' }
             ],
-            orientacoes: 'Completar 10 dias mesmo com melhora em 48 h. Retorno se trismo, voz abafada ou piora unilateral (abscesso).'
+            orientacoes: 'Indicar se exsudato + linfonodos + ausência de tosse ou teste rápido/cultura positiva. Completar 10 dias mesmo com melhora em 48 h.'
           },
           {
-            id: 'amig-2',
+            id: 'amig-atb-clav',
             tier: 'Alternativa',
             label: 'Amoxicilina-clavulanato — escolha apresentação',
             classes: ['penicillin', 'penicillin_clavulanate'],
@@ -223,6 +268,18 @@ const RX_CATALOG_MANUAL = [
               { id: 'amig-clav500', text: MED_VO.amoxClav500, classes: ['penicillin', 'penicillin_clavulanate'], exclusiveGroup: 'amig-clav' }
             ],
             orientacoes: 'Alternativa se falha terapêutica ou fatores de risco para resistência.'
+          },
+          {
+            id: 'amig-atb-alerg',
+            tier: 'Alérgico',
+            label: 'Alérgico à penicilina — escolha um',
+            classes: ['antibiotic'],
+            items: [],
+            meds: [
+              { id: 'amig-azit', text: MED_VO.azitromicina500, classes: ['antibiotic'], exclusiveGroup: 'amig-atb-alerg' },
+              { id: 'amig-clinda', text: MED_VO.clindamicina300, classes: ['antibiotic'], exclusiveGroup: 'amig-atb-alerg' }
+            ],
+            orientacoes: 'Usar apenas se indicação de ATB confirmada e alergia documentada à penicilina.'
           }
         ]
       }
@@ -232,11 +289,30 @@ const RX_CATALOG_MANUAL = [
     id: 'cistite-itu-baixa',
     name: 'Cistite (ITU baixa)',
     icon: '💧',
-    aliases: ['cistite', 'itu', 'infecao urinaria', 'urina', 'disuria', 'polaciuria'],
+    aliases: ['cistite', 'itu', 'infecao urinaria', 'disuria', 'polaciuria', 'queima ao urinar'],
     groups: [
       {
+        id: 'suporte',
+        label: 'Medidas gerais (enquanto confirma ITU)',
+        options: [
+          {
+            id: 'itu-suporte',
+            tier: 'Suporte',
+            label: 'Hidratação e analgesia — escolha analgésico se dor',
+            classes: ['analgesic_non_opioid'],
+            items: [],
+            meds: [
+              { id: 'itu-hid', text: 'Hidratação oral abundante — mínimo 2 L/dia', classes: [] },
+              { id: 'itu-dip500', text: MED_VO.dipirona500 + ', se disúria', classes: ['analgesic_non_opioid'], exclusiveGroup: 'itu-analgesic' },
+              { id: 'itu-par750', text: MED_VO.paracetamol750 + ', se disúria', classes: ['analgesic_non_opioid'], exclusiveGroup: 'itu-analgesic' }
+            ],
+            orientacoes: 'Disúria isolada não confirma ITU — considerar uretrite, vaginite. ATB abaixo só se cistite confirmada ou alta suspeita.'
+          }
+        ]
+      },
+      {
         id: 'atb',
-        label: 'Antibiótico',
+        label: 'Antibiótico — cistite confirmada ou ITU baixa não complicada',
         options: [
           {
             id: 'itu-1',
@@ -346,7 +422,7 @@ function rxInferMedClasses (text) {
   if (/verapamil|diltiazem|anlodipino|nifedipino/.test(t)) classes.push('calcium_channel_blocker');
   if (/amoxicilina|ampicilina|penicilina/.test(t)) classes.push('penicillin');
   if (/clavulanato|clavul/.test(t)) classes.push('penicillin_clavulanate');
-  if (/fosfomicina|nitrofurantoina|ciprofloxacino|levofloxacino|azitromicina|cefalexina/.test(t)) {
+  if (/fosfomicina|nitrofurantoina|ciprofloxacino|levofloxacino|azitromicina|cefalexina|clindamicina/.test(t)) {
     classes.push('antibiotic');
   }
   if (/nitrofurantoina/.test(t)) classes.push('nitrofuran');
@@ -604,20 +680,47 @@ function rxHasValidationErrors (messages) {
   return messages.some(m => m.severity === 'error');
 }
 
+function rxMatchScore (cond, norm) {
+  let score = 0;
+  const aliases = cond.aliases || [];
+
+  if (aliases.some(a => rxNormText(a) === norm)) score += 200;
+  else if (aliases.some(a => norm.includes(rxNormText(a)) && rxNormText(a).length >= 5)) score += 90;
+  else if (aliases.some(a => rxNormText(a).includes(norm) && norm.length >= 4)) score += 50;
+  else if (norm.includes(rxNormText(cond.name))) score += 70;
+
+  if (/dor de garganta|odinofagia|faringite|garganta inflamada/.test(norm)) {
+    if (cond.groups.some(g => /sintomatic|suporte|viral/i.test(g.label))) score += 60;
+    if (/dor de garganta|faringite/i.test(rxNormText(cond.name))) score += 40;
+    const onlyAtb = cond.groups.length === 1 && /antibiot/i.test(cond.groups[0].label);
+    if (onlyAtb) score -= 50;
+  }
+
+  if (/disuria|polaciuria|queima ao urinar/.test(norm) && !/cistite|itu/.test(norm)) {
+    if (cond.groups.some(g => /suporte|sintomatic|medidas/i.test(g.label))) score += 40;
+  }
+
+  if (/dor lombar|lombalgia|ciatica/.test(norm)) {
+    if (cond.id === 'lombalgia-ciatalgia') score += 50;
+  }
+
+  if (/cefaleia|dor de cabeca|enxaqueca/.test(norm)) {
+    if (cond.id === 'cefaleias') score += 50;
+  }
+
+  if (cond.source === 'complete') score += 15;
+  return score;
+}
+
 function rxMatchConditions (queixa) {
   const norm = rxNormText(queixa);
   if (!norm || norm.length < 3) return [];
 
   const catalog = typeof rxGetCatalog === 'function' ? rxGetCatalog() : RX_CATALOG_MANUAL;
 
-  return catalog.filter(cond => {
-    if (cond.aliases.some(a => norm.includes(rxNormText(a)))) return true;
-    if (norm.includes(rxNormText(cond.name))) return true;
-    if (cond.id && norm.includes(rxNormText(cond.id.replace(/-/g, ' ')))) return true;
-    return cond.aliases.some(a => rxNormText(a).includes(norm));
-  }).sort((a, b) => {
-    const aExact = a.aliases.some(al => rxNormText(al) === norm) ? 0 : 1;
-    const bExact = b.aliases.some(al => rxNormText(al) === norm) ? 0 : 1;
-    return aExact - bExact;
-  });
+  return catalog
+    .map(cond => ({ cond, score: rxMatchScore(cond, norm) }))
+    .filter(entry => entry.score >= 50)
+    .sort((a, b) => b.score - a.score)
+    .map(entry => entry.cond);
 }

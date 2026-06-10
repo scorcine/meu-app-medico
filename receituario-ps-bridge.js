@@ -39,6 +39,7 @@ function rxNormalizeVoText (text) {
     if (/dipirona.*(1\s*g|1000).*vo/i.test(t)) return MED_VO.dipirona1g;
     if (/paracetamol.*500.*vo/i.test(t)) return MED_VO.paracetamol500;
     if (/paracetamol.*750.*vo/i.test(t)) return MED_VO.paracetamol750;
+    if (/naproxeno.*250/i.test(t)) return MED_VO.naproxeno250;
     if (/naproxeno.*500/i.test(t)) return MED_VO.naproxeno500;
     if (/ibuprofeno.*600/i.test(t)) return MED_VO.ibuprofeno600;
     if (/ibuprofeno.*400/i.test(t)) return MED_VO.ibuprofeno400;
@@ -98,10 +99,90 @@ function rxPsMedToRxOption (conditionId, psMed) {
   };
 }
 
+function rxGroupSortKey (label) {
+  const l = rxNormText(label);
+  if (/sintomatic|analges|suporte|medidas|viral|adjuvante/i.test(l)) return 0;
+  if (/1ª linha|primeira linha/i.test(l)) return 1;
+  if (/alternativa/i.test(l)) return 2;
+  if (/profilax/i.test(l)) return 3;
+  if (/antibiot|atb\b/i.test(l)) return 4;
+  if (/refract|refrat|grave|abscesso|intern/i.test(l)) return 5;
+  if (/alerg/i.test(l)) return 6;
+  if (/evitar/i.test(l)) return 9;
+  return 3;
+}
+
+function rxSortGroups (groups) {
+  return groups.slice().sort((a, b) => rxGroupSortKey(a.label) - rxGroupSortKey(b.label));
+}
+
+function rxParseGroupedMedsFromHtml (conditionId, html) {
+  if (typeof psParseTier !== 'function') return null;
+
+  const div = document.createElement('div');
+  div.innerHTML = html;
+  const groups = [];
+  let optIdx = 0;
+
+  const addSection = (sectionLabel, container) => {
+    if (!container) return;
+    const options = [];
+    container.querySelectorAll('.ps-med-options li').forEach(li => {
+      const text = li.textContent.replace(/\s+/g, ' ').trim();
+      if (!text) return;
+      const { tier, label } = psParseTier(text);
+      if (/evitar/i.test(tier)) return;
+      options.push(rxPsMedToRxOption(conditionId, {
+        id: `${conditionId}-opt-${optIdx++}`,
+        tier,
+        label: label.length > 240 ? label.slice(0, 237) + '…' : label,
+        drugs: typeof psExtractDrugsFromText === 'function'
+          ? psExtractDrugsFromText(text).map(id => ({ id }))
+          : []
+      }));
+    });
+    if (options.length) {
+      groups.push({
+        id: rxNormText(sectionLabel).replace(/[^a-z0-9]+/g, '-'),
+        label: sectionLabel,
+        options
+      });
+    }
+  };
+
+  div.querySelectorAll('.emerg-steps > li').forEach(li => {
+    const heading = li.querySelector(':scope > strong');
+    if (!heading) return;
+    const sectionLabel = heading.textContent.replace(/:\s*$/, '').trim();
+    if (li.querySelector('.ps-med-options')) addSection(sectionLabel, li);
+  });
+
+  if (!groups.length) {
+    addSection('Protocolo', div);
+  }
+
+  return groups.length ? rxSortGroups(groups) : null;
+}
+
 function rxBuildConditionFromPs (psCondition) {
   if (typeof psGetInteractiveConfig !== 'function') return null;
   const config = psGetInteractiveConfig(psCondition.id);
   if (!config || !config.medications || !config.medications.length) return null;
+
+  const html = typeof PS_CONTENT !== 'undefined' ? PS_CONTENT[psCondition.id] : null;
+  const sectionGroups = html ? rxParseGroupedMedsFromHtml(psCondition.id, html) : null;
+
+  if (sectionGroups && sectionGroups.length) {
+    const shortName = psCondition.name.split('—')[0].split('(')[0].trim();
+    return {
+      id: psCondition.id,
+      name: shortName,
+      icon: psCondition.icon,
+      aliases: rxGenerateAliasesFromPs(psCondition),
+      source: 'guideline',
+      groups: sectionGroups
+    };
+  }
 
   const tierGroups = {};
   config.medications.forEach(med => {
@@ -122,11 +203,11 @@ function rxBuildConditionFromPs (psCondition) {
     icon: psCondition.icon,
     aliases: rxGenerateAliasesFromPs(psCondition),
     source: 'guideline',
-    groups: tiers.map(tier => ({
+    groups: rxSortGroups(tiers.map(tier => ({
       id: rxNormText(tier).replace(/[^a-z0-9]+/g, '-'),
       label: tier,
       options: tierGroups[tier]
-    }))
+    })))
   };
 }
 
