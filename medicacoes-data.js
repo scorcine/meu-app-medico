@@ -1,7 +1,7 @@
 /* Medicações — catálogo clínico (gerado + revisado jun/2026) */
 /* eslint-disable max-len */
 
-const MEDHUB_MED_BUILD = 'med-v5-monographs-a';
+const MEDHUB_MED_BUILD = 'med-v6-batch2';
 
 const MED_EXTRA_DRUGS = {
   "nitrofurantoina": {
@@ -1278,6 +1278,909 @@ const MED_EXTRA_DRUGS = {
       "VO preferível; manter dose se internado"
     ],
     "notes": "Efeito imunossupressor tardio (semanas). Risco linfoma/leucemia com uso prolongado."
+  },
+  "cimetidina": {
+    "name": "Cimetidina",
+    "classes": [
+      "h2_blocker"
+    ],
+    "indications": [
+      "Úlcera péptica / DRGE (alternativa histórica)",
+      "Profilaxia úlcera por estresse (internação)"
+    ],
+    "ciAbs": [
+      "Hipersensibilidade"
+    ],
+    "ciRel": [
+      "DRC — reduzir dose",
+      "Interações CYP (warfarina, fenitoína, teofilina)",
+      "Idoso — confusão"
+    ],
+    "presentations": [
+      "200 mg, 400 mg comprimido",
+      "300 mg/2 mL ampola EV"
+    ],
+    "posologyVo": [
+      "400 mg VO 12/12 h ou 800 mg à noite × 4–8 sem (úlcera)",
+      "400 mg VO 12/12 h (DRGE)"
+    ],
+    "posologyHosp": [
+      "300 mg EV 6/6 h (profilaxia úlcera estresse)",
+      "VO preferível se tolerado"
+    ],
+    "notes": "Preferir IBP na maioria dos casos atuais. Inibidor CYP potente — revisar interações."
+  },
+  "codeina": {
+    "name": "Codeína",
+    "classes": [
+      "opioid"
+    ],
+    "indications": [
+      "Tosse seca (antitussígeno)",
+      "Dor leve a moderada (associação com analgésicos)"
+    ],
+    "ciAbs": [
+      "Depressão respiratória",
+      "Asma aguda",
+      "Íleo paralítico",
+      "Crianças < 12 anos (toxicidade)"
+    ],
+    "ciRel": [
+      "DRC",
+      "Gestação/lactação",
+      "Metabolizadores ultrarrápidos CYP2D6 (morfina excessiva)",
+      "Uso com benzodiazepínicos"
+    ],
+    "presentations": [
+      "30 mg comprimido",
+      "3 mg/mL xarope",
+      "Associações codeína + paracetamol"
+    ],
+    "posologyVo": [
+      "Tosse: 10–20 mg VO 6/8 h (máx. 120 mg/dia)",
+      "Dor: 30–60 mg VO 6/6 h (receita especial)"
+    ],
+    "posologyHosp": [
+      "VO preferível; EV não usual — usar morfina/tramadol se analgesia parenteral"
+    ],
+    "notes": "Receita especial A/B conforme formulação. Risco de constipação e sedação."
+  },
+  "bupropiona": {
+    "name": "Bupropiona",
+    "classes": [
+      "antidepressant"
+    ],
+    "indications": [
+      "Depressão",
+      "Cessação tabágica",
+      "TDAH (registro variável)"
+    ],
+    "ciAbs": [
+      "Convulsão ativa ou história",
+      "Bulimia/anorexia",
+      "Uso abrupto de álcool/benzodiazepínicos",
+      "IMAO concomitante"
+    ],
+    "ciRel": [
+      "Tumor SNC",
+      "HAS",
+      "Insuficiência hepática — reduzir dose"
+    ],
+    "presentations": [
+      "150 mg comprimido liberação prolongada",
+      "75 mg comprimido"
+    ],
+    "posologyVo": [
+      "150 mg VO 24/24 h × 3 dias; depois 150 mg 12/12 h (depressão/tabagismo)",
+      "Máx. 300 mg/dia"
+    ],
+    "posologyHosp": [
+      "VO preferível; manter se já em uso"
+    ],
+    "notes": "Receita B1. Risco convulsão — não usar se história de epilepsia. Evitar nocturno (insônia)."
+  },
+  "cefepima": {
+    "name": "Cefepima",
+    "classes": [
+      "cephalosporin"
+    ],
+    "indications": [
+      "Sepse / pneumonia nosocomial",
+      "Neutropenia febril",
+      "Infecção por Pseudomonas",
+      "Meningite (contexto hospitalar)"
+    ],
+    "ciAbs": [
+      "Alergia grave a cefalosporinas (avaliar reatividade cruzada)"
+    ],
+    "ciRel": [
+      "DRC — ajustar intervalo",
+      "Encefalopatia/convulsão em DRC se dose inadequada",
+      "Colite por C. difficile"
+    ],
+    "presentations": [
+      "1 g, 2 g pó liofilizado EV",
+      "500 mg pó IM"
+    ],
+    "posologyVo": [
+      "Não disponível VO"
+    ],
+    "posologyHosp": [
+      "1–2 g EV 8/8 h (infecção grave)",
+      "2 g EV 8/8 h (neutropenia febril/meningite)",
+      "Ajustar DFG < 60"
+    ],
+    "notes": "Cefalosporina 4ª geração — cobertura Pseudomonas. Neurotoxicidade se acúmulo."
+  },
+  "acetazolamida": {
+    "name": "Acetazolamida",
+    "classes": [
+      "diuretic"
+    ],
+    "indications": [
+      "Glaucoma agudo de ângulo fechado (adjuvante)",
+      "Edema por alcalose metabólica",
+      "Mal da montanha (profilaxia/tratamento)",
+      "Epilepsia adjuvante (off-label)"
+    ],
+    "ciAbs": [
+      "Insuficiência hepática/renal grave",
+      "Hipocalemia",
+      "Hipersensibilidade sulfonamidas",
+      "Cirrose descompensada"
+    ],
+    "ciRel": [
+      "Diabetes",
+      "Gotoso",
+      "Gestação"
+    ],
+    "presentations": [
+      "250 mg comprimido"
+    ],
+    "posologyVo": [
+      "250 mg VO 12/12 h (glaucoma/mal montanha)",
+      "500 mg VO dose única ou 250 mg 8/8 h (mal montanha agudo)"
+    ],
+    "posologyHosp": [
+      "250–500 mg VO/EV 6/8 h (glaucoma agudo adjuvante)",
+      "Monitorizar eletrólitos e pH"
+    ],
+    "notes": "Inibidor anidrase carbônica — parestesias e acidose metabólica comuns."
+  },
+  "cloranfenicol": {
+    "name": "Cloranfenicol",
+    "classes": [
+      "antibiotic"
+    ],
+    "indications": [
+      "Infecção grave por agente sensível (reserva)",
+      "Tifoide (alternativa em alergia)"
+    ],
+    "ciAbs": [
+      "Porfiria",
+      "Depressão medular / aplasia"
+    ],
+    "ciRel": [
+      "Recém-nascido e prematuro — síndrome cinza",
+      "G6PD",
+      "Interações CYP"
+    ],
+    "presentations": [
+      "250 mg, 500 mg cápsula",
+      "1 g pó EV"
+    ],
+    "posologyVo": [
+      "500 mg VO 6/6 h × 7–10 dias (adulto)",
+      "Ajustar dose em hepatopatia"
+    ],
+    "posologyHosp": [
+      "25 mg/kg/dia EV dividido 6/6 h (máx. 4 g/dia)",
+      "Monitorizar hemograma"
+    ],
+    "notes": "Antibiótico reserva — toxicidade medular irreversível. Preferir alternativas sempre que possível."
+  },
+  "carbonato_de_litio": {
+    "name": "Carbonato de lítio",
+    "classes": [
+      "anticonvulsant"
+    ],
+    "indications": [
+      "Transtorno bipolar (mania/depressão)",
+      "Profilaxia de episódios afetivos"
+    ],
+    "ciAbs": [
+      "Insuficiência renal grave",
+      "Desidratação / hiponatremia",
+      "Cardiopatia grave descompensada"
+    ],
+    "ciRel": [
+      "Gestação (teratogenicidade — avaliar)",
+      "Tireoidite",
+      "Diuréticos tiazídicos/AINEs (aumentam nível)",
+      "Idoso"
+    ],
+    "presentations": [
+      "300 mg comprimido"
+    ],
+    "posologyVo": [
+      "300 mg VO 8/8 h; titular por nível sérico (alvo 0,6–1,0 mEq/L)",
+      "Iniciar baixo em idoso"
+    ],
+    "posologyHosp": [
+      "Manter VO se possível; dosagem por nível",
+      "Hidratação e monitorizar Na+, creatinina, lítio"
+    ],
+    "notes": "Receita B1. Janela terapêutica estreita — toxicidade: tremor, confusão, arritmia."
+  },
+  "ciclosporina": {
+    "name": "Ciclosporina",
+    "classes": [
+      "antiinflammatory"
+    ],
+    "indications": [
+      "Transplante (imunossupressor)",
+      "Doença inflamatória intestinal refratária",
+      "Artrite reumatoide (contexto específico)"
+    ],
+    "ciAbs": [
+      "Hipersensibilidade",
+      "Infecção não controlada (relativo)"
+    ],
+    "ciRel": [
+      "Hipertensão",
+      "Nefrotoxicidade",
+      "Interações CYP3A4 (macrolídeos, azóis)",
+      "Vacinas vivas"
+    ],
+    "presentations": [
+      "25 mg, 50 mg, 100 mg cápsula",
+      "100 mg/mL solução oral"
+    ],
+    "posologyVo": [
+      "2,5–5 mg/kg/dia VO dividido 12/12 h (transplante — individualizar)",
+      "Monitorizar níveis séricos"
+    ],
+    "posologyHosp": [
+      "Manter dose VO; EV em formulações específicas se indisponível VO"
+    ],
+    "notes": "Monitorizar creatinina, PA e níveis. Gengivite e hirsutismo frequentes."
+  },
+  "cefoxitina": {
+    "name": "Cefoxitina",
+    "classes": [
+      "cephalosporin"
+    ],
+    "indications": [
+      "Infecção intra-abdominal",
+      "Profilaxia cirúrgica (cirurgia colorretal)",
+      "Infecção ginecológica",
+      "Cobertura anaeróbios (Bacteroides)"
+    ],
+    "ciAbs": [
+      "Alergia grave a cefalosporinas"
+    ],
+    "ciRel": [
+      "Colite por C. difficile",
+      "DRC — ajustar dose"
+    ],
+    "presentations": [
+      "1 g, 2 g pó liofilizado EV/IM"
+    ],
+    "posologyVo": [
+      "Não disponível VO"
+    ],
+    "posologyHosp": [
+      "1–2 g EV 6/6 h",
+      "2 g EV dose única profilaxia cirúrgica (30–60 min pré-incisão)"
+    ],
+    "notes": "Cefalosporina 2ª geração com boa cobertura anaeróbia. Alternativa: ampicilina-sulbactam."
+  },
+  "betametasona": {
+    "name": "Betametasona",
+    "classes": [
+      "corticosteroid"
+    ],
+    "indications": [
+      "Maturação pulmonar fetal (anteparto)",
+      "Doenças alérgicas/inflamatórias",
+      "Coadjuvante asma/DPOC aguda (EV)"
+    ],
+    "ciAbs": [
+      "Infecção sistêmica fúngica não tratada",
+      "Hipersensibilidade"
+    ],
+    "ciRel": [
+      "Diabetes",
+      "HAS",
+      "Osteoporose",
+      "Gestação (exceto maturação pulmonar protocolada)"
+    ],
+    "presentations": [
+      "0,5 mg comprimido",
+      "4 mg/mL ampola EV/IM",
+      "Creme/unguento tópico"
+    ],
+    "posologyVo": [
+      "0,5–2 mg VO 24/24 h (curto prazo)",
+      "Dose única maturação pulmonar: 12 mg IM × 2 (24 h apart) — protocolo obstétrico"
+    ],
+    "posologyHosp": [
+      "4–8 mg EV 6/6 h (exacerbação asma — curto prazo)",
+      "IM maturação pulmonar conforme protocolo"
+    ],
+    "notes": "Potência ~25× hidrocortisona. Desmame se uso > 7–10 dias."
+  },
+  "cabergolina": {
+    "name": "Cabergolina",
+    "classes": [
+      "hormone"
+    ],
+    "indications": [
+      "Prolactinoma",
+      "Inibição lactação (contexto específico)",
+      "Doença de Parkinson adjuvante (off-label)"
+    ],
+    "ciAbs": [
+      "Hipertensão não controlada",
+      "Fibrose valvar/cardiopulmonar por agonista dopaminérgico",
+      "Pré-eclâmpsia"
+    ],
+    "ciRel": [
+      "Gestação (geralmente suspender após confirmação)",
+      "Insuficiência hepática"
+    ],
+    "presentations": [
+      "0,5 mg comprimido"
+    ],
+    "posologyVo": [
+      "Prolactinoma: 0,25–1 mg VO 2×/semana; titular",
+      "Inibição lactação: 1 mg dose única (ver protocolo local)"
+    ],
+    "posologyHosp": [
+      "VO preferível"
+    ],
+    "notes": "Agonista dopaminérgico de meia-vida longa. Ecocardiograma se uso prolongado."
+  },
+  "carvao_vegetal_ativado": {
+    "name": "Carvão vegetal ativado",
+    "classes": [
+      "antidote"
+    ],
+    "indications": [
+      "Intoxicação oral aguda (adsorção)",
+      "Envenenamento por fármacos/toxinas adsorvíveis"
+    ],
+    "ciAbs": [
+      "Alteração nível de consciência sem via aérea protegida",
+      "Ingestão de corrosivos/hidrocarbonetos",
+      "Íleo/obstrução intestinal"
+    ],
+    "ciRel": [
+      "Risco aspiração",
+      "Administrar dentro de 1–2 h da ingestão (ideal < 1 h)"
+    ],
+    "presentations": [
+      "Pó para suspensão oral 25 g, 50 g",
+      "125 mg/mL suspensão"
+    ],
+    "posologyVo": [
+      "50 g VO (adulto) dose única; repetir 25 g se ingestão maciça",
+      "1 g/kg criança (máx. 50 g)"
+    ],
+    "posologyHosp": [
+      "50 g via SNG após proteção de via aérea se necessário",
+      "Repetir 25 g 4/4 h se ingestão sustentada (selecionado)"
+    ],
+    "notes": "Não adsorve álcool, ferro, lítio, potássio. Pode reduzir absorção de medicamentos VO concomitantes."
+  },
+  "ciproeptadina": {
+    "name": "Ciproeptadina",
+    "classes": [
+      "antihistamine"
+    ],
+    "indications": [
+      "Prurido / urticária",
+      "Estimulante apetite (off-label)",
+      "Enxaqueca profilática (off-label)"
+    ],
+    "ciAbs": [
+      "Glaucoma de ângulo fechado",
+      "Retenção urinária",
+      "Úlcera péptica ativa"
+    ],
+    "ciRel": [
+      "Idoso",
+      "Asma",
+      "Gestação",
+      "Sedação"
+    ],
+    "presentations": [
+      "4 mg comprimido",
+      "2 mg/5 mL xarope"
+    ],
+    "posologyVo": [
+      "4 mg VO 8/8 h (urticária)",
+      "2–4 mg VO à noite (estímulo apetite)"
+    ],
+    "posologyHosp": [
+      "4 mg VO 8/8 h — preferir VO"
+    ],
+    "notes": "Antagonista serotoninérgico + anti-H1. Ganho de peso comum."
+  },
+  "clorpropamida": {
+    "name": "Clorpropamida",
+    "classes": [
+      "antidiabetic"
+    ],
+    "indications": [
+      "Diabetes mellitus tipo 2 (sulfonilureia de 1ª geração — uso limitado)"
+    ],
+    "ciAbs": [
+      "DM1",
+      "Cetoacidose",
+      "Insuficiência renal/hepática grave",
+      "Gestação"
+    ],
+    "ciRel": [
+      "Idoso — hipoglicemia prolongada",
+      "Uso com álcool (efeito antabuse)",
+      "Insuficiência cardíaca/renal"
+    ],
+    "presentations": [
+      "250 mg comprimido"
+    ],
+    "posologyVo": [
+      "125–250 mg VO 24/24 h com café da manhã",
+      "Titular até 500 mg/dia (máx.)"
+    ],
+    "posologyHosp": [
+      "Manter VO; monitorizar glicemia — meia-vida longa"
+    ],
+    "notes": "Hipoglicemia prolongada (24–72 h). Preferir sulfonilureias modernas ou metformina."
+  },
+  "tamoxifeno": {
+    "name": "Tamoxifeno",
+    "classes": [
+      "hormone"
+    ],
+    "indications": [
+      "Câncer de mama receptor estrogênio positivo (adjuvante/paliativo)",
+      "Profilaxia alto risco (contexto específico)"
+    ],
+    "ciAbs": [
+      "Gestação",
+      "Tromboembolismo ativo",
+      "Uso concomitante anticoagulante (relativo)"
+    ],
+    "ciRel": [
+      "História TEV",
+      "Endometriose/hiperplasia endometrial",
+      "Catarata"
+    ],
+    "presentations": [
+      "10 mg, 20 mg comprimido"
+    ],
+    "posologyVo": [
+      "20 mg VO 24/24 h × 5 anos (adjuvante — protocolo oncologia)",
+      "10 mg 24/24 h em alguns perfis"
+    ],
+    "posologyHosp": [
+      "Manter VO"
+    ],
+    "notes": "Modulador seletivo estrogênio. Monitorizar sintomas tromboembólicos e sangramento uterino."
+  },
+  "gliclazida": {
+    "name": "Gliclazida",
+    "classes": [
+      "antidiabetic"
+    ],
+    "indications": [
+      "Diabetes mellitus tipo 2 (sulfonilureia)"
+    ],
+    "ciAbs": [
+      "DM1",
+      "Cetoacidose",
+      "Insuficiência renal/hepática grave",
+      "Gestação"
+    ],
+    "ciRel": [
+      "Idoso",
+      "Desnutrição",
+      "Uso com AAS/ sulfonamidas (potencializa hipoglicemia)"
+    ],
+    "presentations": [
+      "30 mg, 60 mg comprimido liberação modificada",
+      "80 mg comprimido"
+    ],
+    "posologyVo": [
+      "30–60 mg VO 24/24 h antes café (MR)",
+      "80 mg VO 12/12 h (convencional — titular)"
+    ],
+    "posologyHosp": [
+      "Manter VO se estável; monitorizar glicemia"
+    ],
+    "notes": "Risco hipoglicemia — orientar sinais e refeição regular."
+  },
+  "glibenclamida": {
+    "name": "Glibenclamida",
+    "classes": [
+      "antidiabetic"
+    ],
+    "indications": [
+      "Diabetes mellitus tipo 2 (sulfonilureia)"
+    ],
+    "ciAbs": [
+      "DM1",
+      "Cetoacidose",
+      "Insuficiência renal grave (DFG < 30)",
+      "Gestação"
+    ],
+    "ciRel": [
+      "Idoso — preferir gliclazida/metformina",
+      "Insuficiência hepática",
+      "Desnutrição"
+    ],
+    "presentations": [
+      "5 mg comprimido"
+    ],
+    "posologyVo": [
+      "2,5–5 mg VO 24/24 h antes café; titular até 15 mg/dia",
+      "Idoso: iniciar 2,5 mg"
+    ],
+    "posologyHosp": [
+      "Manter VO; hipoglicemia pode ser prolongada"
+    ],
+    "notes": "Evitar em idoso frágil — hipoglicemia grave. Preferir alternativas se DRC."
+  },
+  "hidroxido_de_aluminio": {
+    "name": "Hidróxido de alumínio",
+    "classes": [
+      "ppi"
+    ],
+    "indications": [
+      "Dispepsia / hiperacidez",
+      "Refluxo gastroesofágico leve",
+      "Fosfatemia elevada (quelante — contexto DRC)"
+    ],
+    "ciAbs": [
+      "Obstrução intestinal",
+      "Hipersensibilidade"
+    ],
+    "ciRel": [
+      "Insuficiência renal (acúmulo alumínio)",
+      "Reduz absorção de outros fármacos VO"
+    ],
+    "presentations": [
+      "Suspensão oral 60 mg/mL",
+      "Comprimido mastigável 500 mg"
+    ],
+    "posologyVo": [
+      "5–10 mL VO 4/6 h entre refeições e ao deitar",
+      "Separar 2 h de outros medicamentos VO"
+    ],
+    "posologyHosp": [
+      "VO preferível; mesmo esquema"
+    ],
+    "notes": "Constipação comum. Não usar cronicamente em DRC."
+  },
+  "doxazosina": {
+    "name": "Doxazosina",
+    "classes": [
+      "alpha_blocker"
+    ],
+    "indications": [
+      "Hipertensão arterial",
+      "Hiperplasia prostática benigna (LUTS)"
+    ],
+    "ciAbs": [
+      "Hipersensibilidade",
+      "Obstrução urinária com anúria"
+    ],
+    "ciRel": [
+      "Hipotensão ortostática",
+      "Cirurgia catarata (íris flácida)",
+      "Uso com PDE5 (hipotensão)"
+    ],
+    "presentations": [
+      "2 mg, 4 mg comprimido"
+    ],
+    "posologyVo": [
+      "1–2 mg VO à noite; titular até 8 mg 24/24 h (HAS/HBP)",
+      "Iniciar baixo — síncope 1ª dose"
+    ],
+    "posologyHosp": [
+      "Manter VO; cautela hipotensão ortostática"
+    ],
+    "notes": "Bloqueador alfa-1. Primeira dose à noite sentado/deitado."
+  },
+  "lansoprazol": {
+    "name": "Lansoprazol",
+    "classes": [
+      "ppi"
+    ],
+    "indications": [
+      "DRGE",
+      "Úlcera péptica",
+      "Erradicação H. pylori (tripla)",
+      "Profilaxia úlcera por AINE"
+    ],
+    "ciAbs": [
+      "Hipersensibilidade"
+    ],
+    "ciRel": [
+      "Uso prolongado — deficiência Mg/B12, fractura, C. difficile",
+      "Interações CYP2C19 (clopidogrel — preferir pantoprazol se antiagregado)"
+    ],
+    "presentations": [
+      "15 mg, 30 mg cápsula",
+      "30 mg comprimido orodispersível"
+    ],
+    "posologyVo": [
+      "15–30 mg VO 24/24 h antes refeição × 4–8 sem",
+      "H. pylori tripla: 30 mg 12/12 h × 14 dias"
+    ],
+    "posologyHosp": [
+      "30 mg VO 24/24 h (profilaxia úlcera estresse — se IBP indicado)"
+    ],
+    "notes": "Equivalente a omeprazol. Reavaliar necessidade após curto prazo."
+  },
+  "fluoxetina": {
+    "name": "Fluoxetina",
+    "classes": [
+      "antidepressant"
+    ],
+    "indications": [
+      "Depressão",
+      "TOC",
+      "Bulimia",
+      "Transtorno disfórico pré-menstrual"
+    ],
+    "ciAbs": [
+      "IMAO concomitante (14 dias)",
+      "Uso com tioridazina/pimozida"
+    ],
+    "ciRel": [
+      "Epilepsia",
+      "Bipolar (risco mania — associar estabilizador)",
+      "Gestação/lactação",
+      "Síndrome serotoninérgica com triptanos/ISRS"
+    ],
+    "presentations": [
+      "20 mg cápsula",
+      "10 mg comprimido"
+    ],
+    "posologyVo": [
+      "20 mg VO 24/24 h pela manhã; titular até 40–60 mg",
+      "TOC: frequentemente 40–80 mg/dia"
+    ],
+    "posologyHosp": [
+      "Manter VO; meia-vida longa — efeito persiste dias após suspensão"
+    ],
+    "notes": "Receita B1. Ativação/insônia no início. Meia-vida longa — interações prolongadas."
+  },
+  "levodopa": {
+    "name": "Levodopa + carbidopa",
+    "classes": [
+      "discharge_only"
+    ],
+    "indications": [
+      "Doença de Parkinson",
+      "Síndrome parkinsoniana"
+    ],
+    "ciAbs": [
+      "Glaucoma de ângulo fechado",
+      "Uso concomitante IMAO (exceto selegilina baixa dose)",
+      "Melanoma ativo"
+    ],
+    "ciRel": [
+      "Psicose",
+      "Doença ulcerosa péptica",
+      "Arritmias",
+      "Discinesia precoce"
+    ],
+    "presentations": [
+      "200 mg levodopa + 50 mg carbidopa comprimido",
+      "100/25 mg",
+      "250/25 mg"
+    ],
+    "posologyVo": [
+      "100/25 mg VO 8/8 h; titular até 200/50 mg 6/6 h",
+      "Administrar 30 min antes ou 1 h após refeição proteica"
+    ],
+    "posologyHosp": [
+      "Manter horários rigorosos VO; evitar interrupção abrupta"
+    ],
+    "notes": "Não suspender abruptamente (síndrome neuroléptica maligna-like). Discinesias e wearing-off com uso crônico."
+  },
+  "carbonato_de_calcio": {
+    "name": "Carbonato de cálcio",
+    "classes": [
+      "electrolyte"
+    ],
+    "indications": [
+      "Deficiência de cálcio / osteopenia",
+      "Quelante de fósforo (DRC)",
+      "Antídoto hipocalcemia leve"
+    ],
+    "ciAbs": [
+      "Hipercalcemia",
+      "Nefrolitíase cálcio ativa",
+      "Sarcoidose (hipercalcemia)"
+    ],
+    "ciRel": [
+      "Insuficiência renal",
+      "Uso de digitálicos (monitorizar)",
+      "Interação com levotiroxina/bisfosfonatos (separar)"
+    ],
+    "presentations": [
+      "500 mg cálcio elementar comprimido",
+      "Suspensão oral"
+    ],
+    "posologyVo": [
+      "500–1000 mg cálcio elementar VO 24/24 h com refeição",
+      "DRC: com refeições como quelante fósforo"
+    ],
+    "posologyHosp": [
+      "VO preferível; gluconato cálcio EV se hipocalcemia aguda sintomática"
+    ],
+    "notes": "Separar 2–4 h de ferro, levotiroxina e quinolonas."
+  },
+  "acido_ursodesoxicolico": {
+    "name": "Ácido ursodesoxicólico",
+    "classes": [
+      "antiinflammatory"
+    ],
+    "indications": [
+      "Colelitíase com colesterol (dissolução — selecionado)",
+      "Colangite biliar primária",
+      "Colestase intra-hepática gestação (contexto específico)"
+    ],
+    "ciAbs": [
+      "Colangite supurativa",
+      "Obstrução biliar",
+      "Cirrose descompensada"
+    ],
+    "ciRel": [
+      "Diarreia (dose-dependente)",
+      "Monitorizar transaminases"
+    ],
+    "presentations": [
+      "150 mg, 300 mg cápsula"
+    ],
+    "posologyVo": [
+      "10–15 mg/kg/dia VO dividido 8/8 h (CBP)",
+      "300 mg VO 12/12 h (litíase — seleção por ultrassom)"
+    ],
+    "posologyHosp": [
+      "Manter VO se indicado"
+    ],
+    "notes": "Dissolução de cálculos lenta (meses). Eficaz em CBP para reduzir colestase."
+  },
+  "desmopressina": {
+    "name": "Desmopressina (acetato)",
+    "classes": [
+      "hormone"
+    ],
+    "indications": [
+      "Diabetes insipidus central",
+      "Noctúria/enurese noturna (selecionado)",
+      "Hemofilia A / von Willebrand tipo 1 (EV — contexto hospitalar)"
+    ],
+    "ciAbs": [
+      "Polidipsia habitual",
+      "Insuficiência cardíaca/renal descompensada (formulacao antidiurese)"
+    ],
+    "ciRel": [
+      "Hiponatremia",
+      "HAS",
+      "Idoso — monitorizar sódio"
+    ],
+    "presentations": [
+      "0,1 mg, 0,2 mg comprimido",
+      "Spray nasal 10 mcg/jato",
+      "4 mcg/mL ampola EV"
+    ],
+    "posologyVo": [
+      "0,1–0,2 mg VO 12/12 h (DI central)",
+      "Spray nasal: 1–2 jatos/noite (enurese — protocolo)"
+    ],
+    "posologyHosp": [
+      "0,3 mcg/kg EV (hemofilia — protocolo hematologia)",
+      "Monitorizar Na+ e osmolalidade"
+    ],
+    "notes": "Restringir líquidos conforme indicação — risco hiponatremia."
+  },
+  "octreotida": {
+    "name": "Octreotida (acetato)",
+    "classes": [
+      "hormone"
+    ],
+    "indications": [
+      "Sangramento varicoso agudo (adjuvante)",
+      "Fístula pancreática / pós-operatório",
+      "Tumor neuroendócrino",
+      "Acromegalia"
+    ],
+    "ciAbs": [
+      "Hipersensibilidade"
+    ],
+    "ciRel": [
+      "Colelitíase (aumenta risco)",
+      "Diabetes (altera glicemia)",
+      "Bradicardia"
+    ],
+    "presentations": [
+      "0,1 mg/mL ampola SC/EV",
+      "LAR depot 20–30 mg IM mensal (manutenção)"
+    ],
+    "posologyVo": [
+      "Manutenção: LAR mensal (acromegalia/TNE — especialista)",
+      "Não usual VO"
+    ],
+    "posologyHosp": [
+      "50 mcg EV bolus + infusão 50 mcg/h (sangramento varicoso — protocolo)",
+      "100 mcg SC 8/8 h (fístula pancreática — protocolo)"
+    ],
+    "notes": "Análogo somatostatina. Náusea e dor abdominal SC comuns no início."
+  },
+  "benzilpenicilina_benzatina": {
+    "name": "Benzilpenicilina benzatina",
+    "classes": [
+      "penicillin"
+    ],
+    "indications": [
+      "Sífilis",
+      "Profilaxia secundária febre reumática",
+      "Erisipela (selecionado ambulatorial)"
+    ],
+    "ciAbs": [
+      "Alergia grave à penicilina"
+    ],
+    "ciRel": [
+      "Reação anafilática prévia — contraindicado",
+      "G6PD (hemólise — raro)"
+    ],
+    "presentations": [
+      "1,2 milhões UI, 2,4 milhões UI pó IM profunda"
+    ],
+    "posologyVo": [
+      "Não disponível VO"
+    ],
+    "posologyHosp": [
+      "Sífilis primária: 2,4 milhões UI IM dose única",
+      "Fe reumática profilaxia: 1,2 milhões UI IM a cada 3–4 sem",
+      "IM profunda glúteo — nunca EV"
+    ],
+    "notes": "Depósito IM — níveis prolongados. Reação de Jarisch-Herxheimer na sífilis."
+  },
+  "complexo_b": {
+    "name": "Complexo B",
+    "classes": [
+      "vitamin"
+    ],
+    "indications": [
+      "Deficiência de vitaminas B (polineurite, alcoolismo, desnutrição)",
+      "Suplementação adjuvante neuropatia"
+    ],
+    "ciAbs": [
+      "Hipersensibilidade a componentes"
+    ],
+    "ciRel": [
+      "Uso EV/IM — reações anafiláticas raras (tiamina IV isolada)"
+    ],
+    "presentations": [
+      "Comprimido (B1+B6+B12)",
+      "Ampola IM/EV",
+      "Xarope"
+    ],
+    "posologyVo": [
+      "1 comprimido VO 24/24 h ou 8/8 h conforme formulação",
+      "Neuropatia: esquemas 8/8 h por 30 dias (protocolo)"
+    ],
+    "posologyHosp": [
+      "VO preferível; IM se má absorção selecionada"
+    ],
+    "notes": "Formulações variam — verificar mg de cada componente no rótulo."
   }
 };
 
@@ -2065,6 +2968,103 @@ const MED_HOSP_POSOLOGY = {
   ],
   "azatioprina": [
     "VO preferível; manter dose se internado"
+  ],
+  "cimetidina": [
+    "300 mg EV 6/6 h (profilaxia úlcera estresse)",
+    "VO preferível se tolerado"
+  ],
+  "codeina": [
+    "VO preferível; EV não usual — usar morfina/tramadol se analgesia parenteral"
+  ],
+  "bupropiona": [
+    "VO preferível; manter se já em uso"
+  ],
+  "cefepima": [
+    "1–2 g EV 8/8 h (infecção grave)",
+    "2 g EV 8/8 h (neutropenia febril/meningite)",
+    "Ajustar DFG < 60"
+  ],
+  "acetazolamida": [
+    "250–500 mg VO/EV 6/8 h (glaucoma agudo adjuvante)",
+    "Monitorizar eletrólitos e pH"
+  ],
+  "cloranfenicol": [
+    "25 mg/kg/dia EV dividido 6/6 h (máx. 4 g/dia)",
+    "Monitorizar hemograma"
+  ],
+  "carbonato_de_litio": [
+    "Manter VO se possível; dosagem por nível",
+    "Hidratação e monitorizar Na+, creatinina, lítio"
+  ],
+  "ciclosporina": [
+    "Manter dose VO; EV em formulações específicas se indisponível VO"
+  ],
+  "cefoxitina": [
+    "1–2 g EV 6/6 h",
+    "2 g EV dose única profilaxia cirúrgica (30–60 min pré-incisão)"
+  ],
+  "betametasona": [
+    "4–8 mg EV 6/6 h (exacerbação asma — curto prazo)",
+    "IM maturação pulmonar conforme protocolo"
+  ],
+  "cabergolina": [
+    "VO preferível"
+  ],
+  "carvao_vegetal_ativado": [
+    "50 g via SNG após proteção de via aérea se necessário",
+    "Repetir 25 g 4/4 h se ingestão sustentada (selecionado)"
+  ],
+  "ciproeptadina": [
+    "4 mg VO 8/8 h — preferir VO"
+  ],
+  "clorpropamida": [
+    "Manter VO; monitorizar glicemia — meia-vida longa"
+  ],
+  "tamoxifeno": [
+    "Manter VO"
+  ],
+  "gliclazida": [
+    "Manter VO se estável; monitorizar glicemia"
+  ],
+  "glibenclamida": [
+    "Manter VO; hipoglicemia pode ser prolongada"
+  ],
+  "hidroxido_de_aluminio": [
+    "VO preferível; mesmo esquema"
+  ],
+  "doxazosina": [
+    "Manter VO; cautela hipotensão ortostática"
+  ],
+  "lansoprazol": [
+    "30 mg VO 24/24 h (profilaxia úlcera estresse — se IBP indicado)"
+  ],
+  "fluoxetina": [
+    "Manter VO; meia-vida longa — efeito persiste dias após suspensão"
+  ],
+  "levodopa": [
+    "Manter horários rigorosos VO; evitar interrupção abrupta"
+  ],
+  "carbonato_de_calcio": [
+    "VO preferível; gluconato cálcio EV se hipocalcemia aguda sintomática"
+  ],
+  "acido_ursodesoxicolico": [
+    "Manter VO se indicado"
+  ],
+  "desmopressina": [
+    "0,3 mcg/kg EV (hemofilia — protocolo hematologia)",
+    "Monitorizar Na+ e osmolalidade"
+  ],
+  "octreotida": [
+    "50 mcg EV bolus + infusão 50 mcg/h (sangramento varicoso — protocolo)",
+    "100 mcg SC 8/8 h (fístula pancreática — protocolo)"
+  ],
+  "benzilpenicilina_benzatina": [
+    "Sífilis primária: 2,4 milhões UI IM dose única",
+    "Fe reumática profilaxia: 1,2 milhões UI IM a cada 3–4 sem",
+    "IM profunda glúteo — nunca EV"
+  ],
+  "complexo_b": [
+    "VO preferível; IM se má absorção selecionada"
   ]
 };
 

@@ -1,6 +1,6 @@
 /* Medicações — loader lazy RENAME (nível B) a partir de JSON externo */
 
-const MED_RENAME_BUILD = 'rename-v2';
+const MED_RENAME_BUILD = 'rename-v3';
 let MED_RENAME_CACHE = null;
 let MED_RENAME_LOADING = null;
 

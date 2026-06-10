@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-06-10T14:44:44.280Z",
+  "generatedAt": "2026-06-10T23:02:03.329Z",
   "protocolBlocks": 195,
-  "drugCount": 201,
-  "inCatalog": 201,
+  "drugCount": 204,
+  "inCatalog": 204,
   "gaps": 0,
   "drugs": [
     {
@@ -2097,6 +2097,21 @@
       "tier": "full"
     },
     {
+      "id": "codeina",
+      "name": "Codeína",
+      "sources": [
+        "PS:artralgia-dor-msk",
+        "PS:herpes-zoster",
+        "PS:lombalgia-ciatalgia",
+        "PS:tosse"
+      ],
+      "sourceCount": 4,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
       "id": "dexclorfeniramina",
       "name": "Dexclorfeniramina",
       "sources": [
@@ -3244,6 +3259,18 @@
       "tier": "full"
     },
     {
+      "id": "hidroxido_de_aluminio",
+      "name": "Hidróxido de alumínio",
+      "sources": [
+        "PS:dispepsia-drge"
+      ],
+      "sourceCount": 1,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
       "id": "imunoglobulina_hepatite_b",
       "name": "Imunoglobulina anti-HBs",
       "sources": [
@@ -3272,6 +3299,18 @@
       "name": "Isoniazida",
       "sources": [
         "PS:tuberculose"
+      ],
+      "sourceCount": 1,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "lansoprazol",
+      "name": "Lansoprazol",
+      "sources": [
+        "PS:dispepsia-drge"
       ],
       "sourceCount": 1,
       "inMeta": true,

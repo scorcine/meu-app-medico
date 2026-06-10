@@ -114,7 +114,7 @@ function main () {
 
   const catalogPath = writeJson('rename-catalog.json', reference);
   updateManifest({
-    renameBuild: 'rename-v2',
+    renameBuild: 'rename-v3',
     renameEntries: reference.length,
     renameSeed: seed.length,
     renameParsed: parsed.length
