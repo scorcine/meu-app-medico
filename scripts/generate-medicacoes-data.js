@@ -124,7 +124,85 @@ const HOSP = {
   tiamazol: ['10–20 mg VO 8/8 h (hipertireoidismo)'],
   propiltiouracil: ['200 mg VO 4/4 h (tempestade tireotóxica)'],
   levotiroxina: ['25–100 mcg VO 24/24 h em jejum (hipotireoidismo)'],
-  tamsulosina: ['0,4 mg VO 24/24 h (HPB/cólica renal — alta)']
+  tamsulosina: ['0,4 mg VO 24/24 h (HPB/cólica renal — alta)'],
+  lidocaina: ['2% — 1–1,5 mg/kg EV bolus (TV/FV)', 'Infiltração local conforme procedimento'],
+  amiodarona: ['150 mg EV em 10 min (TV/FV)', '360 mg EV em 6 h; manutenção 540 mg/24 h'],
+  adenosina: ['6 mg EV bolus rápido; 12 mg se necessário (PSVT)'],
+  digoxina: ['0,25–0,5 mg EV (FA com resposta ventricular rápida)'],
+  diltiazem: ['0,25 mg/kg EV (FA/flutter)', '60–120 mg VO 8/8 h'],
+  fluconazol: ['200 mg VO/EV 24/24 h', '800 mg dose única (candidíase vaginal)'],
+  tranexamico: ['1 g EV em 10 min (HDA/sangramento)', '1 g VO 8/8 h (menorragia/dengue selecionada)'],
+  nitroprussiato: ['50 mg/amp — infusão 0,3–10 mcg/kg/min (emergência hipertensiva/IC)'],
+  valaciclovir: ['1 g VO 8/8 h × 7 dias (herpes zoster)', '500 mg VO 12/12 h (herpes simples)'],
+  nifedipino: ['10 mg cápsula VO (urgência — cautela)', '30–60 mg OROS 24/24 h'],
+  levetiracetam: ['1 g EV em 15 min (status)', '500 mg VO 12/12 h manutenção'],
+  alteplase: ['0,9 mg/kg EV (máx. 90 mg) — 10% bolus + restante 1 h (AVC isquêmico)'],
+  tenecteplase: ['0,25–0,5 mg/kg EV bolus (IAM)'],
+  estreptoquinase: ['1,5 milhões UI EV em 1 h (IAM — se disponível)'],
+  tobramicina: ['5–7 mg/kg EV 24/24 h dose única', 'Colírio 0,3% — 1 gota 4/4 h (oftalmológico)'],
+  vacina_tetano: ['dT/dTpa conforme esquema vacinal MS (profilaxia tétano)'],
+  penicilina_benzatina: ['1,2 milhões UI IM dose única (sífilis primária)', '2,4 milhões UI IM (sífilis tardia)'],
+  albendazol: ['400 mg VO dose única (ascaris)', '400 mg VO 12/12 h × 3 dias (outras helmintíases)'],
+  mebendazol: ['100 mg VO 12/12 h × 3 dias', '500 mg VO dose única (enterobíase)'],
+  ivermectina: ['200 mcg/kg VO dose única (escabiose/strongyloides)'],
+  praziquantel: ['40 mg/kg VO dose única (schistosoma)'],
+  dopamina: ['5–20 mcg/kg/min EV infusão (choque)'],
+  dobutamina: ['2,5–20 mcg/kg/min EV infusão (IC baixo débito)'],
+  pregabalina: ['75 mg VO 12/12 h (neuropatia)', '150 mg VO 12/12 h titular'],
+  gabapentina: ['300 mg VO 8/8 h; titular até 3600 mg/dia'],
+  soro_reidratacao: ['SRO 200–400 mL após cada evacuação/vômito', 'Plano A/B/C MS — reidratação oral'],
+  aztreonam: ['1–2 g EV 8/8 h (Gram-negativos)'],
+  soro_antitetanico: ['500 UI IM (profilaxia tétano — esquema MS)'],
+  dabigatrana: ['150 mg VO 12/12 h (FA/TEV)', '110 mg 12/12 h se DFG 30–50'],
+  apixabana: ['5 mg VO 12/12 h (FA/TEV)', '2,5 mg 12/12 h se critérios de dose reduzida'],
+  edoxabana: ['60 mg VO 24/24 h (FA/TEV)', '30 mg se dose reduzida'],
+  vitamina_k: ['10 mg EV lento (anticoagulação warfarina)', '1–10 mg VO (deficiência vitamina K)'],
+  sulfato_ferroso: ['200 mg VO 8/8 h (ferro elementar ~60 mg)', 'EV se intolerância VO (protocolo institucional)'],
+  secnidazol: ['2 g VO dose única (tricomoníase/giardíase)'],
+  tinidazol: ['2 g VO dose única (giardíase/tricomoníase)'],
+  anfotericina_b: ['1 mg/kg EV 24/24 h (fungos sistêmicos)', 'Formulação lipídica se disponível'],
+  budesonida: ['200–400 mcg inalatório 12/12 h', '9 mg VO 24/24 h (retocolite — contexto específico)'],
+  fluticasona: ['250–500 mcg inalatório 12/12 h', 'Spray nasal 2 jatos/narina 24/24 h'],
+  mometasona: ['200 mcg inalatório 24/24 h', 'Spray nasal 2 jatos/narina 24/24 h'],
+  levonorgestrel: ['1,5 mg VO dose única (contracepção de emergência)'],
+  fondaparinux: ['2,5 mg SC 24/24 h (SCA)', '5–10 mg SC 24/24 h (TEP)'],
+  rifampicina: ['600 mg VO 24/24 h (TB)', '300 mg VO 12/12 h (meningite profilaxia)'],
+  isoniazida: ['300 mg VO 24/24 h (TB)'],
+  etambutol: ['15 mg/kg VO 24/24 h (TB)'],
+  pirazinamida: ['25–30 mg/kg VO 24/24 h (TB)'],
+  piridoxina: ['25–50 mg VO 24/24 h (profilaxia neuropatia INH)'],
+  cloroquina: ['600 mg VO (malária por P. vivax — esquema MS)'],
+  primaquina: ['0,5 mg/kg VO 24/24 h × 14 dias (radical cura P. vivax)'],
+  mefloquina: ['750 mg VO + 500 mg após 6 h (malária não complicada)'],
+  atovaquona: ['750 mg VO 12/12 h × 3 dias (malária com proguanil)'],
+  isossorbida: ['5 mg SL (angina)', '40 mg VO 8/8 h (profilaxia)'],
+  sertralina: ['50 mg VO 24/24 h; titular até 200 mg'],
+  escitalopram: ['10 mg VO 24/24 h; máx. 20 mg'],
+  venlafaxina: ['75 mg VO 24/24 h; titular'],
+  micafungina: ['100 mg EV 24/24 h (candidíase invasiva)'],
+  loperamida: ['4 mg VO depois 2 mg após evacuação (máx. 16 mg/dia)'],
+  racecadotrilo: ['100 mg VO 8/8 h (diarreia aguda)'],
+  domperidona: ['10 mg VO 8/8 h antes refeições'],
+  bromoprida: ['10 mg VO/IM/EV 8/8 h'],
+  colecalciferol: ['50.000 UI VO semanal (deficiência)'],
+  cefuroxima: ['500 mg VO 12/12 h', '750 mg–1,5 g EV 8/8 h'],
+  cefixima: ['400 mg VO dose única (gonorreia)', '400 mg VO 24/24 h × 5 dias'],
+  espectinomicina: ['2 g IM dose única (gonorreia)'],
+  dolutegravir: ['50 mg VO 12/12 h (PEP HIV — 28 dias)'],
+  tenofovir: ['300 mg VO 24/24 h (PEP/TARV)'],
+  emtricitabina: ['200 mg VO 24/24 h (PEP/TARV)'],
+  raltegravir: ['400 mg VO 12/12 h (PEP HIV)'],
+  zidovudina: ['300 mg VO 12/12 h (PEP/TARV)'],
+  imunoglobulina_hepatite_b: ['0,06 mL/kg IM (profilaxia HB — esquema MS)'],
+  vacina_hepatite_b: ['Esquema 0-1-6 meses IM (profilaxia HB)'],
+  linezolida: ['600 mg VO/EV 12/12 h'],
+  ertapenem: ['1 g EV/IM 24/24 h (ESBL/intra-abdominal leve)'],
+  insulina_nph: ['0,1–0,2 U/kg SC 12/12 h (transição CAD)'],
+  metildopa: ['250 mg VO 8/8 h (HAS gestacional)'],
+  tetraciclina: ['500 mg VO 6/6 h × 7–14 dias'],
+  ganciclovir: ['5 mg/kg EV 12/12 h (CMV)'],
+  misoprostol: ['600 mcg VO/Subl (hemorragia pós-parto)'],
+  metilergonovina: ['0,2 mg IM (hemorragia pós-parto — evitar se HAS)']
 };
 
 const OVERRIDE = {
@@ -181,7 +259,7 @@ const VO_FAMILY = {
 const out = `/* Medicações — catálogo clínico (gerado + revisado jun/2026) */
 /* eslint-disable max-len */
 
-const MEDHUB_MED_BUILD = 'med-v1';
+const MEDHUB_MED_BUILD = 'med-v2-gaps';
 
 const MED_EXTRA_DRUGS = ${JSON.stringify(EXTRA, null, 2)};
 
@@ -248,16 +326,16 @@ function medBuildDrugMonograph (id, meta) {
 }
 
 function medBuildMedicacoesCatalog () {
-  const list = [];
+  const byId = new Map();
   if (typeof PS_DRUG_META !== 'undefined') {
     Object.entries(PS_DRUG_META).forEach(([id, meta]) => {
-      list.push(medBuildDrugMonograph(id, meta));
+      byId.set(id, medBuildDrugMonograph(id, meta));
     });
   }
   Object.entries(MED_EXTRA_DRUGS).forEach(([id, extra]) => {
     const meta = { name: extra.name, classes: extra.classes || [] };
     const built = medBuildDrugMonograph(id, meta);
-    list.push({
+    byId.set(id, {
       ...built,
       indications: extra.indications || built.indications,
       ciAbs: extra.ciAbs || built.ciAbs,
@@ -269,8 +347,7 @@ function medBuildMedicacoesCatalog () {
       searchText: (extra.name + ' ' + id).toLowerCase()
     });
   });
-  list.sort((a, b) => a.name.localeCompare(b.name, 'pt-BR'));
-  return list;
+  return [...byId.values()].sort((a, b) => a.name.localeCompare(b.name, 'pt-BR'));
 }
 
 let MED_CATALOG = [];

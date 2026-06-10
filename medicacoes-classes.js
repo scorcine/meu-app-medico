@@ -53,6 +53,8 @@ const MED_CLASS_LABELS = {
   alpha_blocker: 'Bloqueador alfa-adrenérgico',
   discharge_only: 'Uso ambulatorial / alta',
   tricyclic: 'Antidepressivo tricíclico',
+  antidepressant: 'Antidepressivo (ISRS/SNRI)',
+  antiarrhythmic: 'Antiarrítmico',
   statin: 'Estatina (hipolipemiante)',
   nitrofuran: 'Nitrofurano'
 };
@@ -421,6 +423,20 @@ const MED_CLASS_DEFAULTS = {
     ciRel: ['Idoso', 'Epilepsia', 'Gestação', 'Hipertireoidismo'],
     posologyVo: ['Iniciar dose baixa à noite; titular semanalmente'],
     posologyHosp: ['VO preferível; evitar IV']
+  },
+  antidepressant: {
+    indications: ['Depressão', 'Ansiedade', 'TOC', 'TEPT'],
+    ciAbs: ['Uso concomitante de IMAO (14 dias)', 'Hipersensibilidade'],
+    ciRel: ['Gestação/lactação', 'Prolongamento QT', 'Epilepsia', 'Idoso'],
+    posologyVo: ['Iniciar dose baixa; titular conforme resposta (4–6 semanas)'],
+    posologyHosp: ['VO preferível; monitorizar ideação suicida no início']
+  },
+  antiarrhythmic: {
+    indications: ['Arritmias supraventriculares', 'Fibrilação/flutter', 'Taquicardia ventricular (contexto específico)'],
+    ciAbs: ['Bradicardia sinusal', 'BAV avançado sem marcapasso', 'Hipersensibilidade'],
+    ciRel: ['Prolongamento QT', 'Insuficiência cardíaca', 'DRC', 'Gestação (amiodarona)'],
+    posologyVo: ['Conforme bula e monitorização ECG'],
+    posologyHosp: ['EV/infusão em ambiente monitorizado; titular conforme ECG']
   },
   statin: {
     indications: ['Dislipidemia', 'Prevenção primária/secundária cardiovascular'],

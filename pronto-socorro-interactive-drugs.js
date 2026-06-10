@@ -123,6 +123,10 @@ const PS_DRUG_META = {
   tamsulosina: { name: 'Tamsulosina', classes: ['alpha_blocker', 'discharge_only'] }
 };
 
+if (typeof PS_DRUG_META_GAPS !== 'undefined') {
+  Object.assign(PS_DRUG_META, PS_DRUG_META_GAPS);
+}
+
 const PS_DRUG_ALIASES = [
   ['amoxicilina_clavulanato', ['amoxicilina-clavulanato', 'amoxicilina clavulanato', 'clavulin']],
   ['ampicilina_sulbactam', ['ampicilina-sulbactam', 'ampicilina sulbactam', 'unasyn']],
@@ -150,7 +154,37 @@ const PS_DRUG_ALIASES = [
   ['gluconato_calcio', ['gluconato de cálcio', 'gluconato de calcio']],
   ['artesunato', ['artesunato', 'artesunate']],
   ['magnesio_sulfato', ['sulfato de magnésio ev', 'mgso4']],
-  ['tamsulosina', ['tamsulosina', 'cloridrato de tamsulosina']]
+  ['tamsulosina', ['tamsulosina', 'cloridrato de tamsulosina']],
+  ['penicilina_benzatina', ['penicilina benzatina', 'benzetacil', 'benzathine']],
+  ['cefixima', ['cefixima']],
+  ['espectinomicina', ['espectinomicina']],
+  ['levonorgestrel', ['levonorgestrel', 'postinor']],
+  ['dolutegravir', ['dolutegravir']],
+  ['tenofovir', ['tenofovir', 'tdf']],
+  ['emtricitabina', ['emtricitabina', 'ftc']],
+  ['raltegravir', ['raltegravir']],
+  ['zidovudina', ['zidovudina', 'azt']],
+  ['imunoglobulina_hepatite_b', ['imunoglobulina anti-hbs', 'imunoglobulina hepatite b']],
+  ['vacina_hepatite_b', ['vacina hepatite b', 'vacina contra hepatite b']],
+  ['soro_antitetanico', ['soro antitetânico', 'soro antitetanico']],
+  ['vacina_tetano', ['vacina tétano', 'vacina tetano', 'dtpa', 'dt']],
+  ['soro_reidratacao', ['soro de reidratação oral', 'soro de reidratacao oral', 'sro']],
+  ['amiodarona', ['amiodarona', 'atlansil']],
+  ['alteplase', ['alteplase', 'rt-pa', 'activase']],
+  ['tenecteplase', ['tenecteplase']],
+  ['fluconazol', ['fluconazol']],
+  ['tranexamico', ['ácido tranexâmico', 'acido tranexamico', 'transamin']],
+  ['nitroprussiato', ['nitroprussiato', 'nipride']],
+  ['levetiracetam', ['levetiracetam', 'keppra']],
+  ['tobramicina', ['tobramicina']],
+  ['albendazol', ['albendazol']],
+  ['mebendazol', ['mebendazol']],
+  ['ivermectina', ['ivermectina']],
+  ['nitrofurantoina', ['nitrofurantoina']],
+  ['fosfomicina', ['fosfomicina']],
+  ['bromoprida', ['bromoprida', 'digesan']],
+  ['gabapentina', ['gabapentina']],
+  ['pregabalina', ['pregabalina', 'lyrica']]
 ];
 
 Object.keys(PS_DRUG_META).forEach(id => {
