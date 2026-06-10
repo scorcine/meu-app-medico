@@ -3,7 +3,12 @@ function getSession () {
   if (!raw) return null;
 
   try {
-    return JSON.parse(raw);
+    const user = JSON.parse(raw);
+    if (user && ('pass' in user || 'passHash' in user) && typeof medhubSetSession === 'function') {
+      medhubSetSession(user);
+      return { name: user.name, email: user.email };
+    }
+    return user;
   } catch {
     localStorage.removeItem('session');
     return null;
@@ -23,11 +28,14 @@ function initDashboard () {
   const user = requireAuth();
   if (!user) return;
 
-  const nameEl = document.getElementById('user-name');
-  if (nameEl) nameEl.textContent = user.name;
+  medhubInitComplianceShell();
+  medhubRequireTerms(() => {
+    const nameEl = document.getElementById('user-name');
+    if (nameEl) nameEl.textContent = user.name;
 
-  const greetingEl = document.getElementById('user-greeting');
-  if (greetingEl) greetingEl.textContent = `Olá, ${user.name}`;
+    const greetingEl = document.getElementById('user-greeting');
+    if (greetingEl) greetingEl.textContent = `Olá, ${user.name}`;
+  });
 }
 
 function patchEmergenciaCacheGuard () {
@@ -63,28 +71,33 @@ function initApp () {
   const user = requireAuth();
   if (!user) return;
 
-  const nameEl = document.getElementById('user-name');
-  if (nameEl) nameEl.textContent = user.name;
+  medhubInitComplianceShell();
+  medhubRequireTerms(() => {
+    medhubEnsureCryptoUnlock(() => {
+      const nameEl = document.getElementById('user-name');
+      if (nameEl) nameEl.textContent = user.name;
 
-  const greetingEl = document.getElementById('user-greeting');
-  if (greetingEl) greetingEl.textContent = `Olá, ${user.name}`;
+      const greetingEl = document.getElementById('user-greeting');
+      if (greetingEl) greetingEl.textContent = `Olá, ${user.name}`;
 
-  document.querySelectorAll('.sidebar-link').forEach(link => {
-    link.addEventListener('click', () => showSection(link.dataset.section));
+      document.querySelectorAll('.sidebar-link').forEach(link => {
+        link.addEventListener('click', () => showSection(link.dataset.section));
+      });
+
+      initCalcEssenciais();
+      initGuiaEmergencia();
+      initTratamentoHospitalar();
+      initProntoSocorro();
+      initAnamnese();
+      initReceituario();
+      initMedicacoes();
+      initAnamneseReceituarioLink();
+      patchEmergenciaCacheGuard();
+
+      const hash = window.location.hash.replace('#', '');
+      if (hash) showSection(hash);
+    });
   });
-
-  initCalcEssenciais();
-  initGuiaEmergencia();
-  initTratamentoHospitalar();
-  initProntoSocorro();
-  initAnamnese();
-  initReceituario();
-  initMedicacoes();
-  initAnamneseReceituarioLink();
-  patchEmergenciaCacheGuard();
-
-  const hash = window.location.hash.replace('#', '');
-  if (hash) showSection(hash);
 }
 
 function showSection (sectionId) {

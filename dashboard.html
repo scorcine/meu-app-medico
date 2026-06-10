@@ -6,8 +6,10 @@
   <title>Painel • MedHub</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <script src="theme.js"></script>
-  <link rel="stylesheet" href="style.css?v=theme-v1">
+  <link rel="stylesheet" href="style.css?v=compliance-v1">
   <script defer src="app.js"></script>
+  <script defer src="security-crypto.js"></script>
+  <script defer src="compliance.js"></script>
   <script defer src="auth.js"></script>
 </head>
 <body onload="initDashboard()">
@@ -25,6 +27,9 @@
       <p id="user-greeting"></p>
       <p class="muted">
         Aqui nesse aplicativo você irá conseguir tudo que precisa para dar um plantão tranquilo e com segurança.
+      </p>
+      <p class="compliance-inline-notice" role="note">
+        <strong>Aviso:</strong> ferramenta educacional — não substitui julgamento clínico nem prontuário legal. Anamneses ficam criptografadas no seu navegador.
       </p>
       <a href="app.html" class="btn dashboard-btn">Entrar</a>
     </div>

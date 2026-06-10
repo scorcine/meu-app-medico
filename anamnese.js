@@ -7,16 +7,50 @@ function anamneseStorageKey () {
   return ANAMNESE_STORAGE_PREFIX + (user?.email || 'local');
 }
 
-function anamneseLoadHistory () {
+function anamneseLoadHistoryRaw () {
   try {
-    return JSON.parse(localStorage.getItem(anamneseStorageKey()) || '[]');
+    return localStorage.getItem(anamneseStorageKey());
   } catch {
-    return [];
+    return null;
   }
 }
 
-function anamneseSaveHistory (list) {
-  localStorage.setItem(anamneseStorageKey(), JSON.stringify(list));
+async function anamneseLoadHistory () {
+  const raw = anamneseLoadHistoryRaw();
+  if (!raw) return [];
+
+  let parsed;
+  try {
+    parsed = JSON.parse(raw);
+  } catch {
+    return [];
+  }
+
+  if (Array.isArray(parsed)) {
+    if (typeof medhubHasSessionCryptoKey === 'function' && medhubHasSessionCryptoKey()) {
+      await anamneseSaveHistory(parsed);
+    }
+    return parsed;
+  }
+
+  if (parsed && parsed.enc) {
+    try {
+      return await medhubDecryptJson(parsed);
+    } catch {
+      return [];
+    }
+  }
+
+  return [];
+}
+
+async function anamneseSaveHistory (list) {
+  if (typeof medhubHasSessionCryptoKey === 'function' && medhubHasSessionCryptoKey()) {
+    const enc = await medhubEncryptJson(list);
+    localStorage.setItem(anamneseStorageKey(), JSON.stringify(enc));
+  } else {
+    localStorage.setItem(anamneseStorageKey(), JSON.stringify(list));
+  }
 }
 
 function anamneseFieldIds () {
@@ -87,7 +121,7 @@ function anamneseFormatText (data) {
     '---',
     'Médico(a): ' + (data.medico || '—'),
     'Registrado em: ' + new Date(data.savedAt).toLocaleString('pt-BR'),
-    'Gerado pelo MedHub — conteúdo clínico sob responsabilidade do profissional.'
+    'Gerado pelo MedHub — ferramenta educacional; não substitui prontuário legal.'
   ];
   return lines.join('\n');
 }
@@ -99,12 +133,24 @@ function anamneseBuildFilename (data) {
   return `Anamnese_${name}_${stamp}.txt`;
 }
 
-function anamneseRenderHistory () {
+async function anamneseRenderHistory () {
   const listEl = document.getElementById('anamnese-history-list');
   const emptyEl = document.getElementById('anamnese-history-empty');
+  const lockEl = document.getElementById('anamnese-history-locked');
   if (!listEl) return;
 
-  const history = anamneseLoadHistory().slice().reverse();
+  const raw = anamneseLoadHistoryRaw();
+  const needsUnlock = raw && raw.includes('"enc":true') &&
+    typeof medhubHasSessionCryptoKey === 'function' && !medhubHasSessionCryptoKey();
+
+  if (lockEl) lockEl.hidden = !needsUnlock;
+  if (needsUnlock) {
+    listEl.innerHTML = '';
+    if (emptyEl) emptyEl.hidden = true;
+    return;
+  }
+
+  const history = (await anamneseLoadHistory()).slice().reverse();
   listEl.innerHTML = '';
 
   if (!history.length) {
@@ -131,10 +177,10 @@ function anamneseRenderHistory () {
   });
 
   listEl.querySelectorAll('.anamnese-history-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
+    btn.addEventListener('click', async () => {
       const action = btn.dataset.action;
       const idx = Number(btn.dataset.idx);
-      const historyRev = anamneseLoadHistory().slice().reverse();
+      const historyRev = (await anamneseLoadHistory()).slice().reverse();
       const item = historyRev[idx];
       if (!item) return;
 
@@ -145,10 +191,10 @@ function anamneseRenderHistory () {
         anamneseDownloadFile(item);
       } else if (action === 'delete') {
         if (!confirm('Excluir esta anamnese do histórico local?')) return;
-        const all = anamneseLoadHistory();
+        const all = await anamneseLoadHistory();
         const realIdx = all.length - 1 - idx;
         all.splice(realIdx, 1);
-        anamneseSaveHistory(all);
+        await anamneseSaveHistory(all);
         anamneseRenderHistory();
       }
     });
@@ -188,9 +234,9 @@ async function anamneseHandleSave (e) {
     if (dateEl) dateEl.value = data.data;
   }
 
-  const history = anamneseLoadHistory();
+  const history = await anamneseLoadHistory();
   history.push(data);
-  anamneseSaveHistory(history);
+  await anamneseSaveHistory(history);
   anamneseRenderHistory();
 
   const text = anamneseFormatText(data);
@@ -204,7 +250,7 @@ async function anamneseHandleSave (e) {
       data.driveId = result.id;
       data.driveLink = result.webViewLink;
       history[history.length - 1] = data;
-      anamneseSaveHistory(history);
+      await anamneseSaveHistory(history);
       anamneseRenderHistory();
       driveMsg = ' Enviado ao Google Drive.';
       anamneseShowSaveStatus('Anamnese salva.' + driveMsg, 'ok');

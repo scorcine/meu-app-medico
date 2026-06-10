@@ -6,9 +6,11 @@
   <title>Login • MedHub</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <script src="theme.js"></script>
-  <link rel="stylesheet" href="style.css?v=theme-v1">
+  <link rel="stylesheet" href="style.css?v=compliance-v1">
 
   <script defer src="app.js"></script>
+  <script defer src="security-crypto.js"></script>
+  <script defer src="compliance.js"></script>
   <script defer src="auth.js"></script>
 </head>
 <body onload="redirectIfLogged()">
@@ -24,6 +26,10 @@
     <input id="password" name="password" type="password" required>
 
     <button type="submit">Login</button>
+
+    <p class="auth-notice" role="note">
+      Senhas protegidas com hash local (PBKDF2). Dados clínicos ficam no dispositivo — não substitui prontuário legal.
+    </p>
 
     <a href="register.html">Não tem conta? Cadastre-se</a>
   </form>

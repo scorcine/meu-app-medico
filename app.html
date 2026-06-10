@@ -46,10 +46,12 @@
   <script defer src="receituario-data.js?v=rx-multi-v1"></script>
   <script defer src="receituario-ps-bridge.js?v=rx-multi-v1"></script>
   <script defer src="receituario.js?v=rx-multi-v1"></script>
-  <script defer src="google-drive.js?v=anamnese-v1"></script>
-  <script defer src="anamnese.js?v=anamnese-v1"></script>
-  <script defer src="app.js?v=med-v1"></script>
-  <script defer src="auth.js"></script>
+  <script defer src="google-drive.js?v=compliance-v1"></script>
+  <script defer src="security-crypto.js?v=compliance-v1"></script>
+  <script defer src="compliance.js?v=compliance-v1"></script>
+  <script defer src="anamnese.js?v=compliance-v1"></script>
+  <script defer src="app.js?v=compliance-v1"></script>
+  <script defer src="auth.js?v=compliance-v1"></script>
 </head>
 <body class="app-page" onload="initApp()">
   <header class="app-header">
@@ -338,6 +340,11 @@
       <section id="section-anamnese" class="content-panel">
         <div class="card dashboard-card anamnese-wrap">
           <h2>Anamnese</h2>
+          <p class="compliance-privacy-banner" role="note">
+            <strong>Privacidade:</strong> anamneses salvas ficam <strong>criptografadas neste navegador</strong> (chave derivada da sua senha).
+            Não há servidor MedHub. Isso <strong>não equivale a prontuário legal</strong> — use conforme política da sua instituição e LGPD.
+            Dados enviados ao Google Drive (opcional) ficam sob sua conta Google.
+          </p>
           <p class="muted">Registre a anamnese do paciente. Ao salvar, o texto fica no histórico local e pode ser enviado automaticamente ao seu Google Drive.</p>
 
           <details class="anamnese-drive-panel">
@@ -423,6 +430,9 @@
 
           <section class="anamnese-history">
             <h3>Histórico local</h3>
+            <p id="anamnese-history-locked" class="compliance-inline-notice" hidden>
+              Histórico protegido — informe sua senha ao abrir o app para desbloquear anamneses criptografadas.
+            </p>
             <p id="anamnese-history-empty" class="muted">Nenhuma anamnese salva ainda.</p>
             <ul id="anamnese-history-list" class="anamnese-history-list"></ul>
           </section>

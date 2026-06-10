@@ -6,9 +6,21 @@
   <title>Cadastro • MedHub</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <script src="theme.js"></script>
-  <link rel="stylesheet" href="style.css?v=theme-v1">
+  <link rel="stylesheet" href="style.css?v=compliance-v1">
   <script defer src="app.js"></script>
+  <script defer src="security-crypto.js"></script>
+  <script defer src="compliance.js"></script>
   <script defer src="auth.js"></script>
+  <script defer>
+    document.addEventListener('DOMContentLoaded', () => {
+      medhubInitComplianceShell();
+      const btn = document.getElementById('register-show-terms');
+      if (btn) btn.addEventListener('click', e => {
+        e.preventDefault();
+        medhubShowTermsModal(null, null);
+      });
+    });
+  </script>
 </head>
 <body onload="redirectIfLogged()">
   <header>MedHub</header>
@@ -23,7 +35,13 @@
     <input id="email" name="email" type="email" required>
 
     <label for="password">Senha</label>
-    <input id="password" name="password" type="password" required>
+    <input id="password" name="password" type="password" required minlength="8" autocomplete="new-password">
+    <p class="auth-hint muted">Mínimo 8 caracteres. Usada para login e criptografia local das anamneses.</p>
+
+    <label class="auth-terms-check">
+      <input id="acceptTerms" name="acceptTerms" type="checkbox" required>
+      Li e aceito o <button type="button" class="auth-terms-link" id="register-show-terms">termo de uso e aviso legal</button> (ferramenta educacional; não substitui prontuário legal).
+    </label>
 
     <button type="submit">Cadastrar</button>
 
