@@ -79,6 +79,7 @@ function initApp () {
   initProntoSocorro();
   initAnamnese();
   initReceituario();
+  initMedicacoes();
   initAnamneseReceituarioLink();
   patchEmergenciaCacheGuard();
 
@@ -100,6 +101,7 @@ function showSection (sectionId) {
   if (typeof showTratamentoHospitalarHome === 'function') showTratamentoHospitalarHome();
   if (typeof showProntoSocorroHome === 'function') showProntoSocorroHome();
   if (sectionId === 'receituario' && typeof rxOnSectionShow === 'function') rxOnSectionShow();
+  if (sectionId === 'medicacoes' && typeof medShowList === 'function') medShowList();
 }
 
 function calcPediatrica (e) {
