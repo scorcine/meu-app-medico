@@ -1870,6 +1870,21 @@ body.home-page main {
   font-size: 0.9rem;
 }
 
+.home-disclaimer {
+  margin: 1.25rem 0 0;
+  padding: 0.85rem 1rem;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: var(--text-caption);
+  background: var(--bg-surface-muted);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.home-disclaimer strong {
+  color: var(--text);
+}
+
 .home-cta-text {
   text-align: center;
   color: var(--text-secondary);
