@@ -1,9 +1,11 @@
-/* Medicações — busca lazy, fichas MedHub (A) e referência RENAME (B) */
+/* Medicações — busca lazy, fichas MedHub (A), RENAME (B) e consulta ANVISA (C) */
 
 const MED_DISPLAY_LIMIT = 80;
 const MED_REF_MIN_QUERY = 2;
+const MED_ANVISA_MIN_QUERY = 3;
 
 let medCurrentId = null;
+let medRenameLoadState = 'idle';
 
 function medNorm (text) {
   return (text || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim();
@@ -23,6 +25,7 @@ function medGetSearchCatalog () {
 }
 
 function medGetDrugById (id) {
+  if (id === 'anvisa-external') return null;
   return medGetSearchCatalog().find(d => d.id === id) || null;
 }
 
@@ -34,7 +37,7 @@ function medFilterCatalog (query, opts) {
 
   if (tierFilter === 'reference') {
     list = medGetReferenceCatalog();
-  } else if (q.length >= MED_REF_MIN_QUERY) {
+  } else if (q.length >= MED_REF_MIN_QUERY || tierFilter === 'all') {
     list = medGetSearchCatalog();
   } else {
     list = medGetFullCatalog();
@@ -60,7 +63,51 @@ function medTierBadge (drug) {
   if (drug.tier === 'reference') {
     return '<span class="med-tier-badge med-tier-badge--ref">Referência RENAME</span>';
   }
+  if (drug.tier === 'external') {
+    return '<span class="med-tier-badge med-tier-badge--ext">Consulta ANVISA</span>';
+  }
   return '<span class="med-tier-badge med-tier-badge--full">Ficha MedHub</span>';
+}
+
+function medEnsureRenameLoaded () {
+  if (typeof medFetchRenameReference !== 'function') return Promise.resolve([]);
+  if (typeof medIsRenameLoaded === 'function' && medIsRenameLoaded()) {
+    return Promise.resolve(medGetReferenceCatalog());
+  }
+  if (medRenameLoadState === 'loading') {
+    return medFetchRenameReference();
+  }
+  medRenameLoadState = 'loading';
+  return medFetchRenameReference().finally(function () {
+    medRenameLoadState = 'done';
+  });
+}
+
+function medShouldLoadRename (q, tier) {
+  return tier === 'reference' || tier === 'all' || q.length >= MED_REF_MIN_QUERY;
+}
+
+function medRenderExternalAnvisa (query) {
+  const box = document.getElementById('med-external-anvisa');
+  if (!box) return;
+
+  const q = (query || '').trim();
+  if (q.length < MED_ANVISA_MIN_QUERY) {
+    box.hidden = true;
+    return;
+  }
+
+  const url = typeof medAnvisaSearchUrl === 'function'
+    ? medAnvisaSearchUrl(q)
+    : 'https://consultas.anvisa.gov.br/#/bulario/q/?nomeProduto=' + encodeURIComponent(q);
+
+  box.hidden = false;
+  box.innerHTML =
+    '<p class="med-external-title">' + medTierBadge({ tier: 'external' }) +
+    ' Nível C — medicamento não listado ou busca ampla</p>' +
+    '<p class="muted">Consulta externa ao Bulário eletrônico ANVISA (não revisada pelo MedHub).</p>' +
+    '<a class="btn-outline med-anvisa-btn" href="' + url + '" target="_blank" rel="noopener">' +
+    'Buscar “' + q + '” na ANVISA</a>';
 }
 
 function medRenderGrid (items, meta) {
@@ -71,7 +118,8 @@ function medRenderGrid (items, meta) {
   if (!grid) return;
 
   const fullCount = medGetFullCatalog().length;
-  const refCount = medGetReferenceCatalog().length;
+  const refLoaded = typeof medIsRenameLoaded === 'function' && medIsRenameLoaded();
+  const refCount = refLoaded ? medGetReferenceCatalog().length : null;
   const total = items.length;
   const limited = items.slice(0, MED_DISPLAY_LIMIT);
   const truncated = total > MED_DISPLAY_LIMIT;
@@ -84,21 +132,30 @@ function medRenderGrid (items, meta) {
     let label = '';
     if (meta && meta.mode === 'browse') {
       label = fullCount + ' fichas MedHub';
-      if (refCount) label += ' · ' + refCount + ' referência RENAME (busque ≥ ' + MED_REF_MIN_QUERY + ' letras)';
+      if (refCount !== null) {
+        label += ' · ' + refCount + ' referência RENAME (busque ≥ ' + MED_REF_MIN_QUERY + ' letras)';
+      } else {
+        label += ' · RENAME sob demanda (≥ ' + MED_REF_MIN_QUERY + ' letras)';
+      }
     } else {
       label = total + ' resultado(s)';
       if (fullShown) label += ' · ' + fullShown + ' MedHub';
       if (refShown) label += ' · ' + refShown + ' RENAME';
       if (truncated) label += ' — mostrando ' + MED_DISPLAY_LIMIT;
+      if (meta && meta.loadingRename) label += ' · carregando RENAME…';
     }
     count.textContent = label;
   }
 
   if (hint) {
-    if (meta && meta.mode === 'browse') {
+    if (meta && meta.loadingRename) {
+      hint.hidden = false;
+      hint.textContent = 'Carregando catálogo RENAME…';
+    } else if (meta && meta.mode === 'browse') {
       hint.hidden = false;
       hint.textContent = 'Lista inicial: fichas revisadas dos protocolos. Para buscar na RENAME, digite ao menos ' +
-        MED_REF_MIN_QUERY + ' caracteres ou filtre "Referência RENAME".';
+        MED_REF_MIN_QUERY + ' caracteres ou filtre "Referência RENAME". Com ' + MED_ANVISA_MIN_QUERY +
+        '+ letras sem resultado, use a consulta ANVISA (nível C).';
     } else if (meta && meta.query && meta.query.length < MED_REF_MIN_QUERY && meta.tier !== 'reference') {
       hint.hidden = false;
       hint.textContent = 'Digite mais caracteres para incluir medicamentos da referência RENAME.';
@@ -120,7 +177,16 @@ function medRenderGrid (items, meta) {
     grid.appendChild(btn);
   });
 
-  if (empty) empty.hidden = total > 0;
+  if (empty) {
+    empty.hidden = total > 0;
+    if (!total && meta && meta.query && meta.query.length >= MED_ANVISA_MIN_QUERY) {
+      empty.textContent = 'Nenhum resultado no MedHub — use a consulta ANVISA abaixo (nível C).';
+    } else {
+      empty.textContent = 'Nenhum medicamento encontrado.';
+    }
+  }
+
+  medRenderExternalAnvisa(meta && meta.query ? meta.query : '');
 }
 
 function medListItems (title, items) {
@@ -207,11 +273,22 @@ function medRefreshGrid () {
   const tier = tierFilter ? tierFilter.value : '';
   const cls = classFilter ? classFilter.value : '';
 
-  let items = medFilterCatalog(q, { tier: tier === 'all' ? 'all' : tier });
-  if (cls) items = items.filter(d => (d.classes || []).includes(cls));
+  const mode = (!q && tier !== 'reference' && tier !== 'all') ? 'browse' : 'search';
 
-  const mode = (!q && tier !== 'reference') ? 'browse' : 'search';
-  medRenderGrid(items, { mode, query: q, tier });
+  function renderNow (loadingRename) {
+    let items = medFilterCatalog(q, { tier: tier === 'all' ? 'all' : tier });
+    if (cls) items = items.filter(d => (d.classes || []).includes(cls));
+    medRenderGrid(items, { mode, query: q, tier, loadingRename });
+  }
+
+  if (medShouldLoadRename(q, tier) && typeof medFetchRenameReference === 'function' &&
+      !(typeof medIsRenameLoaded === 'function' && medIsRenameLoaded())) {
+    renderNow(true);
+    medEnsureRenameLoaded().then(function () { renderNow(false); });
+    return;
+  }
+
+  renderNow(false);
 }
 
 function initMedicacoes () {

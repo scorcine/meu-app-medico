@@ -259,7 +259,7 @@ const VO_FAMILY = {
 const out = `/* Medicações — catálogo clínico (gerado + revisado jun/2026) */
 /* eslint-disable max-len */
 
-const MEDHUB_MED_BUILD = 'med-v2-gaps';
+const MEDHUB_MED_BUILD = 'med-v4-pipeline';
 
 const MED_EXTRA_DRUGS = ${JSON.stringify(EXTRA, null, 2)};
 

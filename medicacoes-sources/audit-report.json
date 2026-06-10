@@ -1,0 +1,14 @@
+{
+  "generatedAt": "2026-06-10T13:56:36.647Z",
+  "counts": {
+    "fullCatalog": 210,
+    "renameCatalog": 208,
+    "protocolGaps": 0
+  },
+  "protocolGaps": [],
+  "duplicateCoreNames": [],
+  "missingPosology": [],
+  "rxInteractiveMissing": [],
+  "renameOverlaps": [],
+  "ok": true
+}

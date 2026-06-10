@@ -1,9 +1,4 @@
-/* Medicações — referência RENAME 2024 (nível B, gerado automaticamente) */
-/* Fonte: seed curado + trechos RENAME 2024 MS/SUS — CC BY-NC-SA */
-/* Não substitui ficha MedHub (nível A). Revisar bula ANVISA antes de prescrever. */
-
-const MED_RENAME_BUILD = 'rename-v1';
-const MED_RENAME_REFERENCE = [
+[
   {
     "id": "ref-acetato_de_ciproterona",
     "tier": "reference",
@@ -7076,8 +7071,4 @@ const MED_RENAME_REFERENCE = [
     "bulaUrl": "https://consultas.anvisa.gov.br/#/bulario/q/?nomeProduto=Zopiclona",
     "searchText": "zopiclona rename n05cf01 sistema nervoso · rename"
   }
-];
-
-function medGetRenameReference () {
-  return MED_RENAME_REFERENCE;
-}
+]

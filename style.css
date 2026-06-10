@@ -2219,6 +2219,12 @@ textarea {
   border: 1px solid rgba(59, 130, 246, 0.3);
 }
 
+.med-tier-badge--ext {
+  background: rgba(107, 114, 128, 0.12);
+  color: #374151;
+  border: 1px solid rgba(107, 114, 128, 0.35);
+}
+
 .med-drug-card--reference {
   border-style: dashed;
 }
@@ -2240,6 +2246,25 @@ textarea {
 
 .med-bula-link a {
   font-weight: 600;
+}
+
+.med-external-anvisa {
+  margin: 1rem 0 0.5rem;
+  padding: 0.85rem 1rem;
+  border: 1px dashed var(--border);
+  border-radius: 10px;
+  background: var(--bg-surface-muted);
+}
+
+.med-external-title {
+  margin: 0 0 0.35rem;
+  font-size: 0.9rem;
+}
+
+.med-anvisa-btn {
+  display: inline-block;
+  margin-top: 0.5rem;
+  text-decoration: none;
 }
 
 .med-class-badge {

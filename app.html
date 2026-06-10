@@ -41,9 +41,9 @@
   <script defer src="pronto-socorro-interactive-core.js?v=ps-interactive-rx-v3"></script>
   <script defer src="pronto-socorro.js?v=ps-interactive-rx-v3"></script>
   <script defer src="medicacoes-classes.js?v=med-v2-gaps"></script>
-  <script defer src="medicacoes-data.js?v=med-v3-rename"></script>
-  <script defer src="medicacoes-rename-data.js?v=med-v3-rename"></script>
-  <script defer src="medicacoes.js?v=med-v3-rename"></script>
+  <script defer src="medicacoes-data.js?v=med-v4-pipeline"></script>
+  <script defer src="medicacoes-rename-loader.js?v=med-v4-pipeline"></script>
+  <script defer src="medicacoes.js?v=med-v4-pipeline"></script>
   <script defer src="med-apresentacoes-vo.js?v=ist-pep-v1"></script>
   <script defer src="receituario-data.js?v=rx-multi-v1"></script>
   <script defer src="receituario-ps-bridge.js?v=rx-multi-v1"></script>
@@ -136,7 +136,7 @@
               </li>
               <li>
                 <strong>💊 Guia de medicações</strong>
-                <span>200+ fichas MedHub + 200+ referência RENAME — busca lazy com link ao Bulário ANVISA.</span>
+                <span>210+ fichas MedHub · 200+ RENAME (lazy) · consulta ANVISA quando não achar.</span>
               </li>
               <li>
                 <strong>📝 Anamnese e histórico local</strong>
@@ -225,7 +225,7 @@
         <div class="card dashboard-card med-wrap">
           <div id="med-list-view">
             <h2>Medicações</h2>
-            <p class="muted">Dois níveis: <strong>fichas MedHub</strong> (protocolos PS, revisadas) e <strong>referência RENAME</strong> (MS/SUS, consulta + link ANVISA). Busque pelo nome — referência RENAME entra com 2+ letras.</p>
+            <p class="muted">Três níveis: <strong>fichas MedHub</strong> (protocolos), <strong>referência RENAME</strong> (MS/SUS, carregada sob demanda) e <strong>consulta ANVISA</strong> quando não houver resultado. RENAME: 2+ letras; ANVISA: 3+ letras.</p>
             <label class="ps-search-label" for="med-search">Buscar medicamento</label>
             <input id="med-search" class="ps-search" type="search" placeholder="Ex.: dipirona, ritonavir, mesalazina, dabigatrana…" autocomplete="off">
             <label class="ps-search-label" for="med-filter-tier">Catálogo</label>
@@ -241,6 +241,7 @@
             <p id="med-count" class="ps-count muted"></p>
             <p id="med-search-hint" class="med-search-hint muted" hidden></p>
             <div id="med-drug-grid" class="calc-category-grid med-drug-grid"></div>
+            <div id="med-external-anvisa" class="med-external-anvisa" hidden></div>
             <p id="med-empty" class="ps-placeholder" hidden>Nenhum medicamento encontrado.</p>
             <p class="ps-rx-disclaimer">Catálogo educacional — não inclui todas as especialidades farmacêuticas registradas na ANVISA. Confirme bula e protocolo institucional.</p>
           </div>

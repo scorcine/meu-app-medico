@@ -1,0 +1,3509 @@
+{
+  "generatedAt": "2026-06-10T13:56:35.736Z",
+  "protocolBlocks": 195,
+  "drugCount": 193,
+  "inCatalog": 193,
+  "gaps": 0,
+  "drugs": [
+    {
+      "id": "dipirona",
+      "name": "Dipirona",
+      "sources": [
+        "PS:abdome-agudo",
+        "PS:acidente-ofidico",
+        "PS:afta-estomatite",
+        "PS:ameaca-aborto",
+        "PS:amigdalite-bacteriana",
+        "PS:anemia-falciforme",
+        "PS:apendicite-aguda",
+        "PS:artralgia-dor-msk",
+        "PS:ascaridiase",
+        "PS:balanopostite",
+        "PS:bronquite-aguda",
+        "PS:cefaleias",
+        "PS:celulite",
+        "PS:chikungunya",
+        "PS:cistite-itu-baixa",
+        "PS:colecistite-aguda",
+        "PS:colica-renal",
+        "PS:conjuntivite",
+        "PS:constipacao",
+        "PS:corpo-estranho-ocular",
+        "PS:desconforto-abdominal",
+        "PS:dispepsia-drge",
+        "PS:diverticulite",
+        "PS:edema-mmi",
+        "PS:erisipela",
+        "PS:escorpionismo",
+        "PS:fissura-anal",
+        "PS:flebite",
+        "PS:gripe-influenza",
+        "PS:hemorroidas",
+        "PS:herpes-zoster",
+        "PS:insolacao",
+        "PS:lombalgia-ciatalgia",
+        "PS:meningite-bacteriana",
+        "PS:mononucleose",
+        "PS:otite-externa",
+        "PS:otite-media",
+        "PS:pancreatite-aguda",
+        "PS:pneumonia-comunitaria",
+        "PS:queilite",
+        "PS:queimaduras",
+        "PS:sangramento-uterino",
+        "PS:sinusite-aguda",
+        "PS:trauma-atls",
+        "PS:trauma-ocular",
+        "PS:tvp",
+        "PS:ulcera-varicosa",
+        "PS:ulceras-genitais",
+        "PS:varizes-mmi",
+        "TH:abscesso-cutaneo",
+        "TH:abstinencia-alcool",
+        "TH:anemia-falciforme",
+        "TH:ansiedade-panico",
+        "TH:apendicite",
+        "TH:artralgia-dor-msk",
+        "TH:cefaleia",
+        "TH:celulite-erisipela",
+        "TH:cetoacidose-dm",
+        "TH:colecistite",
+        "TH:colica-renal",
+        "TH:convulsao-eme",
+        "TH:crise-hipertensiva",
+        "TH:crise-tireotoxica",
+        "TH:dengue-dor",
+        "TH:diverticulite",
+        "TH:dor-abdominal",
+        "TH:dor-toracica",
+        "TH:dpoc-exacerbada",
+        "TH:edema-pulmao-ic",
+        "TH:flebite",
+        "TH:gonorreia-ist",
+        "TH:gota-crise",
+        "TH:hda",
+        "TH:herpes-zoster",
+        "TH:hipoglicemia",
+        "TH:influenza-gripe",
+        "TH:intoxicacoes-exogenas",
+        "TH:leptospirose",
+        "TH:lombalgia-ciatalgia",
+        "TH:malaria-grave",
+        "TH:meningite-bacteriana",
+        "TH:nausea-vomitos",
+        "TH:pancreatite",
+        "TH:pielonefrite",
+        "TH:pneumonia",
+        "TH:profilaxia-antirrabica",
+        "TH:profilaxia-tetano",
+        "TH:queimadura",
+        "TH:sepse-infeccao-grave",
+        "TH:vertigem-vestibular"
+      ],
+      "sourceCount": 90,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "paracetamol",
+      "name": "Paracetamol",
+      "sources": [
+        "EM:toxicologia:1",
+        "EM:toxicologia:2",
+        "PS:abdome-agudo",
+        "PS:acidente-ofidico",
+        "PS:afta-estomatite",
+        "PS:ameaca-aborto",
+        "PS:amigdalite-bacteriana",
+        "PS:anemia-falciforme",
+        "PS:artralgia-dor-msk",
+        "PS:ascaridiase",
+        "PS:balanopostite",
+        "PS:bronquite-aguda",
+        "PS:cefaleias",
+        "PS:celulite",
+        "PS:chikungunya",
+        "PS:cistite-itu-baixa",
+        "PS:colica-renal",
+        "PS:conjuntivite",
+        "PS:dengue",
+        "PS:desconforto-abdominal",
+        "PS:diverticulite",
+        "PS:erisipela",
+        "PS:fissura-anal",
+        "PS:gripe-influenza",
+        "PS:insolacao",
+        "PS:intoxicacoes-exogenas",
+        "PS:lombalgia-ciatalgia",
+        "PS:mononucleose",
+        "PS:pancreatite-aguda",
+        "PS:pneumonia-comunitaria",
+        "PS:queilite",
+        "PS:queimaduras",
+        "PS:sangramento-uterino",
+        "PS:sinusite-aguda",
+        "PS:trauma-atls",
+        "TH:apendicite",
+        "TH:artralgia-dor-msk",
+        "TH:cefaleia",
+        "TH:celulite-erisipela",
+        "TH:cetoacidose-dm",
+        "TH:colica-renal",
+        "TH:convulsao-eme",
+        "TH:crise-hipertensiva",
+        "TH:crise-tireotoxica",
+        "TH:dengue-dor",
+        "TH:dor-abdominal",
+        "TH:dor-toracica",
+        "TH:dpoc-exacerbada",
+        "TH:flebite",
+        "TH:gota-crise",
+        "TH:hda",
+        "TH:influenza-gripe",
+        "TH:intoxicacoes-exogenas",
+        "TH:leptospirose",
+        "TH:lombalgia-ciatalgia",
+        "TH:malaria-grave",
+        "TH:meningite-bacteriana",
+        "TH:nausea-vomitos",
+        "TH:pancreatite",
+        "TH:pielonefrite",
+        "TH:pneumonia",
+        "TH:queimadura",
+        "TH:sepse-infeccao-grave",
+        "TH:vertigem-vestibular"
+      ],
+      "sourceCount": 64,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "oxigenio",
+      "name": "Oxigênio",
+      "sources": [
+        "EM:avc:0",
+        "EM:avc:1",
+        "EM:obstetricia:2",
+        "EM:parada-cardio:0",
+        "EM:parada-cardio:2",
+        "EM:parada-cardio:3",
+        "EM:parada-cardio:5",
+        "EM:pediatrica:0",
+        "EM:pediatrica:1",
+        "EM:pressao-arritmias:1",
+        "EM:procedimentos:0",
+        "EM:reacoes-metabolicas:0",
+        "EM:sca:0",
+        "EM:toxicologia:0",
+        "EM:toxicologia:2",
+        "EM:trauma:0",
+        "EM:trauma:1",
+        "EM:via-aerea:0",
+        "EM:via-aerea:1",
+        "EM:via-aerea:2",
+        "PS:abdome-agudo",
+        "PS:alergia-anafilaxia",
+        "PS:anemia-falciforme",
+        "PS:ansiedade-crise",
+        "PS:asma-broncoespasmo",
+        "PS:avc",
+        "PS:bronquite-aguda",
+        "PS:cardioversao-eletrica",
+        "PS:cefaleias",
+        "PS:crise-convulsiva-em",
+        "PS:delirium",
+        "PS:dpoc-exacerbada",
+        "PS:eclampsia-pre-eclampsia",
+        "PS:edema-agudo-pulmao",
+        "PS:escorpionismo",
+        "PS:gripe-influenza",
+        "PS:intoxicacoes-exogenas",
+        "PS:meningite-bacteriana",
+        "PS:pneumonia-comunitaria",
+        "PS:sca-iam",
+        "PS:sincope",
+        "PS:soluco-persistente",
+        "PS:tep",
+        "PS:tosse",
+        "PS:trauma-atls",
+        "TH:anemia-falciforme",
+        "TH:ansiedade-panico",
+        "TH:edema-pulmao-ic"
+      ],
+      "sourceCount": 48,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "tramadol",
+      "name": "Tramadol",
+      "sources": [
+        "PS:abdome-agudo",
+        "PS:acidente-ofidico",
+        "PS:afta-estomatite",
+        "PS:ameaca-aborto",
+        "PS:amigdalite-bacteriana",
+        "PS:anemia-falciforme",
+        "PS:apendicite-aguda",
+        "PS:artralgia-dor-msk",
+        "PS:bronquite-aguda",
+        "PS:cefaleias",
+        "PS:celulite",
+        "PS:colecistite-aguda",
+        "PS:colica-renal",
+        "PS:diverticulite",
+        "PS:hemorroidas",
+        "PS:herpes-zoster",
+        "PS:lombalgia-ciatalgia",
+        "PS:otite-externa",
+        "PS:pancreatite-aguda",
+        "PS:queimaduras",
+        "PS:trauma-atls",
+        "TH:abscesso-cutaneo",
+        "TH:anemia-falciforme",
+        "TH:apendicite",
+        "TH:artralgia-dor-msk",
+        "TH:cefaleia",
+        "TH:celulite-erisipela",
+        "TH:colecistite",
+        "TH:colica-renal",
+        "TH:crise-hipertensiva",
+        "TH:dengue-dor",
+        "TH:diverticulite",
+        "TH:dor-abdominal",
+        "TH:dor-toracica",
+        "TH:flebite",
+        "TH:gota-crise",
+        "TH:hda",
+        "TH:herpes-zoster",
+        "TH:influenza-gripe",
+        "TH:lombalgia-ciatalgia",
+        "TH:pancreatite",
+        "TH:pielonefrite",
+        "TH:pneumonia",
+        "TH:queimadura",
+        "TH:sepse-infeccao-grave"
+      ],
+      "sourceCount": 45,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "ceftriaxona",
+      "name": "Ceftriaxona",
+      "sources": [
+        "PS:abdome-agudo",
+        "PS:amigdalite-bacteriana",
+        "PS:anemia-falciforme",
+        "PS:antiparasitarios",
+        "PS:apendicite-aguda",
+        "PS:artralgia-dor-msk",
+        "PS:ascaridiase",
+        "PS:bronquite-aguda",
+        "PS:celulite",
+        "PS:colecistite-aguda",
+        "PS:diverticulite",
+        "PS:dpoc-exacerbada",
+        "PS:furunculose",
+        "PS:gonorreia-clamidia",
+        "PS:gripe-influenza",
+        "PS:hda",
+        "PS:hordeolo",
+        "PS:leptospirose",
+        "PS:meningite-bacteriana",
+        "PS:otite-media",
+        "PS:pancreatite-aguda",
+        "PS:pielonefrite",
+        "PS:pneumonia-comunitaria",
+        "PS:sepse-choque-septico",
+        "PS:sinusite-aguda",
+        "PS:trauma-ocular",
+        "PS:ulceras-genitais",
+        "PS:violencia-sexual-pep",
+        "TH:abscesso-cutaneo",
+        "TH:apendicite",
+        "TH:celulite-erisipela",
+        "TH:colecistite",
+        "TH:diverticulite",
+        "TH:dpoc-exacerbada",
+        "TH:flebite",
+        "TH:gonorreia-ist",
+        "TH:hda",
+        "TH:influenza-gripe",
+        "TH:leptospirose",
+        "TH:meningite-bacteriana",
+        "TH:pielonefrite",
+        "TH:pneumonia",
+        "TH:queimadura",
+        "TH:sepse-infeccao-grave"
+      ],
+      "sourceCount": 44,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "cetoprofeno",
+      "name": "Cetoprofeno",
+      "sources": [
+        "PS:abdome-agudo",
+        "PS:afta-estomatite",
+        "PS:anemia-falciforme",
+        "PS:artralgia-dor-msk",
+        "PS:cefaleias",
+        "PS:colica-renal",
+        "TH:abscesso-cutaneo",
+        "TH:anemia-falciforme",
+        "TH:apendicite",
+        "TH:artralgia-dor-msk",
+        "TH:cefaleia",
+        "TH:celulite-erisipela",
+        "TH:colecistite",
+        "TH:colica-renal",
+        "TH:crise-hipertensiva",
+        "TH:dengue-dor",
+        "TH:diverticulite",
+        "TH:dor-abdominal",
+        "TH:dor-toracica",
+        "TH:flebite",
+        "TH:gota-crise",
+        "TH:hda",
+        "TH:herpes-zoster",
+        "TH:influenza-gripe",
+        "TH:leptospirose",
+        "TH:lombalgia-ciatalgia",
+        "TH:pielonefrite",
+        "TH:pneumonia",
+        "TH:profilaxia-tetano",
+        "TH:queimadura",
+        "TH:vertigem-vestibular"
+      ],
+      "sourceCount": 31,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "morfina",
+      "name": "Morfina",
+      "sources": [
+        "EM:sca:0",
+        "PS:abdome-agudo",
+        "PS:acidente-ofidico",
+        "PS:anemia-falciforme",
+        "PS:colica-renal",
+        "PS:diverticulite",
+        "PS:dpoc-exacerbada",
+        "PS:edema-agudo-pulmao",
+        "PS:escorpionismo",
+        "PS:pancreatite-aguda",
+        "PS:queimaduras",
+        "PS:sca-iam",
+        "PS:trauma-atls",
+        "TH:anemia-falciforme",
+        "TH:apendicite",
+        "TH:artralgia-dor-msk",
+        "TH:cefaleia",
+        "TH:colecistite",
+        "TH:colica-renal",
+        "TH:diverticulite",
+        "TH:dor-abdominal",
+        "TH:dor-toracica",
+        "TH:edema-pulmao-ic",
+        "TH:herpes-zoster",
+        "TH:lombalgia-ciatalgia",
+        "TH:pancreatite",
+        "TH:queimadura",
+        "TH:sepse-infeccao-grave"
+      ],
+      "sourceCount": 28,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "hidrocortisona",
+      "name": "Hidrocortisona",
+      "sources": [
+        "EM:reacoes-metabolicas:0",
+        "PS:acidente-ofidico",
+        "PS:alergia-anafilaxia",
+        "PS:asma-broncoespasmo",
+        "PS:crise-tireotoxica",
+        "PS:edema-angioneurotico",
+        "PS:hemorroidas",
+        "PS:otite-externa",
+        "PS:queilite",
+        "PS:sepse-choque-septico",
+        "PS:tosse",
+        "PS:varizes-mmi",
+        "TH:anafilaxia",
+        "TH:anemia-falciforme",
+        "TH:artralgia-dor-msk",
+        "TH:asma-broncoespasmo",
+        "TH:cefaleia",
+        "TH:cetoacidose-dm",
+        "TH:colica-renal",
+        "TH:crise-tireotoxica",
+        "TH:dpoc-exacerbada",
+        "TH:gota-crise",
+        "TH:hipoglicemia",
+        "TH:influenza-gripe",
+        "TH:lombalgia-ciatalgia",
+        "TH:sepse-infeccao-grave"
+      ],
+      "sourceCount": 26,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "diclofenaco",
+      "name": "Diclofenaco",
+      "sources": [
+        "PS:cefaleias",
+        "PS:colica-renal",
+        "PS:dengue",
+        "PS:varizes-mmi",
+        "TH:abscesso-cutaneo",
+        "TH:anemia-falciforme",
+        "TH:apendicite",
+        "TH:artralgia-dor-msk",
+        "TH:cefaleia",
+        "TH:celulite-erisipela",
+        "TH:colecistite",
+        "TH:colica-renal",
+        "TH:crise-hipertensiva",
+        "TH:dengue-dor",
+        "TH:diverticulite",
+        "TH:dor-abdominal",
+        "TH:dor-toracica",
+        "TH:flebite",
+        "TH:gota-crise",
+        "TH:hda",
+        "TH:herpes-zoster",
+        "TH:influenza-gripe",
+        "TH:lombalgia-ciatalgia",
+        "TH:pielonefrite",
+        "TH:profilaxia-tetano"
+      ],
+      "sourceCount": 25,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "ketorolaco",
+      "name": "Ketorolaco",
+      "sources": [
+        "TH:abscesso-cutaneo",
+        "TH:anemia-falciforme",
+        "TH:apendicite",
+        "TH:artralgia-dor-msk",
+        "TH:cefaleia",
+        "TH:celulite-erisipela",
+        "TH:colecistite",
+        "TH:colica-renal",
+        "TH:crise-hipertensiva",
+        "TH:dengue-dor",
+        "TH:diverticulite",
+        "TH:dor-abdominal",
+        "TH:dor-toracica",
+        "TH:flebite",
+        "TH:gota-crise",
+        "TH:hda",
+        "TH:herpes-zoster",
+        "TH:influenza-gripe",
+        "TH:lombalgia-ciatalgia",
+        "TH:pancreatite",
+        "TH:pielonefrite",
+        "TH:pneumonia",
+        "TH:queimadura",
+        "TH:vertigem-vestibular"
+      ],
+      "sourceCount": 24,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "prednisolona",
+      "name": "Prednisolona",
+      "sources": [
+        "PS:alergia-anafilaxia",
+        "PS:asma-broncoespasmo",
+        "PS:chikungunya",
+        "PS:dpoc-exacerbada",
+        "PS:lombalgia-ciatalgia",
+        "PS:sindrome-vestibular",
+        "PS:tosse",
+        "TH:anafilaxia",
+        "TH:anemia-falciforme",
+        "TH:artralgia-dor-msk",
+        "TH:asma-broncoespasmo",
+        "TH:cefaleia",
+        "TH:colecistite",
+        "TH:colica-renal",
+        "TH:crise-hipertensiva",
+        "TH:crise-tireotoxica",
+        "TH:dor-abdominal",
+        "TH:dpoc-exacerbada",
+        "TH:gota-crise",
+        "TH:influenza-gripe",
+        "TH:lombalgia-ciatalgia",
+        "TH:pneumonia",
+        "TH:vertigem-vestibular"
+      ],
+      "sourceCount": 23,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "azitromicina",
+      "name": "Azitromicina",
+      "sources": [
+        "PS:amigdalite-bacteriana",
+        "PS:anemia-falciforme",
+        "PS:bronquite-aguda",
+        "PS:celulite",
+        "PS:diarreia-gastroenterite",
+        "PS:dpoc-exacerbada",
+        "PS:gonorreia-clamidia",
+        "PS:mononucleose",
+        "PS:otite-media",
+        "PS:pneumonia-comunitaria",
+        "PS:sepse-choque-septico",
+        "PS:tosse",
+        "PS:ulceras-genitais",
+        "PS:violencia-sexual-pep",
+        "TH:celulite-erisipela",
+        "TH:dpoc-exacerbada",
+        "TH:gonorreia-ist",
+        "TH:influenza-gripe",
+        "TH:leptospirose",
+        "TH:pneumonia"
+      ],
+      "sourceCount": 20,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "dexametasona",
+      "name": "Dexametasona",
+      "sources": [
+        "PS:alergia-anafilaxia",
+        "PS:cefaleias",
+        "PS:lombalgia-ciatalgia",
+        "PS:meningite-bacteriana",
+        "PS:otite-externa",
+        "TH:anafilaxia",
+        "TH:artralgia-dor-msk",
+        "TH:asma-broncoespasmo",
+        "TH:cefaleia",
+        "TH:colica-renal",
+        "TH:crise-hipertensiva",
+        "TH:crise-tireotoxica",
+        "TH:dor-abdominal",
+        "TH:dpoc-exacerbada",
+        "TH:gota-crise",
+        "TH:influenza-gripe",
+        "TH:lombalgia-ciatalgia",
+        "TH:meningite-bacteriana",
+        "TH:pancreatite",
+        "TH:vertigem-vestibular"
+      ],
+      "sourceCount": 20,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "metilprednisolona",
+      "name": "Metilprednisolona",
+      "sources": [
+        "PS:alergia-anafilaxia",
+        "PS:asma-broncoespasmo",
+        "PS:dpoc-exacerbada",
+        "PS:lombalgia-ciatalgia",
+        "PS:tosse",
+        "TH:anafilaxia",
+        "TH:artralgia-dor-msk",
+        "TH:asma-broncoespasmo",
+        "TH:cefaleia",
+        "TH:colecistite",
+        "TH:colica-renal",
+        "TH:crise-hipertensiva",
+        "TH:crise-tireotoxica",
+        "TH:dor-abdominal",
+        "TH:dpoc-exacerbada",
+        "TH:gota-crise",
+        "TH:influenza-gripe",
+        "TH:lombalgia-ciatalgia",
+        "TH:pneumonia",
+        "TH:vertigem-vestibular"
+      ],
+      "sourceCount": 20,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "ondansetrona",
+      "name": "Ondansetrona",
+      "sources": [
+        "PS:abdome-agudo",
+        "PS:colecistite-aguda",
+        "PS:colica-renal",
+        "PS:diarreia-gastroenterite",
+        "PS:sindrome-vestibular",
+        "PS:vomitos-agudos",
+        "TH:ansiedade-panico",
+        "TH:cefaleia",
+        "TH:cetoacidose-dm",
+        "TH:colica-renal",
+        "TH:dengue-dor",
+        "TH:diverticulite",
+        "TH:intoxicacoes-exogenas",
+        "TH:leptospirose",
+        "TH:malaria-grave",
+        "TH:meningite-bacteriana",
+        "TH:nausea-vomitos",
+        "TH:pancreatite",
+        "TH:pielonefrite",
+        "TH:vertigem-vestibular"
+      ],
+      "sourceCount": 20,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "amoxicilina",
+      "name": "Amoxicilina",
+      "sources": [
+        "PS:amigdalite-bacteriana",
+        "PS:bronquite-aguda",
+        "PS:celulite",
+        "PS:colecistite-aguda",
+        "PS:dispepsia-drge",
+        "PS:diverticulite",
+        "PS:dpoc-exacerbada",
+        "PS:erisipela",
+        "PS:impetigo",
+        "PS:leptospirose",
+        "PS:mononucleose",
+        "PS:otite-externa",
+        "PS:otite-media",
+        "PS:pielonefrite",
+        "PS:pneumonia-comunitaria",
+        "PS:sinusite-aguda",
+        "PS:tosse",
+        "PS:ulcera-varicosa",
+        "TH:pneumonia"
+      ],
+      "sourceCount": 19,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "ciprofloxacino",
+      "name": "Ciprofloxacino",
+      "sources": [
+        "PS:abdome-agudo",
+        "PS:anemia-falciforme",
+        "PS:artralgia-dor-msk",
+        "PS:celulite",
+        "PS:colecistite-aguda",
+        "PS:conjuntivite",
+        "PS:corpo-estranho-ocular",
+        "PS:diarreia-gastroenterite",
+        "PS:diverticulite",
+        "PS:meningite-bacteriana",
+        "PS:otite-externa",
+        "PS:pancreatite-aguda",
+        "PS:pielonefrite",
+        "PS:trauma-ocular",
+        "PS:ulceras-genitais",
+        "TH:apendicite",
+        "TH:colecistite",
+        "TH:diverticulite",
+        "TH:pielonefrite"
+      ],
+      "sourceCount": 19,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "clindamicina",
+      "name": "Clindamicina",
+      "sources": [
+        "PS:abscesso-cutaneo",
+        "PS:amigdalite-bacteriana",
+        "PS:apendicite-aguda",
+        "PS:balanopostite",
+        "PS:celulite",
+        "PS:edema-mmi",
+        "PS:erisipela",
+        "PS:frieira",
+        "PS:furunculose",
+        "PS:hordeolo",
+        "PS:impetigo",
+        "PS:malaria",
+        "PS:ulcera-varicosa",
+        "PS:varizes-mmi",
+        "PS:vulvovaginites",
+        "TH:abscesso-cutaneo",
+        "TH:celulite-erisipela",
+        "TH:flebite",
+        "TH:malaria-grave"
+      ],
+      "sourceCount": 19,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "adrenalina",
+      "name": "Adrenalina",
+      "sources": [
+        "EM:parada-cardio:5",
+        "EM:pediatrica:0",
+        "EM:pediatrica:2",
+        "EM:reacoes-metabolicas:0",
+        "EM:sepse:0",
+        "EM:sepse:1",
+        "EM:sepse:2",
+        "PS:alergia-anafilaxia",
+        "PS:arritmias",
+        "PS:asma-broncoespasmo",
+        "PS:edema-angioneurotico",
+        "PS:sepse-choque-septico",
+        "PS:tep",
+        "TH:anafilaxia",
+        "TH:asma-broncoespasmo",
+        "TH:edema-pulmao-ic",
+        "TH:hda",
+        "TH:sepse-infeccao-grave"
+      ],
+      "sourceCount": 18,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "metoclopramida",
+      "name": "Metoclopramida",
+      "sources": [
+        "PS:abdome-agudo",
+        "PS:cefaleias",
+        "PS:colica-renal",
+        "PS:dispepsia-drge",
+        "PS:escorpionismo",
+        "PS:sindrome-vestibular",
+        "PS:soluco-persistente",
+        "PS:vomitos-agudos",
+        "TH:ansiedade-panico",
+        "TH:cefaleia",
+        "TH:cetoacidose-dm",
+        "TH:dengue-dor",
+        "TH:leptospirose",
+        "TH:malaria-grave",
+        "TH:meningite-bacteriana",
+        "TH:nausea-vomitos",
+        "TH:pancreatite",
+        "TH:vertigem-vestibular"
+      ],
+      "sourceCount": 18,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "piperacilina_tazobactam",
+      "name": "Piperacilina-tazobactam",
+      "sources": [
+        "PS:abdome-agudo",
+        "PS:anemia-falciforme",
+        "PS:artralgia-dor-msk",
+        "PS:celulite",
+        "PS:colecistite-aguda",
+        "PS:diverticulite",
+        "PS:pancreatite-aguda",
+        "PS:pneumonia-comunitaria",
+        "PS:sepse-choque-septico",
+        "PS:sinusite-aguda",
+        "TH:abscesso-cutaneo",
+        "TH:apendicite",
+        "TH:celulite-erisipela",
+        "TH:colecistite",
+        "TH:diverticulite",
+        "TH:pielonefrite",
+        "TH:pneumonia",
+        "TH:sepse-infeccao-grave"
+      ],
+      "sourceCount": 18,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "diazepam",
+      "name": "Diazepam",
+      "sources": [
+        "PS:abstinencia-alcoolica",
+        "PS:alcoolismo-intox-abstinencia",
+        "PS:ansiedade-crise",
+        "PS:crise-convulsiva-em",
+        "PS:eclampsia-pre-eclampsia",
+        "PS:escorpionismo",
+        "TH:abstinencia-alcool",
+        "TH:agitacao-psiquiatrica",
+        "TH:ansiedade-panico",
+        "TH:convulsao-eme",
+        "TH:dor-toracica",
+        "TH:hipoglicemia",
+        "TH:intoxicacoes-exogenas",
+        "TH:lombalgia-ciatalgia",
+        "TH:malaria-grave",
+        "TH:pre-eclampsia-eclampsia",
+        "TH:vertigem-vestibular"
+      ],
+      "sourceCount": 17,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "amoxicilina_clavulanato",
+      "name": "Amoxicilina-clavulanato",
+      "sources": [
+        "PS:amigdalite-bacteriana",
+        "PS:bronquite-aguda",
+        "PS:celulite",
+        "PS:colecistite-aguda",
+        "PS:diverticulite",
+        "PS:dpoc-exacerbada",
+        "PS:impetigo",
+        "PS:leptospirose",
+        "PS:otite-externa",
+        "PS:otite-media",
+        "PS:pielonefrite",
+        "PS:pneumonia-comunitaria",
+        "PS:sinusite-aguda",
+        "PS:tosse",
+        "PS:ulcera-varicosa",
+        "TH:pneumonia"
+      ],
+      "sourceCount": 16,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "metronidazol",
+      "name": "Metronidazol",
+      "sources": [
+        "PS:abdome-agudo",
+        "PS:amigdalite-bacteriana",
+        "PS:antiparasitarios",
+        "PS:apendicite-aguda",
+        "PS:ascaridiase",
+        "PS:colecistite-aguda",
+        "PS:diverticulite",
+        "PS:pancreatite-aguda",
+        "PS:parasitoses-intestinais",
+        "PS:sinusite-aguda",
+        "PS:violencia-sexual-pep",
+        "PS:vulvovaginites",
+        "TH:apendicite",
+        "TH:colecistite",
+        "TH:diverticulite",
+        "TH:sepse-infeccao-grave"
+      ],
+      "sourceCount": 16,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "aspirina",
+      "name": "AAS",
+      "sources": [
+        "EM:avc:0",
+        "EM:avc:1",
+        "EM:sca:0",
+        "EM:sca:1",
+        "EM:sca:2",
+        "PS:avc",
+        "PS:chikungunya",
+        "PS:crise-tireotoxica",
+        "PS:dengue",
+        "PS:diverticulite",
+        "PS:gripe-influenza",
+        "PS:sca-iam",
+        "PS:tosse",
+        "TH:dengue-dor",
+        "TH:dor-toracica"
+      ],
+      "sourceCount": 15,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "meropenem",
+      "name": "Meropenem",
+      "sources": [
+        "PS:abdome-agudo",
+        "PS:celulite",
+        "PS:diverticulite",
+        "PS:meningite-bacteriana",
+        "PS:pancreatite-aguda",
+        "PS:pneumonia-comunitaria",
+        "PS:sepse-choque-septico",
+        "PS:sinusite-aguda",
+        "TH:apendicite",
+        "TH:colecistite",
+        "TH:diverticulite",
+        "TH:meningite-bacteriana",
+        "TH:pielonefrite",
+        "TH:pneumonia",
+        "TH:sepse-infeccao-grave"
+      ],
+      "sourceCount": 15,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "vancomicina",
+      "name": "Vancomicina",
+      "sources": [
+        "PS:artralgia-dor-msk",
+        "PS:celulite",
+        "PS:furunculose",
+        "PS:hordeolo",
+        "PS:meningite-bacteriana",
+        "PS:pneumonia-comunitaria",
+        "PS:sepse-choque-septico",
+        "PS:sinusite-aguda",
+        "PS:trauma-ocular",
+        "TH:abscesso-cutaneo",
+        "TH:celulite-erisipela",
+        "TH:meningite-bacteriana",
+        "TH:pneumonia",
+        "TH:queimadura",
+        "TH:sepse-infeccao-grave"
+      ],
+      "sourceCount": 15,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "ibuprofeno",
+      "name": "Ibuprofeno",
+      "sources": [
+        "PS:amigdalite-bacteriana",
+        "PS:artralgia-dor-msk",
+        "PS:bronquite-aguda",
+        "PS:cefaleias",
+        "PS:celulite",
+        "PS:dengue",
+        "PS:flebite",
+        "PS:gota",
+        "PS:insolacao",
+        "PS:lombalgia-ciatalgia",
+        "PS:otite-media",
+        "PS:queilite",
+        "PS:varizes-mmi",
+        "TH:dengue-dor"
+      ],
+      "sourceCount": 14,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "salbutamol",
+      "name": "Salbutamol",
+      "sources": [
+        "EM:reacoes-metabolicas:2",
+        "PS:alergia-anafilaxia",
+        "PS:ansiedade-crise",
+        "PS:ascaridiase",
+        "PS:asma-broncoespasmo",
+        "PS:bronquite-aguda",
+        "PS:disturbios-eletroliticos",
+        "PS:dpoc-exacerbada",
+        "PS:tosse",
+        "TH:anafilaxia",
+        "TH:asma-broncoespasmo",
+        "TH:dpoc-exacerbada",
+        "TH:influenza-gripe",
+        "TH:pneumonia"
+      ],
+      "sourceCount": 14,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "glicose",
+      "name": "Glicose",
+      "sources": [
+        "EM:pediatrica:2",
+        "EM:procedimentos:1",
+        "EM:reacoes-metabolicas:1",
+        "EM:reacoes-metabolicas:2",
+        "PS:abstinencia-alcoolica",
+        "PS:alcoolismo-intox-abstinencia",
+        "PS:avc",
+        "PS:diabetes-insulina-hipo",
+        "PS:hipoglicemia-grave",
+        "TH:abstinencia-alcool",
+        "TH:disturbios-eletroliticos",
+        "TH:hipoglicemia",
+        "TH:malaria-grave"
+      ],
+      "sourceCount": 13,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "prednisona",
+      "name": "Prednisona",
+      "sources": [
+        "EM:reacoes-metabolicas:0",
+        "PS:ascaridiase",
+        "PS:asma-broncoespasmo",
+        "PS:bronquite-aguda",
+        "PS:chikungunya",
+        "PS:dpoc-exacerbada",
+        "PS:edema-angioneurotico",
+        "PS:gota",
+        "PS:mononucleose",
+        "PS:rinite-alergica",
+        "PS:sindrome-vestibular",
+        "PS:tosse",
+        "TH:dpoc-exacerbada"
+      ],
+      "sourceCount": 13,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "ampicilina",
+      "name": "Ampicilina",
+      "sources": [
+        "PS:meningite-bacteriana",
+        "PS:mononucleose",
+        "PS:sepse-choque-septico",
+        "TH:apendicite",
+        "TH:celulite-erisipela",
+        "TH:colecistite",
+        "TH:diverticulite",
+        "TH:dpoc-exacerbada",
+        "TH:leptospirose",
+        "TH:meningite-bacteriana",
+        "TH:pielonefrite",
+        "TH:pneumonia"
+      ],
+      "sourceCount": 12,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "levofloxacino",
+      "name": "Levofloxacino",
+      "sources": [
+        "PS:cistite-itu-baixa",
+        "PS:dpoc-exacerbada",
+        "PS:pielonefrite",
+        "PS:pneumonia-comunitaria",
+        "PS:sepse-choque-septico",
+        "PS:sinusite-aguda",
+        "PS:tosse",
+        "PS:trauma-ocular",
+        "TH:colecistite",
+        "TH:dpoc-exacerbada",
+        "TH:pielonefrite",
+        "TH:pneumonia"
+      ],
+      "sourceCount": 12,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "lidocaina",
+      "name": "Lidocaína",
+      "sources": [
+        "EM:parada-cardio:1",
+        "EM:via-aerea:0",
+        "PS:abscesso-cutaneo",
+        "PS:afta-estomatite",
+        "PS:arritmias",
+        "PS:balanopostite",
+        "PS:epistaxe",
+        "PS:escorpionismo",
+        "PS:hemorroidas",
+        "TH:abscesso-cutaneo",
+        "TH:profilaxia-antirrabica",
+        "TH:profilaxia-tetano"
+      ],
+      "sourceCount": 12,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "vacina_tetano",
+      "name": "Vacina dT/dTpa (tétano)",
+      "sources": [
+        "PS:abstinencia-alcoolica",
+        "PS:antiparasitarios",
+        "PS:ascaridiase",
+        "PS:candidiase",
+        "PS:frieira",
+        "PS:malaria",
+        "PS:meningite-bacteriana",
+        "PS:micoses-superficiais",
+        "PS:profilaxia-antirrabica",
+        "PS:sindrome-vestibular",
+        "PS:violencia-sexual-pep",
+        "TH:profilaxia-tetano"
+      ],
+      "sourceCount": 12,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "noradrenalina",
+      "name": "Noradrenalina",
+      "sources": [
+        "EM:parada-cardio:5",
+        "EM:sepse:0",
+        "EM:sepse:1",
+        "EM:sepse:2",
+        "PS:alergia-anafilaxia",
+        "PS:sepse-choque-septico",
+        "PS:tep",
+        "TH:anafilaxia",
+        "TH:edema-pulmao-ic",
+        "TH:hda",
+        "TH:sepse-infeccao-grave"
+      ],
+      "sourceCount": 11,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "cefalexina",
+      "name": "Cefalexina",
+      "sources": [
+        "PS:balanopostite",
+        "PS:celulite",
+        "PS:edema-mmi",
+        "PS:erisipela",
+        "PS:frieira",
+        "PS:furunculose",
+        "PS:hordeolo",
+        "PS:impetigo",
+        "PS:ulcera-varicosa",
+        "PS:varizes-mmi"
+      ],
+      "sourceCount": 10,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "doxiciclina",
+      "name": "Doxiciclina",
+      "sources": [
+        "PS:furunculose",
+        "PS:gonorreia-clamidia",
+        "PS:leptospirose",
+        "PS:malaria",
+        "PS:sinusite-aguda",
+        "PS:ulceras-genitais",
+        "PS:violencia-sexual-pep",
+        "TH:gonorreia-ist",
+        "TH:leptospirose",
+        "TH:malaria-grave"
+      ],
+      "sourceCount": 10,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "insulina",
+      "name": "Insulina",
+      "sources": [
+        "EM:reacoes-metabolicas:2",
+        "EM:reacoes-metabolicas:3",
+        "PS:avc",
+        "PS:cetoacidose-diabetica",
+        "PS:diabetes-insulina-hipo",
+        "PS:disturbios-eletroliticos",
+        "PS:estado-hiperosmolar",
+        "PS:hipoglicemia-grave",
+        "TH:cetoacidose-dm",
+        "TH:disturbios-eletroliticos"
+      ],
+      "sourceCount": 10,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "midazolam",
+      "name": "Midazolam",
+      "sources": [
+        "EM:pediatrica:2",
+        "EM:pressao-arritmias:1",
+        "EM:via-aerea:0",
+        "PS:arritmias",
+        "PS:cardioversao-eletrica",
+        "PS:crise-convulsiva-em",
+        "TH:abstinencia-alcool",
+        "TH:agitacao-psiquiatrica",
+        "TH:ansiedade-panico",
+        "TH:convulsao-eme"
+      ],
+      "sourceCount": 10,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "naproxeno",
+      "name": "Naproxeno",
+      "sources": [
+        "PS:abdome-agudo",
+        "PS:amigdalite-bacteriana",
+        "PS:anemia-falciforme",
+        "PS:artralgia-dor-msk",
+        "PS:cefaleias",
+        "PS:celulite",
+        "PS:chikungunya",
+        "PS:dengue",
+        "PS:gota",
+        "PS:lombalgia-ciatalgia"
+      ],
+      "sourceCount": 10,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "sulfato_magnesio",
+      "name": "Sulfato de magnésio",
+      "sources": [
+        "EM:obstetricia:0",
+        "EM:pressao-arritmias:0",
+        "PS:arritmias",
+        "PS:asma-broncoespasmo",
+        "PS:crise-hipertensiva",
+        "PS:disturbios-eletroliticos",
+        "TH:asma-broncoespasmo",
+        "TH:disturbios-eletroliticos",
+        "TH:dpoc-exacerbada",
+        "TH:pre-eclampsia-eclampsia"
+      ],
+      "sourceCount": 10,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "furosemida",
+      "name": "Furosemida",
+      "sources": [
+        "EM:pressao-arritmias:0",
+        "PS:crise-hipertensiva",
+        "PS:edema-agudo-pulmao",
+        "PS:edema-mmi",
+        "PS:escorpionismo",
+        "PS:ulcera-varicosa",
+        "TH:crise-hipertensiva",
+        "TH:disturbios-eletroliticos",
+        "TH:edema-pulmao-ic"
+      ],
+      "sourceCount": 9,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "magnesio_sulfato",
+      "name": "Sulfato de magnésio (MgSO₄)",
+      "sources": [
+        "EM:obstetricia:0",
+        "PS:arritmias",
+        "PS:asma-broncoespasmo",
+        "PS:crise-hipertensiva",
+        "PS:disturbios-eletroliticos",
+        "TH:asma-broncoespasmo",
+        "TH:disturbios-eletroliticos",
+        "TH:dpoc-exacerbada",
+        "TH:pre-eclampsia-eclampsia"
+      ],
+      "sourceCount": 9,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "amiodarona",
+      "name": "Amiodarona",
+      "sources": [
+        "EM:parada-cardio:1",
+        "EM:parada-cardio:2",
+        "EM:parada-cardio:4",
+        "EM:pediatrica:0",
+        "EM:pediatrica:2",
+        "EM:pressao-arritmias:1",
+        "PS:arritmias",
+        "PS:cardioversao-eletrica"
+      ],
+      "sourceCount": 8,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "ampicilina_sulbactam",
+      "name": "Ampicilina-sulbactam",
+      "sources": [
+        "PS:sepse-choque-septico",
+        "TH:apendicite",
+        "TH:celulite-erisipela",
+        "TH:colecistite",
+        "TH:diverticulite",
+        "TH:dpoc-exacerbada",
+        "TH:pielonefrite",
+        "TH:pneumonia"
+      ],
+      "sourceCount": 8,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "atropina",
+      "name": "Atropina",
+      "sources": [
+        "EM:parada-cardio:2",
+        "EM:parada-cardio:3",
+        "EM:pediatrica:0",
+        "EM:pediatrica:2",
+        "EM:via-aerea:0",
+        "PS:arritmias",
+        "PS:intoxicacoes-exogenas",
+        "TH:intoxicacoes-exogenas"
+      ],
+      "sourceCount": 8,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "enoxaparina",
+      "name": "Enoxaparina",
+      "sources": [
+        "EM:sca:0",
+        "EM:sca:1",
+        "PS:abdome-agudo",
+        "PS:flebite",
+        "PS:sca-iam",
+        "PS:tep",
+        "PS:tvp",
+        "PS:varizes-mmi"
+      ],
+      "sourceCount": 8,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "fenitoina",
+      "name": "Fenitoína",
+      "sources": [
+        "PS:abstinencia-alcoolica",
+        "PS:alcoolismo-intox-abstinencia",
+        "PS:avc",
+        "PS:crise-convulsiva-em",
+        "PS:escorpionismo",
+        "TH:abstinencia-alcool",
+        "TH:convulsao-eme",
+        "TH:pre-eclampsia-eclampsia"
+      ],
+      "sourceCount": 8,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "fentanil",
+      "name": "Fentanil",
+      "sources": [
+        "EM:toxicologia:0",
+        "EM:via-aerea:0",
+        "PS:arritmias",
+        "PS:cardioversao-eletrica",
+        "PS:pancreatite-aguda",
+        "TH:dor-toracica",
+        "TH:pancreatite",
+        "TH:queimadura"
+      ],
+      "sourceCount": 8,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "heparina",
+      "name": "Heparina",
+      "sources": [
+        "EM:avc:1",
+        "EM:sca:0",
+        "EM:sca:1",
+        "PS:abdome-agudo",
+        "PS:acidente-ofidico",
+        "PS:sca-iam",
+        "PS:tep",
+        "PS:tvp"
+      ],
+      "sourceCount": 8,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "tenoxicam",
+      "name": "Tenoxicam",
+      "sources": [
+        "TH:artralgia-dor-msk",
+        "TH:cefaleia",
+        "TH:colica-renal",
+        "TH:dengue-dor",
+        "TH:dor-abdominal",
+        "TH:flebite",
+        "TH:gota-crise",
+        "TH:lombalgia-ciatalgia"
+      ],
+      "sourceCount": 8,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "fluconazol",
+      "name": "Fluconazol",
+      "sources": [
+        "PS:afta-estomatite",
+        "PS:balanopostite",
+        "PS:candidiase",
+        "PS:micoses-superficiais",
+        "PS:queilite",
+        "PS:tinea",
+        "PS:vulvovaginites"
+      ],
+      "sourceCount": 7,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "hidralazina",
+      "name": "Hidralazina",
+      "sources": [
+        "EM:obstetricia:0",
+        "EM:pressao-arritmias:0",
+        "PS:avc",
+        "PS:crise-hipertensiva",
+        "PS:eclampsia-pre-eclampsia",
+        "TH:crise-hipertensiva",
+        "TH:pre-eclampsia-eclampsia"
+      ],
+      "sourceCount": 7,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "labetalol",
+      "name": "Labetalol",
+      "sources": [
+        "EM:obstetricia:0",
+        "EM:pressao-arritmias:0",
+        "PS:avc",
+        "PS:crise-hipertensiva",
+        "PS:eclampsia-pre-eclampsia",
+        "TH:crise-hipertensiva",
+        "TH:pre-eclampsia-eclampsia"
+      ],
+      "sourceCount": 7,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "lorazepam",
+      "name": "Lorazepam",
+      "sources": [
+        "PS:abstinencia-alcoolica",
+        "PS:alcoolismo-intox-abstinencia",
+        "PS:ansiedade-crise",
+        "PS:crise-convulsiva-em",
+        "TH:abstinencia-alcool",
+        "TH:ansiedade-panico",
+        "TH:convulsao-eme"
+      ],
+      "sourceCount": 7,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "moxifloxacino",
+      "name": "Moxifloxacino",
+      "sources": [
+        "PS:bronquite-aguda",
+        "PS:conjuntivite",
+        "PS:pneumonia-comunitaria",
+        "PS:trauma-ocular",
+        "TH:abscesso-cutaneo",
+        "TH:diverticulite",
+        "TH:pneumonia"
+      ],
+      "sourceCount": 7,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "nitroglicerina",
+      "name": "Nitroglicerina",
+      "sources": [
+        "EM:pressao-arritmias:0",
+        "PS:crise-hipertensiva",
+        "PS:edema-agudo-pulmao",
+        "PS:fissura-anal",
+        "TH:crise-hipertensiva",
+        "TH:dor-toracica",
+        "TH:edema-pulmao-ic"
+      ],
+      "sourceCount": 7,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "prometazina",
+      "name": "Prometazina",
+      "sources": [
+        "EM:reacoes-metabolicas:0",
+        "PS:alergia-anafilaxia",
+        "PS:edema-angioneurotico",
+        "TH:agitacao-psiquiatrica",
+        "TH:anafilaxia",
+        "TH:nausea-vomitos",
+        "TH:vertigem-vestibular"
+      ],
+      "sourceCount": 7,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "tranexamico",
+      "name": "Ácido tranexâmico",
+      "sources": [
+        "EM:obstetricia:1",
+        "EM:trauma:2",
+        "PS:dengue",
+        "PS:edema-angioneurotico",
+        "PS:epistaxe",
+        "PS:sangramento-uterino",
+        "PS:trauma-atls"
+      ],
+      "sourceCount": 7,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "aciclovir",
+      "name": "Aciclovir",
+      "sources": [
+        "PS:afta-estomatite",
+        "PS:herpes-zoster",
+        "PS:meningite-bacteriana",
+        "PS:queilite",
+        "PS:ulceras-genitais",
+        "TH:herpes-zoster"
+      ],
+      "sourceCount": 6,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "eritromicina",
+      "name": "Eritromicina",
+      "sources": [
+        "PS:corpo-estranho-ocular",
+        "PS:dispepsia-drge",
+        "PS:erisipela",
+        "PS:hordeolo",
+        "PS:trauma-ocular",
+        "PS:ulceras-genitais"
+      ],
+      "sourceCount": 6,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "escopolamina",
+      "name": "Escopolamina",
+      "sources": [
+        "PS:colica-renal",
+        "PS:constipacao",
+        "PS:desconforto-abdominal",
+        "TH:colica-renal",
+        "TH:dor-abdominal",
+        "TH:pielonefrite"
+      ],
+      "sourceCount": 6,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "glucagon",
+      "name": "Glucagon",
+      "sources": [
+        "EM:reacoes-metabolicas:0",
+        "EM:reacoes-metabolicas:1",
+        "PS:alergia-anafilaxia",
+        "PS:diabetes-insulina-hipo",
+        "PS:hipoglicemia-grave",
+        "TH:hipoglicemia"
+      ],
+      "sourceCount": 6,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "gluconato_calcio",
+      "name": "Gluconato de cálcio",
+      "sources": [
+        "EM:obstetricia:0",
+        "EM:reacoes-metabolicas:2",
+        "PS:disturbios-eletroliticos",
+        "PS:eclampsia-pre-eclampsia",
+        "TH:disturbios-eletroliticos",
+        "TH:pre-eclampsia-eclampsia"
+      ],
+      "sourceCount": 6,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "haloperidol",
+      "name": "Haloperidol",
+      "sources": [
+        "PS:abstinencia-alcoolica",
+        "PS:delirium",
+        "TH:abstinencia-alcool",
+        "TH:agitacao-psiquiatrica",
+        "TH:ansiedade-panico",
+        "TH:nausea-vomitos"
+      ],
+      "sourceCount": 6,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "ipratropio",
+      "name": "Ipatrópio",
+      "sources": [
+        "PS:asma-broncoespasmo",
+        "PS:bronquite-aguda",
+        "PS:dpoc-exacerbada",
+        "PS:tosse",
+        "TH:anafilaxia",
+        "TH:dpoc-exacerbada"
+      ],
+      "sourceCount": 6,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "nitroprussiato",
+      "name": "Nitroprussiato de sódio",
+      "sources": [
+        "EM:pressao-arritmias:0",
+        "PS:avc",
+        "PS:crise-hipertensiva",
+        "PS:eclampsia-pre-eclampsia",
+        "PS:edema-agudo-pulmao",
+        "TH:crise-hipertensiva"
+      ],
+      "sourceCount": 6,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "octreotide",
+      "name": "Octreotide",
+      "sources": [
+        "EM:reacoes-metabolicas:1",
+        "PS:diabetes-insulina-hipo",
+        "PS:hda",
+        "PS:hipoglicemia-grave",
+        "TH:hda",
+        "TH:hipoglicemia"
+      ],
+      "sourceCount": 6,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "bicarbonato",
+      "name": "Bicarbonato de sódio",
+      "sources": [
+        "EM:reacoes-metabolicas:2",
+        "PS:cetoacidose-diabetica",
+        "PS:estado-hiperosmolar",
+        "PS:intoxicacoes-exogenas",
+        "TH:disturbios-eletroliticos"
+      ],
+      "sourceCount": 5,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "cefazolina",
+      "name": "Cefazolina",
+      "sources": [
+        "PS:apendicite-aguda",
+        "PS:artralgia-dor-msk",
+        "PS:celulite",
+        "PS:erisipela",
+        "TH:celulite-erisipela"
+      ],
+      "sourceCount": 5,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "dimenidrinato",
+      "name": "Dimenidrinato",
+      "sources": [
+        "PS:sindrome-vestibular",
+        "PS:vomitos-agudos",
+        "TH:nausea-vomitos",
+        "TH:pancreatite",
+        "TH:vertigem-vestibular"
+      ],
+      "sourceCount": 5,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "metoprolol",
+      "name": "Metoprolol",
+      "sources": [
+        "PS:arritmias",
+        "PS:cardioversao-eletrica",
+        "PS:intoxicacoes-exogenas",
+        "PS:sca-iam",
+        "TH:crise-tireotoxica"
+      ],
+      "sourceCount": 5,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "nifedipino",
+      "name": "Nifedipino",
+      "sources": [
+        "EM:obstetricia:0",
+        "EM:pressao-arritmias:0",
+        "PS:crise-hipertensiva",
+        "PS:fissura-anal",
+        "TH:pre-eclampsia-eclampsia"
+      ],
+      "sourceCount": 5,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "oxacilina",
+      "name": "Oxacilina",
+      "sources": [
+        "PS:artralgia-dor-msk",
+        "PS:celulite",
+        "TH:abscesso-cutaneo",
+        "TH:celulite-erisipela",
+        "TH:flebite"
+      ],
+      "sourceCount": 5,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "sulfametoxazol_trimetoprim",
+      "name": "Sulfametoxazol-trimetoprima",
+      "sources": [
+        "PS:abscesso-cutaneo",
+        "PS:diarreia-gastroenterite",
+        "PS:furunculose",
+        "PS:impetigo",
+        "TH:abscesso-cutaneo"
+      ],
+      "sourceCount": 5,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "valaciclovir",
+      "name": "Valaciclovir",
+      "sources": [
+        "PS:afta-estomatite",
+        "PS:herpes-zoster",
+        "PS:queilite",
+        "PS:ulceras-genitais",
+        "TH:herpes-zoster"
+      ],
+      "sourceCount": 5,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "adenosina",
+      "name": "Adenosina",
+      "sources": [
+        "EM:parada-cardio:4",
+        "EM:pediatrica:2",
+        "EM:pressao-arritmias:1",
+        "PS:arritmias"
+      ],
+      "sourceCount": 4,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "alteplase",
+      "name": "Alteplase (rt-PA)",
+      "sources": [
+        "EM:avc:1",
+        "EM:sca:1",
+        "PS:avc",
+        "PS:tep"
+      ],
+      "sourceCount": 4,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "ciclobenzaprina",
+      "name": "Ciclobenzaprina",
+      "sources": [
+        "PS:cefaleias",
+        "PS:lombalgia-ciatalgia",
+        "TH:artralgia-dor-msk",
+        "TH:lombalgia-ciatalgia"
+      ],
+      "sourceCount": 4,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "claritromicina",
+      "name": "Claritromicina",
+      "sources": [
+        "PS:bronquite-aguda",
+        "PS:dispepsia-drge",
+        "PS:mononucleose",
+        "PS:pneumonia-comunitaria"
+      ],
+      "sourceCount": 4,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "clonazepam",
+      "name": "Clonazepam",
+      "sources": [
+        "PS:alcoolismo-intox-abstinencia",
+        "TH:abstinencia-alcool",
+        "TH:ansiedade-panico",
+        "TH:convulsao-eme"
+      ],
+      "sourceCount": 4,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "clopidogrel",
+      "name": "Clopidogrel",
+      "sources": [
+        "EM:sca:1",
+        "PS:avc",
+        "PS:sca-iam",
+        "TH:dor-toracica"
+      ],
+      "sourceCount": 4,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "digoxina",
+      "name": "Digoxina",
+      "sources": [
+        "EM:parada-cardio:3",
+        "EM:pressao-arritmias:1",
+        "PS:arritmias",
+        "PS:delirium"
+      ],
+      "sourceCount": 4,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "fenobarbital",
+      "name": "Fenobarbital",
+      "sources": [
+        "PS:abstinencia-alcoolica",
+        "PS:alcoolismo-intox-abstinencia",
+        "TH:abstinencia-alcool",
+        "TH:convulsao-eme"
+      ],
+      "sourceCount": 4,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "gentamicina",
+      "name": "Gentamicina",
+      "sources": [
+        "PS:apendicite-aguda",
+        "PS:gonorreia-clamidia",
+        "TH:gonorreia-ist",
+        "TH:pielonefrite"
+      ],
+      "sourceCount": 4,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "levetiracetam",
+      "name": "Levetiracetam",
+      "sources": [
+        "PS:abstinencia-alcoolica",
+        "PS:alcoolismo-intox-abstinencia",
+        "PS:avc",
+        "PS:meningite-bacteriana"
+      ],
+      "sourceCount": 4,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "loratadina",
+      "name": "Loratadina",
+      "sources": [
+        "PS:conjuntivite",
+        "PS:queilite",
+        "PS:rinite-alergica",
+        "PS:tinea"
+      ],
+      "sourceCount": 4,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "naloxona",
+      "name": "Naloxona",
+      "sources": [
+        "EM:procedimentos:0",
+        "EM:toxicologia:0",
+        "PS:intoxicacoes-exogenas",
+        "TH:intoxicacoes-exogenas"
+      ],
+      "sourceCount": 4,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "omeprazol",
+      "name": "Omeprazol",
+      "sources": [
+        "PS:abdome-agudo",
+        "PS:dispepsia-drge",
+        "PS:hda",
+        "TH:hda"
+      ],
+      "sourceCount": 4,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "potassio_cloreto",
+      "name": "Cloreto de potássio",
+      "sources": [
+        "PS:cetoacidose-diabetica",
+        "PS:disturbios-eletroliticos",
+        "TH:cetoacidose-dm",
+        "TH:disturbios-eletroliticos"
+      ],
+      "sourceCount": 4,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "propranolol",
+      "name": "Propranolol",
+      "sources": [
+        "PS:cefaleias",
+        "PS:crise-tireotoxica",
+        "TH:ansiedade-panico",
+        "TH:crise-tireotoxica"
+      ],
+      "sourceCount": 4,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "soro_reidratacao",
+      "name": "Soro de reidratação oral",
+      "sources": [
+        "PS:dengue",
+        "PS:diarreia-gastroenterite",
+        "PS:insolacao",
+        "PS:vomitos-agudos"
+      ],
+      "sourceCount": 4,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "tobramicina",
+      "name": "Tobramicina",
+      "sources": [
+        "PS:conjuntivite",
+        "PS:corpo-estranho-ocular",
+        "PS:hordeolo",
+        "PS:trauma-ocular"
+      ],
+      "sourceCount": 4,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "zidovudina",
+      "name": "Zidovudina (AZT)",
+      "sources": [
+        "PS:pneumonia-comunitaria",
+        "PS:sepse-choque-septico",
+        "PS:violencia-sexual-pep",
+        "TH:sepse-infeccao-grave"
+      ],
+      "sourceCount": 4,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "acido_valproico",
+      "name": "Ácido valpróico",
+      "sources": [
+        "PS:avc",
+        "PS:crise-convulsiva-em",
+        "TH:convulsao-eme"
+      ],
+      "sourceCount": 3,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "albendazol",
+      "name": "Albendazol",
+      "sources": [
+        "PS:antiparasitarios",
+        "PS:ascaridiase",
+        "PS:parasitoses-intestinais"
+      ],
+      "sourceCount": 3,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "amitriptilina",
+      "name": "Amitriptilina",
+      "sources": [
+        "PS:cefaleias",
+        "PS:herpes-zoster",
+        "TH:herpes-zoster"
+      ],
+      "sourceCount": 3,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "aztreonam",
+      "name": "Aztreonam",
+      "sources": [
+        "PS:pneumonia-comunitaria",
+        "PS:sepse-choque-septico",
+        "TH:sepse-infeccao-grave"
+      ],
+      "sourceCount": 3,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "butilbrometo_escopolamina",
+      "name": "Butilbrometo de escopolamina",
+      "sources": [
+        "PS:desconforto-abdominal",
+        "PS:sangramento-uterino",
+        "TH:dor-abdominal"
+      ],
+      "sourceCount": 3,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "captopril",
+      "name": "Captopril",
+      "sources": [
+        "PS:crise-hipertensiva",
+        "PS:epistaxe",
+        "TH:crise-hipertensiva"
+      ],
+      "sourceCount": 3,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "cefotaxima",
+      "name": "Cefotaxima",
+      "sources": [
+        "PS:meningite-bacteriana",
+        "TH:leptospirose",
+        "TH:meningite-bacteriana"
+      ],
+      "sourceCount": 3,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "difenidramina",
+      "name": "Difenidramina",
+      "sources": [
+        "EM:reacoes-metabolicas:0",
+        "PS:alergia-anafilaxia",
+        "TH:anafilaxia"
+      ],
+      "sourceCount": 3,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "diltiazem",
+      "name": "Diltiazem",
+      "sources": [
+        "EM:pressao-arritmias:1",
+        "PS:arritmias",
+        "PS:fissura-anal"
+      ],
+      "sourceCount": 3,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "dobutamina",
+      "name": "Dobutamina",
+      "sources": [
+        "EM:sepse:1",
+        "PS:escorpionismo",
+        "TH:edema-pulmao-ic"
+      ],
+      "sourceCount": 3,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "dopamina",
+      "name": "Dopamina",
+      "sources": [
+        "EM:parada-cardio:3",
+        "PS:arritmias",
+        "PS:escorpionismo"
+      ],
+      "sourceCount": 3,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "flumazenil",
+      "name": "Flumazenil",
+      "sources": [
+        "EM:procedimentos:0",
+        "PS:intoxicacoes-exogenas",
+        "TH:intoxicacoes-exogenas"
+      ],
+      "sourceCount": 3,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "ivermectina",
+      "name": "Ivermectina",
+      "sources": [
+        "PS:antiparasitarios",
+        "PS:escabiose",
+        "PS:pediculose"
+      ],
+      "sourceCount": 3,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "mebendazol",
+      "name": "Mebendazol",
+      "sources": [
+        "PS:antiparasitarios",
+        "PS:ascaridiase",
+        "PS:parasitoses-intestinais"
+      ],
+      "sourceCount": 3,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "penicilina_benzatina",
+      "name": "Penicilina benzatina",
+      "sources": [
+        "PS:amigdalite-bacteriana",
+        "PS:ulceras-genitais",
+        "PS:violencia-sexual-pep"
+      ],
+      "sourceCount": 3,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "penicilina_cristalina",
+      "name": "Penicilina cristalina",
+      "sources": [
+        "PS:erisipela",
+        "PS:leptospirose",
+        "TH:leptospirose"
+      ],
+      "sourceCount": 3,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "pregabalina",
+      "name": "Pregabalina",
+      "sources": [
+        "PS:herpes-zoster",
+        "PS:lombalgia-ciatalgia",
+        "TH:herpes-zoster"
+      ],
+      "sourceCount": 3,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "rivaroxabana",
+      "name": "Rivaroxabana",
+      "sources": [
+        "PS:flebite",
+        "PS:tep",
+        "PS:tvp"
+      ],
+      "sourceCount": 3,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "soro_antitetanico",
+      "name": "Soro antitetânico (SAT)",
+      "sources": [
+        "PS:queimaduras",
+        "PS:violencia-sexual-pep",
+        "TH:profilaxia-tetano"
+      ],
+      "sourceCount": 3,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "tiamina",
+      "name": "Tiamina",
+      "sources": [
+        "PS:abstinencia-alcoolica",
+        "PS:alcoolismo-intox-abstinencia",
+        "TH:abstinencia-alcool"
+      ],
+      "sourceCount": 3,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "verapamil",
+      "name": "Verapamil",
+      "sources": [
+        "EM:pressao-arritmias:1",
+        "PS:arritmias",
+        "PS:cefaleias"
+      ],
+      "sourceCount": 3,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "alopurinol",
+      "name": "Alopurinol",
+      "sources": [
+        "PS:gota",
+        "TH:gota-crise"
+      ],
+      "sourceCount": 2,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "amlodipino",
+      "name": "Anlodipino",
+      "sources": [
+        "PS:edema-mmi",
+        "TH:crise-hipertensiva"
+      ],
+      "sourceCount": 2,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "anfotericina_b",
+      "name": "Anfotericina B",
+      "sources": [
+        "PS:candidiase",
+        "PS:sepse-choque-septico"
+      ],
+      "sourceCount": 2,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "apixabana",
+      "name": "Apixabana",
+      "sources": [
+        "PS:tep",
+        "PS:tvp"
+      ],
+      "sourceCount": 2,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "artesunato",
+      "name": "Artesunato",
+      "sources": [
+        "PS:malaria",
+        "TH:malaria-grave"
+      ],
+      "sourceCount": 2,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "atovaquona",
+      "name": "Atovaquona",
+      "sources": [
+        "PS:malaria",
+        "TH:malaria-grave"
+      ],
+      "sourceCount": 2,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "budesonida",
+      "name": "Budesonida",
+      "sources": [
+        "PS:rinite-alergica",
+        "PS:sinusite-aguda"
+      ],
+      "sourceCount": 2,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "cloroquina",
+      "name": "Cloroquina",
+      "sources": [
+        "PS:chikungunya",
+        "PS:malaria"
+      ],
+      "sourceCount": 2,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "colchicina",
+      "name": "Colchicina",
+      "sources": [
+        "PS:gota",
+        "TH:gota-crise"
+      ],
+      "sourceCount": 2,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "dabigatrana",
+      "name": "Dabigatrana",
+      "sources": [
+        "PS:avc",
+        "PS:tep"
+      ],
+      "sourceCount": 2,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "espironolactona",
+      "name": "Espironolactona",
+      "sources": [
+        "EM:reacoes-metabolicas:2",
+        "PS:disturbios-eletroliticos"
+      ],
+      "sourceCount": 2,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "fondaparinux",
+      "name": "Fondaparinux",
+      "sources": [
+        "PS:sca-iam",
+        "PS:tep"
+      ],
+      "sourceCount": 2,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "isossorbida",
+      "name": "Isosorbida (mononitrato)",
+      "sources": [
+        "TH:dor-toracica",
+        "TH:edema-pulmao-ic"
+      ],
+      "sourceCount": 2,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "levonorgestrel",
+      "name": "Levonorgestrel",
+      "sources": [
+        "PS:sangramento-uterino",
+        "PS:violencia-sexual-pep"
+      ],
+      "sourceCount": 2,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "meperidina",
+      "name": "Meperidina",
+      "sources": [
+        "TH:dor-toracica",
+        "TH:pancreatite"
+      ],
+      "sourceCount": 2,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "oseltamivir",
+      "name": "Oseltamivir",
+      "sources": [
+        "PS:gripe-influenza",
+        "TH:influenza-gripe"
+      ],
+      "sourceCount": 2,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "pantoprazol",
+      "name": "Pantoprazol",
+      "sources": [
+        "PS:dispepsia-drge",
+        "TH:hda"
+      ],
+      "sourceCount": 2,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "propiltiouracil",
+      "name": "Propiltiouracil",
+      "sources": [
+        "PS:crise-tireotoxica",
+        "TH:crise-tireotoxica"
+      ],
+      "sourceCount": 2,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "quetiapina",
+      "name": "Quetiapina",
+      "sources": [
+        "PS:delirium",
+        "TH:agitacao-psiquiatrica"
+      ],
+      "sourceCount": 2,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "quinina",
+      "name": "Quinina",
+      "sources": [
+        "PS:malaria",
+        "TH:malaria-grave"
+      ],
+      "sourceCount": 2,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "rifampicina",
+      "name": "Rifampicina",
+      "sources": [
+        "PS:meningite-bacteriana",
+        "PS:tuberculose"
+      ],
+      "sourceCount": 2,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "secnidazol",
+      "name": "Secnidazol",
+      "sources": [
+        "PS:antiparasitarios",
+        "PS:vulvovaginites"
+      ],
+      "sourceCount": 2,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "sulfato_ferroso",
+      "name": "Sulfato ferroso",
+      "sources": [
+        "PS:anemia-ferropriva",
+        "PS:sangramento-uterino"
+      ],
+      "sourceCount": 2,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "tenecteplase",
+      "name": "Tenecteplase",
+      "sources": [
+        "EM:sca:1",
+        "PS:tep"
+      ],
+      "sourceCount": 2,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "terlipressina",
+      "name": "Terlipressina",
+      "sources": [
+        "PS:hda",
+        "TH:hda"
+      ],
+      "sourceCount": 2,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "tinidazol",
+      "name": "Tinidazol",
+      "sources": [
+        "PS:antiparasitarios",
+        "PS:parasitoses-intestinais"
+      ],
+      "sourceCount": 2,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "vitamina_k",
+      "name": "Fitomenadiona (vitamina K)",
+      "sources": [
+        "PS:avc",
+        "PS:hda"
+      ],
+      "sourceCount": 2,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "aminofilina",
+      "name": "Aminofilina",
+      "sources": [
+        "TH:dpoc-exacerbada"
+      ],
+      "sourceCount": 1,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "bromoprida",
+      "name": "Bromoprida",
+      "sources": [
+        "PS:vomitos-agudos"
+      ],
+      "sourceCount": 1,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "cefixima",
+      "name": "Cefixima",
+      "sources": [
+        "PS:violencia-sexual-pep"
+      ],
+      "sourceCount": 1,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "cefuroxima",
+      "name": "Cefuroxima",
+      "sources": [
+        "PS:otite-media"
+      ],
+      "sourceCount": 1,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "dolutegravir",
+      "name": "Dolutegravir",
+      "sources": [
+        "PS:violencia-sexual-pep"
+      ],
+      "sourceCount": 1,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "domperidona",
+      "name": "Domperidona",
+      "sources": [
+        "PS:dispepsia-drge"
+      ],
+      "sourceCount": 1,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "edoxabana",
+      "name": "Edoxabana",
+      "sources": [
+        "PS:tep"
+      ],
+      "sourceCount": 1,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "emtricitabina",
+      "name": "Emtricitabina (FTC)",
+      "sources": [
+        "PS:violencia-sexual-pep"
+      ],
+      "sourceCount": 1,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "ertapenem",
+      "name": "Ertapenem",
+      "sources": [
+        "TH:pielonefrite"
+      ],
+      "sourceCount": 1,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "escitalopram",
+      "name": "Escitalopram",
+      "sources": [
+        "PS:ansiedade-crise"
+      ],
+      "sourceCount": 1,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "esomeprazol",
+      "name": "Esomeprazol",
+      "sources": [
+        "TH:hda"
+      ],
+      "sourceCount": 1,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "espectinomicina",
+      "name": "Espectinomicina",
+      "sources": [
+        "PS:violencia-sexual-pep"
+      ],
+      "sourceCount": 1,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "estreptoquinase",
+      "name": "Estreptoquinase",
+      "sources": [
+        "EM:sca:1"
+      ],
+      "sourceCount": 1,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "etambutol",
+      "name": "Etambutol",
+      "sources": [
+        "PS:tuberculose"
+      ],
+      "sourceCount": 1,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "fluticasona",
+      "name": "Fluticasona",
+      "sources": [
+        "PS:rinite-alergica"
+      ],
+      "sourceCount": 1,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "fosfomicina",
+      "name": "Fosfomicina trometamol",
+      "sources": [
+        "PS:cistite-itu-baixa"
+      ],
+      "sourceCount": 1,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "gabapentina",
+      "name": "Gabapentina",
+      "sources": [
+        "PS:soluco-persistente"
+      ],
+      "sourceCount": 1,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "ganciclovir",
+      "name": "Ganciclovir",
+      "sources": [
+        "TH:herpes-zoster"
+      ],
+      "sourceCount": 1,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "hidroclorotiazida",
+      "name": "Hidroclorotiazida",
+      "sources": [
+        "PS:edema-mmi"
+      ],
+      "sourceCount": 1,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "hidroxicloroquina",
+      "name": "Hidroxicloroquina",
+      "sources": [
+        "PS:chikungunya"
+      ],
+      "sourceCount": 1,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "imunoglobulina_hepatite_b",
+      "name": "Imunoglobulina anti-HBs",
+      "sources": [
+        "PS:violencia-sexual-pep"
+      ],
+      "sourceCount": 1,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "insulina_nph",
+      "name": "Insulina NPH",
+      "sources": [
+        "TH:cetoacidose-dm"
+      ],
+      "sourceCount": 1,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "isoniazida",
+      "name": "Isoniazida",
+      "sources": [
+        "PS:tuberculose"
+      ],
+      "sourceCount": 1,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "linezolida",
+      "name": "Linezolida",
+      "sources": [
+        "TH:celulite-erisipela"
+      ],
+      "sourceCount": 1,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "loperamida",
+      "name": "Loperamida",
+      "sources": [
+        "PS:diarreia-gastroenterite"
+      ],
+      "sourceCount": 1,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "manitol",
+      "name": "Manitol",
+      "sources": [
+        "TH:meningite-bacteriana"
+      ],
+      "sourceCount": 1,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "medroxiprogesterona",
+      "name": "Medroxiprogesterona",
+      "sources": [
+        "PS:sangramento-uterino"
+      ],
+      "sourceCount": 1,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "mefloquina",
+      "name": "Mefloquina",
+      "sources": [
+        "PS:malaria"
+      ],
+      "sourceCount": 1,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "metildopa",
+      "name": "Metildopa",
+      "sources": [
+        "TH:pre-eclampsia-eclampsia"
+      ],
+      "sourceCount": 1,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "micafungina",
+      "name": "Micafungina",
+      "sources": [
+        "PS:candidiase"
+      ],
+      "sourceCount": 1,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "misoprostol",
+      "name": "Misoprostol",
+      "sources": [
+        "EM:obstetricia:1"
+      ],
+      "sourceCount": 1,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "mometasona",
+      "name": "Mometasona",
+      "sources": [
+        "PS:rinite-alergica"
+      ],
+      "sourceCount": 1,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "nimesulida",
+      "name": "Nimesulida",
+      "sources": [
+        "PS:cefaleias"
+      ],
+      "sourceCount": 1,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "nitrofurantoina",
+      "name": "Nitrofurantoína",
+      "sources": [
+        "PS:cistite-itu-baixa"
+      ],
+      "sourceCount": 1,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "pirazinamida",
+      "name": "Pirazinamida",
+      "sources": [
+        "PS:tuberculose"
+      ],
+      "sourceCount": 1,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "piridoxina",
+      "name": "Piridoxina (vitamina B6)",
+      "sources": [
+        "PS:tuberculose"
+      ],
+      "sourceCount": 1,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "praziquantel",
+      "name": "Praziquantel",
+      "sources": [
+        "PS:antiparasitarios"
+      ],
+      "sourceCount": 1,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "primaquina",
+      "name": "Primaquina",
+      "sources": [
+        "PS:malaria"
+      ],
+      "sourceCount": 1,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "raltegravir",
+      "name": "Raltegravir",
+      "sources": [
+        "PS:violencia-sexual-pep"
+      ],
+      "sourceCount": 1,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "risperidona",
+      "name": "Risperidona",
+      "sources": [
+        "TH:agitacao-psiquiatrica"
+      ],
+      "sourceCount": 1,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "sertralina",
+      "name": "Sertralina",
+      "sources": [
+        "PS:ansiedade-crise"
+      ],
+      "sourceCount": 1,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "sumatriptano",
+      "name": "Sumatriptano",
+      "sources": [
+        "PS:cefaleias"
+      ],
+      "sourceCount": 1,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "tamsulosina",
+      "name": "Tamsulosina",
+      "sources": [
+        "PS:colica-renal"
+      ],
+      "sourceCount": 1,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "tenofovir",
+      "name": "Tenofovir (TDF)",
+      "sources": [
+        "PS:violencia-sexual-pep"
+      ],
+      "sourceCount": 1,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "tetraciclina",
+      "name": "Tetraciclina",
+      "sources": [
+        "TH:leptospirose"
+      ],
+      "sourceCount": 1,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "tiamazol",
+      "name": "Tiamazol",
+      "sources": [
+        "TH:crise-tireotoxica"
+      ],
+      "sourceCount": 1,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "topiramato",
+      "name": "Topiramato",
+      "sources": [
+        "PS:cefaleias"
+      ],
+      "sourceCount": 1,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "vacina_hepatite_b",
+      "name": "Vacina hepatite B",
+      "sources": [
+        "PS:violencia-sexual-pep"
+      ],
+      "sourceCount": 1,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "venlafaxina",
+      "name": "Venlafaxina",
+      "sources": [
+        "PS:ansiedade-crise"
+      ],
+      "sourceCount": 1,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    },
+    {
+      "id": "zolmitriptano",
+      "name": "Zolmitriptano",
+      "sources": [
+        "PS:cefaleias"
+      ],
+      "sourceCount": 1,
+      "inMeta": true,
+      "inFullCatalog": true,
+      "inRename": false,
+      "tier": "full"
+    }
+  ]
+}
