@@ -92,6 +92,11 @@ function initApp () {
       initReceituario();
       initMedicacoes();
       initAnamneseReceituarioLink();
+      initExames();
+      initInterpretacaoExame();
+      initPacientes();
+      initConsultas();
+      initFerramentas();
       patchEmergenciaCacheGuard();
 
       const hash = window.location.hash.replace('#', '');
@@ -115,6 +120,10 @@ function showSection (sectionId) {
   if (typeof showProntoSocorroHome === 'function') showProntoSocorroHome();
   if (sectionId === 'receituario' && typeof rxOnSectionShow === 'function') rxOnSectionShow();
   if (sectionId === 'medicacoes' && typeof medShowList === 'function') medShowList();
+  if (sectionId === 'exames' && typeof examesOnSectionShow === 'function') examesOnSectionShow();
+  if (sectionId === 'interpretacao-exame' && typeof interpOnSectionShow === 'function') interpOnSectionShow();
+  if (sectionId === 'pacientes' && typeof pacientesOnSectionShow === 'function') pacientesOnSectionShow();
+  if (sectionId === 'consultas' && typeof consultasOnSectionShow === 'function') consultasOnSectionShow();
 }
 
 function calcPediatrica (e) {

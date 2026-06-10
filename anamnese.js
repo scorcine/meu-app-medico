@@ -239,6 +239,10 @@ async function anamneseHandleSave (e) {
   await anamneseSaveHistory(history);
   anamneseRenderHistory();
 
+  if (typeof pacientesUpsertFromAnamnese === 'function') {
+    await pacientesUpsertFromAnamnese(data);
+  }
+
   const text = anamneseFormatText(data);
   const filename = anamneseBuildFilename(data);
 

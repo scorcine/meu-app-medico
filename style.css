@@ -2289,6 +2289,72 @@ textarea {
   background: #1e293b;
 }
 
+/* --- Exames, interpretação, pacientes, ferramentas --- */
+.clinical-wrap {
+  max-width: 920px;
+}
+
+.clinical-record-list {
+  margin-top: 0.75rem;
+}
+
+.clinical-record-item {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.65rem;
+}
+
+.clinical-record-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.clinical-record-meta strong {
+  font-size: 0.95rem;
+  color: var(--text-primary);
+}
+
+.clinical-record-meta span {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+}
+
+.clinical-record-tag {
+  font-size: 0.78rem;
+  color: var(--result-warn-text);
+}
+
+.clinical-record-snippet {
+  display: block;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  margin-top: 0.15rem;
+}
+
+.clinical-record-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.clinical-record-btn {
+  font-size: 0.78rem;
+  padding: 0.3rem 0.55rem;
+}
+
+.ferramentas-grid .ferramentas-card {
+  flex-direction: column;
+  align-items: flex-start;
+  min-height: 5.5rem;
+}
+
+.ferramentas-card-desc {
+  font-size: 0.78rem;
+  line-height: 1.4;
+  margin-top: 0.15rem;
+}
+
 .med-ref-notice {
   padding: 0.65rem 0.85rem;
   margin: 0.75rem 0 1rem;

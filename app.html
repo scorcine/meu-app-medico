@@ -9,7 +9,7 @@
   <title>MedHub</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <script src="theme.js"></script>
-  <link rel="stylesheet" href="style.css?v=med-readability-v1">
+  <link rel="stylesheet" href="style.css?v=atendimento-v1">
   <script defer src="calculators-risco.js"></script>
   <script defer src="calculators-cardio.js"></script>
   <script defer src="calculators-pneumo.js?v=rsi-patient"></script>
@@ -52,8 +52,16 @@
   <script defer src="google-drive.js?v=compliance-v1"></script>
   <script defer src="security-crypto.js?v=compliance-v1"></script>
   <script defer src="compliance.js?v=compliance-v1"></script>
-  <script defer src="anamnese.js?v=compliance-v1"></script>
-  <script defer src="app.js?v=compliance-v1"></script>
+  <script defer src="anamnese.js?v=atendimento-v1"></script>
+  <script defer src="clinical-storage.js?v=atendimento-v1"></script>
+  <script defer src="exames-data.js?v=atendimento-v1"></script>
+  <script defer src="exames.js?v=atendimento-v1"></script>
+  <script defer src="interpretacao-exame-data.js?v=atendimento-v1"></script>
+  <script defer src="interpretacao-exame.js?v=atendimento-v1"></script>
+  <script defer src="pacientes.js?v=atendimento-v1"></script>
+  <script defer src="consultas.js?v=atendimento-v1"></script>
+  <script defer src="ferramentas.js?v=atendimento-v1"></script>
+  <script defer src="app.js?v=atendimento-v1"></script>
   <script defer src="auth.js?v=compliance-v1"></script>
 </head>
 <body class="app-page" onload="initApp()">
@@ -92,7 +100,7 @@
         <button type="button" class="sidebar-link" data-section="calc-pediatrica">Calculadora pediátrica</button>
         <button type="button" class="sidebar-link" data-section="ferramentas">Ferramentas</button>
       </nav>
-      <p class="sidebar-build" id="app-build" title="Confira se esta versão bate com a última atualização do projeto">Build 2026.06.08 · Medicações ✓</p>
+      <p class="sidebar-build" id="app-build" title="Confira se esta versão bate com a última atualização do projeto">Build 2026.06.10 · Atendimento ✓</p>
     </aside>
 
     <main class="app-content">
@@ -142,6 +150,14 @@
               <li>
                 <strong>📝 Anamnese e histórico local</strong>
                 <span>Formulário estruturado, histórico salvo no navegador e envio opcional ao Google Drive.</span>
+              </li>
+              <li>
+                <strong>👤 Pacientes e consultas</strong>
+                <span>Cadastro local de pacientes, registro de consultas e atalho para anamnese — dados criptografados no dispositivo.</span>
+              </li>
+              <li>
+                <strong>🔬 Exames e interpretação</strong>
+                <span>Painéis sugeridos por cenário clínico e guias rápidos de labs/imagem (gasometria, troponina, hemograma, etc.).</span>
               </li>
               <li>
                 <strong>🌐 Uso online e dados locais</strong>
@@ -255,18 +271,40 @@
       </section>
 
       <section id="section-exames" class="content-panel">
-        <div class="card dashboard-card">
-          <h2>Exames</h2>
-          <p class="muted">Referência rápida para solicitação de exames.</p>
-          <p class="coming-soon">Conteúdo em construção — em breve você poderá consultar protocolos de exames aqui.</p>
+        <div class="card dashboard-card clinical-wrap">
+          <div id="exames-list-view">
+            <h2>Exames</h2>
+            <p class="muted">Referência rápida para solicitação de exames por cenário clínico — laboratorial e imagem.</p>
+            <label class="ps-search-label" for="exames-search">Buscar cenário</label>
+            <input id="exames-search" class="ps-search" type="search" placeholder="Ex.: sepse, dor torácica, abdome agudo, dengue…" autocomplete="off">
+            <p id="exames-count" class="ps-count muted"></p>
+            <div id="exames-topic-grid" class="calc-category-grid"></div>
+            <p id="exames-empty" class="ps-placeholder" hidden>Nenhum cenário encontrado.</p>
+          </div>
+          <div id="exames-detail-view" hidden>
+            <button type="button" class="btn-back" id="exames-back">← Voltar à lista</button>
+            <h2 id="exames-topic-title"></h2>
+            <div id="exames-topic-content" class="emerg-content"></div>
+          </div>
         </div>
       </section>
 
       <section id="section-interpretacao-exame" class="content-panel">
-        <div class="card dashboard-card">
-          <h2>Interpretação do exame</h2>
-          <p class="muted">Guia rápido para interpretar resultados de exames laboratoriais e de imagem.</p>
-          <p class="coming-soon">Conteúdo em construção — em breve você poderá consultar referências de interpretação aqui.</p>
+        <div class="card dashboard-card clinical-wrap">
+          <div id="interp-list-view">
+            <h2>Interpretação do exame</h2>
+            <p class="muted">Guia rápido para interpretar resultados laboratoriais e achados de imagem comuns no plantão.</p>
+            <label class="ps-search-label" for="interp-search">Buscar tema</label>
+            <input id="interp-search" class="ps-search" type="search" placeholder="Ex.: gasometria, troponina, sódio, hemograma…" autocomplete="off">
+            <p id="interp-count" class="ps-count muted"></p>
+            <div id="interp-topic-grid" class="calc-category-grid"></div>
+            <p id="interp-empty" class="ps-placeholder" hidden>Nenhum guia encontrado.</p>
+          </div>
+          <div id="interp-detail-view" hidden>
+            <button type="button" class="btn-back" id="interp-back">← Voltar à lista</button>
+            <h2 id="interp-topic-title"></h2>
+            <div id="interp-topic-content" class="emerg-content"></div>
+          </div>
         </div>
       </section>
 
@@ -342,9 +380,57 @@
       </section>
 
       <section id="section-pacientes" class="content-panel">
-        <div class="card dashboard-card">
+        <div class="card dashboard-card clinical-wrap">
           <h2>Pacientes</h2>
-          <p class="coming-soon">Em breve: cadastro e lista de pacientes.</p>
+          <p class="compliance-privacy-banner" role="note">
+            Cadastro <strong>local neste navegador</strong> (criptografado com sua senha). Não substitui prontuário legal — use conforme LGPD e política institucional.
+          </p>
+
+          <h3 id="pac-form-title">Novo paciente</h3>
+          <form id="pac-form" class="anamnese-form">
+            <div class="anamnese-grid">
+              <label class="anamnese-label">Nome *
+                <input id="pac-nome" class="anamnese-input" type="text" required placeholder="Nome completo">
+              </label>
+              <label class="anamnese-label">Idade
+                <input id="pac-idade" class="anamnese-input" type="text" placeholder="Ex.: 45 anos">
+              </label>
+              <label class="anamnese-label">Sexo
+                <select id="pac-sexo" class="anamnese-input">
+                  <option value="">—</option>
+                  <option value="Feminino">Feminino</option>
+                  <option value="Masculino">Masculino</option>
+                  <option value="Outro">Outro</option>
+                </select>
+              </label>
+              <label class="anamnese-label">Telefone
+                <input id="pac-telefone" class="anamnese-input" type="tel" placeholder="Opcional">
+              </label>
+            </div>
+            <label class="anamnese-label">Alergias
+              <textarea id="pac-alergias" class="anamnese-textarea" rows="2" placeholder="NKDA ou listar"></textarea>
+            </label>
+            <label class="anamnese-label">Medicações em uso
+              <textarea id="pac-medicacoes" class="anamnese-textarea" rows="2"></textarea>
+            </label>
+            <label class="anamnese-label">Observações
+              <textarea id="pac-notas" class="anamnese-textarea" rows="2"></textarea>
+            </label>
+            <div class="anamnese-form-actions">
+              <button type="submit" class="btn">Salvar paciente</button>
+              <button type="button" class="btn-outline" id="pac-clear">Limpar</button>
+            </div>
+            <p id="pac-save-status" class="anamnese-save-status" hidden></p>
+          </form>
+
+          <section class="anamnese-history">
+            <h3>Pacientes cadastrados</h3>
+            <label class="ps-search-label" for="pac-search">Buscar</label>
+            <input id="pac-search" class="ps-search" type="search" placeholder="Nome, telefone ou alergia…" autocomplete="off">
+            <p id="pac-locked" class="compliance-inline-notice" hidden>Dados protegidos — desbloqueie com sua senha ao abrir o app.</p>
+            <p id="pac-empty" class="muted">Nenhum paciente cadastrado.</p>
+            <ul id="pac-list" class="anamnese-history-list clinical-record-list"></ul>
+          </section>
         </div>
       </section>
 
@@ -451,16 +537,74 @@
       </section>
 
       <section id="section-consultas" class="content-panel">
-        <div class="card dashboard-card">
+        <div class="card dashboard-card clinical-wrap">
           <h2>Consultas</h2>
-          <p class="coming-soon">Em breve: agenda e registro de consultas.</p>
+          <p class="muted">Registro simples de atendimentos — histórico local vinculado ao paciente. Não é agenda online nem prontuário certificado.</p>
+
+          <h3 id="cons-form-title">Nova consulta</h3>
+          <form id="cons-form" class="anamnese-form">
+            <input id="cons-paciente-id" type="hidden">
+            <label class="anamnese-label">Paciente cadastrado
+              <select id="cons-paciente-select" class="anamnese-input">
+                <option value="">— Digite ou selecione abaixo —</option>
+              </select>
+            </label>
+            <label class="anamnese-label">Nome do paciente *
+              <input id="cons-paciente-nome" class="anamnese-input" type="text" required placeholder="Nome completo">
+            </label>
+            <div class="anamnese-grid">
+              <label class="anamnese-label">Data / hora
+                <input id="cons-data" class="anamnese-input" type="text">
+              </label>
+              <label class="anamnese-label">Tipo
+                <select id="cons-tipo" class="anamnese-input">
+                  <option value="ambulatorial">Ambulatorial</option>
+                  <option value="retorno">Retorno</option>
+                  <option value="ps">Pronto-socorro</option>
+                  <option value="telemedicina">Telemedicina</option>
+                  <option value="outro">Outro</option>
+                </select>
+              </label>
+              <label class="anamnese-label">Status
+                <select id="cons-status" class="anamnese-input">
+                  <option value="realizada">Realizada</option>
+                  <option value="agendada">Agendada</option>
+                  <option value="cancelada">Cancelada</option>
+                </select>
+              </label>
+            </div>
+            <label class="anamnese-label">Queixa / motivo
+              <textarea id="cons-queixa" class="anamnese-textarea" rows="2"></textarea>
+            </label>
+            <label class="anamnese-label">Conduta / plano
+              <textarea id="cons-conduta" class="anamnese-textarea" rows="3"></textarea>
+            </label>
+            <label class="anamnese-label">Observações
+              <textarea id="cons-notas" class="anamnese-textarea" rows="2"></textarea>
+            </label>
+            <div class="anamnese-form-actions">
+              <button type="submit" class="btn">Salvar consulta</button>
+              <button type="button" class="btn-outline" id="cons-clear">Limpar</button>
+            </div>
+            <p id="cons-save-status" class="anamnese-save-status" hidden></p>
+          </form>
+
+          <section class="anamnese-history">
+            <h3>Histórico de consultas</h3>
+            <label class="ps-search-label" for="cons-filter">Buscar</label>
+            <input id="cons-filter" class="ps-search" type="search" placeholder="Paciente, queixa ou conduta…" autocomplete="off">
+            <p id="cons-locked" class="compliance-inline-notice" hidden>Dados protegidos — desbloqueie com sua senha ao abrir o app.</p>
+            <p id="cons-empty" class="muted">Nenhuma consulta registrada.</p>
+            <ul id="cons-list" class="anamnese-history-list clinical-record-list"></ul>
+          </section>
         </div>
       </section>
 
       <section id="section-ferramentas" class="content-panel">
-        <div class="card dashboard-card">
+        <div class="card dashboard-card clinical-wrap">
           <h2>Ferramentas</h2>
-          <p class="coming-soon">Em breve: calculadoras e checklists clínicos.</p>
+          <p class="muted">Atalhos para calculadoras, protocolos e módulos clínicos do MedHub — evita duplicar o que já existe no menu.</p>
+          <div id="ferramentas-grid" class="calc-category-grid ferramentas-grid"></div>
         </div>
       </section>
     </main>
