@@ -43,9 +43,9 @@
   <script defer src="medicacoes-data.js?v=med-v1"></script>
   <script defer src="medicacoes.js?v=med-v1"></script>
   <script defer src="med-apresentacoes-vo.js?v=ist-pep-v1"></script>
-  <script defer src="receituario-data.js?v=ist-pep-v2"></script>
-  <script defer src="receituario-ps-bridge.js?v=ist-pep-v2"></script>
-  <script defer src="receituario.js?v=ist-pep-v2"></script>
+  <script defer src="receituario-data.js?v=rx-multi-v1"></script>
+  <script defer src="receituario-ps-bridge.js?v=rx-multi-v1"></script>
+  <script defer src="receituario.js?v=rx-multi-v1"></script>
   <script defer src="google-drive.js?v=anamnese-v1"></script>
   <script defer src="anamnese.js?v=anamnese-v1"></script>
   <script defer src="app.js?v=med-v1"></script>
@@ -180,19 +180,19 @@
         <div class="card dashboard-card rx-wrap">
           <div id="rx-list-view">
             <h2>Receituário</h2>
-            <p class="muted">Todas as condições do PS estão disponíveis. Modelos completos (cefaleia, ITU, etc.) ou opções extraídas das diretrizes do protocolo.</p>
+            <p class="muted">Todas as condições do PS estão disponíveis. Com várias queixas na anamnese (ex.: cefaleia + náuseas), o app monta uma receita combinada.</p>
             <label class="ps-search-label" for="rx-crm">CRM (opcional — aparece na receita)</label>
             <input id="rx-crm" class="ps-search rx-crm-input" type="text" placeholder="Ex.: CRM-SP 123456" autocomplete="off">
             <div id="rx-suggest-banner" class="rx-suggest-banner" hidden></div>
-            <div id="rx-source-banner" class="rx-source-banner" hidden></div>
             <label class="ps-search-label" for="rx-search">Buscar condição</label>
             <input id="rx-search" class="ps-search" type="search" placeholder="Ex.: cefaleia, amigdalite, cistite…" autocomplete="off">
             <div id="rx-condition-grid" class="calc-category-grid"></div>
           </div>
           <div id="rx-detail-view" hidden>
             <button type="button" class="btn-back" id="rx-back">← Voltar às condições</button>
+            <div id="rx-source-banner" class="rx-source-banner" hidden></div>
             <h2 id="rx-condition-title"></h2>
-            <p class="muted">1) Marque o esquema (ex.: AINE). 2) Escolha o medicamento na lista. 3) Gere a receita para imprimir.</p>
+            <p class="muted rx-detail-hint">1) Marque o esquema (ex.: AINE). 2) Escolha o medicamento na lista. 3) Gere a receita para imprimir.</p>
             <div id="rx-options-wrap"></div>
             <div id="rx-meds-panel" class="rx-meds-panel" hidden></div>
             <div id="rx-selection-bar" class="rx-selection-bar" hidden>
@@ -386,7 +386,7 @@
             </div>
 
             <label class="anamnese-label">Queixa principal
-              <textarea id="anam-queixa" class="anamnese-textarea" rows="2" placeholder="Motivo da consulta (ex.: cefaleia)"></textarea>
+              <textarea id="anam-queixa" class="anamnese-textarea" rows="2" placeholder="Motivo da consulta (ex.: cefaleia, náuseas e vômitos)"></textarea>
             </label>
             <p id="anam-queixa-hint" class="anamnese-queixa-hint" hidden></p>
             <label class="anamnese-label">História da doença atual (HDA)

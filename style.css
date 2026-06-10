@@ -2259,6 +2259,33 @@ textarea {
   background: var(--bg-surface-active);
 }
 
+.rx-suggest-lead {
+  margin: 0 0 0.5rem;
+}
+
+.rx-suggest-combine {
+  margin-top: 0.5rem;
+  font-size: 0.88rem;
+}
+
+.rx-multi-block {
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.rx-multi-block:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.rx-multi-title {
+  margin: 0 0 0.75rem;
+  font-size: 1.05rem;
+  color: var(--text-accent);
+}
+
 .rx-source-banner {
   margin: 0 0 1rem;
   padding: 0.65rem 0.85rem;

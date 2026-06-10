@@ -5,9 +5,37 @@ const MEDHUB_ACTIVE_PACIENTE = 'medhub-active-paciente';
 const MEDHUB_ACTIVE_IDADE = 'medhub-active-idade';
 const MEDHUB_RX_CRM_KEY = 'medhub-rx-crm';
 
-let rxSelectedConditionId = null;
-let rxSelectedOptionIds = new Set();
-let rxSelectedMedIds = new Set();
+let rxActiveConditionIds = [];
+let rxSelectedOptionKeys = new Set();
+let rxSelectedMedKeys = new Set();
+
+function rxOptKey (conditionId, optionId) {
+  return `${conditionId}|${optionId}`;
+}
+
+function rxMedKey (conditionId, medId) {
+  return `${conditionId}|${medId}`;
+}
+
+function rxParseOptKey (key) {
+  const i = key.indexOf('|');
+  return i < 0 ? null : { conditionId: key.slice(0, i), optionId: key.slice(i + 1) };
+}
+
+function rxParseMedKey (key) {
+  const i = key.indexOf('|');
+  return i < 0 ? null : { conditionId: key.slice(0, i), medId: key.slice(i + 1) };
+}
+
+function rxGetActiveConditions () {
+  return rxActiveConditionIds
+    .map(id => (typeof rxGetCatalogEntry === 'function' ? rxGetCatalogEntry(id) : null))
+    .filter(Boolean);
+}
+
+function rxGetCurrentCondition () {
+  return rxGetActiveConditions()[0] || null;
+}
 
 function rxSyncFromAnamnese () {
   const queixa = document.getElementById('anam-queixa')?.value.trim();
@@ -34,26 +62,22 @@ function rxGetPatientContext () {
   };
 }
 
-function rxGetCurrentCondition () {
-  return typeof rxGetCatalogEntry === 'function'
-    ? rxGetCatalogEntry(rxSelectedConditionId)
-    : null;
-}
-
-function rxRemoveMedsForOption (optionId) {
-  const condition = rxGetCurrentCondition();
+function rxRemoveMedsForOption (conditionId, optionId) {
+  const condition = typeof rxGetCatalogEntry === 'function' ? rxGetCatalogEntry(conditionId) : null;
   if (!condition) return;
   condition.groups.forEach(group => {
     group.options.forEach(option => {
       if (option.id !== optionId) return;
-      rxGetOptionMeds(option, group.label).forEach(m => rxSelectedMedIds.delete(m.id));
+      rxGetOptionMeds(option, group.label).forEach(m => {
+        rxSelectedMedKeys.delete(rxMedKey(conditionId, m.id));
+      });
     });
   });
 }
 
-function rxAutoSelectMedsForOption (option, groupLabel) {
+function rxAutoSelectMedsForOption (conditionId, option, groupLabel) {
   rxGetOptionMeds(option, groupLabel).forEach(m => {
-    if (!m.exclusiveGroup) rxSelectedMedIds.add(m.id);
+    if (!m.exclusiveGroup) rxSelectedMedKeys.add(rxMedKey(conditionId, m.id));
   });
 }
 
@@ -72,15 +96,19 @@ function rxUpdateQueixaHint () {
   const totalOpts = matches.reduce((n, c) =>
     n + c.groups.reduce((g, gr) => g + gr.options.length, 0), 0);
 
+  const condLabel = matches.length > 1
+    ? `${matches.length} queixas (${matches.map(c => c.name).join(' + ')})`
+    : `“${queixa}”`;
+
   hint.hidden = false;
-  hint.innerHTML = `💊 <strong>${totalOpts} receita(s)</strong> disponíveis para “${queixa}”. ` +
+  hint.innerHTML = `💊 <strong>${totalOpts} opções</strong> em receita combinada para ${condLabel}. ` +
     `<button type="button" class="anamnese-link-rx" id="anam-open-receituario">Abrir Receituário</button>`;
 
   const btn = document.getElementById('anam-open-receituario');
   if (btn) {
     btn.onclick = () => {
       rxSyncFromAnamnese();
-      if (matches[0]) rxSelectedConditionId = matches[0].id;
+      rxShowCombinedConditions(matches.map(c => c.id), { preserveSelection: false });
       if (typeof showSection === 'function') showSection('receituario');
     };
   }
@@ -106,7 +134,8 @@ function rxAppendMedsToLines (lines, entries, startNum) {
   return n;
 }
 
-function rxFormatReceitaPrint (condition, medEntries, orientacoesList, validationMessages) {
+function rxFormatReceitaPrint (conditions, medEntries, orientacoesList, validationMessages) {
+  const condList = Array.isArray(conditions) ? conditions : (conditions ? [conditions] : []);
   const ctx = rxGetPatientContext();
   const user = typeof getSession === 'function' ? getSession() : null;
   const crm = localStorage.getItem(MEDHUB_RX_CRM_KEY) || '____________';
@@ -121,6 +150,11 @@ function rxFormatReceitaPrint (condition, medEntries, orientacoesList, validatio
     'Idade: ' + idade,
     ''
   ];
+
+  if (condList.length > 1) {
+    lines.push('Queixas: ' + condList.map(c => c.name).join(' · '));
+    lines.push('');
+  }
 
   const byRoute = { vo: [], im: [], tarv: [], geral: [] };
   medEntries.forEach(entry => {
@@ -184,7 +218,8 @@ function rxFormatReceitaPrint (condition, medEntries, orientacoesList, validatio
   return lines.join('\n');
 }
 
-function rxRenderPrintPreview (condition, medEntries, orientacoesList) {
+function rxRenderPrintPreview (conditions, medEntries, orientacoesList) {
+  const condList = Array.isArray(conditions) ? conditions : (conditions ? [conditions] : []);
   const preview = document.getElementById('rx-print-preview');
   if (!preview) return;
 
@@ -203,6 +238,10 @@ function rxRenderPrintPreview (condition, medEntries, orientacoesList) {
        <ol class="rx-print-meds">${entries.map(({ med }) => `<li>${med.text}</li>`).join('')}</ol>`
     : '';
 
+  const queixasLine = condList.length > 1
+    ? `<p><strong>Queixas:</strong> ${condList.map(c => c.name).join(' · ')}</p>`
+    : '';
+
   preview.innerHTML = `
     <div class="rx-print-sheet" contenteditable="true" spellcheck="true" lang="pt-BR" aria-label="Receita editável">
       <h4 class="rx-print-title">RECEITUÁRIO SIMPLES</h4>
@@ -210,6 +249,7 @@ function rxRenderPrintPreview (condition, medEntries, orientacoesList) {
         <p><strong>Paciente:</strong> ${ctx.paciente || '________________________________'}</p>
         <p><strong>Data:</strong> ${date}</p>
         <p><strong>Idade:</strong> ${ctx.idade ? ctx.idade + ' anos' : '________'}</p>
+        ${queixasLine}
       </div>
       ${routeBlock('Uso oral:', byRoute.vo)}
       ${routeBlock('Uso IM (aplicar no serviço de saúde):', byRoute.im)}
@@ -245,12 +285,40 @@ function rxRenderValidation (messages) {
   ).join('');
 }
 
+function rxCollectAllSelectedOptions () {
+  const out = [];
+  rxGetActiveConditions().forEach(condition => {
+    const selectedIds = new Set();
+    rxSelectedOptionKeys.forEach(key => {
+      const parsed = rxParseOptKey(key);
+      if (parsed && parsed.conditionId === condition.id) selectedIds.add(parsed.optionId);
+    });
+    rxCollectSelectedOptions(condition, selectedIds).forEach(item => {
+      out.push({ ...item, conditionId: condition.id });
+    });
+  });
+  return out;
+}
+
+function rxCollectAllSelectedMeds () {
+  const out = [];
+  rxGetActiveConditions().forEach(condition => {
+    rxSelectedMedKeys.forEach(key => {
+      const parsed = rxParseMedKey(key);
+      if (!parsed || parsed.conditionId !== condition.id) return;
+      const found = rxFindMed(condition, parsed.medId);
+      if (found) out.push({ ...found, conditionId: condition.id });
+    });
+  });
+  return out;
+}
+
 function rxRenderMedsPanel () {
   const panel = document.getElementById('rx-meds-panel');
-  const condition = rxGetCurrentCondition();
-  if (!panel || !condition) return;
+  const conditions = rxGetActiveConditions();
+  if (!panel || !conditions.length) return;
 
-  const selections = rxCollectSelectedOptions(condition, rxSelectedOptionIds);
+  const selections = rxCollectAllSelectedOptions();
   if (!selections.length) {
     panel.hidden = true;
     panel.innerHTML = '';
@@ -261,7 +329,9 @@ function rxRenderMedsPanel () {
   panel.innerHTML = `
     <h3 class="rx-meds-title">Escolha os medicamentos</h3>
     <p class="muted rx-meds-hint">Onde houver alternativas (OU), marque <strong>apenas uma</strong> opção — ex.: naproxeno <em>ou</em> ibuprofeno.</p>
-    ${selections.map(({ group, option }) => {
+    ${selections.map(({ conditionId, group, option }) => {
+      const condition = conditions.find(c => c.id === conditionId);
+      const condLabel = condition ? `${condition.icon} ${condition.name}` : conditionId;
       const meds = rxGetOptionMeds(option, group.label);
       const grouped = {};
       const standalone = [];
@@ -276,15 +346,15 @@ function rxRenderMedsPanel () {
 
       return `
         <fieldset class="rx-meds-group">
-          <legend>${group.label} — ${option.label}</legend>
+          <legend>${condLabel} — ${group.label} — ${option.label}</legend>
           ${Object.values(grouped).map(groupMeds => `
             <div class="rx-med-alt-group" role="radiogroup" aria-label="Alternativa">
               <span class="rx-med-alt-label">Escolha uma:</span>
               ${groupMeds.map(m => `
                 <label class="rx-med-item rx-med-item--radio">
-                  <input type="radio" name="rx-alt-${m.exclusiveGroup}" value="${m.id}"
-                    data-med-id="${m.id}" data-opt-id="${option.id}"
-                    ${rxSelectedMedIds.has(m.id) ? 'checked' : ''}>
+                  <input type="radio" name="rx-alt-${conditionId}-${m.exclusiveGroup}" value="${m.id}"
+                    data-cond-id="${conditionId}" data-med-id="${m.id}" data-opt-id="${option.id}"
+                    ${rxSelectedMedKeys.has(rxMedKey(conditionId, m.id)) ? 'checked' : ''}>
                   <span>${m.text}</span>
                 </label>
               `).join('')}
@@ -292,8 +362,8 @@ function rxRenderMedsPanel () {
           `).join('')}
           ${standalone.map(m => `
             <label class="rx-med-item">
-              <input type="checkbox" data-med-id="${m.id}" data-opt-id="${option.id}"
-                ${rxSelectedMedIds.has(m.id) ? 'checked' : ''}>
+              <input type="checkbox" data-cond-id="${conditionId}" data-med-id="${m.id}" data-opt-id="${option.id}"
+                ${rxSelectedMedKeys.has(rxMedKey(conditionId, m.id)) ? 'checked' : ''}>
               <span>${m.text}</span>
             </label>
           `).join('')}
@@ -305,38 +375,60 @@ function rxRenderMedsPanel () {
   panel.querySelectorAll('input[type="radio"]').forEach(input => {
     input.addEventListener('change', () => {
       if (!input.checked) return;
+      const condId = input.dataset.condId;
       const groupName = input.name;
       panel.querySelectorAll(`input[name="${groupName}"]`).forEach(r => {
-        rxSelectedMedIds.delete(r.dataset.medId);
+        rxSelectedMedKeys.delete(rxMedKey(condId, r.dataset.medId));
       });
-      rxSelectedMedIds.add(input.dataset.medId);
+      rxSelectedMedKeys.add(rxMedKey(condId, input.dataset.medId));
       rxUpdateSelectionBar();
     });
   });
 
   panel.querySelectorAll('input[type="checkbox"]').forEach(input => {
     input.addEventListener('change', () => {
-      if (input.checked) rxSelectedMedIds.add(input.dataset.medId);
-      else rxSelectedMedIds.delete(input.dataset.medId);
+      const key = rxMedKey(input.dataset.condId, input.dataset.medId);
+      if (input.checked) rxSelectedMedKeys.add(key);
+      else rxSelectedMedKeys.delete(key);
       rxUpdateSelectionBar();
     });
   });
 }
 
 function rxGetValidationState () {
-  const condition = rxGetCurrentCondition();
-  if (!condition || !rxSelectedOptionIds.size) {
+  const conditions = rxGetActiveConditions();
+  if (!conditions.length || !rxSelectedOptionKeys.size) {
     return { messages: [], medEntries: [], canGenerate: false };
   }
 
-  const optionMessages = rxValidateSchemes(condition, rxSelectedOptionIds);
-  const medEntries = rxCollectSelectedMeds(condition, rxSelectedMedIds);
+  let messages = [];
+  let groupsOk = true;
+
+  conditions.forEach(condition => {
+    const selectedIds = new Set();
+    rxSelectedOptionKeys.forEach(key => {
+      const parsed = rxParseOptKey(key);
+      if (parsed && parsed.conditionId === condition.id) selectedIds.add(parsed.optionId);
+    });
+    messages = messages.concat(rxValidateSchemes(condition, selectedIds));
+    const selectedMedIds = new Set();
+    rxSelectedMedKeys.forEach(key => {
+      const parsed = rxParseMedKey(key);
+      if (parsed && parsed.conditionId === condition.id) selectedMedIds.add(parsed.medId);
+    });
+    if (!rxExclusiveGroupsComplete(condition, selectedIds, selectedMedIds)) groupsOk = false;
+  });
+
+  const medEntries = rxCollectAllSelectedMeds();
   const medMessages = rxValidateMeds(medEntries);
-  const conditionMessages = typeof rxValidateConditionMeds === 'function'
-    ? rxValidateConditionMeds(condition, medEntries)
-    : [];
-  const messages = [...optionMessages, ...medMessages, ...conditionMessages];
-  const groupsOk = rxExclusiveGroupsComplete(condition, rxSelectedOptionIds, rxSelectedMedIds);
+  const conditionMessages = conditions.flatMap(condition => {
+    const subset = medEntries.filter(e => e.conditionId === condition.id);
+    return typeof rxValidateConditionMeds === 'function'
+      ? rxValidateConditionMeds(condition, subset)
+      : [];
+  });
+
+  messages = [...messages, ...medMessages, ...conditionMessages];
   const hasMeds = medEntries.length > 0;
   const canGenerate = hasMeds && groupsOk && !rxHasValidationErrors(messages);
 
@@ -344,7 +436,7 @@ function rxGetValidationState () {
 }
 
 function rxUpdateSelectionBar () {
-  const condition = rxGetCurrentCondition();
+  const conditions = rxGetActiveConditions();
   const bar = document.getElementById('rx-selection-bar');
   const countEl = document.getElementById('rx-selection-count');
   const generateBtn = document.getElementById('rx-generate');
@@ -352,38 +444,41 @@ function rxUpdateSelectionBar () {
   const { messages, medEntries, canGenerate, groupsOk, hasMeds } = rxGetValidationState();
 
   if (countEl) {
-    const optCount = rxSelectedOptionIds.size;
+    const optCount = rxSelectedOptionKeys.size;
     const medCount = medEntries.length;
+    const condCount = conditions.length;
     if (!optCount) countEl.textContent = 'Nenhum esquema selecionado';
-    else if (!groupsOk) countEl.textContent = `${optCount} esquema(s) — escolha as alternativas (OU) abaixo`;
-    else countEl.textContent = `${optCount} esquema(s), ${medCount} medicamento(s) selecionado(s)`;
+    else if (!groupsOk) countEl.textContent = `${condCount > 1 ? condCount + ' queixas · ' : ''}${optCount} esquema(s) — escolha as alternativas (OU) abaixo`;
+    else countEl.textContent = `${condCount > 1 ? condCount + ' queixas · ' : ''}${optCount} esquema(s), ${medCount} medicamento(s)`;
   }
 
-  if (!groupsOk && condition && rxSelectedOptionIds.size) {
+  if (!groupsOk && rxSelectedOptionKeys.size) {
     const pending = [];
-    rxCollectSelectedOptions(condition, rxSelectedOptionIds).forEach(({ group, option }) => {
+    rxCollectAllSelectedOptions().forEach(({ conditionId, group, option }) => {
+      const condition = conditions.find(c => c.id === conditionId);
+      if (!condition) return;
       const meds = rxGetOptionMeds(option, group.label);
       const groups = [...new Set(meds.filter(m => m.exclusiveGroup).map(m => m.exclusiveGroup))];
       groups.forEach(g => {
-        if (!meds.some(m => m.exclusiveGroup === g && rxSelectedMedIds.has(m.id))) {
-          pending.push({ severity: 'warning', text: `Em “${option.label}”, selecione uma alternativa (OU) antes de gerar a receita.` });
+        if (!meds.some(m => m.exclusiveGroup === g && rxSelectedMedKeys.has(rxMedKey(conditionId, m.id)))) {
+          pending.push({ severity: 'warning', text: `Em “${option.label}” (${condition.name}), selecione uma alternativa (OU) antes de gerar.` });
         }
       });
     });
     rxRenderValidation([...messages, ...pending]);
-  } else if (!hasMeds && rxSelectedOptionIds.size) {
+  } else if (!hasMeds && rxSelectedOptionKeys.size) {
     rxRenderValidation([...messages, { severity: 'warning', text: 'Selecione ao menos um medicamento abaixo.' }]);
   } else {
     rxRenderValidation(messages);
   }
 
   if (generateBtn) generateBtn.disabled = !canGenerate;
-  if (clearBtn) clearBtn.disabled = rxSelectedOptionIds.size === 0;
+  if (clearBtn) clearBtn.disabled = rxSelectedOptionKeys.size === 0;
   if (bar) bar.hidden = false;
 }
 
-function rxToggleOption (optId) {
-  const condition = rxGetCurrentCondition();
+function rxToggleOption (conditionId, optId) {
+  const condition = typeof rxGetCatalogEntry === 'function' ? rxGetCatalogEntry(conditionId) : null;
   if (!condition) return;
 
   let option = null;
@@ -398,16 +493,17 @@ function rxToggleOption (optId) {
   });
   if (!option) return;
 
-  if (rxSelectedOptionIds.has(optId)) {
-    rxSelectedOptionIds.delete(optId);
-    rxRemoveMedsForOption(optId);
+  const key = rxOptKey(conditionId, optId);
+  if (rxSelectedOptionKeys.has(key)) {
+    rxSelectedOptionKeys.delete(key);
+    rxRemoveMedsForOption(conditionId, optId);
   } else {
-    rxSelectedOptionIds.add(optId);
-    rxAutoSelectMedsForOption(option, groupLabel);
+    rxSelectedOptionKeys.add(key);
+    rxAutoSelectMedsForOption(conditionId, option, groupLabel);
   }
 
   document.querySelectorAll('.rx-option-card').forEach(card => {
-    const selected = rxSelectedOptionIds.has(card.dataset.optId);
+    const selected = rxSelectedOptionKeys.has(rxOptKey(card.dataset.condId, card.dataset.optId));
     card.classList.toggle('rx-option-card--selected', selected);
     card.setAttribute('aria-pressed', selected ? 'true' : 'false');
   });
@@ -416,12 +512,12 @@ function rxToggleOption (optId) {
   rxUpdateSelectionBar();
 
   const resultEl = document.getElementById('rx-result');
-  if (resultEl && rxSelectedOptionIds.size === 0) resultEl.hidden = true;
+  if (resultEl && rxSelectedOptionKeys.size === 0) resultEl.hidden = true;
 }
 
 function rxGenerateReceita () {
-  const condition = rxGetCurrentCondition();
-  if (!condition) return;
+  const conditions = rxGetActiveConditions();
+  if (!conditions.length) return;
 
   const { medEntries, messages, canGenerate } = rxGetValidationState();
   if (!canGenerate) return;
@@ -435,20 +531,20 @@ function rxGenerateReceita () {
     }
   });
 
-  const text = rxFormatReceitaPrint(condition, medEntries, orientacoesList, messages.filter(m => m.severity === 'warning'));
+  const text = rxFormatReceitaPrint(conditions, medEntries, orientacoesList, messages.filter(m => m.severity === 'warning'));
   const resultEl = document.getElementById('rx-result');
   const textEl = document.getElementById('rx-result-text');
   if (!resultEl || !textEl) return;
 
   textEl.value = text;
-  rxRenderPrintPreview(condition, medEntries, orientacoesList);
+  rxRenderPrintPreview(conditions, medEntries, orientacoesList);
   resultEl.hidden = false;
   resultEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
 function rxClearSelection () {
-  rxSelectedOptionIds.clear();
-  rxSelectedMedIds.clear();
+  rxSelectedOptionKeys.clear();
+  rxSelectedMedKeys.clear();
   document.querySelectorAll('.rx-option-card').forEach(card => {
     card.classList.remove('rx-option-card--selected');
     card.setAttribute('aria-pressed', 'false');
@@ -491,15 +587,24 @@ function rxRenderConditionList (filterText) {
   if (suggestEl) {
     if (fromQueixa.length && activeQueixa.length >= 3) {
       suggestEl.hidden = false;
-      suggestEl.innerHTML = `Sugerido pela anamnese (<strong>${activeQueixa}</strong>): ` +
+      const multi = fromQueixa.length > 1;
+      suggestEl.innerHTML = (multi
+        ? `<p class="rx-suggest-lead">Detectadas <strong>${fromQueixa.length} queixas</strong> na anamnese:</p>`
+        : `<p class="rx-suggest-lead">Sugerido pela anamnese:</p>`) +
         fromQueixa.map(c =>
           `<button type="button" class="rx-suggest-chip" data-rx-id="${c.id}">${c.icon} ${c.name}</button>`
-        ).join(' ');
+        ).join(' ') +
+        (multi
+          ? ` <button type="button" class="btn rx-suggest-combine" id="rx-open-combined">Abrir receita combinada (${fromQueixa.length})</button>`
+          : '');
       suggestEl.querySelectorAll('.rx-suggest-chip').forEach(chip => {
-        chip.addEventListener('click', () => rxShowCondition(chip.dataset.rxId));
+        chip.addEventListener('click', () => rxShowCombinedConditions([chip.dataset.rxId]));
       });
-      if (!rxSelectedConditionId && fromQueixa[0]) {
-        rxShowCondition(fromQueixa[0].id);
+      const combineBtn = document.getElementById('rx-open-combined');
+      if (combineBtn) {
+        combineBtn.addEventListener('click', () => {
+          rxShowCombinedConditions(fromQueixa.map(c => c.id));
+        });
       }
     } else {
       suggestEl.hidden = true;
@@ -507,52 +612,17 @@ function rxRenderConditionList (filterText) {
   }
 }
 
-function rxShowCondition (conditionId) {
-  const condition = typeof rxGetCatalogEntry === 'function'
-    ? rxGetCatalogEntry(conditionId)
-    : null;
-  if (!condition) return;
-
-  rxSelectedConditionId = conditionId;
-  rxSelectedOptionIds.clear();
-  rxSelectedMedIds.clear();
-
-  const listView = document.getElementById('rx-list-view');
-  const detailView = document.getElementById('rx-detail-view');
-  const titleEl = document.getElementById('rx-condition-title');
-  const optionsEl = document.getElementById('rx-options-wrap');
-  const resultEl = document.getElementById('rx-result');
-  const medsPanel = document.getElementById('rx-meds-panel');
-  if (!listView || !detailView || !optionsEl) return;
-
-  listView.hidden = true;
-  detailView.hidden = false;
-  if (titleEl) titleEl.textContent = condition.icon + ' ' + condition.name;
-  if (resultEl) resultEl.hidden = true;
-  if (medsPanel) { medsPanel.hidden = true; medsPanel.innerHTML = ''; }
-
-  const sourceBanner = document.getElementById('rx-source-banner');
-  if (sourceBanner) {
-    if (condition.source === 'guideline') {
-      sourceBanner.hidden = false;
-      sourceBanner.innerHTML = '📋 Opções extraídas do <strong>protocolo PS MedHub</strong> (diretriz). Selecione o esquema, escolha os medicamentos e edite a receita antes de imprimir.';
-    } else if (condition.source === 'reference') {
-      sourceBanner.hidden = false;
-      sourceBanner.innerHTML = '📖 Condição sem modelo VO detalhado — use o protocolo PS como referência, selecione a opção abaixo e <strong>edite a receita</strong> manualmente.';
-    } else {
-      sourceBanner.hidden = false;
-      sourceBanner.innerHTML = '✓ Modelo completo com apresentações VO revisadas. Selecione esquemas, medicamentos e edite a receita livremente.';
-    }
-  }
-
-  optionsEl.innerHTML = condition.groups.map(group => `
+function rxRenderConditionOptions (condition) {
+  return condition.groups.map(group => `
     <fieldset class="ps-rx-fieldset rx-options-group">
       <legend>${group.label}</legend>
       <div class="rx-option-list">
         ${group.options.map(opt => {
           const medCount = rxGetOptionMeds(opt, group.label).length;
+          const selected = rxSelectedOptionKeys.has(rxOptKey(condition.id, opt.id));
           return `
-          <button type="button" class="rx-option-card" data-opt-id="${opt.id}" aria-pressed="false">
+          <button type="button" class="rx-option-card${selected ? ' rx-option-card--selected' : ''}"
+            data-cond-id="${condition.id}" data-opt-id="${opt.id}" aria-pressed="${selected ? 'true' : 'false'}">
             <span class="rx-option-card-head">
               <span class="rx-option-check" aria-hidden="true"></span>
               <span class="ps-rx-tier ps-rx-tier--${opt.tier.replace(/\s+/g, '')}">${opt.tier}</span>
@@ -564,12 +634,80 @@ function rxShowCondition (conditionId) {
       </div>
     </fieldset>
   `).join('');
+}
+
+function rxShowCombinedConditions (conditionIds, opts) {
+  const preserve = opts && opts.preserveSelection;
+  const ids = [...new Set((conditionIds || []).filter(Boolean))];
+  const conditions = ids
+    .map(id => (typeof rxGetCatalogEntry === 'function' ? rxGetCatalogEntry(id) : null))
+    .filter(Boolean);
+  if (!conditions.length) return;
+
+  rxActiveConditionIds = conditions.map(c => c.id);
+  if (!preserve) {
+    rxSelectedOptionKeys.clear();
+    rxSelectedMedKeys.clear();
+  }
+
+  const listView = document.getElementById('rx-list-view');
+  const detailView = document.getElementById('rx-detail-view');
+  const titleEl = document.getElementById('rx-condition-title');
+  const optionsEl = document.getElementById('rx-options-wrap');
+  const resultEl = document.getElementById('rx-result');
+  const medsPanel = document.getElementById('rx-meds-panel');
+  const detailHint = detailView && detailView.querySelector('.rx-detail-hint');
+  if (!listView || !detailView || !optionsEl) return;
+
+  listView.hidden = true;
+  detailView.hidden = false;
+
+  if (titleEl) {
+    titleEl.textContent = conditions.length > 1
+      ? conditions.map(c => c.icon + ' ' + c.name).join(' + ')
+      : conditions[0].icon + ' ' + conditions[0].name;
+  }
+  if (detailHint) {
+    detailHint.textContent = conditions.length > 1
+      ? 'Receita combinada — marque esquemas de cada queixa abaixo. Todos os medicamentos sairão em uma única receita.'
+      : '1) Marque o esquema (ex.: AINE). 2) Escolha o medicamento na lista. 3) Gere a receita para imprimir.';
+  }
+  if (resultEl) resultEl.hidden = true;
+  if (medsPanel) { medsPanel.hidden = true; medsPanel.innerHTML = ''; }
+
+  const sourceBanner = document.getElementById('rx-source-banner');
+  if (sourceBanner) {
+    if (conditions.length > 1) {
+      sourceBanner.hidden = false;
+      sourceBanner.innerHTML = '📋 <strong>Receita combinada</strong> — selecione opções em cada queixa. Validações (ex.: dois AINEs) aplicam-se à receita inteira.';
+    } else if (conditions[0].source === 'guideline') {
+      sourceBanner.hidden = false;
+      sourceBanner.innerHTML = '📋 Opções extraídas do <strong>protocolo PS MedHub</strong> (diretriz). Selecione o esquema, escolha os medicamentos e edite a receita antes de imprimir.';
+    } else if (conditions[0].source === 'reference') {
+      sourceBanner.hidden = false;
+      sourceBanner.innerHTML = '📖 Condição sem modelo VO detalhado — use o protocolo PS como referência, selecione a opção abaixo e <strong>edite a receita</strong> manualmente.';
+    } else {
+      sourceBanner.hidden = false;
+      sourceBanner.innerHTML = '✓ Modelo completo com apresentações VO revisadas. Selecione esquemas, medicamentos e edite a receita livremente.';
+    }
+  }
+
+  optionsEl.innerHTML = conditions.map(condition => `
+    <section class="rx-multi-block" data-rx-cond-id="${condition.id}">
+      <h3 class="rx-multi-title">${condition.icon} ${condition.name}</h3>
+      ${rxRenderConditionOptions(condition)}
+    </section>
+  `).join('');
 
   optionsEl.querySelectorAll('.rx-option-card').forEach(btn => {
-    btn.addEventListener('click', () => rxToggleOption(btn.dataset.optId));
+    btn.addEventListener('click', () => rxToggleOption(btn.dataset.condId, btn.dataset.optId));
   });
 
   rxUpdateSelectionBar();
+}
+
+function rxShowCondition (conditionId) {
+  rxShowCombinedConditions([conditionId]);
 }
 
 function rxShowList () {
@@ -579,9 +717,9 @@ function rxShowList () {
   if (detailView) detailView.hidden = true;
   const sourceBanner = document.getElementById('rx-source-banner');
   if (sourceBanner) { sourceBanner.hidden = true; sourceBanner.innerHTML = ''; }
-  rxSelectedConditionId = null;
-  rxSelectedOptionIds.clear();
-  rxSelectedMedIds.clear();
+  rxActiveConditionIds = [];
+  rxSelectedOptionKeys.clear();
+  rxSelectedMedKeys.clear();
   rxRenderConditionList(document.getElementById('rx-search')?.value || '');
 }
 
@@ -651,7 +789,7 @@ function rxOnSectionShow () {
   const activeQueixa = rxGetActiveQueixa();
   const matches = typeof rxMatchConditions === 'function' ? rxMatchConditions(activeQueixa) : [];
   if (matches.length && activeQueixa.length >= 3) {
-    rxShowCondition(matches[0].id);
+    rxShowCombinedConditions(matches.map(c => c.id));
   }
 }
 

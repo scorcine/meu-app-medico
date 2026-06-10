@@ -998,19 +998,41 @@ function rxMatchScore (cond, norm) {
     if (cond.id === 'cefaleias') score += 50;
   }
 
+  if (/nausea|nauseas|vomito|vomitos|emese|enjoo|gastroenterite/.test(norm)) {
+    if (cond.id === 'vomitos-agudos' || /vomito|nausea/.test(rxNormText(cond.name))) score += 55;
+  }
+
   if (cond.source === 'complete') score += 15;
   return score;
 }
 
+function rxParseQueixaSegments (queixa) {
+  if (!queixa || !queixa.trim()) return [];
+  return queixa
+    .split(/[,;\n]+|\s+\be\s+|\s+\/\s+|\s+\+\s+/i)
+    .map(s => s.trim())
+    .filter(s => s.length >= 3);
+}
+
 function rxMatchConditions (queixa) {
-  const norm = rxNormText(queixa);
-  if (!norm || norm.length < 3) return [];
-
   const catalog = typeof rxGetCatalog === 'function' ? rxGetCatalog() : RX_CATALOG_MANUAL;
+  const segments = rxParseQueixaSegments(queixa);
+  const queries = segments.length ? segments : [queixa];
+  const byId = new Map();
 
-  return catalog
-    .map(cond => ({ cond, score: rxMatchScore(cond, norm) }))
-    .filter(entry => entry.score >= 50)
+  queries.forEach(q => {
+    const norm = rxNormText(q);
+    if (!norm || norm.length < 3) return;
+    catalog.forEach(cond => {
+      const score = rxMatchScore(cond, norm);
+      if (score >= 50) {
+        const prev = byId.get(cond.id);
+        if (!prev || score > prev.score) byId.set(cond.id, { cond, score });
+      }
+    });
+  });
+
+  return [...byId.values()]
     .sort((a, b) => b.score - a.score)
     .map(entry => entry.cond);
 }
