@@ -1,4 +1,4 @@
-/* Ferramentas — hub de atalhos para módulos do MedHub */
+/* Ferramentas — atalhos na home (não duplica o menu lateral) */
 
 const FERRAMENTAS_ITEMS = [
   { section: 'calc-essenciais', icon: '🧮', name: 'Calculadoras essenciais', desc: 'Escalas, scores e doses por especialidade.' },
@@ -12,11 +12,11 @@ const FERRAMENTAS_ITEMS = [
   { section: 'interpretacao-exame', icon: '📊', name: 'Interpretação do exame', desc: 'Guia rápido de labs e imagem.' },
   { section: 'anamnese', icon: '📝', name: 'Anamnese', desc: 'Formulário estruturado e histórico local.' },
   { section: 'pacientes', icon: '👤', name: 'Pacientes', desc: 'Cadastro local vinculado à anamnese.' },
-  { section: 'consultas', icon: '📅', name: 'Consultas', desc: 'Registro de atendimentos no navegador.' }
+  { section: 'consultas', icon: '📅', name: 'Consultas', desc: 'Registro de atendimentos e exportação PDF.' }
 ];
 
 function initFerramentas () {
-  const grid = document.getElementById('ferramentas-grid');
+  const grid = document.getElementById('home-ferramentas-grid');
   if (!grid || grid.dataset.ferBound) return;
   grid.dataset.ferBound = '1';
 

@@ -196,6 +196,7 @@ async function pacientesUpsertFromAnamnese (data) {
     list.push(p);
   }
   await pacientesSaveAll(list);
+  return p;
 }
 
 function initPacientes () {

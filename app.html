@@ -9,7 +9,7 @@
   <title>MedHub</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <script src="theme.js"></script>
-  <link rel="stylesheet" href="style.css?v=atendimento-v1">
+  <link rel="stylesheet" href="style.css?v=atendimento-v2">
   <script defer src="calculators-risco.js"></script>
   <script defer src="calculators-cardio.js"></script>
   <script defer src="calculators-pneumo.js?v=rsi-patient"></script>
@@ -52,16 +52,16 @@
   <script defer src="google-drive.js?v=compliance-v1"></script>
   <script defer src="security-crypto.js?v=compliance-v1"></script>
   <script defer src="compliance.js?v=compliance-v1"></script>
-  <script defer src="anamnese.js?v=atendimento-v1"></script>
-  <script defer src="clinical-storage.js?v=atendimento-v1"></script>
-  <script defer src="exames-data.js?v=atendimento-v1"></script>
-  <script defer src="exames.js?v=atendimento-v1"></script>
-  <script defer src="interpretacao-exame-data.js?v=atendimento-v1"></script>
-  <script defer src="interpretacao-exame.js?v=atendimento-v1"></script>
-  <script defer src="pacientes.js?v=atendimento-v1"></script>
-  <script defer src="consultas.js?v=atendimento-v1"></script>
-  <script defer src="ferramentas.js?v=atendimento-v1"></script>
-  <script defer src="app.js?v=atendimento-v1"></script>
+  <script defer src="anamnese.js?v=atendimento-v2"></script>
+  <script defer src="clinical-storage.js?v=atendimento-v2"></script>
+  <script defer src="exames-data.js?v=atendimento-v2"></script>
+  <script defer src="exames.js?v=atendimento-v2"></script>
+  <script defer src="interpretacao-exame-data.js?v=atendimento-v2"></script>
+  <script defer src="interpretacao-exame.js?v=atendimento-v2"></script>
+  <script defer src="pacientes.js?v=atendimento-v2"></script>
+  <script defer src="consultas.js?v=atendimento-v2"></script>
+  <script defer src="ferramentas.js?v=atendimento-v2"></script>
+  <script defer src="app.js?v=atendimento-v2"></script>
   <script defer src="auth.js?v=compliance-v1"></script>
 </head>
 <body class="app-page" onload="initApp()">
@@ -95,10 +95,9 @@
         <button type="button" class="sidebar-link" data-section="pronto-socorro">Prescrições de Pronto Socorro</button>
         <button type="button" class="sidebar-link" data-section="tratamento-hospitalar">Tratamento hospitalar</button>
 
-        <p class="sidebar-group">Calculadoras &amp; apoio</p>
+        <p class="sidebar-group">Calculadoras</p>
         <button type="button" class="sidebar-link" data-section="calc-essenciais">Calculadoras essenciais</button>
         <button type="button" class="sidebar-link" data-section="calc-pediatrica">Calculadora pediátrica</button>
-        <button type="button" class="sidebar-link" data-section="ferramentas">Ferramentas</button>
       </nav>
       <p class="sidebar-build" id="app-build" title="Confira se esta versão bate com a última atualização do projeto">Build 2026.06.10 · Atendimento ✓</p>
     </aside>
@@ -153,7 +152,7 @@
               </li>
               <li>
                 <strong>👤 Pacientes e consultas</strong>
-                <span>Cadastro local de pacientes, registro de consultas e atalho para anamnese — dados criptografados no dispositivo.</span>
+                <span>Cadastro local, registro automático ao salvar anamnese (opcional) e exportação PDF do atendimento.</span>
               </li>
               <li>
                 <strong>🔬 Exames e interpretação</strong>
@@ -168,6 +167,12 @@
                 <span>Login simples por navegador, sem prontuário certificado. Use com cautela em dados de pacientes e conforme a política da sua instituição.</span>
               </li>
             </ul>
+          </section>
+
+          <section class="home-section">
+            <h3>🧰 Ferramentas rápidas</h3>
+            <p class="muted">Atalhos para os módulos mais usados — acesse direto da home sem item extra no menu lateral.</p>
+            <div id="home-ferramentas-grid" class="calc-category-grid ferramentas-grid home-ferramentas-grid"></div>
           </section>
 
           <p class="home-disclaimer" role="note">
@@ -518,6 +523,11 @@
               <textarea id="anam-conduta" class="anamnese-textarea" rows="3"></textarea>
             </label>
 
+            <label class="anamnese-check">
+              <input type="checkbox" id="anam-registrar-consulta" checked>
+              Registrar consulta automaticamente ao salvar (aba Consultas)
+            </label>
+
             <div class="anamnese-form-actions">
               <button type="submit" class="btn">Salvar anamnese</button>
               <button type="button" class="btn-outline" id="anamnese-clear">Limpar formulário</button>
@@ -539,7 +549,7 @@
       <section id="section-consultas" class="content-panel">
         <div class="card dashboard-card clinical-wrap">
           <h2>Consultas</h2>
-          <p class="muted">Registro simples de atendimentos — histórico local vinculado ao paciente. Não é agenda online nem prontuário certificado.</p>
+          <p class="muted">Registro simples de atendimentos — histórico local vinculado ao paciente. Use <strong>Exportar PDF</strong> para salvar ou imprimir (Salvar como PDF no diálogo do navegador).</p>
 
           <h3 id="cons-form-title">Nova consulta</h3>
           <form id="cons-form" class="anamnese-form">
@@ -584,6 +594,7 @@
             </label>
             <div class="anamnese-form-actions">
               <button type="submit" class="btn">Salvar consulta</button>
+              <button type="button" class="btn-outline" id="cons-export-pdf">Exportar PDF</button>
               <button type="button" class="btn-outline" id="cons-clear">Limpar</button>
             </div>
             <p id="cons-save-status" class="anamnese-save-status" hidden></p>
@@ -597,14 +608,6 @@
             <p id="cons-empty" class="muted">Nenhuma consulta registrada.</p>
             <ul id="cons-list" class="anamnese-history-list clinical-record-list"></ul>
           </section>
-        </div>
-      </section>
-
-      <section id="section-ferramentas" class="content-panel">
-        <div class="card dashboard-card clinical-wrap">
-          <h2>Ferramentas</h2>
-          <p class="muted">Atalhos para calculadoras, protocolos e módulos clínicos do MedHub — evita duplicar o que já existe no menu.</p>
-          <div id="ferramentas-grid" class="calc-category-grid ferramentas-grid"></div>
         </div>
       </section>
     </main>

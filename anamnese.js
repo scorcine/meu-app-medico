@@ -1,6 +1,30 @@
 /* Anamnese — formulário, histórico local e envio ao Google Drive */
 
 const ANAMNESE_STORAGE_PREFIX = 'medhub-anamneses-';
+const ANAMNESE_REGISTER_CONSULTA_KEY = 'medhub-anam-registrar-consulta';
+
+function anamneseRegisterConsultaPrefKey () {
+  const user = typeof getSession === 'function' ? getSession() : null;
+  return ANAMNESE_REGISTER_CONSULTA_KEY + '-' + (user?.email || 'local');
+}
+
+function anamneseShouldRegisterConsulta () {
+  const el = document.getElementById('anam-registrar-consulta');
+  return el ? el.checked : true;
+}
+
+function anamneseLoadRegisterConsultaPref () {
+  const el = document.getElementById('anam-registrar-consulta');
+  if (!el) return;
+  const stored = localStorage.getItem(anamneseRegisterConsultaPrefKey());
+  el.checked = stored !== '0';
+}
+
+function anamneseSaveRegisterConsultaPref () {
+  const el = document.getElementById('anam-registrar-consulta');
+  if (!el) return;
+  localStorage.setItem(anamneseRegisterConsultaPrefKey(), el.checked ? '1' : '0');
+}
 
 function anamneseStorageKey () {
   const user = typeof getSession === 'function' ? getSession() : null;
@@ -240,13 +264,17 @@ async function anamneseHandleSave (e) {
   anamneseRenderHistory();
 
   if (typeof pacientesUpsertFromAnamnese === 'function') {
-    await pacientesUpsertFromAnamnese(data);
+    const patient = await pacientesUpsertFromAnamnese(data);
+    if (anamneseShouldRegisterConsulta() && typeof consultasRegisterFromAnamnese === 'function') {
+      await consultasRegisterFromAnamnese(data, patient?.id || '');
+    }
   }
 
   const text = anamneseFormatText(data);
   const filename = anamneseBuildFilename(data);
 
   let driveMsg = '';
+  let consultaMsg = anamneseShouldRegisterConsulta() ? ' Consulta registrada.' : '';
   if (typeof gdriveIsAutoUpload === 'function' && gdriveIsAutoUpload() && typeof gdriveGetClientId === 'function' && gdriveGetClientId()) {
     try {
       anamneseShowSaveStatus('Salvando e enviando ao Google Drive…', 'pending');
@@ -257,12 +285,12 @@ async function anamneseHandleSave (e) {
       await anamneseSaveHistory(history);
       anamneseRenderHistory();
       driveMsg = ' Enviado ao Google Drive.';
-      anamneseShowSaveStatus('Anamnese salva.' + driveMsg, 'ok');
+      anamneseShowSaveStatus('Anamnese salva.' + consultaMsg + driveMsg, 'ok');
     } catch (err) {
-      anamneseShowSaveStatus('Salva localmente. Drive: ' + (err.message || 'falha no envio'), 'warn');
+      anamneseShowSaveStatus('Salva localmente.' + consultaMsg + ' Drive: ' + (err.message || 'falha no envio'), 'warn');
     }
   } else {
-    anamneseShowSaveStatus('Anamnese salva localmente.' + (gdriveGetClientId() ? ' Conecte o Drive para envio automático.' : ''), 'ok');
+    anamneseShowSaveStatus('Anamnese salva localmente.' + consultaMsg + (gdriveGetClientId() ? ' Conecte o Drive para envio automático.' : ''), 'ok');
   }
 }
 
@@ -290,5 +318,8 @@ function initAnamnese () {
   });
 
   if (typeof initGoogleDriveUI === 'function') initGoogleDriveUI();
+  anamneseLoadRegisterConsultaPref();
+  const regConsulta = document.getElementById('anam-registrar-consulta');
+  if (regConsulta) regConsulta.addEventListener('change', anamneseSaveRegisterConsultaPref);
   anamneseRenderHistory();
 }
