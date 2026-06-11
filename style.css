@@ -77,6 +77,9 @@
   --med-badge-ext-bg: #f1f5f9;
   --med-badge-ext-text: #475569;
   --med-badge-ext-border: #cbd5e1;
+  --badge-guarantee-bg: #dcfce7;
+  --badge-guarantee-text: #14532d;
+  --badge-guarantee-border: #22c55e;
 }
 
 [data-theme="dark"] {
@@ -152,6 +155,9 @@
   --med-badge-ext-bg: rgba(148, 163, 184, 0.18);
   --med-badge-ext-text: #cbd5e1;
   --med-badge-ext-border: rgba(148, 163, 184, 0.45);
+  --badge-guarantee-bg: rgba(34, 197, 94, 0.24);
+  --badge-guarantee-text: #bbf7d0;
+  --badge-guarantee-border: #4ade80;
 }
 
 body {
@@ -2002,9 +2008,16 @@ body.home-page main.landing-main,
 }
 
 .landing-badge-guarantee {
-  background: color-mix(in srgb, #16a34a 12%, var(--bg-surface));
-  color: #15803d;
-  border: 1px solid color-mix(in srgb, #16a34a 35%, transparent);
+  background: var(--badge-guarantee-bg);
+  color: var(--badge-guarantee-text);
+  border: 1px solid var(--badge-guarantee-border);
+  font-weight: 700;
+  font-size: 0.84rem;
+  letter-spacing: 0.01em;
+}
+
+[data-theme="dark"] .landing-badge-guarantee {
+  box-shadow: 0 0 0 1px rgba(74, 222, 128, 0.12), 0 2px 10px rgba(0, 0, 0, 0.28);
 }
 
 .pricing-guarantee-badge {
