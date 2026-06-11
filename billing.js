@@ -31,6 +31,9 @@ async function initPricingPage () {
   document.getElementById('btn-plan-annual')?.addEventListener('click', () => {
     medhubOpenCheckout('annual', emailInput?.value || prefill);
   });
+  document.getElementById('btn-plan-annual-bottom')?.addEventListener('click', () => {
+    medhubOpenCheckout('annual', emailInput?.value || prefill);
+  });
 }
 
 function applyPricingConfig (config) {
