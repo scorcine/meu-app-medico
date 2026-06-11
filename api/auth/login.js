@@ -6,37 +6,19 @@ const {
   parseBody,
   normalizeEmail
 } = require('../_auth');
-const {
-  billingEnabled,
-  findCustomerByEmail,
-  getActiveSubscription,
-  getStripe
-} = require('../_stripe');
 const { getUser, publicUser } = require('../_users');
-
-async function subscriptionStatus (email) {
-  if (!billingEnabled()) {
-    return { active: true, billingDisabled: true };
-  }
-
-  const stripe = getStripe();
-  const customer = await findCustomerByEmail(stripe, email);
-  if (!customer) return { active: false, reason: 'no_customer' };
-
-  const sub = await getActiveSubscription(stripe, customer.id);
-  if (!sub) return { active: false, reason: 'no_subscription' };
-
-  const interval = sub.items?.data?.[0]?.price?.recurring?.interval;
-  return {
-    active: true,
-    plan: interval === 'year' ? 'annual' : 'monthly',
-    status: sub.status
-  };
-}
+const { getSubscriptionStatus } = require('../_subscription');
+const { platformUnavailableMessage } = require('../_platform');
 
 module.exports = async (req, res) => {
   if (req.method !== 'POST') {
     json(res, 405, { error: 'Method not allowed' });
+    return;
+  }
+
+  const unavailable = platformUnavailableMessage();
+  if (unavailable) {
+    json(res, 503, { error: unavailable, code: 'platform_misconfigured' });
     return;
   }
 
@@ -68,7 +50,12 @@ module.exports = async (req, res) => {
       return;
     }
 
-    const sub = await subscriptionStatus(email);
+    const sub = await getSubscriptionStatus(email);
+    if (sub.misconfigured) {
+      json(res, 503, { error: platformUnavailableMessage(), code: 'platform_misconfigured' });
+      return;
+    }
+
     const token = createSessionToken(user);
 
     json(res, 200, {

@@ -34,12 +34,25 @@ Ferramenta **educacional** de apoio à decisão clínica no plantão — protoco
 
 Deploy estático + **API serverless** (`api/`) na Vercel:
 
-- Configure variáveis do `.env.example` (Stripe + KV + JWT).
-- Crie um banco **Vercel KV** (Upstash) e vincule ao projeto.
-- Sem `STRIPE_SECRET_KEY` → billing desabilitado (modo dev).
-- Sem `MEDHUB_JWT_SECRET` + KV → login local no navegador (modo dev).
+- Em **Production**, Stripe + KV + JWT são **obrigatórios** — sem isso login e assinatura ficam bloqueados (não há mais “modo dev grátis” no ar).
+- Configure **todas** as variáveis do `.env.example` na Vercel (ver checklist abaixo).
+- Preview/local: bypass só se `MEDHUB_ALLOW_DEV_BYPASS=true` ou ambiente não-Production.
+- Abrir `index.html` via `file://` ou `localhost` continua liberado para desenvolvimento local.
 
-Após publicar, force refresh: **Ctrl+F5** (cache bust via `?v=` nos scripts).
+### Checklist Production (Vercel → Settings → Environment Variables)
+
+| Variável | Obrigatória |
+|----------|-------------|
+| `STRIPE_SECRET_KEY` | Sim |
+| `STRIPE_PRICE_MONTHLY` | Sim |
+| `STRIPE_PRICE_ANNUAL` | Sim |
+| `MEDHUB_JWT_SECRET` | Sim |
+| `KV_REST_API_URL` | Sim |
+| `KV_REST_API_TOKEN` | Sim |
+| `MEDHUB_SITE_URL` | Recomendado |
+| `STRIPE_WEBHOOK_SECRET` | Recomendado |
+
+Após salvar, **Redeploy** o projeto. A landing mostra quais variáveis faltam se algo estiver incompleto.
 
 ## MedHub Pro — assinatura (médico solo)
 

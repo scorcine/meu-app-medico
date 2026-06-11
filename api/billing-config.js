@@ -1,4 +1,5 @@
 const { billingEnabled, json } = require('./_stripe');
+const { getPlatformStatus } = require('./_platform');
 
 module.exports = async (req, res) => {
   if (req.method !== 'GET') {
@@ -15,8 +16,16 @@ module.exports = async (req, res) => {
     ? Math.round((1 - annual / fullYear) * 100)
     : 15;
 
+  const platform = getPlatformStatus();
+
   json(res, 200, {
     enabled: billingEnabled(),
+    production: platform.production,
+    ready: platform.ready,
+    misconfigured: platform.misconfigured,
+    authConfigured: platform.authConfigured,
+    allowDevBypass: platform.allowDevBypass,
+    missing: platform.misconfigured ? platform.missing : undefined,
     currency: 'BRL',
     monthlyDisplay,
     annualDisplay,

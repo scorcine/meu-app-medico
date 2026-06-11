@@ -6,40 +6,23 @@ const {
   parseBody,
   normalizeEmail
 } = require('../_auth');
-const {
-  billingEnabled,
-  findCustomerByEmail,
-  getActiveSubscription,
-  getStripe
-} = require('../_stripe');
-const { getUser, saveUser, userExists, publicUser } = require('../_users');
+const { billingEnabled } = require('../_stripe');
+const { saveUser, userExists, publicUser } = require('../_users');
+const { getSubscriptionStatus } = require('../_subscription');
+const { platformUnavailableMessage } = require('../_platform');
 
 const TERMS_VERSION = process.env.MEDHUB_TERMS_VERSION || '2026-06-07-v1';
 const PRIVACY_VERSION = process.env.MEDHUB_PRIVACY_VERSION || '2026-06-07-v1';
 
-async function subscriptionStatus (email) {
-  if (!billingEnabled()) {
-    return { active: true, billingDisabled: true };
-  }
-
-  const stripe = getStripe();
-  const customer = await findCustomerByEmail(stripe, email);
-  if (!customer) return { active: false, reason: 'no_customer' };
-
-  const sub = await getActiveSubscription(stripe, customer.id);
-  if (!sub) return { active: false, reason: 'no_subscription' };
-
-  const interval = sub.items?.data?.[0]?.price?.recurring?.interval;
-  return {
-    active: true,
-    plan: interval === 'year' ? 'annual' : 'monthly',
-    status: sub.status
-  };
-}
-
 module.exports = async (req, res) => {
   if (req.method !== 'POST') {
     json(res, 405, { error: 'Method not allowed' });
+    return;
+  }
+
+  const unavailable = platformUnavailableMessage();
+  if (unavailable) {
+    json(res, 503, { error: unavailable, code: 'platform_misconfigured' });
     return;
   }
 
@@ -83,7 +66,12 @@ module.exports = async (req, res) => {
       return;
     }
 
-    const sub = await subscriptionStatus(email);
+    const sub = await getSubscriptionStatus(email);
+    if (sub.misconfigured) {
+      json(res, 503, { error: platformUnavailableMessage(), code: 'platform_misconfigured' });
+      return;
+    }
+
     if (billingEnabled() && !sub.active) {
       json(res, 403, {
         error: 'Assinatura MedHub Pro ativa necessária antes do cadastro.',

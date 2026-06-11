@@ -18,6 +18,9 @@ async function initLandingPage () {
 
   try {
     const config = await medhubFetchBillingConfig();
+    if (typeof medhubApplyPlatformGate === 'function') {
+      medhubApplyPlatformGate(config);
+    }
     if (priceEl && config.monthlyPerMonth) {
       priceEl.textContent = 'A partir de ' + config.monthlyPerMonth;
     }

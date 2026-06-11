@@ -115,6 +115,24 @@ async function handleRegister (e) {
   if (!termsOk || !privacyOk) return alert('Aceite o termo de uso e a política de privacidade.');
   if (!authValidatePassword(pass)) return;
 
+  if (typeof medhubIsLocalDev === 'function' && !medhubIsLocalDev()) {
+    const config = typeof medhubFetchAuthConfig === 'function'
+      ? await medhubFetchAuthConfig(true)
+      : { cloudEnabled: false };
+    const billing = typeof medhubFetchBillingConfig === 'function'
+      ? await medhubFetchBillingConfig()
+      : { misconfigured: true };
+
+    if (billing.misconfigured || config.misconfigured) {
+      alert('Cadastro indisponível: configure Stripe e login na nuvem (KV + JWT) na Vercel antes de abrir ao público.');
+      return;
+    }
+    if (!config.cloudEnabled) {
+      alert('Login na nuvem não está ativo. Conta local só funciona abrindo os arquivos no computador (modo desenvolvimento).');
+      return;
+    }
+  }
+
   const config = typeof medhubFetchAuthConfig === 'function'
     ? await medhubFetchAuthConfig()
     : { cloudEnabled: false };
@@ -155,6 +173,24 @@ async function handleLogin (e) {
   e.preventDefault();
   const email = e.target.email.value.trim();
   const pass = e.target.password.value;
+
+  if (typeof medhubIsLocalDev === 'function' && !medhubIsLocalDev()) {
+    const config = typeof medhubFetchAuthConfig === 'function'
+      ? await medhubFetchAuthConfig(true)
+      : { cloudEnabled: false };
+    const billing = typeof medhubFetchBillingConfig === 'function'
+      ? await medhubFetchBillingConfig()
+      : { misconfigured: true };
+
+    if (billing.misconfigured || config.misconfigured) {
+      alert('Login indisponível: configure Stripe e login na nuvem (KV + JWT) na Vercel antes de abrir ao público.');
+      return;
+    }
+    if (!config.cloudEnabled) {
+      alert('Login na nuvem não está ativo. Conta local só funciona abrindo os arquivos no computador (modo desenvolvimento).');
+      return;
+    }
+  }
 
   const config = typeof medhubFetchAuthConfig === 'function'
     ? await medhubFetchAuthConfig()
@@ -234,4 +270,4 @@ async function requireAuthAsync () {
 
   return user;
 }
-
+

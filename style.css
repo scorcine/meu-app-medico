@@ -1860,10 +1860,10 @@ body.landing-single-page #planos {
   padding-top: 0.5rem;
 }
 
-.landing-single-page .pricing-v2-trust {
-  border-bottom: none;
-  margin-bottom: 0;
-  padding-bottom: 0;
+#btn-plan-monthly:disabled,
+#btn-plan-annual:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
 }
 
 .landing-header {

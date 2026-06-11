@@ -4,29 +4,8 @@ const {
   readBearer,
   json
 } = require('../_auth');
-const { billingEnabled } = require('../_stripe');
 const { getUser, publicUser } = require('../_users');
-const { findCustomerByEmail, getActiveSubscription, getStripe } = require('../_stripe');
-
-async function subscriptionStatus (email) {
-  if (!billingEnabled()) {
-    return { active: true, billingDisabled: true };
-  }
-
-  const stripe = getStripe();
-  const customer = await findCustomerByEmail(stripe, email);
-  if (!customer) return { active: false, reason: 'no_customer' };
-
-  const sub = await getActiveSubscription(stripe, customer.id);
-  if (!sub) return { active: false, reason: 'no_subscription' };
-
-  const interval = sub.items?.data?.[0]?.price?.recurring?.interval;
-  return {
-    active: true,
-    plan: interval === 'year' ? 'annual' : 'monthly',
-    status: sub.status
-  };
-}
+const { getSubscriptionStatus } = require('../_subscription');
 
 module.exports = async (req, res) => {
   if (req.method !== 'GET') {
@@ -52,7 +31,7 @@ module.exports = async (req, res) => {
       return;
     }
 
-    const sub = await subscriptionStatus(user.email);
+    const sub = await getSubscriptionStatus(user.email);
     json(res, 200, {
       user: publicUser(user),
       subscription: sub

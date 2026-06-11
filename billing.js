@@ -17,11 +17,7 @@ async function initPricingPage () {
 
   const config = await medhubFetchBillingConfig();
   applyPricingConfig(config);
-
-  const devNote = document.getElementById('pricing-dev-note');
-  if (devNote && !config.enabled) {
-    devNote.hidden = false;
-  }
+  medhubApplyPlatformGate(config);
 
   document.getElementById('btn-plan-monthly')?.addEventListener('click', () => {
     medhubOpenCheckout('monthly', checkoutEmail);
@@ -49,6 +45,33 @@ function applyPricingConfig (config) {
   if (badgeEl && config.annualDiscountPercent) {
     badgeEl.textContent = config.annualDiscountPercent + '% de desconto';
   }
+}
+
+function medhubApplyPlatformGate (config) {
+  if (!config) return;
+
+  const note = document.getElementById('pricing-dev-note');
+  const checkoutReady = !!config.enabled && !config.misconfigured;
+
+  if (note) {
+    if (config.misconfigured) {
+      note.hidden = false;
+      const missing = (config.missing || []).join(', ');
+      note.textContent = 'Assinaturas indisponíveis até configurar na Vercel: ' + missing + '.';
+    } else if (!config.enabled && config.allowDevBypass) {
+      note.hidden = false;
+      note.textContent = 'Ambiente de preview/desenvolvimento — pagamentos desligados.';
+    } else if (!config.enabled) {
+      note.hidden = false;
+      note.textContent = 'Pagamentos não configurados no servidor.';
+    } else {
+      note.hidden = true;
+    }
+  }
+
+  document.querySelectorAll('#btn-plan-monthly, #btn-plan-annual').forEach(function (btn) {
+    btn.disabled = !checkoutReady;
+  });
 }
 
 async function initSubscribeSuccessPage () {

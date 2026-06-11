@@ -154,7 +154,10 @@ function medhubClearCloudSession () {
 }
 
 function medhubSubscriptionBlocked (subscription) {
-  return subscription && !subscription.active && !subscription.billingDisabled;
+  if (!subscription) return false;
+  if (subscription.devBypass) return false;
+  if (subscription.misconfigured) return true;
+  return !subscription.active;
 }
 
 function medhubRedirectPricing (email) {
