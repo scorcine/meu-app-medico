@@ -24,10 +24,11 @@ module.exports = async (req, res) => {
     annualPerYear: annualDisplay + '/ano',
     annualDiscountPercent: discountPercent,
     annualSavingsDisplay: formatBrl(Math.max(0, fullYear - annual)),
-    trialDays: Number(process.env.MEDHUB_TRIAL_DAYS || 0)
+    trialDays: Number(process.env.MEDHUB_TRIAL_DAYS || 0),
+    guaranteeDays: Number(process.env.MEDHUB_GUARANTEE_DAYS || 7)
   });
 };
 
 function formatBrl (cents) {
-  return 'R$ ' + (cents / 100).toLocaleString('pt-BR', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+  return 'R$ ' + (cents / 100).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }

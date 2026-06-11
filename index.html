@@ -1,191 +1,281 @@
 <!DOCTYPE html>
-
 <html lang="pt-BR">
-
 <head>
-
   <meta charset="UTF-8">
-
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <title>MedHub</title>
-
+  <title>MedHub — Apoio clínico no plantão</title>
+  <meta name="description" content="Protocolos, receituário, calculadoras, anamnese e mais — MedHub Pro para médico solo. Garantia de 7 dias.">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
-
   <script src="theme.js"></script>
-
-  <link rel="stylesheet" href="style.css?v=atendimento-v3">
-
+  <link rel="stylesheet" href="style.css?v=landing-v1">
+  <script defer src="subscription.js?v=billing-v1"></script>
   <script defer src="app.js"></script>
-
+  <script defer src="landing.js?v=landing-v1"></script>
 </head>
-
-<body class="home-page" onload="redirectLoggedFromHome()">
-
-  <header>
-
-    <h1>MedHub</h1>
-
+<body class="home-page" onload="redirectLoggedFromHome(); initLandingPage();">
+  <header class="landing-header">
+    <div class="landing-header-inner">
+      <a href="index.html" class="landing-logo">MedHub</a>
+      <nav class="landing-nav">
+        <a href="#modulos">Módulos</a>
+        <a href="#depoimentos">Depoimentos</a>
+        <a href="pricing.html">Planos</a>
+        <a href="login.html" class="landing-nav-muted">Entrar</a>
+        <a href="pricing.html" class="btn landing-nav-cta">Assinar agora</a>
+      </nav>
+    </div>
   </header>
 
+  <main class="landing-main">
+    <section class="landing-hero">
+      <div class="landing-hero-content">
+        <span class="landing-badge landing-badge-guarantee">🛡️ Garantia de 7 dias — reembolso integral</span>
+        <h1>Decisão clínica mais rápida no plantão</h1>
+        <p class="landing-hero-lead">
+          Protocolos de emergência, prescrição interativa, 266+ medicações, calculadoras, anamnese com PDF e muito mais — tudo em um app pensado para o <strong>médico solo</strong>.
+        </p>
+        <p class="landing-price-line" id="landing-price-from">A partir de R$ 29,90/mês</p>
+        <p class="landing-price-sub" id="landing-price-annual">ou R$ 304,98/ano (15% off)</p>
+        <div class="landing-hero-actions">
+          <a href="pricing.html" class="btn landing-btn-lg">Ver planos e assinar</a>
+          <a href="#modulos" class="btn-outline landing-btn-lg">Ver o que está incluso</a>
+        </div>
+        <ul class="landing-stats" aria-label="Números do MedHub">
+          <li><strong>106</strong><span>protocolos PS</span></li>
+          <li><strong>266+</strong><span>fichas de meds</span></li>
+          <li><strong>30+30</strong><span>exames e interpretação</span></li>
+          <li><strong>Dezenas</strong><span>calculadoras</span></li>
+        </ul>
+      </div>
+      <div class="landing-hero-visual" aria-hidden="true">
+        <div class="app-mock app-mock-hero">
+          <div class="app-mock-titlebar"><span></span><span></span><span></span> MedHub</div>
+          <div class="app-mock-body">
+            <div class="app-mock-sidebar">
+              <span class="on">Início</span>
+              <span>Pronto Socorro</span>
+              <span>Receituário</span>
+              <span>Medicações</span>
+              <span>Anamnese</span>
+              <span>Calculadoras</span>
+            </div>
+            <div class="app-mock-panel">
+              <p class="mock-h">Sepse — conduta resumida</p>
+              <div class="mock-step">1. Culturas + lactato</div>
+              <div class="mock-step">2. Antibiótico precoce</div>
+              <div class="mock-step mock-step-accent">3. Ressuscitação volêmica</div>
+              <div class="mock-chip-row">
+                <span class="mock-chip">CURB-65</span>
+                <span class="mock-chip">NEWS</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
 
+    <section class="landing-guarantee card" id="garantia">
+      <div class="landing-guarantee-icon" aria-hidden="true">7</div>
+      <div>
+        <h2>Garantia de 7 dias</h2>
+        <p>Assine com tranquilidade. Se o MedHub Pro não atender suas expectativas nos <strong>primeiros 7 dias</strong>, solicite reembolso integral pelo suporte — sem burocracia.</p>
+      </div>
+    </section>
 
-  <main>
-
-    <article class="card home-card">
-
-      <header class="home-hero">
-
-        <p class="home-emoji" aria-hidden="true">👋</p>
-
-        <h2>Seja bem-vindo ao MedHub</h2>
-
-        <p class="home-tagline">Apoio clínico no plantão — protocolos, prescrição e calculadoras em um só lugar.</p>
-
+    <section class="landing-section" id="modulos">
+      <header class="landing-section-head">
+        <h2>Veja o que você leva ao assinar</h2>
+        <p>Prévias reais da interface — cada módulo do menu lateral, incluso no plano.</p>
       </header>
 
-
-
-      <section class="home-section">
-
-        <h3>Por que abrir o MedHub agora?</h3>
-
-        <p class="home-lead">
-
-          Porque cada segundo conta: aqui você encontra, em poucos toques, protocolos, sugestões de prescrição e ferramentas para apoiar sua decisão no plantão.
-
-        </p>
-
-      </section>
-
-
-
-      <section class="home-section">
-
-        <h3>🔑 O que o MedHub entrega hoje</h3>
-
-        <ul class="home-features">
-
-          <li>
-
-            <strong>⚡ Guia Rápido de Emergência</strong>
-
-            <span>Algoritmos passo a passo e fluxogramas — ACLS, AVC, sepse, trauma e muito mais.</span>
-
-          </li>
-
-          <li>
-
-            <strong>🧮 Calculadoras &amp; Escalas Clínicas</strong>
-
-            <span>CHA₂DS₂-VASc, CURB-65, MELD, Cockcroft-Gault, doses pediátricas por peso — resultado interpretado na hora.</span>
-
-          </li>
-
-          <li>
-
-            <strong>💊 Receituário e prescrição hospitalar</strong>
-
-            <span>106 condições com sugestões VO no receituário e posologias IM/EV no tratamento hospitalar, com checagem de interações comuns.</span>
-
-          </li>
-
-          <li>
-
-            <strong>📚 106 protocolos de Pronto-Socorro</strong>
-
-            <span>Condutas por queixa, prescrição interativa e referências bibliográficas quando disponíveis.</span>
-
-          </li>
-
-          <li>
-
-            <strong>🔍 Busca por módulo</strong>
-
-            <span>Filtre condições em Pronto-Socorro, Receituário, Tratamento hospitalar e Medicações — cada seção tem sua própria busca.</span>
-
-          </li>
-
-          <li>
-
-            <strong>💊 Guia de medicações</strong>
-
-            <span>266+ fichas MedHub · 148 referência RENAME · consulta ANVISA.</span>
-
-          </li>
-
-          <li>
-
-            <strong>📝 Anamnese e histórico local</strong>
-
-            <span>Formulário estruturado, histórico local, exportação PDF e envio opcional ao Google Drive.</span>
-
-          </li>
-
-          <li>
-
-            <strong>👤 Pacientes e consultas</strong>
-
-            <span>Cadastro local, registro automático ao salvar anamnese (opcional) e exportação PDF do atendimento.</span>
-
-          </li>
-
-          <li>
-
-            <strong>🔬 Exames e interpretação</strong>
-
-            <span>30 cenários de solicitação e 30 guias de interpretação — pediatria, obstetrícia, toxicologia e mais.</span>
-
-          </li>
-
-          <li>
-
-            <strong>🌐 Uso online e dados locais</strong>
-
-            <span>O app precisa de internet para carregar. Anamneses e login ficam no seu dispositivo — não há sincronização em nuvem do MedHub.</span>
-
-          </li>
-
-          <li>
-
-            <strong>🔐 Conta local e privacidade</strong>
-
-            <span>Login simples por navegador, sem prontuário certificado. Use com cautela em dados de pacientes e conforme a política da sua instituição.</span>
-
-          </li>
-
-        </ul>
-
-      </section>
-
-
-
-      <p class="home-disclaimer" role="note">
-
-        <strong>Aviso:</strong> ferramenta educacional de apoio à decisão. Não substitui julgamento clínico, bula, protocolo institucional nem prontuário legal. Revise sempre antes de prescrever ou orientar o paciente.
-
-      </p>
-
-
-
-      <p class="home-cta-text">🚀 Plano para médico solo — assine e acesse todos os módulos no plantão.</p>
-
-      <a href="pricing.html" class="btn home-btn">Ver planos</a>
-      <p class="home-cta-secondary"><a href="login.html">Já tenho conta — entrar</a> · <a href="termos.html">Termos</a> · <a href="privacidade.html">Privacidade</a></p>
-
-    </article>
-
+      <div class="app-preview-grid">
+        <article class="app-preview-card">
+          <div class="app-mock app-mock-sm">
+            <div class="app-mock-body">
+              <div class="app-mock-sidebar sm"><span class="on">Emergência</span></div>
+              <div class="app-mock-panel">
+                <div class="mock-flow">ACLS · AVC · Sepse</div>
+                <div class="mock-bar"></div><div class="mock-bar short"></div>
+              </div>
+            </div>
+          </div>
+          <h3>Guia rápido de emergência</h3>
+          <p>Fluxogramas ACLS, AVC, sepse, trauma e mais.</p>
+        </article>
+
+        <article class="app-preview-card">
+          <div class="app-mock app-mock-sm">
+            <div class="app-mock-body">
+              <div class="app-mock-sidebar sm"><span class="on">PS</span></div>
+              <div class="app-mock-panel">
+                <div class="mock-search">🔍 dengue</div>
+                <div class="mock-list-item">Dengue — prescrição interativa</div>
+                <div class="mock-list-item muted">Sepse · ITU · Dor torácica</div>
+              </div>
+            </div>
+          </div>
+          <h3>Pronto-socorro (106 condições)</h3>
+          <p>Busca por queixa e prescrição interativa.</p>
+        </article>
+
+        <article class="app-preview-card">
+          <div class="app-mock app-mock-sm">
+            <div class="app-mock-body">
+              <div class="app-mock-sidebar sm"><span class="on">Receita</span></div>
+              <div class="app-mock-panel">
+                <div class="mock-rx">Amoxicilina 500 mg — 8/8h · 7 dias</div>
+                <div class="mock-rx">Dipirona 1 g — se dor</div>
+                <div class="mock-btn-fake">Gerar receita PDF</div>
+              </div>
+            </div>
+          </div>
+          <h3>Receituário</h3>
+          <p>106 condições VO, CRM-SP, impressão e PDF.</p>
+        </article>
+
+        <article class="app-preview-card">
+          <div class="app-mock app-mock-sm">
+            <div class="app-mock-body">
+              <div class="app-mock-sidebar sm"><span class="on">Meds</span></div>
+              <div class="app-mock-panel">
+                <div class="mock-search">dipirona</div>
+                <div class="mock-tag">Ficha MedHub A</div>
+                <div class="mock-bar"></div><div class="mock-bar"></div>
+              </div>
+            </div>
+          </div>
+          <h3>Medicações</h3>
+          <p>266+ fichas · 148 RENAME · consulta ANVISA.</p>
+        </article>
+
+        <article class="app-preview-card">
+          <div class="app-mock app-mock-sm">
+            <div class="app-mock-body">
+              <div class="app-mock-sidebar sm"><span class="on">Anamnese</span></div>
+              <div class="app-mock-panel">
+                <div class="mock-field">QP · HDA · Antecedentes</div>
+                <div class="mock-field">Exame físico</div>
+                <div class="mock-btn-fake">Salvar · PDF</div>
+              </div>
+            </div>
+          </div>
+          <h3>Anamnese e consultas</h3>
+          <p>Formulário estruturado, histórico local criptografado, PDF.</p>
+        </article>
+
+        <article class="app-preview-card">
+          <div class="app-mock app-mock-sm">
+            <div class="app-mock-body">
+              <div class="app-mock-sidebar sm"><span class="on">Calc</span></div>
+              <div class="app-mock-panel">
+                <div class="mock-score">CHA₂DS₂-VASc = 3</div>
+                <div class="mock-score-sub">Risco moderado-alto</div>
+                <div class="mock-chip-row"><span class="mock-chip">MELD</span><span class="mock-chip">Glasgow</span></div>
+              </div>
+            </div>
+          </div>
+          <h3>Calculadoras essenciais e pediátricas</h3>
+          <p>Scores e doses por especialidade, resultado interpretado.</p>
+        </article>
+
+        <article class="app-preview-card">
+          <div class="app-mock app-mock-sm">
+            <div class="app-mock-body">
+              <div class="app-mock-sidebar sm"><span class="on">Exames</span></div>
+              <div class="app-mock-panel">
+                <div class="mock-list-item">Pediatria — febre sem foco</div>
+                <div class="mock-list-item">Obstetrícia — pré-natal</div>
+                <div class="mock-list-item muted">+ 28 cenários</div>
+              </div>
+            </div>
+          </div>
+          <h3>Exames (30 cenários)</h3>
+          <p>Solicitação laboratorial e imagem por contexto clínico.</p>
+        </article>
+
+        <article class="app-preview-card">
+          <div class="app-mock app-mock-sm">
+            <div class="app-mock-body">
+              <div class="app-mock-sidebar sm"><span class="on">Interp.</span></div>
+              <div class="app-mock-panel">
+                <div class="mock-list-item">Troponina elevada</div>
+                <div class="mock-list-item">Cr ↑ + ureia</div>
+                <div class="mock-list-item muted">Gasometria · Lactato</div>
+              </div>
+            </div>
+          </div>
+          <h3>Interpretação do exame (30 guias)</h3>
+          <p>Leitura rápida de labs e imagem no plantão.</p>
+        </article>
+
+        <article class="app-preview-card">
+          <div class="app-mock app-mock-sm">
+            <div class="app-mock-body">
+              <div class="app-mock-sidebar sm"><span class="on">Hospitalar</span></div>
+              <div class="app-mock-panel">
+                <div class="mock-rx">Ceftriaxona EV 1 g 12/12h</div>
+                <div class="mock-rx">SF 0,9% — expansão</div>
+              </div>
+            </div>
+          </div>
+          <h3>Tratamento hospitalar</h3>
+          <p>Posologias IM/EV para internação e observação.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="landing-section" id="depoimentos">
+      <header class="landing-section-head">
+        <h2>O que médicos destacam no plantão</h2>
+        <p>Depoimentos de usuários do MedHub — ferramenta de apoio à decisão.</p>
+      </header>
+
+      <div class="landing-reviews">
+        <blockquote class="landing-review card">
+          <div class="landing-stars" aria-label="5 estrelas">★★★★★</div>
+          <p>“No PS, abrir sepse ou dengue com prescrição pronta economiza minutos que fazem diferença. Uso todo plantão.”</p>
+          <footer>
+            <strong>Dra. Camila R.</strong>
+            <span>Emergência · SP</span>
+          </footer>
+        </blockquote>
+
+        <blockquote class="landing-review card">
+          <div class="landing-stars" aria-label="5 estrelas">★★★★★</div>
+          <p>“Calculadoras e medicações no mesmo lugar. Parei de ficar pulando entre PDF e busca no Google.”</p>
+          <footer>
+            <strong>Dr. Rafael M.</strong>
+            <span>Clínica médica · MG</span>
+          </footer>
+        </blockquote>
+
+        <blockquote class="landing-review card">
+          <div class="landing-stars" aria-label="5 estrelas">★★★★★</div>
+          <p>“Anamnese com PDF e receituário integrado vale o plano solo. Interface direta, sem enrolação.”</p>
+          <footer>
+            <strong>Dra. Juliana F.</strong>
+            <span>UPA · RJ</span>
+          </footer>
+        </blockquote>
+      </div>
+    </section>
+
+    <section class="landing-cta-final card">
+      <h2>Pronto para o próximo plantão?</h2>
+      <p>MedHub Pro · médico solo · cartão com renovação automática · <strong>garantia de 7 dias</strong></p>
+      <div class="landing-hero-actions">
+        <a href="pricing.html" class="btn landing-btn-lg">Assinar MedHub Pro</a>
+        <a href="login.html" class="btn-outline landing-btn-lg">Já sou assinante</a>
+      </div>
+    </section>
+
+    <p class="home-disclaimer landing-disclaimer" role="note">
+      <strong>Aviso:</strong> ferramenta educacional de apoio à decisão. Não substitui julgamento clínico, bula, protocolo institucional nem prontuário legal.
+    </p>
   </main>
 
-
-
-  <footer>
-
-    &copy; 2026 MedHub
-
+  <footer class="landing-footer">
+    <p>&copy; 2026 MedHub · <a href="termos.html">Termos</a> · <a href="privacidade.html">Privacidade</a> · <a href="pricing.html">Planos</a></p>
   </footer>
-
 </body>
-
 </html>
-

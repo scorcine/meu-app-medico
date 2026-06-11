@@ -11,11 +11,12 @@ const MEDHUB_TERMS_BODY = `
     <li>Revise sempre textos, doses e checklists antes de utilizar no atendimento.</li>
     <li>Não utilize o app como único registro assistencial quando a instituição exige prontuário certificado.</li>
   </ul>
-  <h3>3. Conta e assinatura</h3>
+  <h3>3. Conta, assinatura e garantia</h3>
   <ul>
-    <li>A conta é pessoal e intransferível.</li>
+    <li>A conta é pessoal e intransferível (médico solo).</li>
     <li>O acesso depende de assinatura ativa (plano mensal ou anual) processada pela Stripe.</li>
     <li>Renovação automática conforme o plano escolhido, salvo cancelamento pelo portal de cobrança.</li>
+    <li><strong>Garantia de 7 dias:</strong> nos primeiros 7 dias após a primeira cobrança, você pode solicitar reembolso integral pelo canal de suporte informado na fatura ou site, caso o serviço não atenda suas expectativas.</li>
   </ul>
   <h3>4. Conteúdo</h3>
   <p>Protocolos e fichas são referências resumidas e podem estar desatualizados ou incompletos. O MedHub não garante adequação a todos os cenários clínicos.</p>
