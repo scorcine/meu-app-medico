@@ -154,7 +154,7 @@ function medhubEnsureUnlockModal () {
   overlay.innerHTML = `
     <div class="compliance-modal compliance-modal--narrow" role="dialog" aria-modal="true" aria-labelledby="medhub-unlock-title">
       <h2 id="medhub-unlock-title">Desbloquear dados locais</h2>
-      <p class="muted">Suas anamneses são criptografadas. Informe sua senha para continuar nesta sessão do navegador.</p>
+      <p class="muted">Suas notas locais são criptografadas. Informe sua senha para continuar nesta sessão do navegador.</p>
       <label class="compliance-label" for="medhub-unlock-pass">Senha</label>
       <input id="medhub-unlock-pass" class="compliance-input" type="password" autocomplete="current-password">
       <p id="medhub-unlock-error" class="compliance-error" hidden></p>
@@ -169,6 +169,9 @@ function medhubEnsureUnlockModal () {
 function medhubEnsureCryptoUnlock (next) {
   if (typeof medhubHasSessionCryptoKey === 'function' && medhubHasSessionCryptoKey()) {
     if (typeof next === 'function') next();
+    if (typeof medhubCloudSyncAfterUnlock === 'function') {
+      medhubCloudSyncAfterUnlock();
+    }
     return;
   }
 
@@ -223,6 +226,9 @@ function medhubEnsureCryptoUnlock (next) {
 
     await medhubUnlockSession(password, user.email);
     finish();
+    if (typeof medhubCloudSyncAfterUnlock === 'function') {
+      medhubCloudSyncAfterUnlock();
+    }
     if (typeof next === 'function') next();
   };
 

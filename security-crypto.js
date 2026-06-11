@@ -147,10 +147,86 @@ async function medhubEncryptJson (data) {
 async function medhubDecryptJson (payload) {
   const key = await medhubGetSessionAesKey();
   if (!key) throw new Error('Informe sua senha para acessar anamneses criptografadas.');
+  return medhubDecryptJsonWithKey(payload, key);
+}
+
+async function medhubDecryptJsonWithKey (payload, key) {
   const iv = medhubB64ToBuf(payload.iv);
   const cipher = medhubB64ToBuf(payload.data);
   const plain = await crypto.subtle.decrypt({ name: 'AES-GCM', iv }, key, cipher);
   return JSON.parse(new TextDecoder().decode(plain));
+}
+
+async function medhubEncryptJsonWithKey (data, key) {
+  const iv = crypto.getRandomValues(new Uint8Array(12));
+  const plaintext = new TextEncoder().encode(JSON.stringify(data));
+  const cipher = await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, key, plaintext);
+  return { v: 1, enc: true, iv: medhubBufToB64(iv), data: medhubBufToB64(cipher) };
+}
+
+async function medhubReencryptStorageValue (raw, oldPassword, newPassword, email) {
+  if (!raw || !raw.includes('"enc":true')) return { changed: false };
+
+  let parsed;
+  try {
+    parsed = JSON.parse(raw);
+  } catch {
+    return { changed: false };
+  }
+
+  if (!parsed?.enc) return { changed: false };
+
+  const oldKey = await medhubDeriveAesKey(oldPassword, email);
+  const newKey = await medhubDeriveAesKey(newPassword, email);
+  const data = await medhubDecryptJsonWithKey(parsed, oldKey);
+  const reenc = await medhubEncryptJsonWithKey(data, newKey);
+  return { changed: true, value: JSON.stringify(reenc) };
+}
+
+async function medhubReencryptAllClinicalData (oldPassword, newPassword, email) {
+  const norm = String(email || '').toLowerCase();
+  if (!norm || !oldPassword || !newPassword) return { ok: false, error: 'Dados incompletos.' };
+
+  let passwordValid = false;
+  const account = typeof getUsers === 'function'
+    ? getUsers().find(u => String(u.email).toLowerCase() === norm)
+    : null;
+
+  if (account && (account.passHash || account.pass)) {
+    passwordValid = await medhubVerifyPassword(oldPassword, account);
+  } else if (typeof medhubCloudVerifyPassword === 'function') {
+    passwordValid = await medhubCloudVerifyPassword(norm, oldPassword);
+  }
+
+  if (!passwordValid) {
+    return { ok: false, error: 'Senha atual incorreta.' };
+  }
+
+  const keys = typeof backupStorageKeys === 'function'
+    ? backupStorageKeys(norm)
+    : [
+      'medhub-anamneses-' + norm,
+      'medhub-pacientes-' + norm,
+      'medhub-consultas-' + norm
+    ];
+
+  let reencrypted = 0;
+  for (const key of keys) {
+    const raw = localStorage.getItem(key);
+    if (!raw) continue;
+    const result = await medhubReencryptStorageValue(raw, oldPassword, newPassword, norm);
+    if (result.changed) {
+      localStorage.setItem(key, result.value);
+      reencrypted += 1;
+    }
+  }
+
+  await medhubUnlockSession(newPassword, norm);
+  if (typeof medhubTouchClinicalLocalAt === 'function') {
+    medhubTouchClinicalLocalAt();
+  }
+
+  return { ok: true, reencrypted };
 }
 
 function medhubSetSession (user) {

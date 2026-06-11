@@ -51,13 +51,17 @@ function medhubApplyPlatformGate (config) {
   if (!config) return;
 
   const note = document.getElementById('pricing-dev-note');
-  const checkoutReady = !!config.enabled && !config.misconfigured;
+  const checkoutReady = !!(config.checkoutEnabled ?? config.enabled);
 
   if (note) {
-    if (config.misconfigured) {
+    if (config.billingMisconfigured) {
       note.hidden = false;
-      const missing = (config.missing || []).join(', ');
+      const missing = (config.missingBilling || config.missing || []).join(', ');
       note.textContent = 'Assinaturas indisponíveis até configurar na Vercel: ' + missing + '.';
+    } else if (config.authMisconfigured) {
+      note.hidden = false;
+      const missing = (config.missingAuth || []).join(', ');
+      note.textContent = 'Pagamentos ativos. Login na nuvem em breve — falta: ' + missing + '.';
     } else if (!config.enabled && config.allowDevBypass) {
       note.hidden = false;
       note.textContent = 'Ambiente de preview/desenvolvimento — pagamentos desligados.';
@@ -80,26 +84,53 @@ async function initSubscribeSuccessPage () {
   const titleEl = document.getElementById('success-title');
   const bodyEl = document.getElementById('success-body');
   const emailEl = document.getElementById('success-email');
+  const registerLink = document.getElementById('success-register');
+  const loginLink = document.getElementById('success-login');
 
   if (!sessionId) {
     if (titleEl) titleEl.textContent = 'Assinatura';
-    if (bodyEl) bodyEl.textContent = 'Se você concluiu o pagamento, faça login com o mesmo e-mail usado no cartão.';
+    if (bodyEl) bodyEl.textContent = 'Se você concluiu o pagamento, use o link que enviamos ou entre com o e-mail do cartão.';
     return;
   }
 
   try {
     const res = await fetch('/api/checkout-session?session_id=' + encodeURIComponent(sessionId));
     const data = await res.json();
-    if (data.email) {
-      if (emailEl) {
-        emailEl.hidden = false;
-        emailEl.textContent = data.email;
-      }
+
+    if (!res.ok) {
+      if (bodyEl) bodyEl.textContent = data.error || 'Não foi possível validar o pagamento.';
+      return;
+    }
+
+    if (data.email && emailEl) {
+      emailEl.hidden = false;
+      emailEl.textContent = 'E-mail da assinatura: ' + data.email;
+    }
+
+    if (data.readyToRegister) {
+      if (titleEl) titleEl.textContent = 'Pagamento confirmado';
       if (bodyEl) {
-        bodyEl.textContent = 'Cadastre-se ou entre com o e-mail acima para acessar o MedHub.';
+        bodyEl.textContent = 'Último passo: crie sua conta com o e-mail acima. Sua assinatura já está vinculada ao pagamento.';
       }
-      const registerLink = document.getElementById('success-register');
-      if (registerLink) registerLink.href = 'register.html?email=' + encodeURIComponent(data.email);
+      if (registerLink) {
+        const q = new URLSearchParams({
+          email: data.email,
+          session_id: sessionId
+        });
+        registerLink.href = 'register.html?' + q.toString();
+        registerLink.textContent = 'Criar conta agora';
+      }
+    } else if (data.paid) {
+      if (bodyEl) bodyEl.textContent = 'Pagamento recebido. Aguarde alguns segundos e clique em criar conta, ou faça login se já tiver cadastro.';
+      if (registerLink && data.email) {
+        registerLink.href = 'register.html?email=' + encodeURIComponent(data.email) + '&session_id=' + encodeURIComponent(sessionId);
+      }
+    } else {
+      if (bodyEl) bodyEl.textContent = 'Pagamento em processamento. Atualize esta página em instantes.';
+    }
+
+    if (loginLink && data.email) {
+      loginLink.href = 'login.html?email=' + encodeURIComponent(data.email);
     }
   } catch {
     if (bodyEl) bodyEl.textContent = 'Pagamento recebido. Entre com o mesmo e-mail usado no Stripe.';

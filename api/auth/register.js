@@ -10,6 +10,7 @@ const { billingEnabled } = require('../_stripe');
 const { saveUser, userExists, publicUser } = require('../_users');
 const { getSubscriptionStatus } = require('../_subscription');
 const { platformUnavailableMessage } = require('../_platform');
+const { verifyCheckoutForRegister, saveCustomerBilling } = require('../_billing-kv');
 
 const TERMS_VERSION = process.env.MEDHUB_TERMS_VERSION || '2026-06-07-v1';
 const PRIVACY_VERSION = process.env.MEDHUB_PRIVACY_VERSION || '2026-06-07-v1';
@@ -44,6 +45,7 @@ module.exports = async (req, res) => {
   const password = String(body.password || '');
   const acceptTerms = !!body.acceptTerms;
   const acceptPrivacy = !!body.acceptPrivacy;
+  const checkoutSessionId = String(body.checkoutSessionId || body.session_id || '').trim();
 
   if (!name || !email || !password) {
     json(res, 400, { error: 'Preencha nome, e-mail e senha.' });
@@ -66,18 +68,59 @@ module.exports = async (req, res) => {
       return;
     }
 
-    const sub = await getSubscriptionStatus(email);
-    if (sub.misconfigured) {
-      json(res, 503, { error: platformUnavailableMessage(), code: 'platform_misconfigured' });
-      return;
-    }
+    let stripeCustomerId = null;
+    let stripeSubscriptionId = null;
+    let sub;
 
-    if (billingEnabled() && !sub.active) {
-      json(res, 403, {
-        error: 'Assinatura MedHub Pro ativa necessária antes do cadastro.',
-        code: 'subscription_required'
-      });
-      return;
+    if (checkoutSessionId) {
+      const verified = await verifyCheckoutForRegister(checkoutSessionId);
+      if (!verified.ok) {
+        json(res, 403, {
+          error: verified.error,
+          code: verified.code
+        });
+        return;
+      }
+
+      const checkout = verified.checkout;
+      if (checkout.email && checkout.email !== email) {
+        json(res, 400, {
+          error: 'Use o mesmo e-mail do pagamento: ' + checkout.email,
+          code: 'email_mismatch',
+          expectedEmail: checkout.email
+        });
+        return;
+      }
+
+      stripeCustomerId = checkout.customerId;
+      stripeSubscriptionId = checkout.subscriptionId;
+      sub = {
+        active: true,
+        email: checkout.email || email,
+        customerId: stripeCustomerId,
+        subscriptionId: stripeSubscriptionId,
+        plan: checkout.plan,
+        status: checkout.subscriptionStatus || 'active',
+        currentPeriodEnd: checkout.currentPeriodEnd,
+        source: 'checkout'
+      };
+    } else {
+      sub = await getSubscriptionStatus(email);
+      if (sub.misconfigured) {
+        json(res, 503, { error: platformUnavailableMessage(), code: 'platform_misconfigured' });
+        return;
+      }
+
+      if (billingEnabled() && !sub.active) {
+        json(res, 403, {
+          error: 'Assinatura MedHub Pro ativa necessária. Conclua o pagamento e use o link da página de sucesso para cadastrar.',
+          code: 'subscription_required'
+        });
+        return;
+      }
+
+      stripeCustomerId = sub.customerId || null;
+      stripeSubscriptionId = sub.subscriptionId || null;
     }
 
     const hashed = hashPassword(password);
@@ -87,10 +130,25 @@ module.exports = async (req, res) => {
       ...hashed,
       termsVersion: TERMS_VERSION,
       privacyVersion: PRIVACY_VERSION,
-      createdAt: new Date().toISOString()
+      createdAt: new Date().toISOString(),
+      stripeCustomerId,
+      stripeSubscriptionId
     };
 
     await saveUser(user);
+
+    if (stripeCustomerId) {
+      await saveCustomerBilling({
+        email,
+        customerId: stripeCustomerId,
+        subscriptionId: stripeSubscriptionId,
+        status: sub.status || 'active',
+        plan: sub.plan,
+        active: true,
+        currentPeriodEnd: sub.currentPeriodEnd || null
+      });
+    }
+
     const token = createSessionToken(user);
 
     json(res, 201, {

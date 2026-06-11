@@ -6,13 +6,13 @@ const FERRAMENTAS_ITEMS = [
   { section: 'guia-emergencia', icon: '⚡', name: 'Guia rápido de emergência', desc: 'ACLS, AVC, sepse, trauma e fluxogramas.' },
   { section: 'pronto-socorro', icon: '🏥', name: 'Prescrições PS', desc: '106 condições com prescrição interativa.' },
   { section: 'tratamento-hospitalar', icon: '💉', name: 'Tratamento hospitalar', desc: 'Posologias IM/EV e internação.' },
-  { section: 'receituario', icon: '📋', name: 'Receituário', desc: 'Prescrições ambulatoriais VO.' },
+  { section: 'receituario', icon: '📋', name: 'Receituário', desc: 'Sugestões VO · modelo educacional · CRM-SP.' },
   { section: 'medicacoes', icon: '💊', name: 'Medicações', desc: '266+ fichas MedHub e referência RENAME.' },
   { section: 'exames', icon: '🔬', name: 'Exames', desc: 'Painéis sugeridos por cenário clínico.' },
   { section: 'interpretacao-exame', icon: '📊', name: 'Interpretação do exame', desc: 'Guia rápido de labs e imagem.' },
-  { section: 'anamnese', icon: '📝', name: 'Anamnese', desc: 'Formulário estruturado e histórico local.' },
-  { section: 'pacientes', icon: '👤', name: 'Pacientes', desc: 'Cadastro local vinculado à anamnese.' },
-  { section: 'consultas', icon: '📅', name: 'Consultas', desc: 'Registro de atendimentos e exportação PDF.' }
+  { section: 'anamnese', icon: '📝', name: 'Roteiro de atendimento', desc: 'Queixa → protocolo · notas locais criptografadas.' },
+  { section: 'pacientes', icon: '👤', name: 'Contexto do paciente', desc: 'Cadastro local opcional para o fluxo no app.' },
+  { section: 'consultas', icon: '📅', name: 'Histórico de atendimentos', desc: 'Registro local e PDF educacional.' }
 ];
 
 function initFerramentas () {

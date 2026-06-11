@@ -123,8 +123,12 @@ async function handleRegister (e) {
       ? await medhubFetchBillingConfig()
       : { misconfigured: true };
 
-    if (billing.misconfigured || config.misconfigured) {
-      alert('Cadastro indisponível: configure Stripe e login na nuvem (KV + JWT) na Vercel antes de abrir ao público.');
+    if (billing.billingMisconfigured || (billing.misconfigured && !billing.enabled)) {
+      alert('Cadastro indisponível: configure Stripe na Vercel antes de abrir ao público.');
+      return;
+    }
+    if (config.misconfigured || !config.cloudEnabled) {
+      alert('Cadastro na nuvem indisponível: conecte KV (Upstash) ao projeto na Vercel. Você já pode assinar em Planos.');
       return;
     }
     if (!config.cloudEnabled) {
@@ -138,11 +142,19 @@ async function handleRegister (e) {
     : { cloudEnabled: false };
 
   if (config.cloudEnabled && typeof medhubCloudRegister === 'function') {
-    const result = await medhubCloudRegister(name, email, pass, termsOk, privacyOk);
+    const checkoutSessionId = document.getElementById('checkout-session-id')?.value?.trim() || '';
+    const result = await medhubCloudRegister(name, email, pass, termsOk, privacyOk, checkoutSessionId);
     if (!result.ok) {
       if (result.code === 'subscription_required') {
         alert(result.error);
         window.location.href = 'index.html?email=' + encodeURIComponent(email) + '#planos';
+        return;
+      }
+      if (result.code === 'email_mismatch' && result.expectedEmail) {
+        alert(result.error);
+        const q = new URLSearchParams(window.location.search);
+        q.set('email', result.expectedEmail);
+        window.location.href = 'register.html?' + q.toString();
         return;
       }
       alert(result.error || 'Erro ao cadastrar.');
@@ -182,8 +194,12 @@ async function handleLogin (e) {
       ? await medhubFetchBillingConfig()
       : { misconfigured: true };
 
-    if (billing.misconfigured || config.misconfigured) {
-      alert('Login indisponível: configure Stripe e login na nuvem (KV + JWT) na Vercel antes de abrir ao público.');
+    if (billing.billingMisconfigured || (billing.misconfigured && !billing.enabled)) {
+      alert('Login indisponível: configure Stripe na Vercel antes de abrir ao público.');
+      return;
+    }
+    if (config.misconfigured || !config.cloudEnabled) {
+      alert('Login na nuvem indisponível: conecte KV (Upstash) ao projeto na Vercel. Assine em Planos se ainda não tiver conta.');
       return;
     }
     if (!config.cloudEnabled) {
@@ -247,6 +263,119 @@ function logout () {
   localStorage.removeItem('session');
   if (typeof medhubClearCloudSession === 'function') medhubClearCloudSession();
   medhubClearSessionCrypto();
+  window.location.href = 'login.html';
+}
+
+async function handleChangePassword (e) {
+  e.preventDefault();
+  const currentPassword = e.target.currentPassword.value;
+  const newPassword = e.target.newPassword.value;
+  const confirm = e.target.newPasswordConfirm.value;
+  const statusEl = document.getElementById('account-password-status');
+  const user = typeof getSession === 'function' ? getSession() : null;
+
+  if (!authValidatePassword(newPassword)) return;
+  if (newPassword !== confirm) return alert('As senhas não coincidem.');
+  if (!user?.email) return alert('Faça login novamente.');
+
+  const config = typeof medhubFetchAuthConfig === 'function'
+    ? await medhubFetchAuthConfig()
+    : { cloudEnabled: false };
+
+  if (!config.cloudEnabled || typeof medhubCloudChangePassword !== 'function') {
+    alert('Alteração de senha na nuvem indisponível neste ambiente.');
+    return;
+  }
+
+  if (statusEl) {
+    statusEl.hidden = false;
+    statusEl.textContent = 'Recriptografando dados clínicos…';
+    statusEl.className = 'anamnese-save-status anamnese-save-status--ok';
+  }
+
+  if (typeof medhubReencryptAllClinicalData === 'function') {
+    const reenc = await medhubReencryptAllClinicalData(currentPassword, newPassword, user.email);
+    if (!reenc.ok) {
+      if (statusEl) {
+        statusEl.textContent = reenc.error || 'Senha atual incorreta.';
+        statusEl.className = 'anamnese-save-status anamnese-save-status--warn';
+      } else {
+        alert(reenc.error || 'Senha atual incorreta.');
+      }
+      return;
+    }
+  }
+
+  const result = await medhubCloudChangePassword(currentPassword, newPassword);
+  if (!result.ok) {
+    if (statusEl) {
+      statusEl.hidden = false;
+      statusEl.textContent = result.error || 'Erro ao alterar senha.';
+      statusEl.className = 'anamnese-save-status anamnese-save-status--warn';
+    } else {
+      alert(result.error || 'Erro ao alterar senha.');
+    }
+    return;
+  }
+
+  if (typeof medhubCloudPushClinical === 'function') {
+    await medhubCloudPushClinical({ force: true });
+  }
+  if (typeof backupRefreshUi === 'function') backupRefreshUi();
+
+  e.target.reset();
+  if (statusEl) {
+    statusEl.hidden = false;
+    statusEl.textContent = 'Senha alterada e dados clínicos recriptografados.';
+    statusEl.className = 'anamnese-save-status anamnese-save-status--ok';
+  } else {
+    alert('Senha alterada com sucesso.');
+  }
+}
+
+async function handleRequestPasswordReset (e) {
+  e.preventDefault();
+  const email = e.target.email.value.trim();
+  const statusEl = document.getElementById('reset-request-status');
+  if (!email) return alert('Informe o e-mail.');
+
+  const result = await medhubRequestPasswordReset(email);
+  if (statusEl) {
+    statusEl.hidden = false;
+    statusEl.textContent = result.ok
+      ? (result.message || 'E-mail enviado. Verifique sua caixa de entrada.')
+      : (result.error || 'Erro ao enviar.');
+    statusEl.className = 'anamnese-save-status anamnese-save-status--' + (result.ok ? 'ok' : 'warn');
+  } else {
+    alert(result.ok ? result.message : result.error);
+  }
+}
+
+async function handleConfirmPasswordReset (e) {
+  e.preventDefault();
+  const params = new URLSearchParams(window.location.search);
+  const token = params.get('token') || '';
+  const pass = e.target.password.value;
+  const confirmPass = e.target.passwordConfirm.value;
+  const statusEl = document.getElementById('reset-confirm-status');
+
+  if (!token) return alert('Link inválido.');
+  if (!authValidatePassword(pass)) return;
+  if (pass !== confirmPass) return alert('As senhas não coincidem.');
+
+  const result = await medhubConfirmPasswordReset(token, pass);
+  if (!result.ok) {
+    if (statusEl) {
+      statusEl.hidden = false;
+      statusEl.textContent = result.error || 'Erro ao redefinir.';
+      statusEl.className = 'anamnese-save-status anamnese-save-status--warn';
+    } else {
+      alert(result.error || 'Erro ao redefinir.');
+    }
+    return;
+  }
+
+  alert(result.message || 'Senha redefinida. Faça login.');
   window.location.href = 'login.html';
 }
 

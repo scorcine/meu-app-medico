@@ -5,6 +5,8 @@ const {
   json,
   findCustomerByEmail
 } = require('./_stripe');
+const { verifyToken, readBearer } = require('./_auth');
+const { getUser, saveUser } = require('./_users');
 
 module.exports = async (req, res) => {
   if (req.method !== 'POST') {
@@ -17,30 +19,35 @@ module.exports = async (req, res) => {
     return;
   }
 
-  let body = {};
-  try {
-    body = typeof req.body === 'string' ? JSON.parse(req.body) : (req.body || {});
-  } catch {
-    json(res, 400, { error: 'JSON inválido' });
-    return;
-  }
-
-  const email = String(body.email || '').trim().toLowerCase();
-  if (!email) {
-    json(res, 400, { error: 'Informe o e-mail.' });
+  const payload = verifyToken(readBearer(req));
+  if (!payload?.email) {
+    json(res, 401, { error: 'Faça login para gerenciar sua assinatura.' });
     return;
   }
 
   try {
-    const stripe = getStripe();
-    const customer = await findCustomerByEmail(stripe, email);
-    if (!customer) {
-      json(res, 404, { error: 'Nenhuma assinatura encontrada para este e-mail.' });
+    const user = await getUser(payload.email);
+    if (!user) {
+      json(res, 401, { error: 'Conta não encontrada.' });
       return;
     }
 
+    const stripe = getStripe();
+    let customerId = user.stripeCustomerId;
+
+    if (!customerId) {
+      const customer = await findCustomerByEmail(stripe, user.email);
+      if (!customer) {
+        json(res, 404, { error: 'Nenhuma assinatura encontrada para esta conta.' });
+        return;
+      }
+      customerId = customer.id;
+      user.stripeCustomerId = customerId;
+      await saveUser(user);
+    }
+
     const portal = await stripe.billingPortal.sessions.create({
-      customer: customer.id,
+      customer: customerId,
       return_url: `${siteOrigin(req)}/app.html`
     });
 

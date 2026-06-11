@@ -1,4 +1,9 @@
 const { getStripe, json } = require('./_stripe');
+const {
+  syncCheckoutSession,
+  syncSubscriptionEvent,
+  markSubscriptionCanceled
+} = require('./_billing-kv');
 
 module.exports.config = {
   api: {
@@ -35,17 +40,23 @@ module.exports = async (req, res) => {
     return;
   }
 
-  // Stripe é a fonte da verdade; verify-subscription consulta a API.
-  // Webhook reservado para logs futuros / e-mail transacional.
-  switch (event.type) {
-    case 'customer.subscription.created':
-    case 'customer.subscription.updated':
-    case 'customer.subscription.deleted':
-    case 'checkout.session.completed':
-      break;
-    default:
-      break;
+  try {
+    switch (event.type) {
+      case 'checkout.session.completed':
+        await syncCheckoutSession(event.data.object);
+        break;
+      case 'customer.subscription.created':
+      case 'customer.subscription.updated':
+        await syncSubscriptionEvent(event.data.object);
+        break;
+      case 'customer.subscription.deleted':
+        await markSubscriptionCanceled(event.data.object);
+        break;
+      default:
+        break;
+    }
+    json(res, 200, { received: true });
+  } catch (err) {
+    json(res, 500, { error: err.message || 'Erro ao processar webhook' });
   }
-
-  json(res, 200, { received: true });
 };

@@ -5,8 +5,47 @@ const {
   getActiveSubscription
 } = require('./_stripe');
 const { allowDevBypass } = require('./_platform');
+const { getUser } = require('./_users');
+const {
+  getCustomerIdByEmail,
+  getCustomerBilling,
+  saveCustomerBilling,
+  snapshotFromSubscription
+} = require('./_billing-kv');
 
-async function getSubscriptionStatus (email) {
+function statusFromSnapshot (snapshot, email) {
+  if (!snapshot) return null;
+  return {
+    active: !!snapshot.active,
+    email: normalizeEmail(email || snapshot.email),
+    customerId: snapshot.customerId,
+    subscriptionId: snapshot.subscriptionId,
+    plan: snapshot.plan,
+    status: snapshot.status,
+    currentPeriodEnd: snapshot.currentPeriodEnd || null,
+    source: 'kv'
+  };
+}
+
+function normalizeEmail (email) {
+  return String(email || '').trim().toLowerCase();
+}
+
+async function resolveCustomerId (email, options = {}) {
+  if (options.customerId) return options.customerId;
+  if (options.user?.stripeCustomerId) return options.user.stripeCustomerId;
+
+  const kvCustomerId = await getCustomerIdByEmail(email);
+  if (kvCustomerId) return kvCustomerId;
+
+  const stripe = getStripe();
+  if (!stripe) return null;
+
+  const customer = await findCustomerByEmail(stripe, email);
+  return customer?.id || null;
+}
+
+async function getSubscriptionStatus (email, options = {}) {
   if (!billingEnabled()) {
     if (allowDevBypass()) {
       return { active: true, billingDisabled: true, devBypass: true };
@@ -14,32 +53,49 @@ async function getSubscriptionStatus (email) {
     return { active: false, misconfigured: true, reason: 'billing_not_configured' };
   }
 
-  const norm = String(email || '').trim().toLowerCase();
+  const norm = normalizeEmail(email);
   if (!norm) {
     return { active: false, reason: 'no_email' };
   }
 
-  const stripe = getStripe();
-  const customer = await findCustomerByEmail(stripe, norm);
-  if (!customer) {
+  let user = options.user;
+  if (!user && options.loadUser !== false) {
+    user = await getUser(norm);
+  }
+
+  const customerId = await resolveCustomerId(norm, { ...options, user });
+  if (!customerId) {
     return { active: false, email: norm, reason: 'no_customer' };
   }
 
-  const sub = await getActiveSubscription(stripe, customer.id);
-  if (!sub) {
-    return { active: false, email: norm, reason: 'no_subscription' };
+  const cached = await getCustomerBilling(customerId);
+  const cachedStatus = statusFromSnapshot(cached, norm);
+  if (cachedStatus?.active) {
+    return cachedStatus;
   }
 
-  const interval = sub.items?.data?.[0]?.price?.recurring?.interval;
+  const stripe = getStripe();
+  const sub = await getActiveSubscription(stripe, customerId);
+  if (!sub) {
+    if (cachedStatus) {
+      return { ...cachedStatus, active: false, reason: 'no_subscription' };
+    }
+    return { active: false, email: norm, customerId, reason: 'no_subscription' };
+  }
+
+  const snapshot = snapshotFromSubscription(sub, norm);
+  await saveCustomerBilling(snapshot);
+
   return {
     active: true,
     email: norm,
-    plan: interval === 'year' ? 'annual' : 'monthly',
+    customerId,
+    subscriptionId: sub.id,
+    plan: snapshot.plan,
     status: sub.status,
-    currentPeriodEnd: sub.current_period_end
-      ? new Date(sub.current_period_end * 1000).toISOString()
-      : null
+    currentPeriodEnd: snapshot.currentPeriodEnd,
+    source: 'stripe'
   };
 }
 
-module.exports = { getSubscriptionStatus };
+module.exports = { getSubscriptionStatus, resolveCustomerId };

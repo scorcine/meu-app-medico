@@ -1,14 +1,15 @@
-const MEDHUB_TERMS_VERSION = '2026-06-07-v1';
-const MEDHUB_PRIVACY_VERSION = '2026-06-07-v1';
+const MEDHUB_TERMS_VERSION = '2026-06-07-v2';
+const MEDHUB_PRIVACY_VERSION = '2026-06-07-v2';
 
 const MEDHUB_TERMS_BODY = `
-  <p><strong>MedHub é uma ferramenta educacional</strong> de apoio à decisão clínica para médicos. Ela <strong>não substitui</strong> julgamento médico, bula, protocolo institucional, segunda opinião nem <strong>prontuário legal</strong> exigido por lei, conselho profissional ou operadora.</p>
+  <p><strong>MedHub é uma ferramenta educacional</strong> de apoio à decisão clínica para médicos no plantão. Ela <strong>não substitui</strong> julgamento médico, bula, protocolo institucional, segunda opinião nem <strong>prontuário legal</strong> exigido por lei, conselho profissional ou operadora.</p>
   <h3>1. Objeto</h3>
-  <p>O MedHub Pro oferece conteúdos de referência (protocolos, calculadoras, modelos de anamnese e prescrição) para uso profissional individual (<strong>médico solo</strong>), mediante assinatura.</p>
+  <p>O MedHub Pro oferece conteúdos de referência (protocolos, calculadoras, sugestões de prescrição e roteiro local de atendimento) para uso profissional individual (<strong>médico solo</strong>), mediante assinatura. O roteiro local usa formato clínico para orientar o fluxo queixa → conduta no app — <strong>não constitui prontuário certificado</strong>.</p>
   <h3>2. Responsabilidade clínica</h3>
   <ul>
     <li>Você é o único responsável por condutas, prescrições e orientações aos pacientes.</li>
     <li>Revise sempre textos, doses e checklists antes de utilizar no atendimento.</li>
+    <li>O receituário PDF é <strong>modelo educacional</strong> (CRM-SP opcional) — valide conforme sua UF, tipo de receita e normas aplicáveis.</li>
     <li>Não utilize o app como único registro assistencial quando a instituição exige prontuário certificado.</li>
   </ul>
   <h3>3. Conta, assinatura e garantia</h3>
@@ -35,7 +36,7 @@ const MEDHUB_PRIVACY_BODY = `
   <ul>
     <li><strong>Conta na nuvem:</strong> nome, e-mail e senha (armazenada apenas como hash PBKDF2).</li>
     <li><strong>Assinatura:</strong> e-mail e status de pagamento via Stripe (não armazenamos número de cartão).</li>
-    <li><strong>Dados clínicos:</strong> anamneses, pacientes e consultas ficam <strong>no seu navegador</strong>, criptografados com chave derivada da sua senha — o servidor MedHub não recebe esse conteúdo.</li>
+    <li><strong>Dados clínicos (roteiro local):</strong> notas de atendimento, contexto de paciente e histórico ficam <strong>no seu navegador</strong>, criptografados com chave derivada da sua senha — o servidor MedHub não recebe esse conteúdo em texto claro.</li>
   </ul>
   <h3>3. Finalidades</h3>
   <ul>
@@ -44,7 +45,7 @@ const MEDHUB_PRIVACY_BODY = `
     <li>Cumprir obrigações legais e responder solicitações de titulares (LGPD).</li>
   </ul>
   <h3>4. Compartilhamento</h3>
-  <p>Usamos processadores: <strong>Vercel</strong> (hospedagem/API), <strong>Stripe</strong> (pagamentos) e, se você configurar, <strong>Google</strong> (backup opcional de anamnese). Não vendemos dados.</p>
+  <p>Usamos processadores: <strong>Vercel</strong> (hospedagem/API), <strong>Stripe</strong> (pagamentos) e, se você configurar, <strong>Google</strong> (backup opcional do roteiro local). Não vendemos dados.</p>
   <h3>5. Retenção</h3>
   <p>Conta na nuvem: enquanto a assinatura/conta estiver ativa. Dados locais no dispositivo: até você apagar cache, restaurar backup ou redefinir senha local.</p>
   <h3>6. Seus direitos (LGPD)</h3>

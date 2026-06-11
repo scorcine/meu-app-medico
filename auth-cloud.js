@@ -55,21 +55,72 @@ function medhubCacheLocalUser (user, passHash, passSalt) {
   saveUsers(users);
 }
 
-async function medhubCloudRegister (name, email, password, acceptTerms, acceptPrivacy) {
-  const res = await fetch('/api/auth/register', {
+async function medhubCloudChangePassword (currentPassword, newPassword) {
+  const res = await fetch('/api/auth/me', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: medhubAuthHeaders(),
     body: JSON.stringify({
-      name,
-      email: authNormalizedEmail(email),
-      password,
-      acceptTerms,
-      acceptPrivacy
+      action: 'changePassword',
+      currentPassword,
+      newPassword
     })
   });
   const data = await res.json();
   if (!res.ok) {
-    return { ok: false, error: data.error || 'Erro ao cadastrar', code: data.code };
+    return { ok: false, error: data.error || 'Erro ao alterar senha.' };
+  }
+  return { ok: true };
+}
+
+async function medhubRequestPasswordReset (email) {
+  const res = await fetch('/api/auth/verify-password', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ action: 'requestReset', email: authNormalizedEmail(email) })
+  });
+  const data = await res.json();
+  if (!res.ok) {
+    return { ok: false, error: data.error || 'Erro ao enviar e-mail.', code: data.code };
+  }
+  return { ok: true, message: data.message };
+}
+
+async function medhubConfirmPasswordReset (token, newPassword) {
+  const res = await fetch('/api/auth/verify-password', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ action: 'confirmReset', token, newPassword })
+  });
+  const data = await res.json();
+  if (!res.ok) {
+    return { ok: false, error: data.error || 'Erro ao redefinir senha.', code: data.code };
+  }
+  return { ok: true, message: data.message, clinicalDataReset: data.clinicalDataReset };
+}
+
+async function medhubCloudRegister (name, email, password, acceptTerms, acceptPrivacy, checkoutSessionId) {
+  const payload = {
+    name,
+    email: authNormalizedEmail(email),
+    password,
+    acceptTerms,
+    acceptPrivacy
+  };
+  if (checkoutSessionId) payload.checkoutSessionId = checkoutSessionId;
+
+  const res = await fetch('/api/auth/register', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  });
+  const data = await res.json();
+  if (!res.ok) {
+    return {
+      ok: false,
+      error: data.error || 'Erro ao cadastrar',
+      code: data.code,
+      expectedEmail: data.expectedEmail
+    };
   }
   return { ok: true, data };
 }
@@ -168,6 +219,10 @@ function medhubRedirectPricing (email) {
 async function medhubAfterCloudAuth (loginData, password) {
   medhubApplyCloudSession(loginData, password);
   await medhubUnlockSession(password, loginData.user.email);
+
+  if (typeof medhubCloudSyncAfterUnlock === 'function') {
+    await medhubCloudSyncAfterUnlock();
+  }
 
   if (medhubSubscriptionBlocked(loginData.subscription)) {
     medhubClearCloudSession();

@@ -49,6 +49,12 @@ async function clinicalSaveList (type, list) {
   } else {
     localStorage.setItem(clinicalStorageKey(type), JSON.stringify(list));
   }
+  if (typeof medhubTouchClinicalLocalAt === 'function') {
+    medhubTouchClinicalLocalAt();
+  }
+  if (typeof medhubScheduleCloudPush === 'function') {
+    medhubScheduleCloudPush();
+  }
 }
 
 function clinicalNewId () {

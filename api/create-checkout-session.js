@@ -52,11 +52,18 @@ module.exports = async (req, res) => {
 
     if (email) {
       sessionParams.customer_email = email;
+      sessionParams.metadata.medhub_email = email;
+      sessionParams.subscription_data = {
+        metadata: { medhub_email: email }
+      };
     }
 
     const trialDays = Number(process.env.MEDHUB_TRIAL_DAYS || 0);
     if (trialDays > 0) {
-      sessionParams.subscription_data = { trial_period_days: trialDays };
+      sessionParams.subscription_data = {
+        ...(sessionParams.subscription_data || {}),
+        trial_period_days: trialDays
+      };
     }
 
     const session = await stripe.checkout.sessions.create(sessionParams);

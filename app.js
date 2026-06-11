@@ -67,6 +67,20 @@ function patchEmergenciaCacheGuard () {
   showEmergenciaTopic._cacheGuard = true;
 }
 
+function initAccountPanel () {
+  const panel = document.getElementById('account-panel');
+  if (!panel) return;
+
+  if (typeof medhubFetchAuthConfig !== 'function') {
+    panel.hidden = true;
+    return;
+  }
+
+  medhubFetchAuthConfig().then(config => {
+    panel.hidden = !config.cloudEnabled;
+  });
+}
+
 function initAppCore (user) {
   medhubInitComplianceShell();
   medhubRequireTerms(() => {
@@ -95,7 +109,9 @@ function initAppCore (user) {
       initConsultas();
       initFerramentas();
       initBackup();
+      if (typeof initCloudSyncPanel === 'function') initCloudSyncPanel();
       if (typeof initBillingPanel === 'function') initBillingPanel(user);
+      initAccountPanel();
       patchEmergenciaCacheGuard();
 
       const hash = window.location.hash.replace('#', '');

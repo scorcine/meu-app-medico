@@ -4,13 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MedHub — Apoio clínico no plantão</title>
-  <meta name="description" content="Sepse, dengue, dor torácica — conduta e prescrição prontas no plantão. MedHub Pro para médico solo. Garantia de 7 dias. A partir de R$ 29,90/mês.">
+  <meta name="description" content="106 protocolos de PS, prescrição interativa, 266+ fichas de medicação e calculadoras — apoio à decisão no plantão. MedHub Pro para médico solo. Garantia de 7 dias.">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <script src="theme.js"></script>
-  <link rel="stylesheet" href="style.css?v=landing-v11">
+  <link rel="stylesheet" href="style.css?v=landing-v13">
   <script defer src="subscription.js?v=billing-v2"></script>
   <script defer src="app.js"></script>
-  <script defer src="app-showcase.js?v=showcase-v3"></script>
+  <script defer src="app-showcase.js?v=showcase-v4"></script>
   <script defer src="billing.js?v=billing-v3"></script>
   <script defer src="landing.js?v=landing-v4"></script>
 </head>
@@ -37,7 +37,7 @@
         <span class="landing-badge landing-badge-guarantee">🛡️ Garantia de 7 dias — reembolso integral</span>
         <h1>No plantão, cada minuto conta.<br>Seu apoio clínico cabe no bolso.</h1>
         <p class="landing-hero-lead">
-          Chega de alternar PDF, Google e papel no meio do atendimento. Abra <strong>sepse, dengue ou dor torácica</strong> com prescrição interativa pronta — <strong>106 protocolos de PS</strong>, receituário PDF, <strong>lista com mais de 400 medicamentos inclusos</strong> e calculadoras num só app, feito para quem atende <strong>sozinho</strong>.
+          Chega de alternar PDF, Google e papel no meio do atendimento. Abra <strong>sepse, dengue ou dor torácica</strong> com conduta e prescrição interativa — <strong>106 protocolos de PS</strong>, receituário educacional (PDF), <strong>266+ fichas de medicação</strong> e calculadoras num só app, feito para quem atende <strong>sozinho</strong> no plantão.
         </p>
         <p class="landing-hero-benefit">⚡ Conduta no leito · menos improviso · mais segurança na decisão</p>
         <p class="landing-price-line" id="landing-price-from">A partir de R$ 29,90/mês</p>
@@ -48,7 +48,7 @@
         </div>
         <ul class="landing-stats" aria-label="Números do MedHub">
           <li><strong>106</strong><span>protocolos PS</span></li>
-          <li><strong>400+</strong><span>medicamentos</span></li>
+          <li><strong>266+</strong><span>fichas de medicação</span></li>
           <li><strong>30+30</strong><span>exames e interpretação</span></li>
           <li><strong>Dezenas</strong><span>calculadoras</span></li>
         </ul>
@@ -62,7 +62,7 @@
               <span>Pronto Socorro</span>
               <span>Receituário</span>
               <span>Medicações</span>
-              <span>Anamnese</span>
+              <span>Roteiro</span>
               <span>Calculadoras</span>
             </div>
             <div class="app-mock-panel">
@@ -88,6 +88,33 @@
       </div>
     </section>
 
+    <section class="landing-section landing-data-clarity card" id="dados">
+      <header class="landing-section-head">
+        <h2>Conta na nuvem · Dados clínicos no seu dispositivo</h2>
+        <p>Transparência sobre o que fica onde — sem surpresas ao trocar de celular.</p>
+      </header>
+      <div class="landing-data-grid">
+        <article class="landing-data-card">
+          <h3>☁️ Na nuvem MedHub</h3>
+          <ul>
+            <li>Login (e-mail e senha)</li>
+            <li>Assinatura MedHub Pro</li>
+            <li>Protocolos, calculadoras e conteúdo clínico</li>
+          </ul>
+        </article>
+        <article class="landing-data-card">
+          <h3>📱 Notas locais (opcional · E2E)</h3>
+          <ul>
+            <li>Roteiro de atendimento e histórico no dispositivo</li>
+            <li>Criptografados com sua senha</li>
+            <li>Sync opcional na nuvem (ciphertext)</li>
+            <li>Backup JSON manual também disponível</li>
+          </ul>
+        </article>
+      </div>
+      <p class="landing-data-note muted"><strong>Não é prontuário legal.</strong> O roteiro de atendimento orienta o fluxo queixa → protocolo → prescrição dentro do app. PDFs são exportação educacional. Use conforme LGPD e política da sua instituição.</p>
+    </section>
+
     <section class="landing-section pricing-v2-included" id="incluso">
       <header class="landing-section-head">
         <h2>Tudo isso incluso no plano</h2>
@@ -96,9 +123,9 @@
       <div class="pricing-v2-module-grid">
         <div class="pricing-v2-module"><span>⚡</span><strong>Emergência</strong><small>ACLS, AVC, sepse, trauma</small></div>
         <div class="pricing-v2-module"><span>🏥</span><strong>Pronto-socorro</strong><small>106 condições + prescrição</small></div>
-        <div class="pricing-v2-module"><span>💊</span><strong>Receituário</strong><small>106 condições VO + PDF</small></div>
-        <div class="pricing-v2-module"><span>📋</span><strong>Medicações</strong><small>400+ medicamentos · RENAME</small></div>
-        <div class="pricing-v2-module"><span>📝</span><strong>Anamnese</strong><small>Formulário + histórico local</small></div>
+        <div class="pricing-v2-module"><span>💊</span><strong>Receituário</strong><small>106 condições VO · modelo educacional</small></div>
+        <div class="pricing-v2-module"><span>📋</span><strong>Medicações</strong><small>266+ fichas · 148 RENAME</small></div>
+        <div class="pricing-v2-module"><span>📝</span><strong>Roteiro local</strong><small>Queixa → protocolo · notas criptografadas</small></div>
         <div class="pricing-v2-module"><span>🧮</span><strong>Calculadoras</strong><small>Scores e doses pediátricas</small></div>
         <div class="pricing-v2-module"><span>🔬</span><strong>Exames</strong><small>30 cenários de pedido</small></div>
         <div class="pricing-v2-module"><span>📊</span><strong>Interpretação</strong><small>30 guias de labs/imagem</small></div>
@@ -109,7 +136,7 @@
       <header class="landing-section-head landing-section-head-showcase">
         <span class="showcase-head-kicker">✨ Explore antes de assinar</span>
         <h2>Olhe o que este aplicativo pode te oferecer</h2>
-        <p>Protocolos, prescrições, medicações e calculadoras — <strong>veja na prática</strong> como o MedHub Pro apoia seu plantão.</p>
+        <p>Protocolos, prescrições, medicações e calculadoras — <strong>veja na prática</strong> como o MedHub Pro apoia sua decisão no plantão.</p>
       </header>
       <div id="app-showcase-root-index"></div>
     </section>
@@ -132,10 +159,22 @@
         </blockquote>
         <blockquote class="landing-review card">
           <div class="landing-stars" aria-label="5 estrelas">★★★★★</div>
-          <p>“Anamnese com PDF e receituário integrado vale o plano solo. Interface direta, sem enrolação.”</p>
+          <p>“Abro a queixa, o app já me leva na conduta e na prescrição. Parei de improvisar no meio do atendimento.”</p>
           <footer><strong>Dra. Juliana F.</strong><span>UPA · RJ</span></footer>
         </blockquote>
       </div>
+    </section>
+
+    <section class="landing-section landing-compliance card" id="compliance">
+      <header class="landing-section-head">
+        <h2>Transparência clínica</h2>
+        <p>O MedHub Pro é <strong>apoio à decisão no plantão</strong>, não consultório digital certificado.</p>
+      </header>
+      <ul class="landing-compliance-list">
+        <li><strong>Protocolos e prescrição:</strong> referência educacional — revise doses, contraindicações e protocolo institucional antes de usar.</li>
+        <li><strong>Receituário PDF:</strong> modelo educacional com CRM-SP opcional — valide conforme sua UF, tipo de receita e normas locais.</li>
+        <li><strong>Roteiro local:</strong> formulário no formato clínico para guiar queixa → conduta no app — <em>não substitui prontuário legal</em>.</li>
+      </ul>
     </section>
 
     <section class="landing-section pricing-v2-checkout" id="planos">

@@ -9,7 +9,7 @@
   <title>MedHub</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <script src="theme.js"></script>
-  <link rel="stylesheet" href="style.css?v=atendimento-v3">
+  <link rel="stylesheet" href="style.css?v=atendimento-v4">
   <script defer src="calculators-risco.js"></script>
   <script defer src="calculators-cardio.js"></script>
   <script defer src="calculators-pneumo.js?v=rsi-patient"></script>
@@ -61,9 +61,10 @@
   <script defer src="pacientes.js?v=atendimento-v3"></script>
   <script defer src="consultas.js?v=atendimento-v3"></script>
   <script defer src="ferramentas.js?v=atendimento-v3"></script>
-  <script defer src="backup.js?v=backup-v1"></script>
-  <script defer src="subscription.js?v=billing-v2"></script>
-  <script defer src="auth-cloud.js?v=cloud-v1"></script>
+  <script defer src="backup.js?v=backup-v2"></script>
+  <script defer src="clinical-cloud.js?v=cloud-sync-v1"></script>
+  <script defer src="subscription.js?v=billing-v4"></script>
+  <script defer src="auth-cloud.js?v=cloud-v4"></script>
   <script defer src="app.js?v=atendimento-v3"></script>
   <script defer src="auth.js?v=compliance-v1"></script>
 </head>
@@ -82,10 +83,10 @@
       <nav class="sidebar-nav">
         <button type="button" class="sidebar-link active" data-section="inicio">Início</button>
 
-        <p class="sidebar-group">Atendimento</p>
-        <button type="button" class="sidebar-link" data-section="pacientes">Pacientes</button>
-        <button type="button" class="sidebar-link" data-section="anamnese">Anamnese</button>
-        <button type="button" class="sidebar-link" data-section="consultas">Consultas</button>
+        <p class="sidebar-group">Roteiro local (opcional)</p>
+        <button type="button" class="sidebar-link" data-section="pacientes">Contexto do paciente</button>
+        <button type="button" class="sidebar-link" data-section="anamnese">Roteiro de atendimento</button>
+        <button type="button" class="sidebar-link" data-section="consultas">Histórico de atendimentos</button>
 
         <p class="sidebar-group">Prescrição &amp; exames</p>
         <button type="button" class="sidebar-link" data-section="receituario">Receituário</button>
@@ -150,24 +151,28 @@
                 <span>266+ fichas MedHub · 148 referência RENAME · consulta ANVISA.</span>
               </li>
               <li>
-                <strong>📝 Anamnese e histórico local</strong>
-                <span>Formulário estruturado, histórico local, exportação PDF e envio opcional ao Google Drive.</span>
+                <strong>📝 Roteiro de atendimento (local)</strong>
+                <span>Formulário clínico para queixa → protocolo → prescrição. Histórico criptografado e PDF educacional — não substitui prontuário legal.</span>
               </li>
               <li>
-                <strong>👤 Pacientes e consultas</strong>
-                <span>Cadastro local, registro automático ao salvar anamnese (opcional) e exportação PDF do atendimento.</span>
+                <strong>👤 Contexto do paciente</strong>
+                <span>Cadastro local opcional (alergias, medicações) para apoiar o fluxo no app — não é prontuário institucional.</span>
               </li>
               <li>
                 <strong>🔬 Exames e interpretação</strong>
                 <span>30 cenários de solicitação e 30 guias de interpretação — pediatria, obstetrícia, toxicologia e mais.</span>
               </li>
               <li>
-                <strong>💾 Backup local</strong>
-                <span>Exporte e restaure anamneses, pacientes e consultas em JSON — útil ao trocar de PC ou limpar o navegador.</span>
+                <strong>☁️ Sync criptografado na nuvem</strong>
+                <span>Backup automático das suas notas locais (ciphertext — MedHub não lê o conteúdo).</span>
               </li>
               <li>
-                <strong>🌐 Uso online e dados locais</strong>
-                <span>O app precisa de internet para carregar. Anamneses e login ficam no seu dispositivo — não há sincronização em nuvem do MedHub.</span>
+                <strong>💾 Backup JSON local</strong>
+                <span>Exporte e restaure manualmente — útil como cópia extra ou offline.</span>
+              </li>
+              <li>
+                <strong>🌐 Uso online</strong>
+                <span>O app precisa de internet para carregar conteúdo clínico e sincronizar conta/dados.</span>
               </li>
               <li>
                 <strong>🔐 Conta local e privacidade</strong>
@@ -192,9 +197,26 @@
             </div>
           </section>
 
+          <section class="home-section cloud-sync-section" id="cloud-sync-panel" hidden>
+            <h3>☁️ Sync criptografado na nuvem</h3>
+            <p class="muted">Cópia automática das suas notas locais na nuvem MedHub. O servidor <strong>não lê</strong> o conteúdo — só armazena ciphertext. Use a mesma senha para desbloquear em outro aparelho.</p>
+            <label class="auth-terms-check">
+              <input type="checkbox" id="cloud-sync-enabled" checked>
+              Ativar backup automático na nuvem
+            </label>
+            <div class="backup-actions">
+              <button type="button" class="btn-outline" id="cloud-sync-now">Sincronizar agora</button>
+            </div>
+            <p id="cloud-sync-status" class="anamnese-save-status" hidden></p>
+          </section>
+
           <section class="home-section backup-section">
-            <h3>💾 Backup dos seus dados</h3>
-            <p class="muted">Exporte anamneses, pacientes, consultas e preferências deste navegador. Restaure em outro computador ou após limpar o cache — use o <strong>mesmo e-mail de login</strong> e desbloqueie com sua senha.</p>
+            <div id="backup-first-use-banner" class="backup-first-use-banner" hidden role="note">
+              <p><strong>Proteja seus dados clínicos.</strong> Ative o sync na nuvem acima ou exporte backup JSON — ao trocar de celular ou PC, restaure com a mesma senha.</p>
+              <button type="button" class="btn-outline btn-sm" id="backup-dismiss-prompt">Entendi</button>
+            </div>
+            <h3>💾 Backup JSON (manual)</h3>
+            <p class="muted">Exporte ou restaure um arquivo JSON neste navegador — complementar ao sync na nuvem.</p>
             <p class="compliance-inline-notice" role="note">
               O arquivo JSON contém dados clínicos sensíveis (incluindo conteúdo criptografado). Guarde em local seguro; não envie por apps públicos sem proteção.
             </p>
@@ -206,6 +228,26 @@
               </label>
             </div>
             <p id="backup-status" class="anamnese-save-status" hidden></p>
+          </section>
+
+          <section class="home-section account-section" id="account-panel">
+            <h3>🔐 Conta e senha</h3>
+            <p class="muted">Conta MedHub na nuvem (e-mail e assinatura). Dados clínicos: sync criptografado opcional + armazenamento local.</p>
+            <form class="account-password-form" id="change-password-form" onsubmit="handleChangePassword(event)">
+              <label for="account-current-password">Senha atual</label>
+              <input id="account-current-password" name="currentPassword" type="password" required autocomplete="current-password">
+
+              <label for="account-new-password">Nova senha</label>
+              <input id="account-new-password" name="newPassword" type="password" required minlength="8" autocomplete="new-password">
+
+              <label for="account-new-password-confirm">Confirmar nova senha</label>
+              <input id="account-new-password-confirm" name="newPasswordConfirm" type="password" required minlength="8" autocomplete="new-password">
+
+              <p class="auth-hint muted">Com a senha atual, recriptografamos suas notas locais automaticamente. Esqueceu a senha? Use o link na tela de login.</p>
+
+              <button type="submit" class="btn-outline">Alterar senha</button>
+              <p id="account-password-status" class="anamnese-save-status" hidden></p>
+            </form>
           </section>
 
           <p class="home-disclaimer" role="note">
@@ -239,7 +281,8 @@
         <div class="card dashboard-card rx-wrap">
           <div id="rx-list-view">
             <h2>Receituário</h2>
-            <p class="muted">Todas as condições do PS estão disponíveis. Com várias queixas na anamnese (ex.: cefaleia + náuseas), o app monta uma receita combinada.</p>
+            <p class="compliance-inline-notice" role="note"><strong>Modelo educacional.</strong> Sugestões VO por condição com CRM-SP opcional. Valide conforme sua UF, tipo de receita e normas locais antes de prescrever.</p>
+            <p class="muted">Todas as condições do PS estão disponíveis. Com várias queixas no roteiro (ex.: cefaleia + náuseas), o app monta uma receita combinada.</p>
             <label class="ps-search-label" for="rx-crm">CRM-SP (opcional — aparece na receita)</label>
             <div class="rx-crm-field">
               <span class="rx-crm-prefix" aria-hidden="true">CRM-SP</span>
@@ -422,9 +465,9 @@
 
       <section id="section-pacientes" class="content-panel">
         <div class="card dashboard-card clinical-wrap">
-          <h2>Pacientes</h2>
+          <h2>Contexto do paciente</h2>
           <p class="compliance-privacy-banner" role="note">
-            Cadastro <strong>local neste navegador</strong> (criptografado com sua senha). Não substitui prontuário legal — use conforme LGPD e política institucional.
+            Cadastro <strong>local neste navegador</strong> (criptografado com sua senha) para apoiar o fluxo de atendimento no app. <strong>Não substitui prontuário legal</strong> — use conforme LGPD e política institucional.
           </p>
 
           <h3 id="pac-form-title">Novo paciente</h3>
@@ -477,13 +520,13 @@
 
       <section id="section-anamnese" class="content-panel">
         <div class="card dashboard-card anamnese-wrap">
-          <h2>Anamnese</h2>
+          <h2>Roteiro de atendimento</h2>
           <p class="compliance-privacy-banner" role="note">
-            <strong>Privacidade:</strong> anamneses salvas ficam <strong>criptografadas neste navegador</strong> (chave derivada da sua senha).
-            Não há servidor MedHub. Isso <strong>não equivale a prontuário legal</strong> — use conforme política da sua instituição e LGPD.
+            <strong>Apoio ao fluxo clínico</strong> — formulário no formato de anamnese para orientar queixa → protocolo → prescrição dentro do app.
+            Dados salvos ficam <strong>criptografados neste navegador</strong> (chave derivada da sua senha). Isso <strong>não equivale a prontuário legal</strong> — use conforme política da sua instituição e LGPD.
             Dados enviados ao Google Drive (opcional) ficam sob sua conta Google.
           </p>
-          <p class="muted">Registre a anamnese do paciente. Ao salvar, o texto fica no histórico local, pode ser exportado em PDF e enviado ao Google Drive.</p>
+          <p class="muted">Registre a queixa e o exame no formato clínico. Ao salvar, o texto fica no histórico local e pode ser exportado em PDF educacional ou enviado ao Google Drive.</p>
 
           <details class="anamnese-drive-panel">
             <summary>Google Drive — envio automático</summary>
@@ -561,11 +604,11 @@
 
             <label class="anamnese-check">
               <input type="checkbox" id="anam-registrar-consulta" checked>
-              Registrar consulta automaticamente ao salvar (aba Consultas)
+              Registrar atendimento automaticamente ao salvar (aba Histórico)
             </label>
 
             <div class="anamnese-form-actions">
-              <button type="submit" class="btn">Salvar anamnese</button>
+              <button type="submit" class="btn">Salvar roteiro</button>
               <button type="button" class="btn-outline" id="anamnese-export-pdf">Exportar PDF</button>
               <button type="button" class="btn-outline" id="anamnese-clear">Limpar formulário</button>
             </div>
@@ -577,7 +620,7 @@
             <p id="anamnese-history-locked" class="compliance-inline-notice" hidden>
               Histórico protegido — informe sua senha ao abrir o app para desbloquear anamneses criptografadas.
             </p>
-            <p id="anamnese-history-empty" class="muted">Nenhuma anamnese salva ainda.</p>
+            <p id="anamnese-history-empty" class="muted">Nenhum roteiro salvo ainda.</p>
             <ul id="anamnese-history-list" class="anamnese-history-list"></ul>
           </section>
         </div>
@@ -585,8 +628,9 @@
 
       <section id="section-consultas" class="content-panel">
         <div class="card dashboard-card clinical-wrap">
-          <h2>Consultas</h2>
-          <p class="muted">Registro simples de atendimentos — histórico local vinculado ao paciente. Use <strong>Exportar PDF</strong> para salvar ou imprimir (Salvar como PDF no diálogo do navegador).</p>
+          <h2>Histórico de atendimentos</h2>
+          <p class="compliance-inline-notice" role="note">Registro local opcional vinculado ao paciente — <strong>não substitui prontuário legal</strong>.</p>
+          <p class="muted">Histórico simples de atendimentos no dispositivo. Use <strong>Exportar PDF</strong> para rascunho educacional (Salvar como PDF no diálogo do navegador).</p>
 
           <h3 id="cons-form-title">Nova consulta</h3>
           <form id="cons-form" class="anamnese-form">

@@ -6,7 +6,7 @@ const {
   parseBody,
   normalizeEmail
 } = require('../_auth');
-const { getUser, publicUser } = require('../_users');
+const { getUser, publicUser, saveUser } = require('../_users');
 const { getSubscriptionStatus } = require('../_subscription');
 const { platformUnavailableMessage } = require('../_platform');
 
@@ -50,10 +50,16 @@ module.exports = async (req, res) => {
       return;
     }
 
-    const sub = await getSubscriptionStatus(email);
+    const sub = await getSubscriptionStatus(email, { user, loadUser: false });
     if (sub.misconfigured) {
       json(res, 503, { error: platformUnavailableMessage(), code: 'platform_misconfigured' });
       return;
+    }
+
+    if (sub.customerId && !user.stripeCustomerId) {
+      user.stripeCustomerId = sub.customerId;
+      user.stripeSubscriptionId = sub.subscriptionId || user.stripeSubscriptionId || null;
+      await saveUser(user);
     }
 
     const token = createSessionToken(user);

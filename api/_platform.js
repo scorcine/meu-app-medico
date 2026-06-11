@@ -35,6 +35,8 @@ function getPlatformStatus () {
   const authConfigured = cloudAuthEnabled();
   const production = isProductionDeploy();
   const ready = billingConfigured && authConfigured;
+  const billingMisconfigured = production && !billingConfigured;
+  const authMisconfigured = production && !authConfigured;
   const misconfigured = production && !ready;
   const devBypass = allowDevBypass();
 
@@ -42,10 +44,14 @@ function getPlatformStatus () {
     production,
     ready,
     misconfigured,
+    billingMisconfigured,
+    authMisconfigured,
     billingConfigured,
     authConfigured,
     allowDevBypass: devBypass,
-    missing: getMissingConfig()
+    missing: getMissingConfig(),
+    missingAuth: getMissingConfig().filter(k => k.startsWith('KV_') || k === 'MEDHUB_JWT_SECRET'),
+    missingBilling: getMissingConfig().filter(k => k.startsWith('STRIPE_'))
   };
 }
 

@@ -85,7 +85,7 @@ checkTopicCatalog('Exames', 'exames-data.js', 'EXAMES_TOPICS', 'EXAMES_CONTENT')
 checkTopicCatalog('Interpretação', 'interpretacao-exame-data.js', 'INTERP_TOPICS', 'INTERP_CONTENT');
 
 console.log('\nArquivos essenciais:');
-['app.html', 'index.html', 'login.html', 'pricing.html', 'termos.html', 'privacidade.html', 'subscribe-success.html', 'reset-password.html', 'auth-cloud.js', 'subscription.js', 'billing.js', 'app-showcase.js', 'legal-content.js', 'receituario.js', 'clinical-storage.js', 'backup.js', 'api/billing-config.js', 'api/create-checkout-session.js', 'api/verify-subscription.js', 'api/auth/config.js', 'api/auth/login.js', 'api/auth/register.js', 'api/auth/me.js'].forEach(f => {
+['app.html', 'index.html', 'login.html', 'pricing.html', 'termos.html', 'privacidade.html', 'subscribe-success.html', 'reset-password.html', 'auth-cloud.js', 'clinical-cloud.js', 'subscription.js', 'billing.js', 'app-showcase.js', 'legal-content.js', 'receituario.js', 'clinical-storage.js', 'backup.js', 'api/billing-config.js', 'api/create-checkout-session.js', 'api/auth/config.js', 'api/auth/login.js', 'api/auth/register.js', 'api/auth/me.js'].forEach(f => {
   if (fs.existsSync(path.join(root, f))) pass(f);
   else fail('ausente: ' + f);
 });

@@ -20,12 +20,17 @@ module.exports = async (req, res) => {
 
   json(res, 200, {
     enabled: billingEnabled(),
+    checkoutEnabled: billingEnabled(),
     production: platform.production,
     ready: platform.ready,
     misconfigured: platform.misconfigured,
+    billingMisconfigured: platform.billingMisconfigured,
+    authMisconfigured: platform.authMisconfigured,
     authConfigured: platform.authConfigured,
     allowDevBypass: platform.allowDevBypass,
     missing: platform.misconfigured ? platform.missing : undefined,
+    missingAuth: platform.authMisconfigured ? platform.missingAuth : undefined,
+    missingBilling: platform.billingMisconfigured ? platform.missingBilling : undefined,
     currency: 'BRL',
     monthlyDisplay,
     annualDisplay,

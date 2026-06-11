@@ -13,7 +13,7 @@ function mountAppShowcase (rootSelector) {
     emerg: 'Emergência',
     rx: 'Receituário',
     med: 'Medicações',
-    anam: 'Anamnese',
+    anam: 'Roteiro',
     calc: 'Calculadoras'
   };
 
@@ -284,9 +284,9 @@ function buildShowcaseMeta () {
       ]
     },
     rx: {
-      title: 'Receituário médico',
-      desc: 'Sugestões VO por condição, CRM-SP, geração de receita e exportação PDF para o paciente.',
-      list: ['106 condições ambulatoriais', 'Impressão e PDF', 'Checagem de interações comuns'],
+      title: 'Receituário educacional',
+      desc: 'Sugestões VO por condição, CRM-SP opcional e PDF — valide conforme sua UF antes de prescrever.',
+      list: ['106 condições ambulatoriais', 'Modelo educacional · CRM-SP', 'Checagem de interações comuns'],
       slides: [
         { label: 'Faringoamigdalite estreptocócica', html: shotChrome(NAV_RX, shotCard('Faringoamigdalite estreptocócica — Receituário',
           '<p class="shot-muted">CRM-SP · 123456 · Dr. Silva</p>' +
@@ -349,35 +349,35 @@ function buildShowcaseMeta () {
       ]
     },
     anam: {
-      title: 'Anamnese e consultas',
-      desc: 'Registro estruturado no dispositivo, histórico criptografado e PDF do atendimento.',
-      list: ['Formulário QP, HDA, exame físico', 'Pacientes e consultas vinculados', 'Exportação PDF'],
+      title: 'Roteiro de atendimento',
+      desc: 'Formulário clínico local para queixa → protocolo → prescrição. Histórico criptografado e PDF educacional.',
+      list: ['Queixa → conduta no app', 'Contexto de paciente opcional', 'PDF educacional (não prontuário)'],
       slides: [
-        { label: 'Cefaleia — consulta ambulatorial', html: shotChrome(NAV_ANAM, shotCard('Anamnese — consulta ambulatorial',
+        { label: 'Cefaleia — consulta ambulatorial', html: shotChrome(NAV_ANAM, shotCard('Roteiro — consulta ambulatorial',
           '<div class="shot-form-grid">' +
           '<label class="shot-label">Queixa principal</label><div class="shot-field shot-field-filled">Cefaleia há 3 dias</div>' +
           '<label class="shot-label">HDA</label><div class="shot-field shot-field-area">Holocraniana, pulsátil…</div>' +
           '<label class="shot-label">Exame físico</label><div class="shot-field shot-field-filled">PA 130×85 · FC 78 · GCS 15</div>' +
           '</div><div class="shot-rx-actions"><button type="button" class="shot-btn">Salvar</button><button type="button" class="shot-btn shot-btn-ghost">Exportar PDF</button></div>')) },
-        { label: 'Dor abdominal — PS ambulatorial', html: shotChrome(NAV_ANAM, shotCard('Anamnese — dor abdominal',
+        { label: 'Dor abdominal — PS ambulatorial', html: shotChrome(NAV_ANAM, shotCard('Roteiro — dor abdominal',
           '<div class="shot-form-grid">' +
           '<label class="shot-label">Queixa principal</label><div class="shot-field shot-field-filled">Dor epigástrica há 2 dias</div>' +
           '<label class="shot-label">HDA</label><div class="shot-field shot-field-area">Em queimação · pós-prandial · sem irradiação</div>' +
           '<label class="shot-label">Exame físico</label><div class="shot-field shot-field-filled">Abdome flácido · Murphy −</div>' +
           '</div>')) },
-        { label: 'Dispneia — avaliação inicial', html: shotChrome(NAV_ANAM, shotCard('Anamnese — dispneia',
+        { label: 'Dispneia — avaliação inicial', html: shotChrome(NAV_ANAM, shotCard('Roteiro — dispneia',
           '<div class="shot-form-grid">' +
           '<label class="shot-label">Queixa principal</label><div class="shot-field shot-field-filled">Falta de ar há 1 semana</div>' +
           '<label class="shot-label">HDA</label><div class="shot-field shot-field-area">Progressiva · ortopneia · edema MMII</div>' +
           '<label class="shot-label">Exame físico</label><div class="shot-field shot-field-filled">Estertores bibasais · SatO₂ 93%</div>' +
           '</div>')) },
-        { label: 'Retorno DM2 — acompanhamento', html: shotChrome(NAV_ANAM, shotCard('Anamnese — retorno diabetes',
+        { label: 'Retorno DM2 — acompanhamento', html: shotChrome(NAV_ANAM, shotCard('Roteiro — retorno diabetes',
           '<div class="shot-form-grid">' +
           '<label class="shot-label">Motivo</label><div class="shot-field shot-field-filled">Retorno DM2 · controle glicêmico</div>' +
           '<label class="shot-label">HDA</label><div class="shot-field shot-field-area">Glicemia capilar 140–180 · aderência OK</div>' +
           '<label class="shot-label">Exame físico</label><div class="shot-field shot-field-filled">Pé sem lesões · PA 128×82</div>' +
           '</div>')) },
-        { label: 'Pré-natal — 1ª consulta', html: shotChrome(NAV_ANAM, shotCard('Anamnese — pré-natal',
+        { label: 'Pré-natal — 1ª consulta', html: shotChrome(NAV_ANAM, shotCard('Roteiro — pré-natal',
           '<div class="shot-form-grid">' +
           '<label class="shot-label">IG</label><div class="shot-field shot-field-filled">12 semanas · DUM confirmada</div>' +
           '<label class="shot-label">Antecedentes</label><div class="shot-field shot-field-area">G2P1A0 · sem comorbidades</div>' +
@@ -477,7 +477,7 @@ var NAV_MED = shotNav([
 ]);
 
 var NAV_ANAM = shotNav([
-  { label: 'Atendimento', items: [{ text: 'Pacientes' }, { text: 'Anamnese', active: true }, { text: 'Consultas' }] }
+  { label: 'Roteiro local', items: [{ text: 'Contexto' }, { text: 'Roteiro', active: true }, { text: 'Histórico' }] }
 ]);
 
 var NAV_CALC = shotNav([

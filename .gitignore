@@ -2,5 +2,7 @@
 .env.local
 .env.*.local
 stripe-key.local.txt
+resend-key.local.txt
 node_modules/
 .vercel/
+.env*

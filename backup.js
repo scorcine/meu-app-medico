@@ -170,4 +170,23 @@ function initBackup () {
       importInput.value = '';
     });
   }
+
+  backupMaybePromptFirstUse();
+}
+
+function backupMaybePromptFirstUse () {
+  const banner = document.getElementById('backup-first-use-banner');
+  if (!banner) return;
+
+  const key = 'medhub-backup-prompt-' + backupUserEmail();
+  if (localStorage.getItem(key)) {
+    banner.hidden = true;
+    return;
+  }
+
+  banner.hidden = false;
+  document.getElementById('backup-dismiss-prompt')?.addEventListener('click', () => {
+    localStorage.setItem(key, '1');
+    banner.hidden = true;
+  });
 }

@@ -24,17 +24,22 @@ async function medhubVerifySubscription (email) {
     return { active: true, localDev: true };
   }
 
-  try {
-    const res = await fetch('/api/verify-subscription?email=' + encodeURIComponent(norm));
-    const data = await res.json();
-    if (res.status === 503 && data.misconfigured) {
-      return { active: false, misconfigured: true, reason: data.reason };
+  if (typeof medhubGetAuthToken === 'function' && medhubGetAuthToken() && typeof medhubCloudMe === 'function') {
+    try {
+      const me = await medhubCloudMe();
+      if (me?.subscription) {
+        if (me.subscription.misconfigured) {
+          return { active: false, misconfigured: true, reason: me.subscription.reason };
+        }
+        if (me.subscription.devBypass) return { active: true, devBypass: true };
+        return me.subscription;
+      }
+    } catch {
+      /* fallback abaixo removido em produção */
     }
-    if (res.ok && data.devBypass) return { active: true, devBypass: true };
-    return data;
-  } catch {
-    return { active: false, error: 'network' };
   }
+
+  return { active: false, reason: 'auth_required' };
 }
 
 async function medhubRequireSubscription (user) {
@@ -74,15 +79,14 @@ async function medhubOpenCheckout (plan, email) {
   }
 }
 
-async function medhubOpenBillingPortal (email) {
-  const norm = String(email || '').trim().toLowerCase();
-  if (!norm) return alert('E-mail não encontrado na sessão.');
+async function medhubOpenBillingPortal () {
+  const token = medhubGetAuthToken();
+  if (!token) return alert('Faça login para gerenciar sua assinatura.');
 
   try {
     const res = await fetch('/api/create-portal-session', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: norm })
+      headers: medhubAuthHeaders()
     });
     const data = await res.json();
     if (data.url) {
@@ -125,5 +129,5 @@ async function initBillingPanel (user) {
   subscribeBtn?.addEventListener('click', () => {
     window.location.href = 'index.html?email=' + encodeURIComponent(user.email) + '#planos';
   });
-  portalBtn?.addEventListener('click', () => medhubOpenBillingPortal(user.email));
+  portalBtn?.addEventListener('click', () => medhubOpenBillingPortal());
 }

@@ -75,6 +75,12 @@ async function anamneseSaveHistory (list) {
   } else {
     localStorage.setItem(anamneseStorageKey(), JSON.stringify(list));
   }
+  if (typeof medhubTouchClinicalLocalAt === 'function') {
+    medhubTouchClinicalLocalAt();
+  }
+  if (typeof medhubScheduleCloudPush === 'function') {
+    medhubScheduleCloudPush();
+  }
 }
 
 function anamneseFieldIds () {
@@ -107,7 +113,7 @@ function anamneseFillForm (data) {
 
 function anamneseFormatText (data) {
   const lines = [
-    'ANAMNESE — MedHub',
+    'ROTEIRO DE ATENDIMENTO — MedHub',
     '==================',
     '',
     'Data/Hora: ' + (data.data || new Date().toLocaleString('pt-BR')),
@@ -154,7 +160,7 @@ function anamneseBuildFilename (data) {
   const name = (data.paciente || 'paciente').replace(/[^\w\s-áàâãéêíóôõúçÁÀÂÃÉÊÍÓÔÕÚÇ]/gi, '').trim().replace(/\s+/g, '_') || 'paciente';
   const d = data.savedAt ? new Date(data.savedAt) : new Date();
   const stamp = d.toISOString().slice(0, 16).replace('T', '_').replace(':', 'h');
-  return `Anamnese_${name}_${stamp}.txt`;
+  return `Roteiro_${name}_${stamp}.txt`;
 }
 
 function anamneseBuildPdfTitle (data) {
@@ -179,7 +185,7 @@ function anamneseExportPdf (data) {
 
   const bodyHtml = `
     <div class="anam-print-doc">
-      <h1 class="anam-print-title">ANAMNESE</h1>
+      <h1 class="anam-print-title">ROTEIRO DE ATENDIMENTO</h1>
       <p class="anam-print-sub">MedHub — documento educacional (não substitui prontuário legal)</p>
       <table class="anam-print-meta">
         <tr><th>Paciente</th><td>${esc(data.paciente)}</td></tr>
