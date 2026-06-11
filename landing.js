@@ -23,7 +23,7 @@ async function initLandingPage () {
     }
     if (annualEl && config.annualPerYear) {
       const pct = config.annualDiscountPercent ? ' (' + config.annualDiscountPercent + '% off)' : ' (15% off)';
-      annualEl.textContent = 'ou ' + config.annualPerYear + pct;
+      annualEl.textContent = 'ou ' + config.annualPerYear + pct + ' · parcelável no cartão';
     }
   } catch {
     /* mantém texto estático */
