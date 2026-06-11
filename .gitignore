@@ -1,2 +1,6 @@
-.vercel
+.env
+.env.local
+.env.*.local
+stripe-key.local.txt
 node_modules/
+.vercel/

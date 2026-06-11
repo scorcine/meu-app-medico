@@ -152,9 +152,93 @@ function anamneseFormatText (data) {
 
 function anamneseBuildFilename (data) {
   const name = (data.paciente || 'paciente').replace(/[^\w\s-áàâãéêíóôõúçÁÀÂÃÉÊÍÓÔÕÚÇ]/gi, '').trim().replace(/\s+/g, '_') || 'paciente';
-  const d = new Date(data.savedAt);
+  const d = data.savedAt ? new Date(data.savedAt) : new Date();
   const stamp = d.toISOString().slice(0, 16).replace('T', '_').replace(':', 'h');
   return `Anamnese_${name}_${stamp}.txt`;
+}
+
+function anamneseBuildPdfTitle (data) {
+  return anamneseBuildFilename(data).replace(/\.txt$/i, '.pdf');
+}
+
+function anamneseEscapeHtml (text) {
+  return String(text || '—')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/\n/g, '<br>');
+}
+
+function anamneseExportPdf (data) {
+  if (!data) return;
+
+  const savedAt = data.savedAt || new Date().toISOString();
+  const savedLabel = new Date(savedAt).toLocaleString('pt-BR');
+  const esc = (v) => anamneseEscapeHtml(v).replace(/<br>/g, ' ');
+
+  const bodyHtml = `
+    <div class="anam-print-doc">
+      <h1 class="anam-print-title">ANAMNESE</h1>
+      <p class="anam-print-sub">MedHub — documento educacional (não substitui prontuário legal)</p>
+      <table class="anam-print-meta">
+        <tr><th>Paciente</th><td>${esc(data.paciente)}</td></tr>
+        <tr><th>Idade</th><td>${esc(data.idade)}</td></tr>
+        <tr><th>Sexo</th><td>${esc(data.sexo)}</td></tr>
+        <tr><th>Data/hora</th><td>${esc(data.data || new Date().toLocaleString('pt-BR'))}</td></tr>
+        <tr><th>Profissional</th><td>${esc(data.medico)}</td></tr>
+      </table>
+      <h2>Queixa principal</h2>
+      <p>${anamneseEscapeHtml(data.queixa)}</p>
+      <h2>História da doença atual (HDA)</h2>
+      <p>${anamneseEscapeHtml(data.hda)}</p>
+      <h2>Antecedentes pessoais</h2>
+      <p>${anamneseEscapeHtml(data.antecedentes)}</p>
+      <h2>Medicações em uso</h2>
+      <p>${anamneseEscapeHtml(data.medicacoes)}</p>
+      <h2>Alergias</h2>
+      <p>${anamneseEscapeHtml(data.alergias)}</p>
+      <h2>Hábitos</h2>
+      <p>${anamneseEscapeHtml(data.habitos)}</p>
+      <h2>Exame físico</h2>
+      <p>${anamneseEscapeHtml(data.exame)}</p>
+      <h2>Hipóteses diagnósticas</h2>
+      <p>${anamneseEscapeHtml(data.hipoteses)}</p>
+      <h2>Conduta / plano</h2>
+      <p>${anamneseEscapeHtml(data.conduta)}</p>
+      <p class="anam-print-foot">Registrado em ${savedLabel} · Gerado em ${new Date().toLocaleString('pt-BR')}</p>
+    </div>`;
+
+  const win = window.open('', '_blank', 'width=720,height=900');
+  if (!win) {
+    alert('Permita pop-ups para exportar o PDF.');
+    return;
+  }
+
+  const docData = { ...data, savedAt };
+  win.document.write(`<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>${anamneseBuildPdfTitle(docData)}</title>
+  <style>
+    body { font-family: Georgia, 'Times New Roman', serif; color: #111; margin: 2rem; line-height: 1.55; }
+    .anam-print-title { text-align: center; font-size: 1.15rem; letter-spacing: 0.06em; margin: 0 0 0.35rem; }
+    .anam-print-sub { text-align: center; font-size: 0.82rem; color: #555; margin: 0 0 1.5rem; }
+    .anam-print-meta { width: 100%; border-collapse: collapse; margin-bottom: 1.25rem; font-size: 0.95rem; }
+    .anam-print-meta th { text-align: left; width: 28%; padding: 0.35rem 0.5rem 0.35rem 0; vertical-align: top; }
+    .anam-print-meta td { padding: 0.35rem 0; }
+    h2 { font-size: 1rem; margin: 1.1rem 0 0.35rem; border-bottom: 1px solid #ccc; padding-bottom: 0.2rem; }
+    p { margin: 0 0 0.75rem; white-space: pre-wrap; }
+    .anam-print-foot { margin-top: 2rem; font-size: 0.8rem; color: #666; }
+    @media print { body { margin: 1.5cm; } }
+  </style>
+</head>
+<body>${bodyHtml}</body>
+</html>`);
+  win.document.close();
+  win.focus();
+  setTimeout(() => win.print(), 300);
 }
 
 async function anamneseRenderHistory () {
@@ -193,6 +277,7 @@ async function anamneseRenderHistory () {
         ${item.driveLink ? `<a href="${item.driveLink}" target="_blank" rel="noopener">Abrir no Drive</a>` : ''}
       </div>
       <div class="anamnese-history-actions">
+        <button type="button" class="btn-outline anamnese-history-btn" data-action="pdf" data-idx="${idx}">Exportar PDF</button>
         <button type="button" class="btn-outline anamnese-history-btn" data-action="load" data-idx="${idx}">Carregar</button>
         <button type="button" class="btn-outline anamnese-history-btn" data-action="download" data-idx="${idx}">Baixar</button>
         <button type="button" class="btn-outline anamnese-history-btn" data-action="delete" data-idx="${idx}">Excluir</button>
@@ -211,6 +296,8 @@ async function anamneseRenderHistory () {
       if (action === 'load') {
         anamneseFillForm(item);
         document.getElementById('anamnese-form')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } else if (action === 'pdf') {
+        anamneseExportPdf(item);
       } else if (action === 'download') {
         anamneseDownloadFile(item);
       } else if (action === 'delete') {
@@ -321,5 +408,19 @@ function initAnamnese () {
   anamneseLoadRegisterConsultaPref();
   const regConsulta = document.getElementById('anam-registrar-consulta');
   if (regConsulta) regConsulta.addEventListener('change', anamneseSaveRegisterConsultaPref);
+
+  const pdfBtn = document.getElementById('anamnese-export-pdf');
+  if (pdfBtn) {
+    pdfBtn.addEventListener('click', () => {
+      const data = anamneseCollectData();
+      if (!data.paciente && !data.queixa) {
+        alert('Preencha ao menos paciente ou queixa para exportar.');
+        return;
+      }
+      if (!data.data) data.data = new Date().toLocaleString('pt-BR');
+      anamneseExportPdf(data);
+    });
+  }
+
   anamneseRenderHistory();
 }

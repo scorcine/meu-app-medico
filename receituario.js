@@ -4,6 +4,24 @@ const MEDHUB_ACTIVE_QUEIXA = 'medhub-active-queixa';
 const MEDHUB_ACTIVE_PACIENTE = 'medhub-active-paciente';
 const MEDHUB_ACTIVE_IDADE = 'medhub-active-idade';
 const MEDHUB_RX_CRM_KEY = 'medhub-rx-crm';
+const MEDHUB_RX_CRM_PREFIX = 'CRM-SP';
+
+function rxParseCrmNumber (stored) {
+  if (!stored) return '';
+  const s = String(stored).trim();
+  const prefixed = s.match(/CRM[-\s]*SP\s*(\d+)/i);
+  if (prefixed) return prefixed[1];
+  return s.replace(/\D/g, '');
+}
+
+function rxFormatCrmDisplay (num) {
+  const n = rxParseCrmNumber(num);
+  return n ? MEDHUB_RX_CRM_PREFIX + ' ' + n : MEDHUB_RX_CRM_PREFIX + ' ____________';
+}
+
+function rxGetStoredCrmDisplay () {
+  return rxFormatCrmDisplay(localStorage.getItem(MEDHUB_RX_CRM_KEY));
+}
 
 let rxActiveConditionIds = [];
 let rxSelectedOptionKeys = new Set();
@@ -138,7 +156,7 @@ function rxFormatReceitaPrint (conditions, medEntries, orientacoesList, validati
   const condList = Array.isArray(conditions) ? conditions : (conditions ? [conditions] : []);
   const ctx = rxGetPatientContext();
   const user = typeof getSession === 'function' ? getSession() : null;
-  const crm = localStorage.getItem(MEDHUB_RX_CRM_KEY) || '____________';
+  const crm = rxGetStoredCrmDisplay();
   const date = new Date().toLocaleDateString('pt-BR');
   const paciente = ctx.paciente || '________________________________';
   const idade = ctx.idade ? ctx.idade + ' anos' : '________';
@@ -225,7 +243,7 @@ function rxRenderPrintPreview (conditions, medEntries, orientacoesList) {
 
   const ctx = rxGetPatientContext();
   const user = typeof getSession === 'function' ? getSession() : null;
-  const crm = localStorage.getItem(MEDHUB_RX_CRM_KEY) || '____________';
+  const crm = rxGetStoredCrmDisplay();
   const date = new Date().toLocaleDateString('pt-BR');
 
   const byRoute = { vo: [], im: [], tarv: [], geral: [] };
@@ -803,10 +821,18 @@ function initReceituario () {
   const crmInput = document.getElementById('rx-crm');
 
   if (crmInput) {
-    crmInput.value = localStorage.getItem(MEDHUB_RX_CRM_KEY) || '';
-    crmInput.addEventListener('change', () => {
-      localStorage.setItem(MEDHUB_RX_CRM_KEY, crmInput.value.trim());
+    crmInput.value = rxParseCrmNumber(localStorage.getItem(MEDHUB_RX_CRM_KEY));
+    const saveCrm = () => {
+      const num = crmInput.value.replace(/\D/g, '');
+      crmInput.value = num;
+      localStorage.setItem(MEDHUB_RX_CRM_KEY, num);
+    };
+    crmInput.addEventListener('input', () => {
+      const num = crmInput.value.replace(/\D/g, '');
+      if (crmInput.value !== num) crmInput.value = num;
     });
+    crmInput.addEventListener('change', saveCrm);
+    crmInput.addEventListener('blur', saveCrm);
   }
 
   if (search) search.addEventListener('input', () => rxRenderConditionList(search.value));

@@ -9,7 +9,7 @@
   <title>MedHub</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <script src="theme.js"></script>
-  <link rel="stylesheet" href="style.css?v=atendimento-v2">
+  <link rel="stylesheet" href="style.css?v=atendimento-v3">
   <script defer src="calculators-risco.js"></script>
   <script defer src="calculators-cardio.js"></script>
   <script defer src="calculators-pneumo.js?v=rsi-patient"></script>
@@ -48,20 +48,23 @@
   <script defer src="med-apresentacoes-vo.js?v=ist-pep-v1"></script>
   <script defer src="receituario-data.js?v=rx-multi-v1"></script>
   <script defer src="receituario-ps-bridge.js?v=rx-multi-v1"></script>
-  <script defer src="receituario.js?v=rx-multi-v1"></script>
+  <script defer src="receituario.js?v=rx-crm-sp"></script>
   <script defer src="google-drive.js?v=compliance-v1"></script>
   <script defer src="security-crypto.js?v=compliance-v1"></script>
   <script defer src="compliance.js?v=compliance-v1"></script>
-  <script defer src="anamnese.js?v=atendimento-v2"></script>
-  <script defer src="clinical-storage.js?v=atendimento-v2"></script>
-  <script defer src="exames-data.js?v=atendimento-v2"></script>
-  <script defer src="exames.js?v=atendimento-v2"></script>
-  <script defer src="interpretacao-exame-data.js?v=atendimento-v2"></script>
-  <script defer src="interpretacao-exame.js?v=atendimento-v2"></script>
-  <script defer src="pacientes.js?v=atendimento-v2"></script>
-  <script defer src="consultas.js?v=atendimento-v2"></script>
-  <script defer src="ferramentas.js?v=atendimento-v2"></script>
-  <script defer src="app.js?v=atendimento-v2"></script>
+  <script defer src="anamnese.js?v=anam-pdf-v1"></script>
+  <script defer src="clinical-storage.js?v=atendimento-v3"></script>
+  <script defer src="exames-data.js?v=atendimento-v3"></script>
+  <script defer src="exames.js?v=atendimento-v3"></script>
+  <script defer src="interpretacao-exame-data.js?v=atendimento-v3"></script>
+  <script defer src="interpretacao-exame.js?v=atendimento-v3"></script>
+  <script defer src="pacientes.js?v=atendimento-v3"></script>
+  <script defer src="consultas.js?v=atendimento-v3"></script>
+  <script defer src="ferramentas.js?v=atendimento-v3"></script>
+  <script defer src="backup.js?v=backup-v1"></script>
+  <script defer src="subscription.js?v=billing-v1"></script>
+  <script defer src="auth-cloud.js?v=cloud-v1"></script>
+  <script defer src="app.js?v=atendimento-v3"></script>
   <script defer src="auth.js?v=compliance-v1"></script>
 </head>
 <body class="app-page" onload="initApp()">
@@ -99,7 +102,7 @@
         <button type="button" class="sidebar-link" data-section="calc-essenciais">Calculadoras essenciais</button>
         <button type="button" class="sidebar-link" data-section="calc-pediatrica">Calculadora pediátrica</button>
       </nav>
-      <p class="sidebar-build" id="app-build" title="Confira se esta versão bate com a última atualização do projeto">Build 2026.06.10 · Atendimento ✓</p>
+      <p class="sidebar-build" id="app-build" title="Confira se esta versão bate com a última atualização do projeto">Build 2026.06.07 · Exames 30 ✓</p>
     </aside>
 
     <main class="app-content">
@@ -144,11 +147,11 @@
               </li>
               <li>
                 <strong>💊 Guia de medicações</strong>
-                <span>266+ fichas MedHub · 145+ referência RENAME · consulta ANVISA.</span>
+                <span>266+ fichas MedHub · 148 referência RENAME · consulta ANVISA.</span>
               </li>
               <li>
                 <strong>📝 Anamnese e histórico local</strong>
-                <span>Formulário estruturado, histórico salvo no navegador e envio opcional ao Google Drive.</span>
+                <span>Formulário estruturado, histórico local, exportação PDF e envio opcional ao Google Drive.</span>
               </li>
               <li>
                 <strong>👤 Pacientes e consultas</strong>
@@ -156,7 +159,11 @@
               </li>
               <li>
                 <strong>🔬 Exames e interpretação</strong>
-                <span>Painéis sugeridos por cenário clínico e guias rápidos de labs/imagem (gasometria, troponina, hemograma, etc.).</span>
+                <span>30 cenários de solicitação e 30 guias de interpretação — pediatria, obstetrícia, toxicologia e mais.</span>
+              </li>
+              <li>
+                <strong>💾 Backup local</strong>
+                <span>Exporte e restaure anamneses, pacientes e consultas em JSON — útil ao trocar de PC ou limpar o navegador.</span>
               </li>
               <li>
                 <strong>🌐 Uso online e dados locais</strong>
@@ -173,6 +180,32 @@
             <h3>🧰 Ferramentas rápidas</h3>
             <p class="muted">Atalhos para os módulos mais usados — acesse direto da home sem item extra no menu lateral.</p>
             <div id="home-ferramentas-grid" class="calc-category-grid ferramentas-grid home-ferramentas-grid"></div>
+          </section>
+
+          <section class="home-section billing-section" id="billing-panel" hidden>
+            <h3>💳 Assinatura MedHub Pro</h3>
+            <p class="muted">Plano para médico solo — cartão com renovação automática (mensal ou anual com desconto).</p>
+            <p id="billing-status-text" class="billing-status-text"></p>
+            <div class="billing-actions">
+              <button type="button" class="btn" id="billing-subscribe-btn" hidden>Ver planos</button>
+              <button type="button" class="btn-outline" id="billing-portal-btn" hidden>Gerenciar assinatura</button>
+            </div>
+          </section>
+
+          <section class="home-section backup-section">
+            <h3>💾 Backup dos seus dados</h3>
+            <p class="muted">Exporte anamneses, pacientes, consultas e preferências deste navegador. Restaure em outro computador ou após limpar o cache — use o <strong>mesmo e-mail de login</strong> e desbloqueie com sua senha.</p>
+            <p class="compliance-inline-notice" role="note">
+              O arquivo JSON contém dados clínicos sensíveis (incluindo conteúdo criptografado). Guarde em local seguro; não envie por apps públicos sem proteção.
+            </p>
+            <div class="backup-actions">
+              <button type="button" class="btn" id="backup-export">Exportar backup</button>
+              <label class="btn-outline backup-import-label">
+                Restaurar backup
+                <input type="file" id="backup-import-file" accept="application/json,.json" hidden>
+              </label>
+            </div>
+            <p id="backup-status" class="anamnese-save-status" hidden></p>
           </section>
 
           <p class="home-disclaimer" role="note">
@@ -207,8 +240,11 @@
           <div id="rx-list-view">
             <h2>Receituário</h2>
             <p class="muted">Todas as condições do PS estão disponíveis. Com várias queixas na anamnese (ex.: cefaleia + náuseas), o app monta uma receita combinada.</p>
-            <label class="ps-search-label" for="rx-crm">CRM (opcional — aparece na receita)</label>
-            <input id="rx-crm" class="ps-search rx-crm-input" type="text" placeholder="Ex.: CRM-SP 123456" autocomplete="off">
+            <label class="ps-search-label" for="rx-crm">CRM-SP (opcional — aparece na receita)</label>
+            <div class="rx-crm-field">
+              <span class="rx-crm-prefix" aria-hidden="true">CRM-SP</span>
+              <input id="rx-crm" class="ps-search rx-crm-input" type="text" inputmode="numeric" pattern="[0-9]*" placeholder="123456" autocomplete="off" aria-label="Número do CRM-SP">
+            </div>
             <div id="rx-suggest-banner" class="rx-suggest-banner" hidden></div>
             <label class="ps-search-label" for="rx-search">Buscar condição</label>
             <input id="rx-search" class="ps-search" type="search" placeholder="Ex.: cefaleia, amigdalite, cistite…" autocomplete="off">
@@ -447,7 +483,7 @@
             Não há servidor MedHub. Isso <strong>não equivale a prontuário legal</strong> — use conforme política da sua instituição e LGPD.
             Dados enviados ao Google Drive (opcional) ficam sob sua conta Google.
           </p>
-          <p class="muted">Registre a anamnese do paciente. Ao salvar, o texto fica no histórico local e pode ser enviado automaticamente ao seu Google Drive.</p>
+          <p class="muted">Registre a anamnese do paciente. Ao salvar, o texto fica no histórico local, pode ser exportado em PDF e enviado ao Google Drive.</p>
 
           <details class="anamnese-drive-panel">
             <summary>Google Drive — envio automático</summary>
@@ -530,6 +566,7 @@
 
             <div class="anamnese-form-actions">
               <button type="submit" class="btn">Salvar anamnese</button>
+              <button type="button" class="btn-outline" id="anamnese-export-pdf">Exportar PDF</button>
               <button type="button" class="btn-outline" id="anamnese-clear">Limpar formulário</button>
             </div>
             <p id="anamnese-save-status" class="anamnese-save-status" hidden></p>

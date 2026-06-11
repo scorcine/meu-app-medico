@@ -1,40 +1,57 @@
-/* Termo de uso, avisos legais e desbloqueio de dados criptografados */
+/* Termo de uso, política de privacidade e desbloqueio de dados criptografados */
 
-const MEDHUB_TERMS_VERSION = '2026-06-07-v1';
-
-const MEDHUB_TERMS_HTML = `
-  <h2 id="medhub-terms-title">Termo de uso e aviso legal</h2>
-  <div class="compliance-terms-body">
-    <p><strong>MedHub é uma ferramenta educacional</strong> de apoio à decisão clínica. Ela <strong>não substitui</strong> julgamento médico, bula, protocolo institucional, segunda opinião nem <strong>prontuário legal</strong> exigido por lei, conselho profissional ou operadora.</p>
-    <ul>
-      <li>Revise sempre prescrições, condutas e textos gerados antes de usar com pacientes.</li>
-      <li>Não use o app como único registro assistencial em serviços que exigem prontuário certificado.</li>
-      <li>Conteúdos de protocolos são referências resumidas — podem estar desatualizados ou incompletos.</li>
-    </ul>
-    <p><strong>Dados e privacidade (uso local):</strong></p>
-    <ul>
-      <li>Contas e anamneses ficam <strong>no seu navegador/dispositivo</strong>, sem servidor MedHub.</li>
-      <li>Senhas são armazenadas com hash (PBKDF2); anamneses salvas são <strong>criptografadas localmente</strong> com chave derivada da sua senha.</li>
-      <li>Quem tiver acesso físico ao dispositivo desbloqueado ou à sua senha pode ler os dados. Evite identificadores desnecessários se não houver base legal e política institucional.</li>
-      <li>Envio ao Google Drive (opcional) segue as políticas do Google e da sua instituição — você é responsável pela configuração OAuth.</li>
-    </ul>
-    <p>Ao continuar, você declara ter lido e aceito estes termos na versão ${MEDHUB_TERMS_VERSION}.</p>
-  </div>
-`;
+function medhubLegalVersions () {
+  return {
+    terms: typeof MEDHUB_TERMS_VERSION !== 'undefined' ? MEDHUB_TERMS_VERSION : '2026-06-07-v1',
+    privacy: typeof MEDHUB_PRIVACY_VERSION !== 'undefined' ? MEDHUB_PRIVACY_VERSION : '2026-06-07-v1'
+  };
+}
 
 function medhubTermsStorageKey (email) {
   return 'medhub-terms-' + String(email || '').toLowerCase();
 }
 
+function medhubPrivacyStorageKey (email) {
+  return 'medhub-privacy-' + String(email || '').toLowerCase();
+}
+
 function medhubHasAcceptedTerms (email) {
-  return localStorage.getItem(medhubTermsStorageKey(email)) === MEDHUB_TERMS_VERSION;
+  const v = medhubLegalVersions();
+  return localStorage.getItem(medhubTermsStorageKey(email)) === v.terms;
+}
+
+function medhubHasAcceptedPrivacy (email) {
+  const v = medhubLegalVersions();
+  return localStorage.getItem(medhubPrivacyStorageKey(email)) === v.privacy;
+}
+
+function medhubHasAcceptedLegal (email) {
+  return medhubHasAcceptedTerms(email) && medhubHasAcceptedPrivacy(email);
+}
+
+function medhubAcceptLegalLocal (email, config) {
+  const v = config || medhubLegalVersions();
+  localStorage.setItem(medhubTermsStorageKey(email), v.terms || v.termsVersion || medhubLegalVersions().terms);
+  localStorage.setItem(medhubPrivacyStorageKey(email), v.privacy || v.privacyVersion || medhubLegalVersions().privacy);
 }
 
 function medhubAcceptTerms (email) {
-  localStorage.setItem(medhubTermsStorageKey(email), MEDHUB_TERMS_VERSION);
+  medhubAcceptLegalLocal(email, medhubLegalVersions());
 }
 
-function medhubEnsureTermsModal () {
+const MEDHUB_LEGAL_MODAL_HTML = `
+  <h2 id="medhub-legal-title">Termos e privacidade</h2>
+  <div class="compliance-terms-body">
+    <p>Para usar o MedHub, leia e aceite:</p>
+    <ul>
+      <li><a href="termos.html" target="_blank" rel="noopener">Termo de uso e aviso legal</a></li>
+      <li><a href="privacidade.html" target="_blank" rel="noopener">Política de privacidade (LGPD)</a></li>
+    </ul>
+    <p><strong>Resumo:</strong> ferramenta educacional; dados clínicos ficam criptografados no seu dispositivo; conta e assinatura usam e-mail na nuvem.</p>
+  </div>
+`;
+
+function medhubEnsureLegalModal () {
   if (document.getElementById('medhub-compliance-overlay')) return;
 
   const overlay = document.createElement('div');
@@ -42,66 +59,87 @@ function medhubEnsureTermsModal () {
   overlay.className = 'compliance-overlay';
   overlay.hidden = true;
   overlay.innerHTML = `
-    <div class="compliance-modal" role="dialog" aria-modal="true" aria-labelledby="medhub-terms-title">
-      <div class="compliance-modal-scroll">${MEDHUB_TERMS_HTML}</div>
+    <div class="compliance-modal" role="dialog" aria-modal="true" aria-labelledby="medhub-legal-title">
+      <div class="compliance-modal-scroll">${MEDHUB_LEGAL_MODAL_HTML}</div>
       <label class="compliance-check">
         <input type="checkbox" id="medhub-terms-check">
-        Li e aceito o termo de uso e aviso legal acima.
+        Li e aceito o <a href="termos.html" target="_blank" rel="noopener">termo de uso</a>.
+      </label>
+      <label class="compliance-check">
+        <input type="checkbox" id="medhub-privacy-check">
+        Li e aceito a <a href="privacidade.html" target="_blank" rel="noopener">política de privacidade</a>.
       </label>
       <div class="compliance-modal-actions">
-        <button type="button" class="btn" id="medhub-terms-accept" disabled>Continuar</button>
-        <button type="button" class="btn-outline" id="medhub-terms-decline">Sair</button>
+        <button type="button" class="btn" id="medhub-legal-accept" disabled>Continuar</button>
+        <button type="button" class="btn-outline" id="medhub-legal-decline">Sair</button>
       </div>
     </div>`;
   document.body.appendChild(overlay);
 
-  const check = overlay.querySelector('#medhub-terms-check');
-  const acceptBtn = overlay.querySelector('#medhub-terms-accept');
-  check.addEventListener('change', () => {
-    acceptBtn.disabled = !check.checked;
-  });
+  const termsCheck = overlay.querySelector('#medhub-terms-check');
+  const privacyCheck = overlay.querySelector('#medhub-privacy-check');
+  const acceptBtn = overlay.querySelector('#medhub-legal-accept');
+
+  const syncAccept = () => {
+    acceptBtn.disabled = !(termsCheck.checked && privacyCheck.checked);
+  };
+  termsCheck.addEventListener('change', syncAccept);
+  privacyCheck.addEventListener('change', syncAccept);
 }
 
-function medhubShowTermsModal (onAccept, onDecline) {
-  medhubEnsureTermsModal();
+function medhubShowLegalModal (onAccept, onDecline) {
+  medhubEnsureLegalModal();
   const overlay = document.getElementById('medhub-compliance-overlay');
-  const check = overlay.querySelector('#medhub-terms-check');
-  const acceptBtn = overlay.querySelector('#medhub-terms-accept');
-  const declineBtn = overlay.querySelector('#medhub-terms-decline');
+  const termsCheck = overlay.querySelector('#medhub-terms-check');
+  const privacyCheck = overlay.querySelector('#medhub-privacy-check');
+  const acceptBtn = overlay.querySelector('#medhub-legal-accept');
 
-  check.checked = false;
+  termsCheck.checked = false;
+  privacyCheck.checked = false;
   acceptBtn.disabled = true;
   overlay.hidden = false;
   document.body.classList.add('compliance-modal-open');
-  check.focus();
+  termsCheck.focus();
 
-  overlay.querySelector('#medhub-terms-accept').onclick = () => {
-    if (!check.checked) return;
+  acceptBtn.onclick = () => {
+    if (!termsCheck.checked || !privacyCheck.checked) return;
     overlay.hidden = true;
     document.body.classList.remove('compliance-modal-open');
     if (typeof onAccept === 'function') onAccept();
   };
 
-  overlay.querySelector('#medhub-terms-decline').onclick = () => {
+  overlay.querySelector('#medhub-legal-decline').onclick = () => {
     overlay.hidden = true;
     document.body.classList.remove('compliance-modal-open');
     if (typeof onDecline === 'function') onDecline();
-    else if (typeof onAccept === 'function') {
-      if (typeof logout === 'function') logout();
-      else window.location.href = 'login.html';
-    }
+    else if (typeof logout === 'function') logout();
+    else window.location.href = 'login.html';
   };
+}
+
+function medhubShowTermsModal (onAccept, onDecline) {
+  medhubShowLegalModal(onAccept, onDecline);
 }
 
 function medhubRequireTerms (next) {
   const user = typeof getSession === 'function' ? getSession() : null;
   if (!user) return;
-  if (medhubHasAcceptedTerms(user.email)) {
+
+  if (medhubHasAcceptedLegal(user.email)) {
     if (typeof next === 'function') next();
     return;
   }
-  medhubShowTermsModal(() => {
-    medhubAcceptTerms(user.email);
+
+  medhubShowLegalModal(async () => {
+    const config = typeof medhubFetchAuthConfig === 'function'
+      ? await medhubFetchAuthConfig()
+      : medhubLegalVersions();
+
+    if (config.cloudEnabled && typeof medhubCloudAcceptLegal === 'function') {
+      await medhubCloudAcceptLegal();
+    }
+
+    medhubAcceptLegalLocal(user.email, config);
     if (typeof next === 'function') next();
   });
 }
@@ -165,14 +203,24 @@ function medhubEnsureCryptoUnlock (next) {
       errEl.hidden = false;
       return;
     }
+
     const account = typeof getUsers === 'function'
-      ? getUsers().find(u => u.email === user.email)
+      ? getUsers().find(u => authNormalizedEmail(u.email) === authNormalizedEmail(user.email))
       : null;
-    if (!account || !(await medhubVerifyPassword(password, account))) {
+
+    let passwordOk = false;
+    if (account) {
+      passwordOk = await medhubVerifyPassword(password, account);
+    } else if (typeof medhubCloudVerifyPassword === 'function') {
+      passwordOk = await medhubCloudVerifyPassword(user.email, password);
+    }
+
+    if (!passwordOk) {
       errEl.textContent = 'Senha incorreta.';
       errEl.hidden = false;
       return;
     }
+
     await medhubUnlockSession(password, user.email);
     finish();
     if (typeof next === 'function') next();
@@ -188,6 +236,6 @@ function medhubEnsureCryptoUnlock (next) {
 }
 
 function medhubInitComplianceShell () {
-  medhubEnsureTermsModal();
+  medhubEnsureLegalModal();
   medhubEnsureUnlockModal();
 }

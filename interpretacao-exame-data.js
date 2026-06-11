@@ -18,7 +18,19 @@ const INTERP_TOPICS = [
   { id: 'pcr-pct', name: 'PCR e procalcitonina', icon: '🌡️', tags: 'infeccao bacteriana viral' },
   { id: 'rx-torax', name: 'Rx tórax — padrões comuns', icon: '🫁', tags: 'consolidacao derrame pneumotorax' },
   { id: 'ecg-basico', name: 'ECG — leitura sistemática', icon: '📈', tags: 'ritmo eixo intervalo supra st' },
-  { id: 'bnp', name: 'BNP / NT-proBNP', icon: '💓', tags: 'ic dispneia congestao' }
+  { id: 'bnp', name: 'BNP / NT-proBNP', icon: '💓', tags: 'ic dispneia congestao' },
+  { id: 'calcio-magnesio', name: 'Cálcio / magnésio / fósforo', icon: '🦴', tags: 'hipocalcemia hipomagnesemia pth' },
+  { id: 'coagulograma', name: 'Coagulograma (TAP/INR)', icon: '🩸', tags: 'tp inr fibrinogenio dic' },
+  { id: 'amilase-lipase', name: 'Amilase / lipase', icon: '🫃', tags: 'pancreatite abdome agudo' },
+  { id: 'beta-hcg', name: 'β-hCG — gestação / ectópica', icon: '🤰', tags: 'gravidez ectopica aborto' },
+  { id: 'acidose-gap', name: 'Acidose metabólica / anion gap', icon: '⚗️', tags: 'gap delta winter mudpiles' },
+  { id: 'toxicologia-serica', name: 'Toxicologia sérica (plantão)', icon: '☠️', tags: 'paracetamol salicilato etanol' },
+  { id: 'hemocultura-urina', name: 'Culturas — hemocultura / urocultura', icon: '🧫', tags: 'bacteremia itu sepse' },
+  { id: 'osmolaridade', name: 'Osmolaridade / tonicidade', icon: '💧', tags: 'hiperosmolar siadh diabetes insipidus' },
+  { id: 'pediatria-electrolitos', name: 'Eletrólitos na pediatria', icon: '👶', tags: 'desidratacao sodio potassio' },
+  { id: 'tc-cranio-basico', name: 'TC crânio — achados básicos', icon: '🧠', tags: 'hemorragia edema hernia' },
+  { id: 'ferritina-inflamacao', name: 'Ferritina / marcadores inflamatórios', icon: '🔥', tags: 'ferropriva doenca cronica ferritina' },
+  { id: 'curva-glicemica', name: 'Curva glicêmica / hipoglicemia', icon: '📉', tags: 'insulina sulfonilureia whippple' }
 ];
 
 const INTERP_CONTENT = {
@@ -252,6 +264,186 @@ const INTERP_CONTENT = {
     <h4>Limitações</h4>
     <ul>
       <li>Obesidade (falsamente baixo) · DRC · idade avançada · TEP · FA</li>
+    </ul>`,
+
+  'calcio-magnesio': `
+    <h4>Hipocalcemia</h4>
+    <ul>
+      <li>Sintomas: parestesias, tetania, prolongamento QT</li>
+      <li>Causas: hipoparatireoidismo, DRC, pancreatite, hipomagnesemia</li>
+      <li>Corrigir Mg antes de reposição de Ca refratária</li>
+    </ul>
+    <h4>Hipomagnesemia</h4>
+    <ul>
+      <li>Diuréticos · álcool · diarreia · PPI crônico</li>
+      <li>Associa-se a hipocalemia e hipocalcemia refratárias</li>
+    </ul>
+    <h4>Hipercalcemia</h4>
+    <ul>
+      <li>Hiperparatireoidismo · malignidade · intoxicação vitamina D</li>
+      <li>Hidratação EV + calcitonina/bifosfonato se sintomática</li>
+    </ul>`,
+
+  coagulograma: `
+    <h4>TAP/INR prolongado</h4>
+    <ul>
+      <li>Anticoagulantes · hepatopatia · deficiência vitamina K · CIVD</li>
+      <li>INR terapêutico AVK: meta usual 2–3 (válvula mecânica: 2,5–3,5)</li>
+    </ul>
+    <h4>CIVD</h4>
+    <ul>
+      <li>TAP ↑ + plaquetopenia + fibrinogênio ↓ + D-dímero ↑</li>
+      <li>Sepse, trauma, obstetrícia, leucemia — tratar causa base</li>
+    </ul>
+    <h4>TTPa</h4>
+    <ul>
+      <li>Heparina · fator deficiente · anticoagulante lúpico</li>
+    </ul>`,
+
+  'amilase-lipase': `
+    <h4>Pancreatite aguda</h4>
+    <ul>
+      <li>Lipase &gt; 3× LSN mais específica que amilase</li>
+      <li>Correlacionar com clínica + imagem (USG/TC) — valor isolado não fecha diagnóstico</li>
+    </ul>
+    <h4>Outras causas de elevação</h4>
+    <ul>
+      <li>Insuficiência renal · salpingite · macroamilase · perfuração intestinal</li>
+    </ul>
+    <h4>Gravidade</h4>
+    <ul>
+      <li>Usar escores (BISAP, Ranson) + lactato, creatinina, Ca, hematócrito</li>
+    </ul>`,
+
+  'beta-hcg': `
+    <h4>Interpretação</h4>
+    <ul>
+      <li>Positivo — gestação intrauterina, ectópica, molár ou pós-parto recente</li>
+      <li><strong>Curva seriada</strong> — ectópica: subida lenta (&lt; 53% em 48 h) ou queda anômala</li>
+    </ul>
+    <h4>Plantão</h4>
+    <ul>
+      <li>USG transvaginal se β-hCG acima do limiar de discriminação (~1500–2000 mUI/mL) e dor/sangramento</li>
+      <li>Negativo não exclui ectópica muito precoce — repetir em 48 h</li>
+    </ul>`,
+
+  'acidose-gap': `
+    <h4>Anion gap</h4>
+    <ul>
+      <li>AG = Na − (Cl + HCO₃) — normal ~ 8–12 mEq/L</li>
+      <li>AG ↑: MUDPILES + cetoacidose, lactato, renal avançada</li>
+    </ul>
+    <h4>Delta-delta</h4>
+    <ul>
+      <li>ΔAG/ΔHCO₃ ≈ 1 — acidose pura com gap</li>
+      <li>Δ &lt; 1 — acidose mista (gap + hiperclorêmica)</li>
+      <li>Δ &gt; 1 — alcalose metabólica concomitante</li>
+    </ul>
+    <h4>Compensação respiratória (Winter)</h4>
+    <p>pCO₂ esperado ≈ 1,5 × HCO₃ + 8 (± 2)</p>`,
+
+  'toxicologia-serica': `
+    <h4>Paracetamol</h4>
+    <ul>
+      <li>Dosagem ≥ 4 h pós-ingestão · nomograma Rumack-Matthew</li>
+      <li>N-acetilcisteína se acima da linha de tratamento ou ingestão &gt; 150 mg/kg</li>
+    </ul>
+    <h4>Salicilato</h4>
+    <ul>
+      <li>Nível sérico + gasometria (alcalose respiratória + acidose metabólica)</li>
+      <li>Alcalinização urinária se moderado/grave</li>
+    </ul>
+    <h4>Etanol / tóxicos voláteis</h4>
+    <ul>
+      <li>Osmolaridade gap ↑ sugere metanol/etilenoglicol — tratar empiricamente se suspeita alta</li>
+    </ul>`,
+
+  'hemocultura-urina': `
+    <h4>Hemocultura positiva</h4>
+    <ul>
+      <li>Contaminante vs verdadeira bacteremia: múltiplos frascos, mesmo germe, patógeno típico</li>
+      <li>Coagulase negativo em 1 frasco — frequentemente contaminante cutâneo</li>
+    </ul>
+    <h4>Urocultura</h4>
+    <ul>
+      <li>≥ 10⁵ UFC/mL (micção espontânea) — ITU bacteriana</li>
+      <li>Contagem intermediária: correlacionar com sintomas e piúria</li>
+    </ul>
+    <p class="emerg-note">Antibiograma guia ATB dirigido — não atrasar empírico em sepse.</p>`,
+
+  osmolaridade: `
+    <h4>Osmolaridade calculada</h4>
+    <ul>
+      <li>2×Na + glicose/18 + ureia/6 (mg/dL)</li>
+      <li>Gap osmolar &gt; 10: etanol, metanol, manitol, sorbitol</li>
+    </ul>
+    <h4>Tonicidade efetiva</h4>
+    <ul>
+      <li>2×Na + glicose/18 — ureia não contribui (penetra célula)</li>
+      <li>Hiponatremia hipotônica vs hipertônica (hiperglicemia)</li>
+    </ul>
+    <h4>Hiperosmolar</h4>
+    <ul>
+      <li>Estado hiperglicêmico hiperosmolar · diabetes insipidus · desidratação grave</li>
+    </ul>`,
+
+  'pediatria-electrolitos': `
+    <h4>Desidratação</h4>
+    <ul>
+      <li>Clínica &gt; laboratório isolado — peso pré-doença se possível</li>
+      <li>Na sérico: hiponatremia, isonatremia ou hipernatremia — reidratação conforme tipo</li>
+    </ul>
+    <h4>Hipocalemia / hiponatremia pediátrica</h4>
+    <ul>
+      <li>Gastroenterite + baixa ingesta — corrigir lentamente (risco edema cerebral)</li>
+      <li>Reposição K VO/EV conforme gravidade e ECG</li>
+    </ul>
+    <p class="emerg-note">RN: estreita janela — consultar protocolo neonatal institucional.</p>`,
+
+  'tc-cranio-basico': `
+    <h4>Hemorragia</h4>
+    <ul>
+      <li>Subdural (crescente) · epidural (lente biconvexa) · subaracnóidea · intraparenquimatosa</li>
+    </ul>
+    <h4>Isquemia / edema</h4>
+    <ul>
+      <li>Hipodensidade precoce · perda diferenciação córtico-subcortical · efeito de massa</li>
+    </ul>
+    <h4>Urgências radiológicas</h4>
+    <ul>
+      <li>Desvio de linha média · herniação · hidrocefalia aguda · pneumoencéfalo</li>
+    </ul>
+    <p class="emerg-note">Correlacionar sempre com clínica — TC normal não exclui HSA muito precoce.</p>`,
+
+  'ferritina-inflamacao': `
+    <h4>Ferritina baixa</h4>
+    <ul>
+      <li>Anemia ferropriva (&lt; 30 ng/mL adulto) — investigar sangramento GI em homens/pós-menopausa</li>
+    </ul>
+    <h4>Ferritina alta</h4>
+    <ul>
+      <li>Inflamação/infecção (reactante de fase aguda) — interpretar com PCR</li>
+      <li>Hemocromatose · síndrome inflamatória multissistêmica</li>
+    </ul>
+    <h4>Anemia de doença crônica</h4>
+    <ul>
+      <li>Ferritina normal/alta + saturação transferrina baixa + PCR ↑</li>
+    </ul>`,
+
+  'curva-glicemica': `
+    <h4>Hipoglicemia (&lt; 70 mg/dL)</h4>
+    <ul>
+      <li>Tríade Whipple: sintomas + glicemia baixa + alívio com glicose</li>
+      <li>Causas: insulina/sulfonilureia · insuficiência hepática · sepsis · tumor secretor</li>
+    </ul>
+    <h4>Investigação (jejum prolongado)</h4>
+    <ul>
+      <li>Glicemia + insulina + peptídeo C + sulfonilureia sérica durante hipoglicemia</li>
+      <li>Insulina ↑ + peptídeo C ↓ → exógena · ambos ↑ → endógena</li>
+    </ul>
+    <h4>Plantão</h4>
+    <ul>
+      <li>Tratar primeiro: glicose EV/VO · glucagon IM se via oral impossível</li>
     </ul>`
 };
 

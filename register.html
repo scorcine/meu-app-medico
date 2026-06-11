@@ -9,16 +9,17 @@
   <link rel="stylesheet" href="style.css?v=compliance-v1">
   <script defer src="app.js"></script>
   <script defer src="security-crypto.js"></script>
+  <script defer src="legal-content.js"></script>
   <script defer src="compliance.js"></script>
+  <script defer src="subscription.js?v=billing-v1"></script>
+  <script defer src="auth-cloud.js?v=cloud-v1"></script>
   <script defer src="auth.js"></script>
   <script defer>
     document.addEventListener('DOMContentLoaded', () => {
       medhubInitComplianceShell();
-      const btn = document.getElementById('register-show-terms');
-      if (btn) btn.addEventListener('click', e => {
-        e.preventDefault();
-        medhubShowTermsModal(null, null);
-      });
+      const emailParam = new URLSearchParams(window.location.search).get('email');
+      const emailInput = document.getElementById('email');
+      if (emailParam && emailInput) emailInput.value = emailParam;
     });
   </script>
 </head>
@@ -40,8 +41,15 @@
 
     <label class="auth-terms-check">
       <input id="acceptTerms" name="acceptTerms" type="checkbox" required>
-      Li e aceito o <button type="button" class="auth-terms-link" id="register-show-terms">termo de uso e aviso legal</button> (ferramenta educacional; não substitui prontuário legal).
+      Li e aceito o <a href="termos.html" target="_blank" rel="noopener">termo de uso</a> (ferramenta educacional; não substitui prontuário legal).
     </label>
+
+    <label class="auth-terms-check">
+      <input id="acceptPrivacy" name="acceptPrivacy" type="checkbox" required>
+      Li e aceito a <a href="privacidade.html" target="_blank" rel="noopener">política de privacidade</a>.
+    </label>
+
+    <p class="auth-pricing-note muted">Assinatura MedHub Pro ativa necessária antes do cadastro quando a cobrança estiver configurada.</p>
 
     <button type="submit">Cadastrar</button>
 

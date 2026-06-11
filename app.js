@@ -67,10 +67,7 @@ function patchEmergenciaCacheGuard () {
   showEmergenciaTopic._cacheGuard = true;
 }
 
-function initApp () {
-  const user = requireAuth();
-  if (!user) return;
-
+function initAppCore (user) {
   medhubInitComplianceShell();
   medhubRequireTerms(() => {
     medhubEnsureCryptoUnlock(() => {
@@ -97,10 +94,27 @@ function initApp () {
       initPacientes();
       initConsultas();
       initFerramentas();
+      initBackup();
+      if (typeof initBillingPanel === 'function') initBillingPanel(user);
       patchEmergenciaCacheGuard();
 
       const hash = window.location.hash.replace('#', '');
       if (hash) showSection(hash);
+    });
+  });
+}
+
+function initApp () {
+  requireAuthAsync().then(user => {
+    if (!user) return;
+
+    if (typeof medhubRequireSubscription !== 'function') {
+      initAppCore(user);
+      return;
+    }
+
+    medhubRequireSubscription(user).then(ok => {
+      if (ok) initAppCore(user);
     });
   });
 }
@@ -707,5 +721,5 @@ function handleCalcFormSubmit (e) {
 }
 
 function redirectLoggedFromHome () {
-  if (getSession()) window.location.href = 'dashboard.html';
+  if (getSession()) window.location.href = 'app.html';
 }

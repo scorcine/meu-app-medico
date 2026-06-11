@@ -18,7 +18,19 @@ const EXAMES_TOPICS = [
   { id: 'tireotoxicose', name: 'Tireotoxicose / tempestade', icon: '🦋', tags: 'tsh t4 livre' },
   { id: 'hepatopatia', name: 'Hepatopatia aguda / icterícia', icon: '🧪', tags: 'transaminases bilirrubina inr' },
   { id: 'drc-monitorizacao', name: 'DRC — monitorização', icon: '💧', tags: 'creatinina egfr proteinuria' },
-  { id: 'pre-operatorio', name: 'Pré-operatório (rotina)', icon: '🔪', tags: 'coagulograma hemograma ecg' }
+  { id: 'pre-operatorio', name: 'Pré-operatório (rotina)', icon: '🔪', tags: 'coagulograma hemograma ecg' },
+  { id: 'pediatria-febril', name: 'Pediatria — febre sem foco', icon: '👶', tags: 'crianca lactente urina hemocultura' },
+  { id: 'intoxicacao-overdose', name: 'Intoxicação / overdose', icon: '☠️', tags: 'paracetamol salicilato etanol toxicologia' },
+  { id: 'convulsao-status', name: 'Convulsão / status epilepticus', icon: '⚡', tags: 'eeg glicemia eletrólitos neuro' },
+  { id: 'pre-eclampsia-hellp', name: 'Pré-eclâmpsia / HELLP', icon: '🤰', tags: 'gestante proteinuria plaquetas transaminases' },
+  { id: 'trabalho-parto', name: 'Trabalho de parto / RPMO', icon: '👶', tags: 'gestante cardiotocografia beta hcg' },
+  { id: 'celulite-abcesso', name: 'Celulite / abscesso cutâneo', icon: '🦠', tags: 'mrsa erisipela punção' },
+  { id: 'artrite-septica', name: 'Artrite séptica / monoartrite', icon: '🦴', tags: 'punção articular gota cristais' },
+  { id: 'lombalgia-alarme', name: 'Lombalgia com sinais de alarme', icon: '🦴', tags: 'rm coluna cauda equina infeccao' },
+  { id: 'tvp-edema', name: 'Edema unilateral / TVP', icon: '🦵', tags: 'd dimero doppler venoso' },
+  { id: 'neutropenia-febril', name: 'Neutropenia febril / imunossuprimido', icon: '🛡️', tags: 'oncologia neutrofilos hemocultura' },
+  { id: 'meningite-encefalite', name: 'Meningite / encefalite', icon: '🧠', tags: 'liquor pcr viral tomografia' },
+  { id: 'ictericia-neonatal', name: 'Icterícia neonatal / pediátrica', icon: '👶', tags: 'bilirrubina coombs tipagem' }
 ];
 
 const EXAMES_CONTENT = {
@@ -283,7 +295,173 @@ const EXAMES_CONTENT = {
       <li>Rx tórax se DPOC/cardiopatia</li>
       <li>Coagulograma se anticoagulante, hepatopatia ou neuraxial</li>
       <li>Tipagem se cirurgia de grande porte</li>
-    </ul>`
+    </ul>`,
+
+  'pediatria-febril': `
+    <p class="muted">Febre em lactente — abordagem por idade (≤ 28 dias = emergência; 29–90 dias = protocolo local rigoroso).</p>
+    <h4>≤ 28 dias ou instabilidade</h4>
+    <ul>
+      <li>Hemograma · PCR/procalcitonina · hemocultura · urocultura</li>
+      <li>Liquor se irritabilidade, fontanela tensa ou protocolo neonatal</li>
+      <li>Rx tórax se sintomas respiratórios</li>
+    </ul>
+    <h4>3–36 meses (febre sem foco, bem)</h4>
+    <ul>
+      <li>Urina I/E + urocultura (ITU oculta frequente)</li>
+      <li>Hemograma/PCR conforme idade e vacinação</li>
+      <li>Rx tórax se taquipneia · liquor se sinais meníngeos</li>
+    </ul>`,
+
+  'intoxicacao-overdose': `
+    <h4>Triagem imediata</h4>
+    <ul>
+      <li>Glicemia capilar · eletrólitos · gasometria venosa</li>
+      <li>Paracetamol sérico se suspeita (≥ 4 h pós-ingestão)</li>
+      <li>Salicilato · etanol · metanol/etilenoglicol se contexto</li>
+      <li>ECG — alargamento QRS (cocaína/tricíclicos), QT longo</li>
+    </ul>
+    <h4>Complementar</h4>
+    <ul>
+      <li>Creatinina · TAP · lactato · osmolaridade sérica</li>
+      <li>Rx tórax/abdome se corpo estranho ou empacotamento</li>
+      <li>Toxicologia urinária (cocaína, benzodiazepínico) — confirmação, não atrasa conduta</li>
+    </ul>
+    <p class="emerg-note">Contate centro de intoxicação. Carvão ativado se indicado e via protegida.</p>`,
+
+  'convulsao-status': `
+    <h4>Urgente (paralelo ao tratamento)</h4>
+    <ul>
+      <li>Glicemia capilar · eletrólitos (Na, Ca, Mg) · gasometria</li>
+      <li>Hemograma · creatinina · TAP se anticoagulante</li>
+      <li>Drogas séricas (fenitoína, fenobarbital, lítio) se uso crônico</li>
+    </ul>
+    <h4>Imagem / EEG</h4>
+    <ul>
+      <li>TC crânio se 1ª crise, trauma, déficit focal ou febre</li>
+      <li>EEG após controle se suspeita epilepsia de novo ou status prolongado</li>
+      <li>Liquor se febre/meningismo e TC normal</li>
+    </ul>`,
+
+  'pre-eclampsia-hellp': `
+    <h4>Laboratório</h4>
+    <ul>
+      <li>Proteinúria (relacionar A/C ou 24 h) · TAP · plaquetas</li>
+      <li>TGO/TGP · LDH · bilirrubinas (HELLP)</li>
+      <li>Creatinina · ácido úrico · hemograma</li>
+    </ul>
+    <h4>Monitorização fetal</h4>
+    <ul>
+      <li>Cardiotocografia · USG obstétrico/Doppler conforme idade gestacional</li>
+      <li>Hemograma e função hepática seriados se HELLP</li>
+    </ul>
+    <p class="emerg-note">Eclâmpsia = convulsão + pré-eclâmpsia — sulfato de magnésio e avaliação de parto.</p>`,
+
+  'trabalho-parto': `
+    <h4>Admissão obstétrica</h4>
+    <ul>
+      <li>Tipagem sanguínea · hemograma · TAP se sangramento</li>
+      <li>β-hCG se idade gestacional incerta</li>
+      <li>Urina I/E · urocultura se sintomas</li>
+    </ul>
+    <h4>RPMO / corioamnionite</h4>
+    <ul>
+      <li>Hemograma · PCR · hemocultura materna se febre</li>
+      <li>Cardiotocografia contínua</li>
+      <li>USG se suspeita de malposição ou placenta</li>
+    </ul>`,
+
+  'celulite-abcesso': `
+    <h4>Leve (ambulatorial)</h4>
+    <ul>
+      <li>Clínica suficiente na maioria — hemograma se febre/toxemia</li>
+      <li>Hemocultura se febre &gt; 38,5 °C ou imunossupressão</li>
+    </ul>
+    <h4>Moderada/grave ou MRSA de risco</h4>
+    <ul>
+      <li>Hemograma · PCR · creatinina</li>
+      <li>USG partes moles — diferenciar abscesso (drenagem)</li>
+      <li>Punção/cultura de abscesso se drenado</li>
+      <li>TC se celulite periorbitária, Fournier ou falha ATB</li>
+    </ul>`,
+
+  'artrite-septica': `
+    <h4>Essencial</h4>
+    <ul>
+      <li><strong>Punção articular</strong> — análise e cultura (prioridade antes de ATB se possível)</li>
+      <li>Hemograma · PCR · procalcitonina · hemoculturas</li>
+      <li>Rx da articulação (linha de base)</li>
+    </ul>
+    <h4>Diferencial gota/pseudogota</h4>
+    <ul>
+      <li>Cristais no líquido sinovial (urato / pirofosfato)</li>
+      <li>USG/RM se dúvida ou prótese</li>
+    </ul>`,
+
+  'lombalgia-alarme': `
+    <p class="muted">Sinais de alarme: déficit motor, anestesia em sela, febre, trauma, câncer, uso crônico de corticoide, idade &gt; 50 com novo início.</p>
+    <h4>Laboratório</h4>
+    <ul>
+      <li>Hemograma · PCR/VHS se infecção ou espondilodiscite</li>
+      <li>Creatinina antes de contraste · TAP se procedimento invasivo</li>
+    </ul>
+    <h4>Imagem</h4>
+    <ul>
+      <li><strong>RM coluna lombar</strong> — cauda equina, abscesso, metástase, fratura</li>
+      <li>TC se RM indisponível e suspeita alta</li>
+      <li>Rx simples — fratura, alinhamento (baixa sensibilidade para hérnia)</li>
+    </ul>`,
+
+  'tvp-edema': `
+    <h4>Probabilidade clínica (Wells) + D-dímero</h4>
+    <ul>
+      <li>D-dímero para <strong>excluir</strong> TVP/TEP em baixa/intermediária probabilidade</li>
+      <li>Hemograma · creatinina (anticoagulação) · TAP se anticoagulado</li>
+    </ul>
+    <h4>Imagem</h4>
+    <ul>
+      <li><strong>Doppler venoso</strong> de membros — padrão-ouro TVP proximal</li>
+      <li>AngioTC tórax se TEP suspeito (instabilidade → protocolo PE)</li>
+    </ul>`,
+
+  'neutropenia-febril': `
+    <h4>Emergência oncológica/infecciosa</h4>
+    <ul>
+      <li>Hemograma com diferencial · creatinina · eletrólitos</li>
+      <li><strong>Hemoculturas</strong> (2 pares) + urocultura antes do ATB</li>
+      <li>Rx tórax · urina I/E</li>
+    </ul>
+    <h4>Se instável ou foco abdominal</h4>
+    <ul>
+      <li>TC abdome/pelve · liquor se meningismo</li>
+      <li>PCR/procalcitonina — tendência, não atrasar ATB empírico</li>
+    </ul>`,
+
+  'meningite-encefalite': `
+    <h4>Antes/durante ATB — não atrasar tratamento</h4>
+    <ul>
+      <li>Hemoculturas · hemograma · glicemia · eletrólitos</li>
+      <li><strong>Liquor</strong>: celularidade, glicose, proteína, Gram, cultura, PCR viral (HSV/VZV)</li>
+      <li>TC crânio <strong>antes</strong> da punção se focalidade, papiledema ou rebaixamento</li>
+    </ul>
+    <h4>Complementar</h4>
+    <ul>
+      <li>Rx tórax · urina se foco concomitante</li>
+      <li>RM encefálica se encefalite ou complicação</li>
+    </ul>`,
+
+  'ictericia-neonatal': `
+    <h4>RN / lactente</h4>
+    <ul>
+      <li>Bilirrubina total e <strong>direta</strong> — diferenciar colestase</li>
+      <li>Tipagem mãe/RN · Coombs direto se isoimune</li>
+      <li>Hemograma · reticulócitos · G6PD se hemólise</li>
+    </ul>
+    <h4>Coletase (bilirrubina direta ↑)</h4>
+    <ul>
+      <li>TGO/TGP · FA · GGT · USG abdome (atresia biliar)</li>
+      <li>Urina reduzida / culturas se sepse neonatal</li>
+    </ul>
+    <p class="emerg-note">Curva de bilirrubina conforme nomograma de Bhutani / idade gestacional.</p>`
 };
 
 EXAMES_TOPICS.forEach(t => {

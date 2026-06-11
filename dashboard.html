@@ -3,40 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Painel • MedHub</title>
+  <title>MedHub</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <script src="theme.js"></script>
-  <link rel="stylesheet" href="style.css?v=compliance-v1">
   <script defer src="app.js"></script>
-  <script defer src="security-crypto.js"></script>
-  <script defer src="compliance.js"></script>
   <script defer src="auth.js"></script>
 </head>
-<body onload="initDashboard()">
-  <header class="app-header">
-    <h1>MedHub</h1>
-    <div class="header-actions">
-      <span id="user-name"></span>
-      <button type="button" class="btn-outline" onclick="logout()">Sair</button>
-    </div>
-  </header>
-
-  <main>
-    <div class="card dashboard-card">
-      <h2>Painel</h2>
-      <p id="user-greeting"></p>
-      <p class="muted">
-        Aqui nesse aplicativo você irá conseguir tudo que precisa para dar um plantão tranquilo e com segurança.
-      </p>
-      <p class="compliance-inline-notice" role="note">
-        <strong>Aviso:</strong> ferramenta educacional — não substitui julgamento clínico nem prontuário legal. Anamneses ficam criptografadas no seu navegador.
-      </p>
-      <a href="app.html" class="btn dashboard-btn">Entrar</a>
-    </div>
-  </main>
-
-  <footer>
-    &copy; 2026 MedHub
-  </footer>
+<body onload="redirectDashboardLegacy()">
+  <p class="muted" style="text-align:center;margin-top:3rem;">Redirecionando…</p>
 </body>
 </html>

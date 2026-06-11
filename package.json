@@ -1,0 +1,20 @@
+{
+  "name": "meu-app-medico",
+  "private": true,
+  "description": "MedHub — apoio clínico no plantão (HTML/JS estático)",
+  "scripts": {
+    "test": "node scripts/test-smoke.js",
+    "audit": "node scripts/audit-prelaunch.js",
+    "audit:med": "node scripts/audit-medicacoes-gaps.js",
+    "audit:rx": "node scripts/audit-rx-expand.js",
+    "pipeline:med": "node scripts/run-medicacoes-pipeline.js",
+    "setup:stripe": "node scripts/setup-stripe.js"
+  },
+  "dependencies": {
+    "@vercel/kv": "^3.0.0",
+    "stripe": "^17.7.0"
+  },
+  "devDependencies": {
+    "jsdom": "^26.1.0"
+  }
+}

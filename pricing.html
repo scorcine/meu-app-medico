@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Planos • MedHub Pro</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <script src="theme.js"></script>
+  <link rel="stylesheet" href="style.css?v=billing-v1">
+  <script defer src="subscription.js?v=billing-v1"></script>
+  <script defer src="billing.js?v=billing-v1"></script>
+</head>
+<body class="pricing-page" onload="initPricingPage()">
+  <header>MedHub</header>
+
+  <main class="pricing-main">
+    <article class="card pricing-hero">
+      <p class="pricing-kicker">Médico solo</p>
+      <h1>MedHub Pro</h1>
+      <p class="pricing-lead">
+        Acesso completo ao app no plantão: protocolos, receituário, anamnese local, exames e calculadoras.
+        Pagamento por cartão de crédito com renovação automática.
+      </p>
+
+      <p id="pricing-notice" class="pricing-notice" hidden role="status"></p>
+      <p id="pricing-dev-note" class="pricing-dev-note" hidden role="note">
+        Modo desenvolvimento: pagamentos Stripe ainda não configurados no servidor. O app funciona sem cobrança até você definir as variáveis na Vercel.
+      </p>
+
+      <label class="pricing-email-label" for="billing-email">E-mail da conta MedHub</label>
+      <input id="billing-email" type="email" required placeholder="seu@email.com" autocomplete="email">
+      <p class="pricing-email-hint">Use o <strong>mesmo e-mail</strong> do cadastro e do login. A assinatura é vinculada a ele.</p>
+    </article>
+
+    <div class="pricing-grid">
+      <article class="card pricing-card">
+        <h2>Mensal</h2>
+        <p class="pricing-amount" id="price-monthly">—</p>
+        <p class="pricing-desc">Cobrança automática todo mês no cartão. Cancele quando quiser pelo portal Stripe.</p>
+        <ul class="pricing-features">
+          <li>Todos os módulos do MedHub</li>
+          <li>Renovação automática</li>
+          <li>1 médico · 1 conta</li>
+        </ul>
+        <button type="button" class="btn pricing-btn" id="btn-plan-monthly">Assinar mensal</button>
+      </article>
+
+      <article class="card pricing-card pricing-card-featured">
+        <span class="pricing-badge" id="price-annual-badge">15% off</span>
+        <h2>Anual</h2>
+        <p class="pricing-amount" id="price-annual">—</p>
+        <p class="pricing-desc" id="price-savings">Economize 15% em relação a 12 meses avulsos.</p>
+        <ul class="pricing-features">
+          <li>Mesmo acesso do plano mensal</li>
+          <li>Uma cobrança por ano</li>
+          <li>Desconto de pacote anual</li>
+        </ul>
+        <button type="button" class="btn pricing-btn" id="btn-plan-annual">Assinar anual</button>
+      </article>
+    </div>
+
+    <p class="pricing-legal">
+      Ferramenta educacional de apoio à decisão — não substitui prontuário legal. Ao assinar, você concorda com cobrança recorrente conforme o plano escolhido.
+      Pagamentos processados com segurança pela Stripe.
+      <br><a href="termos.html">Termo de uso</a> · <a href="privacidade.html">Política de privacidade</a>
+    </p>
+
+    <p class="pricing-back">
+      <a href="login.html">Já assinou? Entrar</a>
+      ·
+      <a href="index.html">Voltar ao início</a>
+    </p>
+  </main>
+
+  <footer>&copy; 2026 MedHub</footer>
+</body>
+</html>
