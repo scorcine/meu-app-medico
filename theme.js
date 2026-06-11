@@ -2,6 +2,9 @@
   var STORAGE_KEY = 'medhub-theme';
 
   function getPreferredTheme () {
+    if (document.documentElement.getAttribute('data-force-light') === 'true') {
+      return 'light';
+    }
     try {
       var stored = localStorage.getItem(STORAGE_KEY);
       if (stored === 'light' || stored === 'dark') return stored;

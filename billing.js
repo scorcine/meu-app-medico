@@ -34,6 +34,10 @@ async function initPricingPage () {
   document.getElementById('btn-plan-annual-bottom')?.addEventListener('click', () => {
     medhubOpenCheckout('annual', emailInput?.value || prefill);
   });
+
+  if (typeof mountAppShowcase === 'function') {
+    mountAppShowcase('#app-showcase-root');
+  }
 }
 
 function applyPricingConfig (config) {

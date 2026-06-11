@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" data-theme="light" data-force-light="true">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,9 +8,10 @@
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <script src="theme.js"></script>
   <script>document.documentElement.setAttribute('data-theme', 'light');</script>
-  <link rel="stylesheet" href="style.css?v=landing-v1">
+  <link rel="stylesheet" href="style.css?v=showcase-v1">
   <script defer src="subscription.js?v=billing-v1"></script>
   <script defer src="app.js"></script>
+  <script defer src="app-showcase.js?v=showcase-v1"></script>
   <script defer src="landing.js?v=landing-v1"></script>
 </head>
 <body class="home-page" onload="redirectLoggedFromHome(); initLandingPage();">
@@ -86,143 +87,9 @@
     <section class="landing-section" id="modulos">
       <header class="landing-section-head">
         <h2>Veja o que você leva ao assinar</h2>
-        <p>Prévias reais da interface — cada módulo do menu lateral, incluso no plano.</p>
+        <p>Clique nos módulos — prévias detalhadas do app MedHub Pro.</p>
       </header>
-
-      <div class="app-preview-grid">
-        <article class="app-preview-card">
-          <div class="app-mock app-mock-sm">
-            <div class="app-mock-body">
-              <div class="app-mock-sidebar sm"><span class="on">Emergência</span></div>
-              <div class="app-mock-panel">
-                <div class="mock-flow">ACLS · AVC · Sepse</div>
-                <div class="mock-bar"></div><div class="mock-bar short"></div>
-              </div>
-            </div>
-          </div>
-          <h3>Guia rápido de emergência</h3>
-          <p>Fluxogramas ACLS, AVC, sepse, trauma e mais.</p>
-        </article>
-
-        <article class="app-preview-card">
-          <div class="app-mock app-mock-sm">
-            <div class="app-mock-body">
-              <div class="app-mock-sidebar sm"><span class="on">PS</span></div>
-              <div class="app-mock-panel">
-                <div class="mock-search">🔍 dengue</div>
-                <div class="mock-list-item">Dengue — prescrição interativa</div>
-                <div class="mock-list-item muted">Sepse · ITU · Dor torácica</div>
-              </div>
-            </div>
-          </div>
-          <h3>Pronto-socorro (106 condições)</h3>
-          <p>Busca por queixa e prescrição interativa.</p>
-        </article>
-
-        <article class="app-preview-card">
-          <div class="app-mock app-mock-sm">
-            <div class="app-mock-body">
-              <div class="app-mock-sidebar sm"><span class="on">Receita</span></div>
-              <div class="app-mock-panel">
-                <div class="mock-rx">Amoxicilina 500 mg — 8/8h · 7 dias</div>
-                <div class="mock-rx">Dipirona 1 g — se dor</div>
-                <div class="mock-btn-fake">Gerar receita PDF</div>
-              </div>
-            </div>
-          </div>
-          <h3>Receituário</h3>
-          <p>106 condições VO, CRM-SP, impressão e PDF.</p>
-        </article>
-
-        <article class="app-preview-card">
-          <div class="app-mock app-mock-sm">
-            <div class="app-mock-body">
-              <div class="app-mock-sidebar sm"><span class="on">Meds</span></div>
-              <div class="app-mock-panel">
-                <div class="mock-search">dipirona</div>
-                <div class="mock-tag">Ficha MedHub A</div>
-                <div class="mock-bar"></div><div class="mock-bar"></div>
-              </div>
-            </div>
-          </div>
-          <h3>Medicações</h3>
-          <p>266+ fichas · 148 RENAME · consulta ANVISA.</p>
-        </article>
-
-        <article class="app-preview-card">
-          <div class="app-mock app-mock-sm">
-            <div class="app-mock-body">
-              <div class="app-mock-sidebar sm"><span class="on">Anamnese</span></div>
-              <div class="app-mock-panel">
-                <div class="mock-field">QP · HDA · Antecedentes</div>
-                <div class="mock-field">Exame físico</div>
-                <div class="mock-btn-fake">Salvar · PDF</div>
-              </div>
-            </div>
-          </div>
-          <h3>Anamnese e consultas</h3>
-          <p>Formulário estruturado, histórico local criptografado, PDF.</p>
-        </article>
-
-        <article class="app-preview-card">
-          <div class="app-mock app-mock-sm">
-            <div class="app-mock-body">
-              <div class="app-mock-sidebar sm"><span class="on">Calc</span></div>
-              <div class="app-mock-panel">
-                <div class="mock-score">CHA₂DS₂-VASc = 3</div>
-                <div class="mock-score-sub">Risco moderado-alto</div>
-                <div class="mock-chip-row"><span class="mock-chip">MELD</span><span class="mock-chip">Glasgow</span></div>
-              </div>
-            </div>
-          </div>
-          <h3>Calculadoras essenciais e pediátricas</h3>
-          <p>Scores e doses por especialidade, resultado interpretado.</p>
-        </article>
-
-        <article class="app-preview-card">
-          <div class="app-mock app-mock-sm">
-            <div class="app-mock-body">
-              <div class="app-mock-sidebar sm"><span class="on">Exames</span></div>
-              <div class="app-mock-panel">
-                <div class="mock-list-item">Pediatria — febre sem foco</div>
-                <div class="mock-list-item">Obstetrícia — pré-natal</div>
-                <div class="mock-list-item muted">+ 28 cenários</div>
-              </div>
-            </div>
-          </div>
-          <h3>Exames (30 cenários)</h3>
-          <p>Solicitação laboratorial e imagem por contexto clínico.</p>
-        </article>
-
-        <article class="app-preview-card">
-          <div class="app-mock app-mock-sm">
-            <div class="app-mock-body">
-              <div class="app-mock-sidebar sm"><span class="on">Interp.</span></div>
-              <div class="app-mock-panel">
-                <div class="mock-list-item">Troponina elevada</div>
-                <div class="mock-list-item">Cr ↑ + ureia</div>
-                <div class="mock-list-item muted">Gasometria · Lactato</div>
-              </div>
-            </div>
-          </div>
-          <h3>Interpretação do exame (30 guias)</h3>
-          <p>Leitura rápida de labs e imagem no plantão.</p>
-        </article>
-
-        <article class="app-preview-card">
-          <div class="app-mock app-mock-sm">
-            <div class="app-mock-body">
-              <div class="app-mock-sidebar sm"><span class="on">Hospitalar</span></div>
-              <div class="app-mock-panel">
-                <div class="mock-rx">Ceftriaxona EV 1 g 12/12h</div>
-                <div class="mock-rx">SF 0,9% — expansão</div>
-              </div>
-            </div>
-          </div>
-          <h3>Tratamento hospitalar</h3>
-          <p>Posologias IM/EV para internação e observação.</p>
-        </article>
-      </div>
+      <div id="app-showcase-root-index"></div>
     </section>
 
     <section class="landing-section" id="depoimentos">

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR" data-theme="light">
+<html lang="pt-BR" data-theme="light" data-force-light="true">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,8 +7,9 @@
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <script src="theme.js"></script>
   <script>document.documentElement.setAttribute('data-theme', 'light');</script>
-  <link rel="stylesheet" href="style.css?v=pricing-v2">
+  <link rel="stylesheet" href="style.css?v=showcase-v1">
   <script defer src="subscription.js?v=billing-v1"></script>
+  <script defer src="app-showcase.js?v=showcase-v1"></script>
   <script defer src="billing.js?v=billing-v1"></script>
 </head>
 <body class="pricing-page marketing-page" onload="initPricingPage()">
@@ -97,50 +98,12 @@
       </div>
     </section>
 
-    <section class="pricing-v2-showcase landing-section">
+    <section class="pricing-v2-showcase landing-section" id="modulos-preview">
       <header class="landing-section-head">
         <h2>Veja como é por dentro</h2>
-        <p>Prévias da interface real — o que você usa após assinar.</p>
+        <p>Clique nos módulos abaixo — prévias fiéis ao app que você acessa após assinar.</p>
       </header>
-      <div class="app-preview-grid pricing-v2-previews">
-        <article class="app-preview-card">
-          <div class="app-mock app-mock-sm">
-            <div class="app-mock-body">
-              <div class="app-mock-sidebar sm"><span class="on">PS</span></div>
-              <div class="app-mock-panel">
-                <div class="mock-search">🔍 sepse</div>
-                <div class="mock-list-item">Sepse — bundle + ATB</div>
-                <div class="mock-btn-fake">Prescrição interativa</div>
-              </div>
-            </div>
-          </div>
-          <h3>Prescrição no plantão</h3>
-        </article>
-        <article class="app-preview-card">
-          <div class="app-mock app-mock-sm">
-            <div class="app-mock-body">
-              <div class="app-mock-sidebar sm"><span class="on">Emerg.</span></div>
-              <div class="app-mock-panel">
-                <div class="mock-flow">ACLS · Fluxograma</div>
-                <div class="mock-step mock-step-accent">Adrenalina 1 mg</div>
-              </div>
-            </div>
-          </div>
-          <h3>Guia de emergência</h3>
-        </article>
-        <article class="app-preview-card">
-          <div class="app-mock app-mock-sm">
-            <div class="app-mock-body">
-              <div class="app-mock-sidebar sm"><span class="on">Calc</span></div>
-              <div class="app-mock-panel">
-                <div class="mock-score">CURB-65 = 2</div>
-                <div class="mock-score-sub">Internação a considerar</div>
-              </div>
-            </div>
-          </div>
-          <h3>Calculadoras clínicas</h3>
-        </article>
-      </div>
+      <div id="app-showcase-root"></div>
     </section>
 
     <section class="pricing-v2-reviews landing-section">
