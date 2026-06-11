@@ -1848,6 +1848,90 @@ body.home-page main.landing-main,
   flex-wrap: wrap;
 }
 
+.landing-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-left: auto;
+}
+
+.landing-header-email-wrap {
+  margin: 0;
+}
+
+.landing-header-email {
+  width: min(200px, 42vw);
+  padding: 0.4rem 0.65rem;
+  font-size: 0.85rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg-input);
+  color: var(--text-primary);
+}
+
+.landing-header-login {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text-accent);
+  text-decoration: none;
+  white-space: nowrap;
+  padding: 0.35rem 0.5rem;
+}
+
+.landing-header-login:hover {
+  text-decoration: underline;
+}
+
+.landing-header-actions .theme-toggle {
+  margin-left: 0.15rem;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.pricing-v2-intro {
+  text-align: center;
+  padding: 1.75rem 0 1rem;
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+.pricing-v2-scroll-hint {
+  margin: 1.25rem 0 0;
+}
+
+.pricing-v2-checkout {
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+  margin-top: 1rem;
+}
+
+.pricing-v2-checkout .pricing-v2-trust {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+@media (max-width: 720px) {
+  .landing-nav-links {
+    display: none;
+  }
+
+  .landing-header-email {
+    width: min(160px, 38vw);
+  }
+}
+
 .landing-logo {
   font-weight: 700;
   font-size: 1.25rem;
@@ -2340,7 +2424,7 @@ body.home-page main.landing-main,
     grid-template-columns: repeat(2, 1fr);
   }
 
-  .landing-nav a:not(.landing-nav-cta):not(.landing-nav-muted) {
+  .landing-nav-links {
     display: none;
   }
 

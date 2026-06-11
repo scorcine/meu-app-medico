@@ -2,9 +2,7 @@
 
 async function initPricingPage () {
   const params = new URLSearchParams(window.location.search);
-  const emailInput = document.getElementById('billing-email');
-  const prefill = params.get('email') || '';
-  if (emailInput && prefill) emailInput.value = prefill;
+  const checkoutEmail = params.get('email') || '';
 
   const reason = params.get('reason');
   const notice = document.getElementById('pricing-notice');
@@ -26,13 +24,10 @@ async function initPricingPage () {
   }
 
   document.getElementById('btn-plan-monthly')?.addEventListener('click', () => {
-    medhubOpenCheckout('monthly', emailInput?.value || prefill);
+    medhubOpenCheckout('monthly', checkoutEmail);
   });
   document.getElementById('btn-plan-annual')?.addEventListener('click', () => {
-    medhubOpenCheckout('annual', emailInput?.value || prefill);
-  });
-  document.getElementById('btn-plan-annual-bottom')?.addEventListener('click', () => {
-    medhubOpenCheckout('annual', emailInput?.value || prefill);
+    medhubOpenCheckout('annual', checkoutEmail);
   });
 
   if (typeof mountAppShowcase === 'function') {

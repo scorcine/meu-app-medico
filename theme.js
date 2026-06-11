@@ -2,9 +2,6 @@
   var STORAGE_KEY = 'medhub-theme';
 
   function getPreferredTheme () {
-    if (document.documentElement.getAttribute('data-force-light') === 'true') {
-      return 'light';
-    }
     try {
       var stored = localStorage.getItem(STORAGE_KEY);
       if (stored === 'light' || stored === 'dark') return stored;
@@ -69,15 +66,13 @@
       return;
     }
 
-    var target = document.querySelector('.header-actions') || document.querySelector('header');
+    var target = document.querySelector('.landing-header-actions')
+      || document.querySelector('.header-actions')
+      || document.querySelector('header');
     if (!target) return;
 
     var btn = createToggleButton();
-    if (target.classList.contains('header-actions')) {
-      target.insertBefore(btn, target.firstChild);
-    } else {
-      target.appendChild(btn);
-    }
+    target.appendChild(btn);
     updateToggleButtons(document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light');
   }
 

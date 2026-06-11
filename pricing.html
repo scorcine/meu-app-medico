@@ -1,13 +1,12 @@
 <!DOCTYPE html>
-<html lang="pt-BR" data-theme="light" data-force-light="true">
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Planos • MedHub Pro</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <script src="theme.js"></script>
-  <script>document.documentElement.setAttribute('data-theme', 'light');</script>
-  <link rel="stylesheet" href="style.css?v=showcase-v1">
+  <link rel="stylesheet" href="style.css?v=pricing-v4">
   <script defer src="subscription.js?v=billing-v1"></script>
   <script defer src="app-showcase.js?v=showcase-v1"></script>
   <script defer src="billing.js?v=billing-v1"></script>
@@ -16,69 +15,30 @@
   <header class="landing-header">
     <div class="landing-header-inner">
       <a href="index.html" class="landing-logo">MedHub</a>
-      <nav class="landing-nav">
-        <a href="index.html#modulos">O que inclui</a>
-        <a href="index.html#depoimentos">Depoimentos</a>
-        <a href="login.html" class="landing-nav-muted">Entrar</a>
+      <nav class="landing-nav landing-nav-links">
+        <a href="#modulos-preview">O app</a>
+        <a href="#depoimentos">Depoimentos</a>
+        <a href="#planos">Planos</a>
       </nav>
+      <div class="landing-header-actions">
+        <a href="login.html" class="landing-header-login">Entrar</a>
+      </div>
     </div>
   </header>
 
   <main class="pricing-v2">
-    <section class="pricing-v2-hero">
+    <section class="pricing-v2-intro">
       <span class="landing-badge landing-badge-guarantee">🛡️ Garantia de 7 dias — reembolso integral</span>
-      <h1>Escolha seu plano MedHub Pro</h1>
+      <h1>MedHub Pro — apoio clínico completo no plantão</h1>
       <p class="pricing-v2-subtitle">
-        Acesso completo a protocolos, receituário, medicações, calculadoras, anamnese e mais —
-        pensado para o <strong>médico solo</strong> no plantão.
+        Protocolos, prescrição interativa, medicações, calculadoras, anamnese com PDF e muito mais —
+        pensado para o <strong>médico solo</strong>.
       </p>
-
       <p id="pricing-notice" class="pricing-notice pricing-v2-notice" hidden role="status"></p>
       <p id="pricing-dev-note" class="pricing-dev-note pricing-v2-notice" hidden role="note">
         Pagamentos ainda não configurados no servidor. Configure as variáveis Stripe na Vercel para ativar o checkout.
       </p>
-
-      <div class="pricing-v2-email card">
-        <label class="pricing-email-label" for="billing-email">E-mail da sua conta MedHub</label>
-        <input id="billing-email" type="email" required placeholder="seu@email.com" autocomplete="email">
-        <p class="pricing-email-hint">Use o <strong>mesmo e-mail</strong> no pagamento, cadastro e login.</p>
-      </div>
-    </section>
-
-    <section class="pricing-v2-plans" aria-label="Planos de assinatura">
-      <article class="pricing-v2-plan card">
-        <p class="pricing-v2-plan-name">Mensal</p>
-        <p class="pricing-amount" id="price-monthly">R$ 29,90/mês</p>
-        <p class="pricing-v2-plan-tagline">Flexível — cancele quando quiser</p>
-        <ul class="pricing-v2-plan-features">
-          <li>✓ Todos os módulos do app</li>
-          <li>✓ Renovação automática no cartão</li>
-          <li>✓ Garantia de 7 dias</li>
-          <li>✓ 1 médico · 1 conta</li>
-        </ul>
-        <button type="button" class="btn pricing-v2-cta" id="btn-plan-monthly">Assinar mensal</button>
-      </article>
-
-      <article class="pricing-v2-plan card pricing-v2-plan-featured">
-        <span class="pricing-v2-popular">Mais popular</span>
-        <span class="pricing-badge" id="price-annual-badge">15% off</span>
-        <p class="pricing-v2-plan-name">Anual</p>
-        <p class="pricing-amount" id="price-annual">R$ 304,98/ano</p>
-        <p class="pricing-desc" id="price-savings">Economize R$ 53,82 vs 12 meses avulsos.</p>
-        <ul class="pricing-v2-plan-features">
-          <li>✓ Tudo do plano mensal</li>
-          <li>✓ Uma cobrança por ano</li>
-          <li>✓ Melhor custo no plantão</li>
-          <li>✓ Garantia de 7 dias</li>
-        </ul>
-        <button type="button" class="btn pricing-v2-cta pricing-v2-cta-primary" id="btn-plan-annual">Assinar anual</button>
-      </article>
-    </section>
-
-    <section class="pricing-v2-trust">
-      <span>🔒 Pagamento seguro Stripe</span>
-      <span>↩️ Reembolso em 7 dias</span>
-      <span>✕ Cancele pelo portal</span>
+      <p class="pricing-v2-scroll-hint"><a href="#planos" class="btn landing-btn-lg">Ver planos e preços ↓</a></p>
     </section>
 
     <section class="pricing-v2-included landing-section">
@@ -101,12 +61,12 @@
     <section class="pricing-v2-showcase landing-section" id="modulos-preview">
       <header class="landing-section-head">
         <h2>Veja como é por dentro</h2>
-        <p>Clique nos módulos abaixo — prévias fiéis ao app que você acessa após assinar.</p>
+        <p>Clique nos módulos — prévias fiéis ao app que você acessa após assinar.</p>
       </header>
       <div id="app-showcase-root"></div>
     </section>
 
-    <section class="pricing-v2-reviews landing-section">
+    <section class="pricing-v2-reviews landing-section" id="depoimentos">
       <header class="landing-section-head">
         <h2>Médicos no plantão recomendam</h2>
       </header>
@@ -129,19 +89,52 @@
       </div>
     </section>
 
-    <section class="landing-cta-final card pricing-v2-final">
-      <h2>Pronto para assinar?</h2>
-      <p>Cartão com renovação automática · garantia de 7 dias · cancele quando quiser</p>
-      <div class="landing-hero-actions">
-        <button type="button" class="btn landing-btn-lg" id="btn-plan-annual-bottom">Assinar anual — melhor preço</button>
-        <a href="index.html" class="btn-outline landing-btn-lg">Voltar ao início</a>
+    <section class="pricing-v2-checkout landing-section" id="planos">
+      <header class="landing-section-head">
+        <h2>Escolha seu plano</h2>
+        <p>Use o mesmo e-mail no pagamento, cadastro e login. O Stripe pede o e-mail no checkout.</p>
+      </header>
+
+      <div class="pricing-v2-plans" aria-label="Planos de assinatura">
+        <article class="pricing-v2-plan card">
+          <p class="pricing-v2-plan-name">Mensal</p>
+          <p class="pricing-amount" id="price-monthly">R$ 29,90/mês</p>
+          <p class="pricing-v2-plan-tagline">Flexível — cancele quando quiser</p>
+          <ul class="pricing-v2-plan-features">
+            <li>✓ Todos os módulos do app</li>
+            <li>✓ Renovação automática no cartão</li>
+            <li>✓ Garantia de 7 dias</li>
+            <li>✓ 1 médico · 1 conta</li>
+          </ul>
+          <button type="button" class="btn pricing-v2-cta" id="btn-plan-monthly">Assinar mensal</button>
+        </article>
+
+        <article class="pricing-v2-plan card pricing-v2-plan-featured">
+          <span class="pricing-v2-popular">Mais popular</span>
+          <span class="pricing-badge" id="price-annual-badge">15% off</span>
+          <p class="pricing-v2-plan-name">Anual</p>
+          <p class="pricing-amount" id="price-annual">R$ 304,98/ano</p>
+          <p class="pricing-desc" id="price-savings">Economize R$ 53,82 vs 12 meses avulsos.</p>
+          <ul class="pricing-v2-plan-features">
+            <li>✓ Tudo do plano mensal</li>
+            <li>✓ Uma cobrança por ano</li>
+            <li>✓ Melhor custo no plantão</li>
+            <li>✓ Garantia de 7 dias</li>
+          </ul>
+          <button type="button" class="btn pricing-v2-cta pricing-v2-cta-primary" id="btn-plan-annual">Assinar anual</button>
+        </article>
+      </div>
+
+      <div class="pricing-v2-trust">
+        <span>🔒 Pagamento seguro Stripe</span>
+        <span>↩️ Reembolso em 7 dias</span>
+        <span>✕ Cancele pelo portal</span>
       </div>
     </section>
 
     <p class="pricing-legal pricing-v2-legal">
       Ferramenta educacional — não substitui prontuário legal. Cobrança recorrente conforme o plano.
-      <a href="termos.html">Termos</a> · <a href="privacidade.html">Privacidade</a> ·
-      <a href="login.html">Já assinou? Entrar</a>
+      <a href="termos.html">Termos</a> · <a href="privacidade.html">Privacidade</a>
     </p>
   </main>
 

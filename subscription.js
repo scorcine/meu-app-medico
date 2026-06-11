@@ -39,16 +39,15 @@ async function medhubRequireSubscription (user) {
 
 async function medhubOpenCheckout (plan, email) {
   const norm = String(email || '').trim().toLowerCase();
-  if (!norm) {
-    alert('Informe o e-mail que usará no MedHub (mesmo da conta).');
-    return;
-  }
 
   try {
+    const payload = { plan };
+    if (norm) payload.email = norm;
+
     const res = await fetch('/api/create-checkout-session', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ plan, email: norm })
+      body: JSON.stringify(payload)
     });
     const data = await res.json();
     if (data.url) {
