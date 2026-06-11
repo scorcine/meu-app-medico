@@ -44,7 +44,7 @@ module.exports = async (req, res) => {
       payment_method_types: ['card'],
       line_items: [{ price: priceId, quantity: 1 }],
       success_url: `${origin}/subscribe-success.html?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${origin}/pricing.html?canceled=1`,
+      cancel_url: `${origin}/index.html?canceled=1#planos`,
       allow_promotion_codes: false,
       billing_address_collection: 'auto',
       metadata: { medhub_plan: plan }

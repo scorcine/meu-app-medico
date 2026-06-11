@@ -1,8 +1,14 @@
-/* Landing page — preços dinâmicos e CTA */
+/* Landing page — preços, checkout e navegação por âncoras */
 
 async function initLandingPage () {
+  initLandingAnchorNav();
+
   if (typeof mountAppShowcase === 'function') {
     mountAppShowcase('#app-showcase-root-index');
+  }
+
+  if (typeof initPricingPage === 'function') {
+    await initPricingPage();
   }
 
   const priceEl = document.getElementById('landing-price-from');
@@ -16,9 +22,36 @@ async function initLandingPage () {
       priceEl.textContent = 'A partir de ' + config.monthlyPerMonth;
     }
     if (annualEl && config.annualPerYear) {
-      annualEl.textContent = 'ou ' + config.annualPerYear + ' (15% off)';
+      const pct = config.annualDiscountPercent ? ' (' + config.annualDiscountPercent + '% off)' : ' (15% off)';
+      annualEl.textContent = 'ou ' + config.annualPerYear + pct;
     }
   } catch {
     /* mantém texto estático */
   }
+
+  if (window.location.hash) {
+    requestAnimationFrame(function () {
+      scrollToLandingSection(window.location.hash);
+    });
+  }
+}
+
+function initLandingAnchorNav () {
+  document.querySelectorAll('a[href^="#"]').forEach(function (link) {
+    link.addEventListener('click', function (event) {
+      const hash = link.getAttribute('href');
+      if (!hash || hash === '#') return;
+      const target = document.querySelector(hash);
+      if (!target) return;
+      event.preventDefault();
+      history.pushState(null, '', hash);
+      scrollToLandingSection(hash);
+    });
+  });
+}
+
+function scrollToLandingSection (hash) {
+  const target = document.querySelector(hash);
+  if (!target) return;
+  target.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }

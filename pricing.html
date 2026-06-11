@@ -3,143 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Planos • MedHub Pro</title>
+  <title>Redirecionando… • MedHub Pro</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <script src="theme.js"></script>
-  <link rel="stylesheet" href="style.css?v=pricing-v8">
-  <script defer src="subscription.js?v=billing-v1"></script>
-  <script defer src="app-showcase.js?v=showcase-v3"></script>
-  <script defer src="billing.js?v=billing-v1"></script>
+  <script>
+    (function () {
+      var q = window.location.search;
+      var hash = window.location.hash || '#planos';
+      window.location.replace('index.html' + q + hash);
+    })();
+  </script>
+  <meta http-equiv="refresh" content="0;url=index.html#planos">
 </head>
-<body class="pricing-page marketing-page" onload="initPricingPage()">
-  <header class="landing-header">
-    <div class="landing-header-inner">
-      <a href="index.html" class="landing-logo">MedHub</a>
-      <nav class="landing-nav landing-nav-links">
-        <a href="#modulos-preview">O app</a>
-        <a href="#depoimentos">Depoimentos</a>
-        <a href="#planos">Planos</a>
-      </nav>
-      <div class="landing-header-actions">
-        <a href="login.html" class="landing-header-login">Entrar</a>
-      </div>
-    </div>
-  </header>
-
-  <main class="pricing-v2">
-    <section class="pricing-v2-intro">
-      <span class="landing-badge landing-badge-guarantee">🛡️ Garantia de 7 dias — reembolso integral</span>
-      <h1>MedHub Pro — apoio clínico completo no plantão</h1>
-      <p class="pricing-v2-subtitle">
-        Protocolos, prescrição interativa, medicações, calculadoras, anamnese com PDF e muito mais —
-        pensado para o <strong>médico solo</strong>.
-      </p>
-      <p id="pricing-notice" class="pricing-notice pricing-v2-notice" hidden role="status"></p>
-      <p id="pricing-dev-note" class="pricing-dev-note pricing-v2-notice" hidden role="note">
-        Pagamentos ainda não configurados no servidor. Configure as variáveis Stripe na Vercel para ativar o checkout.
-      </p>
-      <p class="pricing-v2-scroll-hint"><a href="#planos" class="btn landing-btn-lg">Ver planos e preços ↓</a></p>
-    </section>
-
-    <section class="pricing-v2-included landing-section">
-      <header class="landing-section-head">
-        <h2>Tudo isso incluso no plano</h2>
-        <p>Sem upsell — um plano, acesso completo ao MedHub.</p>
-      </header>
-      <div class="pricing-v2-module-grid">
-        <div class="pricing-v2-module"><span>⚡</span><strong>Emergência</strong><small>ACLS, AVC, sepse, trauma</small></div>
-        <div class="pricing-v2-module"><span>🏥</span><strong>Pronto-socorro</strong><small>106 condições + prescrição</small></div>
-        <div class="pricing-v2-module"><span>💊</span><strong>Receituário</strong><small>106 condições VO + PDF</small></div>
-        <div class="pricing-v2-module"><span>📋</span><strong>Medicações</strong><small>266+ fichas · RENAME</small></div>
-        <div class="pricing-v2-module"><span>📝</span><strong>Anamnese</strong><small>Formulário + histórico local</small></div>
-        <div class="pricing-v2-module"><span>🧮</span><strong>Calculadoras</strong><small>Scores e doses pediátricas</small></div>
-        <div class="pricing-v2-module"><span>🔬</span><strong>Exames</strong><small>30 cenários de pedido</small></div>
-        <div class="pricing-v2-module"><span>📊</span><strong>Interpretação</strong><small>30 guias de labs/imagem</small></div>
-      </div>
-    </section>
-
-    <section class="pricing-v2-showcase landing-section" id="modulos-preview">
-      <header class="landing-section-head landing-section-head-showcase">
-        <span class="showcase-head-kicker">✨ Explore antes de assinar</span>
-        <h2>Olhe o que este aplicativo pode te oferecer</h2>
-        <p>Protocolos, prescrições, medicações e calculadoras — <strong>veja na prática</strong> como o MedHub Pro apoia seu plantão.</p>
-      </header>
-      <div id="app-showcase-root"></div>
-    </section>
-
-    <section class="pricing-v2-reviews landing-section" id="depoimentos">
-      <header class="landing-section-head">
-        <h2>Médicos no plantão recomendam</h2>
-      </header>
-      <div class="landing-reviews">
-        <blockquote class="landing-review card">
-          <div class="landing-stars">★★★★★</div>
-          <p>“Protocolos de PS prontos — sepse, dengue, dor torácica — sem perder tempo.”</p>
-          <footer><strong>Dr. Rafael M.</strong><span>Emergência</span></footer>
-        </blockquote>
-        <blockquote class="landing-review card">
-          <div class="landing-stars">★★★★★</div>
-          <p>“Receituário + medicações no mesmo app. Vale cada centavo do plano solo.”</p>
-          <footer><strong>Dra. Camila R.</strong><span>UPA · SP</span></footer>
-        </blockquote>
-        <blockquote class="landing-review card">
-          <div class="landing-stars">★★★★★</div>
-          <p>“Anamnese com PDF integrada ao atendimento. Uso em todo plantão.”</p>
-          <footer><strong>Dra. Juliana F.</strong><span>Clínica médica</span></footer>
-        </blockquote>
-      </div>
-    </section>
-
-    <section class="pricing-v2-checkout landing-section" id="planos">
-      <header class="landing-section-head">
-        <h2>Escolha seu plano</h2>
-        <p>Use o mesmo e-mail no pagamento, cadastro e login. O Stripe pede o e-mail no checkout.</p>
-      </header>
-
-      <div class="pricing-v2-plans" aria-label="Planos de assinatura">
-        <article class="pricing-v2-plan card">
-          <p class="pricing-v2-plan-name">Mensal</p>
-          <p class="pricing-amount" id="price-monthly">R$ 29,90/mês</p>
-          <p class="pricing-v2-plan-tagline">Flexível — cancele quando quiser</p>
-          <ul class="pricing-v2-plan-features">
-            <li>✓ Todos os módulos do app</li>
-            <li>✓ Renovação automática no cartão</li>
-            <li>✓ Garantia de 7 dias</li>
-            <li>✓ 1 médico · 1 conta</li>
-          </ul>
-          <button type="button" class="btn pricing-v2-cta" id="btn-plan-monthly">Assinar mensal</button>
-        </article>
-
-        <article class="pricing-v2-plan card pricing-v2-plan-featured">
-          <span class="pricing-v2-popular">Mais popular</span>
-          <span class="pricing-v2-discount-badge" id="price-annual-badge">15% de desconto</span>
-          <p class="pricing-v2-plan-name">Anual</p>
-          <p class="pricing-amount" id="price-annual">R$ 304,98/ano</p>
-          <p class="pricing-desc" id="price-savings">Economize R$ 53,82 vs 12 meses avulsos.</p>
-          <p class="pricing-v2-installments">💳 Pode ser parcelado no cartão de crédito</p>
-          <ul class="pricing-v2-plan-features">
-            <li>✓ Tudo do plano mensal</li>
-            <li>✓ Uma cobrança por ano</li>
-            <li>✓ Melhor custo no plantão</li>
-            <li>✓ Garantia de 7 dias</li>
-          </ul>
-          <button type="button" class="btn pricing-v2-cta pricing-v2-cta-primary" id="btn-plan-annual">Assinar anual</button>
-        </article>
-      </div>
-
-      <div class="pricing-v2-trust">
-        <span>🔒 Pagamento seguro Stripe</span>
-        <span>↩️ Reembolso em 7 dias</span>
-        <span>✕ Cancele pelo portal</span>
-      </div>
-    </section>
-
-    <p class="pricing-legal pricing-v2-legal">
-      Ferramenta educacional — não substitui prontuário legal. Cobrança recorrente conforme o plano.
-      <a href="termos.html">Termos</a> · <a href="privacidade.html">Privacidade</a>
-    </p>
-  </main>
-
-  <footer class="landing-footer">&copy; 2026 MedHub</footer>
+<body>
+  <p>Redirecionando para <a href="index.html#planos">MedHub — planos</a>…</p>
 </body>
 </html>

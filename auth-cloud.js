@@ -159,7 +159,7 @@ function medhubSubscriptionBlocked (subscription) {
 
 function medhubRedirectPricing (email) {
   const q = new URLSearchParams({ reason: 'subscription', email: email || '' });
-  window.location.href = 'pricing.html?' + q.toString();
+  window.location.href = 'index.html?' + q.toString() + '#planos';
 }
 
 async function medhubAfterCloudAuth (loginData, password) {

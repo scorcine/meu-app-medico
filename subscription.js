@@ -33,7 +33,7 @@ async function medhubRequireSubscription (user) {
   if (status.active || status.billingDisabled || status.localDev) return true;
 
   const q = new URLSearchParams({ reason: 'subscription', email: user.email });
-  window.location.href = 'pricing.html?' + q.toString();
+  window.location.href = 'index.html?' + q.toString() + '#planos';
   return false;
 }
 
@@ -109,7 +109,7 @@ async function initBillingPanel (user) {
   }
 
   subscribeBtn?.addEventListener('click', () => {
-    window.location.href = 'pricing.html?email=' + encodeURIComponent(user.email);
+    window.location.href = 'index.html?email=' + encodeURIComponent(user.email) + '#planos';
   });
   portalBtn?.addEventListener('click', () => medhubOpenBillingPortal(user.email));
 }

@@ -1831,6 +1831,41 @@ body.home-page main.landing-main,
   max-width: none;
 }
 
+body.landing-single-page {
+  scroll-behavior: smooth;
+}
+
+body.landing-single-page #topo,
+body.landing-single-page #garantia,
+body.landing-single-page #incluso,
+body.landing-single-page #modulos,
+body.landing-single-page #depoimentos,
+body.landing-single-page #planos {
+  scroll-margin-top: 4.75rem;
+}
+
+.landing-plan-login {
+  text-align: center;
+  margin: 1.25rem 0 0;
+  font-size: 0.95rem;
+  color: var(--text-muted);
+}
+
+.landing-plan-login a {
+  color: var(--text-accent);
+  font-weight: 600;
+}
+
+.landing-single-page .pricing-v2-checkout {
+  padding-top: 0.5rem;
+}
+
+.landing-single-page .pricing-v2-trust {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
 .landing-header {
   position: sticky;
   top: 0;
