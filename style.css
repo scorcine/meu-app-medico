@@ -4298,6 +4298,7 @@ body.pricing-page .pricing-v2 {
   overflow-y: hidden;
   margin-bottom: 1rem;
   scroll-behavior: smooth;
+  overscroll-behavior-x: contain;
   scrollbar-width: thin;
   scrollbar-color: var(--shot-accent) transparent;
   -webkit-overflow-scrolling: touch;

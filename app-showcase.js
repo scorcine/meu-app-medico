@@ -53,12 +53,22 @@ function mountAppShowcase (rootSelector) {
   var dotsEl = root.querySelector('#showcase-dots');
   var labelEl = root.querySelector('#showcase-slide-label');
   var tabs = root.querySelectorAll('.showcase-tab');
+  var tabsScroll = root.querySelector('.showcase-tabs-scroll');
 
   var tabIndex = 0;
   var slideIndex = 0;
   var timer = null;
-  var barTimer = null;
   var paused = false;
+  var visible = true;
+
+  function scrollActiveTabIntoBar (instant) {
+    var tab = tabs[tabIndex];
+    if (!tabsScroll || !tab) return;
+    var maxScroll = Math.max(0, tabsScroll.scrollWidth - tabsScroll.clientWidth);
+    var target = tab.offsetLeft + (tab.offsetWidth / 2) - (tabsScroll.clientWidth / 2);
+    target = Math.max(0, Math.min(target, maxScroll));
+    tabsScroll.scrollTo({ left: target, behavior: instant ? 'auto' : 'smooth' });
+  }
 
   function renderDots (count, active) {
     dotsEl.innerHTML = '';
@@ -118,7 +128,7 @@ function mountAppShowcase (rootSelector) {
 
     resetTabBars();
     animateTabBar(tabs[tabIndex]);
-    tabs[tabIndex].scrollIntoView({ behavior: instant ? 'auto' : 'smooth', inline: 'center', block: 'nearest' });
+    scrollActiveTabIntoBar(instant);
 
     updateInfo(key);
     renderDots(data.slides.length, slideIndex);
@@ -150,15 +160,13 @@ function mountAppShowcase (rootSelector) {
 
   function stopAutoplay () {
     if (timer) clearInterval(timer);
-    if (barTimer) clearTimeout(barTimer);
     timer = null;
-    barTimer = null;
   }
 
   function restartAutoplay () {
     stopAutoplay();
-    if (paused) return;
-    showCurrent(true);
+    if (paused || !visible) return;
+    animateTabBar(tabs[tabIndex]);
     timer = setInterval(nextSlide, SHOWCASE_SLIDE_MS);
   }
 
@@ -181,6 +189,15 @@ function mountAppShowcase (rootSelector) {
     paused = false;
     restartAutoplay();
   });
+
+  if ('IntersectionObserver' in window) {
+    var observer = new IntersectionObserver(function (entries) {
+      visible = entries[0].isIntersecting;
+      if (visible && !paused) restartAutoplay();
+      else stopAutoplay();
+    }, { threshold: 0.2 });
+    observer.observe(root.querySelector('.showcase-wrap'));
+  }
 
   showCurrent(true);
   restartAutoplay();
