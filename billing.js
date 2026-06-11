@@ -47,7 +47,7 @@ function applyPricingConfig (config) {
     savingsEl.textContent = 'Economize ' + config.annualSavingsDisplay + ' em relação a 12 meses avulsos.';
   }
   if (badgeEl && config.annualDiscountPercent) {
-    badgeEl.textContent = config.annualDiscountPercent + '% off';
+    badgeEl.textContent = config.annualDiscountPercent + '% de desconto';
   }
 }
 
