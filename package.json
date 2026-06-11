@@ -11,7 +11,8 @@
     "setup:stripe": "node scripts/setup-stripe.js",
     "setup:stripe-webhook": "node scripts/setup-stripe-webhook.js",
     "setup:resend": "node scripts/setup-resend.js",
-    "setup:production": "node scripts/setup-production.js"
+    "setup:production": "node scripts/setup-production.js",
+    "grant:access": "node scripts/grant-access.js"
   },
   "dependencies": {
     "@vercel/kv": "^3.0.0",

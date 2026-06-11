@@ -31,6 +31,14 @@ function normalizeEmail (email) {
   return String(email || '').trim().toLowerCase();
 }
 
+function isOwnerEmail (email) {
+  const norm = normalizeEmail(email);
+  if (!norm) return false;
+  const raw = process.env.MEDHUB_OWNER_EMAIL || process.env.MEDHUB_OWNER_EMAILS || '';
+  const owners = raw.split(/[,;\s]+/).map(normalizeEmail).filter(Boolean);
+  return owners.includes(norm);
+}
+
 async function resolveCustomerId (email, options = {}) {
   if (options.customerId) return options.customerId;
   if (options.user?.stripeCustomerId) return options.user.stripeCustomerId;
@@ -56,6 +64,16 @@ async function getSubscriptionStatus (email, options = {}) {
   const norm = normalizeEmail(email);
   if (!norm) {
     return { active: false, reason: 'no_email' };
+  }
+
+  if (isOwnerEmail(norm)) {
+    return {
+      active: true,
+      email: norm,
+      plan: 'owner',
+      status: 'active',
+      source: 'owner_bypass'
+    };
   }
 
   let user = options.user;
