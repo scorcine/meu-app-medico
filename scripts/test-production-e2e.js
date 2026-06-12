@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 /** Teste produção — login, sessão e estrutura de todos os módulos */
-const BASE = 'https://meu-app-medico.vercel.app';
+const BASE = process.env.MEDHUB_SITE_URL || 'https://meu-app-medico.vercel.app';
+const TEST_EMAIL = process.env.MEDHUB_TEST_EMAIL || 'teste@medhub.app';
+const TEST_PASSWORD = process.env.MEDHUB_TEST_PASSWORD || 'MedHubTeste2026!';
 let failures = 0;
 
 function pass (a, b) { console.log('  OK   ' + a + ' — ' + b); }
@@ -28,12 +30,12 @@ async function main () {
   const login = await fetch(BASE + '/api/auth/login', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email: 'scorcine@gmail.com', password: 'MedHub2026!' })
+    body: JSON.stringify({ email: TEST_EMAIL, password: TEST_PASSWORD })
   });
   if (!login.ok) { fail('Login', String(login.status)); process.exit(1); }
   pass('Login', '200 OK');
   const { token, subscription } = await login.json();
-  if (subscription?.active) pass('Assinatura', 'ativa');
+  if (subscription?.active) pass('Assinatura', 'ativa (' + TEST_EMAIL + ')');
   else fail('Assinatura', JSON.stringify(subscription));
 
   const me = await fetch(BASE + '/api/auth/me', { headers: { Authorization: 'Bearer ' + token } });
