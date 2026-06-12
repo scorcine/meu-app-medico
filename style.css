@@ -216,6 +216,33 @@ form.card {
   gap: 0.75rem;
 }
 
+[hidden] {
+  display: none !important;
+}
+
+body.auth-body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.auth-main {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem 1rem 2rem;
+  min-height: 0;
+}
+
+.auth-main > form.card,
+.auth-main > .auth-card {
+  margin: 0;
+  width: min(420px, calc(100% - 2rem));
+  max-height: calc(100vh - 7rem);
+  overflow-y: auto;
+}
+
 .icon {
   font-size: 3rem;
   margin-bottom: 1rem;
@@ -3912,6 +3939,34 @@ form.card .auth-notice-warn {
   border: 1px solid var(--result-warn-border, #f0c674);
   background: var(--result-warn-bg, #fffbeb);
   color: var(--result-warn-text, #854d0e);
+}
+
+form.card .auth-notice-compact {
+  text-align: left;
+}
+
+form.card .auth-notice-compact summary {
+  cursor: pointer;
+  font-weight: 600;
+  list-style: none;
+}
+
+form.card .auth-notice-compact summary::-webkit-details-marker {
+  display: none;
+}
+
+form.card .auth-notice-compact summary::before {
+  content: '▸ ';
+}
+
+form.card .auth-notice-compact[open] summary::before {
+  content: '▾ ';
+}
+
+form.card .auth-notice-compact p {
+  margin: 0.5rem 0 0;
+  font-size: 0.82rem;
+  line-height: 1.45;
 }
 
 form.card .auth-pricing-wrap {

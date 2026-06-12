@@ -13,7 +13,7 @@ function mountAppShowcase (rootSelector) {
     emerg: 'Emergência',
     rx: 'Receituário',
     med: 'Medicações',
-    anam: 'Roteiro',
+    anam: 'Anamnese',
     calc: 'Calculadoras'
   };
 
@@ -349,9 +349,9 @@ function buildShowcaseMeta () {
       ]
     },
     anam: {
-      title: 'Roteiro de atendimento',
-      desc: 'Formulário clínico local para queixa → protocolo → prescrição. Histórico criptografado e PDF educacional.',
-      list: ['Queixa → conduta no app', 'Contexto de paciente opcional', 'PDF educacional (não prontuário)'],
+      title: 'Anamnese',
+      desc: 'Guia clínico local para queixa → protocolo → prescrição. Histórico criptografado e PDF educacional.',
+      list: ['Queixa → conduta no app', 'Cadastro de paciente opcional', 'PDF educacional (não prontuário)'],
       slides: [
         { label: 'Cefaleia — consulta ambulatorial', html: shotChrome(NAV_ANAM, shotCard('Roteiro — consulta ambulatorial',
           '<div class="shot-form-grid">' +
@@ -477,7 +477,7 @@ var NAV_MED = shotNav([
 ]);
 
 var NAV_ANAM = shotNav([
-  { label: 'Roteiro local', items: [{ text: 'Contexto' }, { text: 'Roteiro', active: true }, { text: 'Histórico' }] }
+  { label: 'Roteiro local', items: [{ text: 'Cadastro' }, { text: 'Anamnese', active: true }, { text: 'Histórico' }] }
 ]);
 
 var NAV_CALC = shotNav([

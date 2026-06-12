@@ -84,8 +84,8 @@
         <button type="button" class="sidebar-link active" data-section="inicio">Início</button>
 
         <p class="sidebar-group">Roteiro local (opcional)</p>
-        <button type="button" class="sidebar-link" data-section="pacientes">Contexto do paciente</button>
-        <button type="button" class="sidebar-link" data-section="anamnese">Roteiro de atendimento</button>
+        <button type="button" class="sidebar-link" data-section="pacientes">Cadastro do paciente</button>
+        <button type="button" class="sidebar-link" data-section="anamnese">Anamnese</button>
         <button type="button" class="sidebar-link" data-section="consultas">Histórico de atendimentos</button>
 
         <p class="sidebar-group">Prescrição &amp; exames</p>
@@ -151,12 +151,12 @@
                 <span>266+ fichas MedHub · 148 referência RENAME · consulta ANVISA.</span>
               </li>
               <li>
-                <strong>📝 Roteiro de atendimento (local)</strong>
-                <span>Formulário clínico para queixa → protocolo → prescrição. Histórico criptografado e PDF educacional — não substitui prontuário legal.</span>
+                <strong>📝 Anamnese (local)</strong>
+                <span>Formulário clínico para guiar queixa → protocolo → prescrição. Histórico criptografado e PDF educacional — não substitui prontuário legal.</span>
               </li>
               <li>
-                <strong>👤 Contexto do paciente</strong>
-                <span>Cadastro local opcional (alergias, medicações) para apoiar o fluxo no app — não é prontuário institucional.</span>
+                <strong>👤 Cadastro do paciente</strong>
+                <span>Cadastro local opcional (alergias, medicações) para apoiar anamnese e histórico — não é prontuário institucional.</span>
               </li>
               <li>
                 <strong>🔬 Exames e interpretação</strong>
@@ -465,7 +465,7 @@
 
       <section id="section-pacientes" class="content-panel">
         <div class="card dashboard-card clinical-wrap">
-          <h2>Contexto do paciente</h2>
+          <h2>Cadastro do paciente</h2>
           <p class="compliance-privacy-banner" role="note">
             Cadastro <strong>local neste navegador</strong> (criptografado com sua senha) para apoiar o fluxo de atendimento no app. <strong>Não substitui prontuário legal</strong> — use conforme LGPD e política institucional.
           </p>
@@ -520,13 +520,12 @@
 
       <section id="section-anamnese" class="content-panel">
         <div class="card dashboard-card anamnese-wrap">
-          <h2>Roteiro de atendimento</h2>
+          <h2>Anamnese</h2>
           <p class="compliance-privacy-banner" role="note">
-            <strong>Apoio ao fluxo clínico</strong> — formulário no formato de anamnese para orientar queixa → protocolo → prescrição dentro do app.
-            Dados salvos ficam <strong>criptografados neste navegador</strong> (chave derivada da sua senha). Isso <strong>não equivale a prontuário legal</strong> — use conforme política da sua instituição e LGPD.
-            Dados enviados ao Google Drive (opcional) ficam sob sua conta Google.
+            <strong>Guia para prescrição no app</strong> — organize queixa, exame e conduta para apoiar protocolos e receituário do MedHub.
+            Dados salvos ficam <strong>criptografados neste navegador</strong>. Isso <strong>não equivale a prontuário legal</strong>.
           </p>
-          <p class="muted">Registre a queixa e o exame no formato clínico. Ao salvar, o texto fica no histórico local e pode ser exportado em PDF educacional ou enviado ao Google Drive.</p>
+          <p class="muted">Use como rascunho clínico local. Ao salvar, o texto fica no histórico e pode ser exportado em PDF educacional ou enviado ao Google Drive.</p>
 
           <details class="anamnese-drive-panel">
             <summary>Google Drive — envio automático</summary>
@@ -608,7 +607,7 @@
             </label>
 
             <div class="anamnese-form-actions">
-              <button type="submit" class="btn">Salvar roteiro</button>
+              <button type="submit" class="btn">Salvar anamnese</button>
               <button type="button" class="btn-outline" id="anamnese-export-pdf">Exportar PDF</button>
               <button type="button" class="btn-outline" id="anamnese-clear">Limpar formulário</button>
             </div>
@@ -620,7 +619,7 @@
             <p id="anamnese-history-locked" class="compliance-inline-notice" hidden>
               Histórico protegido — informe sua senha ao abrir o app para desbloquear anamneses criptografadas.
             </p>
-            <p id="anamnese-history-empty" class="muted">Nenhum roteiro salvo ainda.</p>
+            <p id="anamnese-history-empty" class="muted">Nenhuma anamnese salva ainda.</p>
             <ul id="anamnese-history-list" class="anamnese-history-list"></ul>
           </section>
         </div>

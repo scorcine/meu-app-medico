@@ -182,7 +182,7 @@ const UI = [
   ['Pronto-socorro', 'pronto-socorro', 'ps-condition-grid', 50],
   ['Trat. hospitalar', 'tratamento-hospitalar', 'th-condition-grid', 40],
   ['Calculadoras', 'calc-essenciais', 'calc-category-grid', 10],
-  ['Roteiro', 'anamnese', 'anamnese-form', -1],
+  ['Anamnese', 'anamnese', 'anamnese-form', -1],
   ['Pacientes', 'pacientes', 'pac-form', -1],
   ['Consultas', 'consultas', 'cons-form', -1]
 ];

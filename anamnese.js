@@ -396,6 +396,76 @@ function anamneseClearForm () {
   if (dateEl) dateEl.value = new Date().toLocaleString('pt-BR');
 }
 
+const ANAMNESE_GUIDE_DISMISS_PREFIX = 'medhub-anamnese-guide-dismissed-';
+
+function anamneseGuideStorageKey () {
+  const user = typeof getSession === 'function' ? getSession() : null;
+  return ANAMNESE_GUIDE_DISMISS_PREFIX + (user?.email || 'local');
+}
+
+function anamneseGuideDismissed () {
+  return localStorage.getItem(anamneseGuideStorageKey()) === '1';
+}
+
+function anamneseEnsureGuideModal () {
+  if (document.getElementById('medhub-anamnese-guide-overlay')) return;
+
+  const overlay = document.createElement('div');
+  overlay.id = 'medhub-anamnese-guide-overlay';
+  overlay.className = 'compliance-overlay';
+  overlay.hidden = true;
+  overlay.innerHTML = `
+    <div class="compliance-modal compliance-modal--narrow" role="dialog" aria-modal="true" aria-labelledby="medhub-anamnese-guide-title">
+      <h2 id="medhub-anamnese-guide-title">Anamnese — guia para prescrição</h2>
+      <div class="compliance-modal-scroll">
+        <p>Esta seção serve para <strong>organizar a consulta e guiar a prescrição</strong> dentro do MedHub — da queixa à conduta, conectando protocolos e receituário do app.</p>
+        <ul>
+          <li>É um <strong>rascunho local</strong>, criptografado neste navegador.</li>
+          <li><strong>Não substitui prontuário legal</strong> nem documentação institucional.</li>
+          <li>Use conforme LGPD e a política do seu serviço de saúde.</li>
+        </ul>
+      </div>
+      <label class="compliance-check">
+        <input type="checkbox" id="medhub-anamnese-guide-dismiss">
+        Não mostrar este aviso novamente
+      </label>
+      <div class="compliance-modal-actions">
+        <button type="button" class="btn" id="medhub-anamnese-guide-accept">Entendi — é somente um guia</button>
+      </div>
+    </div>`;
+  document.body.appendChild(overlay);
+}
+
+function anamneseShowGuideModal (onContinue) {
+  if (anamneseGuideDismissed()) {
+    if (typeof onContinue === 'function') onContinue();
+    return;
+  }
+
+  anamneseEnsureGuideModal();
+  const overlay = document.getElementById('medhub-anamnese-guide-overlay');
+  const dismissCheck = overlay.querySelector('#medhub-anamnese-guide-dismiss');
+  const acceptBtn = overlay.querySelector('#medhub-anamnese-guide-accept');
+
+  dismissCheck.checked = false;
+  overlay.hidden = false;
+  document.body.classList.add('compliance-modal-open');
+  acceptBtn.focus();
+
+  acceptBtn.onclick = () => {
+    if (dismissCheck.checked) {
+      localStorage.setItem(anamneseGuideStorageKey(), '1');
+    }
+    overlay.hidden = true;
+    document.body.classList.remove('compliance-modal-open');
+    if (typeof onContinue === 'function') onContinue();
+  };
+}
+
+function anamneseOnSectionShow () {
+  anamneseShowGuideModal();
+}
+
 function initAnamnese () {
   const form = document.getElementById('anamnese-form');
   const clearBtn = document.getElementById('anamnese-clear');
