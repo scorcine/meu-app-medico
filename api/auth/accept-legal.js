@@ -7,8 +7,8 @@ const {
 } = require('../_auth');
 const { getUser, saveUser, publicUser } = require('../_users');
 
-const TERMS_VERSION = process.env.MEDHUB_TERMS_VERSION || '2026-06-07-v1';
-const PRIVACY_VERSION = process.env.MEDHUB_PRIVACY_VERSION || '2026-06-07-v1';
+const TERMS_VERSION = process.env.MEDHUB_TERMS_VERSION || '2026-06-07-v2';
+const PRIVACY_VERSION = process.env.MEDHUB_PRIVACY_VERSION || '2026-06-07-v2';
 
 module.exports = async (req, res) => {
   if (req.method !== 'POST') {

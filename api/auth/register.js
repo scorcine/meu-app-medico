@@ -12,8 +12,8 @@ const { getSubscriptionStatus } = require('../_subscription');
 const { platformUnavailableMessage } = require('../_platform');
 const { verifyCheckoutForRegister, saveCustomerBilling } = require('../_billing-kv');
 
-const TERMS_VERSION = process.env.MEDHUB_TERMS_VERSION || '2026-06-07-v1';
-const PRIVACY_VERSION = process.env.MEDHUB_PRIVACY_VERSION || '2026-06-07-v1';
+const TERMS_VERSION = process.env.MEDHUB_TERMS_VERSION || '2026-06-07-v2';
+const PRIVACY_VERSION = process.env.MEDHUB_PRIVACY_VERSION || '2026-06-07-v2';
 
 module.exports = async (req, res) => {
   if (req.method !== 'POST') {

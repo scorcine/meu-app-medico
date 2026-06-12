@@ -2,8 +2,8 @@
 
 function medhubLegalVersions () {
   return {
-    terms: typeof MEDHUB_TERMS_VERSION !== 'undefined' ? MEDHUB_TERMS_VERSION : '2026-06-07-v1',
-    privacy: typeof MEDHUB_PRIVACY_VERSION !== 'undefined' ? MEDHUB_PRIVACY_VERSION : '2026-06-07-v1'
+    terms: typeof MEDHUB_TERMS_VERSION !== 'undefined' ? MEDHUB_TERMS_VERSION : '2026-06-07-v2',
+    privacy: typeof MEDHUB_PRIVACY_VERSION !== 'undefined' ? MEDHUB_PRIVACY_VERSION : '2026-06-07-v2'
   };
 }
 

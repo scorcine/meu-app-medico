@@ -16,8 +16,8 @@ module.exports = async (req, res) => {
     misconfigured: platform.misconfigured,
     authMisconfigured: platform.authMisconfigured,
     allowDevBypass: platform.allowDevBypass,
-    termsVersion: process.env.MEDHUB_TERMS_VERSION || '2026-06-07-v1',
-    privacyVersion: process.env.MEDHUB_PRIVACY_VERSION || '2026-06-07-v1',
+    termsVersion: process.env.MEDHUB_TERMS_VERSION || '2026-06-07-v2',
+    privacyVersion: process.env.MEDHUB_PRIVACY_VERSION || '2026-06-07-v2',
     passwordResetEnabled: !!process.env.RESEND_API_KEY
   });
 };
