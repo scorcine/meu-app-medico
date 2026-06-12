@@ -110,12 +110,32 @@ function medRenderExternalAnvisa (query) {
     'Buscar “' + q + '” na ANVISA</a>';
 }
 
+function medRenderAllergyBanner () {
+  if (typeof clinicalAllergyBannerHtml !== 'function') return;
+  const grid = document.getElementById('med-drug-grid');
+  if (!grid) return;
+  const html = clinicalAllergyBannerHtml();
+  let bannerEl = document.getElementById('med-allergy-banner');
+  if (html) {
+    if (!bannerEl) {
+      bannerEl = document.createElement('div');
+      bannerEl.id = 'med-allergy-banner';
+      grid.parentNode.insertBefore(bannerEl, grid);
+    }
+    bannerEl.innerHTML = html;
+  } else if (bannerEl) {
+    bannerEl.remove();
+  }
+}
+
 function medRenderGrid (items, meta) {
   const grid = document.getElementById('med-drug-grid');
   const empty = document.getElementById('med-empty');
   const count = document.getElementById('med-count');
   const hint = document.getElementById('med-search-hint');
   if (!grid) return;
+
+  medRenderAllergyBanner();
 
   const fullCount = medGetFullCatalog().length;
   const refLoaded = typeof medIsRenameLoaded === 'function' && medIsRenameLoaded();
@@ -278,6 +298,7 @@ function medRefreshGrid () {
   function renderNow (loadingRename) {
     let items = medFilterCatalog(q, { tier: tier === 'all' ? 'all' : tier });
     if (cls) items = items.filter(d => (d.classes || []).includes(cls));
+    if (typeof clinicalFilterDrugsByAllergy === 'function') items = clinicalFilterDrugsByAllergy(items);
     medRenderGrid(items, { mode, query: q, tier, loadingRename });
   }
 

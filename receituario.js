@@ -62,6 +62,12 @@ function rxSyncFromAnamnese () {
   if (queixa) sessionStorage.setItem(MEDHUB_ACTIVE_QUEIXA, queixa);
   if (paciente) sessionStorage.setItem(MEDHUB_ACTIVE_PACIENTE, paciente);
   if (idade) sessionStorage.setItem(MEDHUB_ACTIVE_IDADE, idade);
+  if (typeof clinicalSyncActivePatientFromAnamnese === 'function') {
+    clinicalSyncActivePatientFromAnamnese();
+  } else if (typeof clinicalSetActiveAllergies === 'function') {
+    const alergias = document.getElementById('anam-alergias')?.value?.trim();
+    if (alergias) clinicalSetActiveAllergies(alergias);
+  }
   rxUpdateQueixaHint();
 }
 
@@ -95,7 +101,9 @@ function rxRemoveMedsForOption (conditionId, optionId) {
 
 function rxAutoSelectMedsForOption (conditionId, option, groupLabel) {
   rxGetOptionMeds(option, groupLabel).forEach(m => {
-    if (!m.exclusiveGroup) rxSelectedMedKeys.add(rxMedKey(conditionId, m.id));
+    if (m.exclusiveGroup) return;
+    if (typeof clinicalIsDrugBlocked === 'function' && clinicalIsDrugBlocked(m)) return;
+    rxSelectedMedKeys.add(rxMedKey(conditionId, m.id));
   });
 }
 
@@ -331,10 +339,28 @@ function rxCollectAllSelectedMeds () {
   return out;
 }
 
+function rxPurgeBlockedSelectedMeds () {
+  if (typeof clinicalIsDrugBlocked !== 'function') return;
+  [...rxSelectedMedKeys].forEach(key => {
+    const parsed = rxParseMedKey(key);
+    if (!parsed) return;
+    const condition = typeof rxGetCatalogEntry === 'function' ? rxGetCatalogEntry(parsed.conditionId) : null;
+    if (!condition) return;
+    const found = rxFindMed(condition, parsed.medId);
+    if (found && clinicalIsDrugBlocked(found.med)) rxSelectedMedKeys.delete(key);
+  });
+}
+
+function rxFilterMedsByAllergy (meds) {
+  return typeof clinicalFilterDrugsByAllergy === 'function' ? clinicalFilterDrugsByAllergy(meds) : meds;
+}
+
 function rxRenderMedsPanel () {
   const panel = document.getElementById('rx-meds-panel');
   const conditions = rxGetActiveConditions();
   if (!panel || !conditions.length) return;
+
+  rxPurgeBlockedSelectedMeds();
 
   const selections = rxCollectAllSelectedOptions();
   if (!selections.length) {
@@ -343,14 +369,24 @@ function rxRenderMedsPanel () {
     return;
   }
 
+  const allergyBanner = typeof clinicalAllergyBannerHtml === 'function' ? clinicalAllergyBannerHtml() : '';
+
   panel.hidden = false;
   panel.innerHTML = `
     <h3 class="rx-meds-title">Escolha os medicamentos</h3>
+    ${allergyBanner}
     <p class="muted rx-meds-hint">Onde houver alternativas (OU), marque <strong>apenas uma</strong> opção — ex.: naproxeno <em>ou</em> ibuprofeno.</p>
     ${selections.map(({ conditionId, group, option }) => {
       const condition = conditions.find(c => c.id === conditionId);
       const condLabel = condition ? `${condition.icon} ${condition.name}` : conditionId;
-      const meds = rxGetOptionMeds(option, group.label);
+      const meds = rxFilterMedsByAllergy(rxGetOptionMeds(option, group.label));
+      if (!meds.length) {
+        return `
+          <fieldset class="rx-meds-group">
+            <legend>${condLabel} — ${group.label} — ${option.label}</legend>
+            <p class="muted">Nenhuma opção disponível — medicamentos deste esquema foram ocultados por alergia do paciente.</p>
+          </fieldset>`;
+      }
       const grouped = {};
       const standalone = [];
       meds.forEach(m => {
@@ -803,11 +839,16 @@ function rxPrintReceita () {
 }
 
 function rxOnSectionShow () {
+  if (typeof clinicalInvalidateAllergyCache === 'function') clinicalInvalidateAllergyCache();
   rxRenderConditionList(document.getElementById('rx-search')?.value || '');
   const activeQueixa = rxGetActiveQueixa();
   const matches = typeof rxMatchConditions === 'function' ? rxMatchConditions(activeQueixa) : [];
   if (matches.length && activeQueixa.length >= 3) {
     rxShowCombinedConditions(matches.map(c => c.id));
+  } else if (rxActiveConditionIds.length) {
+    rxPurgeBlockedSelectedMeds();
+    rxRenderMedsPanel();
+    rxUpdateSelectionBar();
   }
 }
 

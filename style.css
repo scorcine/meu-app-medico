@@ -3151,6 +3151,18 @@ textarea {
   color: var(--result-warn-text);
 }
 
+.clinical-allergy-banner {
+  margin: 0.75rem 0 0;
+  padding: 0.65rem 0.75rem;
+  border-radius: 8px;
+  border: 1px solid var(--result-warn-border, #f0c674);
+  background: var(--result-warn-bg, #fffbeb);
+  color: var(--result-warn-text, #854d0e);
+  font-size: 0.85rem;
+  line-height: 1.45;
+  text-align: left;
+}
+
 .clinical-record-snippet {
   display: block;
   font-size: 0.82rem;

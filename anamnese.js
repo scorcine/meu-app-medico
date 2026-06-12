@@ -109,6 +109,12 @@ function anamneseFillForm (data) {
     const el = document.getElementById('anam-' + key);
     if (el && typeof val === 'string') el.value = val;
   });
+  if (typeof clinicalSetActiveAllergies === 'function' && data.alergias) {
+    clinicalSetActiveAllergies(data.alergias);
+  }
+  if (typeof clinicalSyncActivePatientFromAnamnese === 'function') {
+    clinicalSyncActivePatientFromAnamnese();
+  }
 }
 
 function anamneseFormatText (data) {
@@ -499,4 +505,5 @@ function initAnamnese () {
   }
 
   anamneseRenderHistory();
+  if (typeof clinicalBindAllergyInputs === 'function') clinicalBindAllergyInputs();
 }

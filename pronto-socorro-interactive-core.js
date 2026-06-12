@@ -499,6 +499,11 @@ function psRenderInteractiveRx (conditionId, container) {
     : null;
   if (!config || !config.medications || !config.medications.length) return false;
 
+  const allergyBanner = typeof clinicalAllergyBannerHtml === 'function' ? clinicalAllergyBannerHtml() : '';
+  const allergyCtx = typeof clinicalGetPsContextFromAllergies === 'function'
+    ? clinicalGetPsContextFromAllergies()
+    : {};
+
   const autoNote = config.auto
     ? '<p class="ps-rx-auto-note muted">Opções extraídas automaticamente do protocolo · regras específicas reforçadas em condições-chave.</p>'
     : '';
@@ -510,6 +515,7 @@ function psRenderInteractiveRx (conditionId, container) {
       <h3>Prescrição interativa</h3>
       <p class="muted">Selecione as opções que prescreveria e clique em <strong>Analisar</strong>. O sistema verifica interações e adequação ao protocolo.</p>
       ${autoNote}
+      ${allergyBanner}
     </div>
     <div class="ps-rx-context" id="ps-rx-context"></div>
     <div class="ps-rx-meds" id="ps-rx-meds"></div>
@@ -530,19 +536,37 @@ function psRenderInteractiveRx (conditionId, container) {
     ctxEl.innerHTML = '<fieldset class="ps-rx-fieldset"><legend>Contexto clínico</legend>' +
       config.contextFields.map(field => psRenderContextField(field)).join('') +
       '</fieldset>';
+    Object.entries(allergyCtx).forEach(([fieldId, val]) => {
+      const el = wrap.querySelector('[data-ctx-field="' + fieldId + '"]');
+      if (el && el.type === 'checkbox' && val) el.checked = true;
+    });
   } else {
     ctxEl.hidden = true;
   }
 
-  const groups = config.groups || [{ id: 'all', label: 'Opções terapêuticas do protocolo', medications: config.medications }];
-  medsEl.innerHTML = groups.map(g => `
+  const filterMeds = typeof clinicalFilterDrugsByAllergy === 'function'
+    ? clinicalFilterDrugsByAllergy
+    : meds => meds;
+
+  const groups = (config.groups || [{ id: 'all', label: 'Opções terapêuticas do protocolo', medications: config.medications }])
+    .map(g => ({ ...g, medications: filterMeds(g.medications) }));
+
+  medsEl.innerHTML = groups.map(g => {
+    if (!g.medications.length) {
+      return `
+        <fieldset class="ps-rx-fieldset" data-group="${g.id}">
+          <legend>${g.label}</legend>
+          <p class="muted">Nenhuma opção disponível — medicamentos ocultados por alergia do paciente.</p>
+        </fieldset>`;
+    }
+    return `
     <fieldset class="ps-rx-fieldset" data-group="${g.id}">
       <legend>${g.label}</legend>
       <div class="ps-rx-med-list">
         ${g.medications.map(m => psRenderMedOption(m)).join('')}
       </div>
-    </fieldset>
-  `).join('');
+    </fieldset>`;
+  }).join('');
 
   function getContext () {
     const ctx = {};

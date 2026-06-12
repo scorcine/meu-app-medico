@@ -76,6 +76,7 @@ async function consultasPopulatePatientSelect () {
 }
 
 function consultasOpenForPatient (patient) {
+  if (typeof clinicalSetActivePatient === 'function') clinicalSetActivePatient(patient);
   consultasClearForm();
   consultasFillForm({
     pacienteId: patient.id,
@@ -389,6 +390,7 @@ function initConsultas () {
       if (p) {
         document.getElementById('cons-paciente-id').value = p.id;
         document.getElementById('cons-paciente-nome').value = p.nome;
+        if (typeof clinicalSetActivePatient === 'function') clinicalSetActivePatient(p);
       }
     });
   }
