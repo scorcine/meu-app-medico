@@ -3727,13 +3727,19 @@ function medBuildDrugMonograph (id, meta) {
   };
 }
 
+function medCollectDrugMeta () {
+  const meta = {};
+  if (typeof PS_DRUG_META !== 'undefined') Object.assign(meta, PS_DRUG_META);
+  if (typeof PS_DRUG_META_GAPS !== 'undefined') Object.assign(meta, PS_DRUG_META_GAPS);
+  if (typeof PS_DRUG_META_PROMOTED !== 'undefined') Object.assign(meta, PS_DRUG_META_PROMOTED);
+  return meta;
+}
+
 function medBuildMedicacoesCatalog () {
   const byId = new Map();
-  if (typeof PS_DRUG_META !== 'undefined') {
-    Object.entries(PS_DRUG_META).forEach(([id, meta]) => {
-      byId.set(id, medBuildDrugMonograph(id, meta));
-    });
-  }
+  Object.entries(medCollectDrugMeta()).forEach(([id, meta]) => {
+    byId.set(id, medBuildDrugMonograph(id, meta));
+  });
   Object.entries(MED_EXTRA_DRUGS).forEach(([id, extra]) => {
     const meta = { name: extra.name, classes: extra.classes || [] };
     const built = medBuildDrugMonograph(id, meta);

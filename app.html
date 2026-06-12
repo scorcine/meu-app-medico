@@ -528,10 +528,11 @@
           <p class="muted">Use como rascunho clínico local. Ao salvar, o texto fica no histórico e pode ser exportado em PDF educacional ou enviado ao Google Drive.</p>
 
           <details class="anamnese-drive-panel">
-            <summary>Google Drive — envio automático</summary>
+            <summary>Google Drive — envio opcional (OAuth seu)</summary>
             <div class="anamnese-drive-body">
               <p class="anamnese-drive-help muted">
-                Para enviar ao Drive, crie um <strong>Client ID OAuth</strong> no
+                Opcional: cada médico usa o <strong>próprio Client ID OAuth</strong> (Google Cloud Console).
+                O MedHub não armazena credenciais Google — só envia PDF/texto quando você conectar.
                 <a href="https://console.cloud.google.com/apis/credentials" target="_blank" rel="noopener">Google Cloud Console</a>
                 (tipo <em>Aplicativo da Web</em>) e autorize a origem <code>https://meu-app-medico.vercel.app</code>.
                 Ative a API <strong>Google Drive</strong>.

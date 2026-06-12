@@ -199,9 +199,7 @@ const CALC_AREAS = [
     id: 'avaliacao-geral',
     icon: '⚙️',
     name: 'Avaliação geral & estratificação de risco',
-    calculators: ['charlson', 'news2', 'qsofa', 'sofa', 'apache2', 'saps3', 'lactate-clearance', 'curb65', 'wells', 'mews'],
-    comingSoon: []
-  },
+    calculators: ['charlson', 'news2', 'qsofa', 'sofa', 'apache2', 'saps3', 'lactate-clearance', 'curb65', 'wells', 'mews']  },
   {
     id: 'cardiologia',
     icon: '❤️',
@@ -210,73 +208,54 @@ const CALC_AREAS = [
       'chads-vasc', 'has-bled', 'grace', 'timi-ua', 'timi-stemi', 'killip',
       'score2', 'framingham', 'wells-tvp', 'wells', 'perc', 'heart',
       'nyha', 'qtc', 'ict'
-    ],
-    comingSoon: []
-  },
+    ]  },
   {
     id: 'pneumologia',
     icon: '🌬️',
     name: 'Pneumologia & Gasometrias',
-    calculators: ['psi', 'curb65', 'mallampati', 'agem-pram', 'vef1', 'aa-pafi', 'rox'],
-    comingSoon: []
-  },
+    calculators: ['psi', 'curb65', 'mallampati', 'agem-pram', 'vef1', 'aa-pafi', 'rox']  },
   {
     id: 'nefrologia',
     icon: '💧',
     name: 'Nefrologia',
-    calculators: ['cockcroft', 'egfr', 'fena', 'rifle-kdigo', 'anion-osm', 'fst'],
-    comingSoon: []
-  },
+    calculators: ['cockcroft', 'egfr', 'fena', 'rifle-kdigo', 'anion-osm', 'fst']  },
   {
     id: 'hepatologia',
     icon: '🧪',
     name: 'Hepatologia & Gastro',
-    calculators: ['child-pugh', 'meld', 'maddrey', 'gb-rockall', 'deritis', 'apri-fib4'],
-    comingSoon: []
-  },
+    calculators: ['child-pugh', 'meld', 'maddrey', 'gb-rockall', 'deritis', 'apri-fib4']  },
   {
     id: 'endocrino',
     icon: '🩸',
     name: 'Endócrino & Metabólico',
-    calculators: ['homa', 'frax', 'dka', 'ukpds-ascvd', 'hba1c', 'osm-efetiva'],
-    comingSoon: []
-  },
+    calculators: ['homa', 'frax', 'dka', 'ukpds-ascvd', 'hba1c', 'osm-efetiva']  },
   {
     id: 'oncologia',
     icon: '🎗️',
     name: 'Oncologia',
-    calculators: ['mascc', 'kps-ecog', 'apgar-cx', 'capra'],
-    comingSoon: []
-  },
+    calculators: ['mascc', 'kps-ecog', 'apgar-cx', 'capra']  },
   {
     id: 'obstetricia',
     icon: '🤰',
     name: 'Obstetrícia & Ginecologia',
-    calculators: ['bishop', 'hellp', 'magee-preeclampsia', 'naegele', 'rcog-vte', 'vbac'],
-    comingSoon: []
-  },
+    calculators: ['bishop', 'hellp', 'magee-preeclampsia', 'naegele', 'rcog-vte', 'vbac']  },
   {
     id: 'pediatria',
     icon: '👶',
     name: 'Pediatria',
     calculators: ['silverman', 'downes', 'parkland-ped', 'pcr-ped', 'who-bmi', 'rochester-yos'],
-    comingSoon: [],
     linkSection: 'calc-pediatrica'
   },
   {
     id: 'urgencia',
     icon: '🆘',
     name: 'Urgência & Trauma',
-    calculators: ['gcs', 'rts', 'iss', 'nexus-cspine', 'pecarn', 'lrnec', 'alvarado-air', 'syncope-vpp'],
-    comingSoon: []
-  },
+    calculators: ['gcs', 'rts', 'iss', 'nexus-cspine', 'pecarn', 'lrnec', 'alvarado-air', 'syncope-vpp']  },
   {
     id: 'hematologia',
     icon: '🩸',
     name: 'Hematologia & Trombose',
-    calculators: ['padua-improve', '4ts', 'has-bled', 'khorana', 'chads-vasc'],
-    comingSoon: []
-  },
+    calculators: ['padua-improve', '4ts', 'has-bled', 'khorana', 'chads-vasc']  },
   {
     id: 'farmacologia',
     icon: '💊',
@@ -284,30 +263,22 @@ const CALC_AREAS = [
     calculators: [
       'dose-peso', 'dose-infusion-ped', 'insulina-correcao', 'opioide-conv',
       'gotejamento', 'clcr-dose', 'interacoes'
-    ],
-    comingSoon: []
-  },
+    ]  },
   {
     id: 'neurologia',
     icon: '🧠',
     name: 'Neurologia',
-    calculators: ['nihss', 'abcd2', 'chads-vasc', 'hunt-hess', 'mrs'],
-    comingSoon: []
-  },
+    calculators: ['nihss', 'abcd2', 'chads-vasc', 'hunt-hess', 'mrs']  },
   {
     id: 'dermatologia',
     icon: '🩹',
     name: 'Dermatologia & Queimaduras',
-    calculators: ['regra-9', 'scorten'],
-    comingSoon: []
-  },
+    calculators: ['regra-9', 'scorten']  },
   {
     id: 'ortopedia',
     icon: '🦴',
     name: 'Ortopedia & Reumatologia',
-    calculators: ['frax', 'ottawa', 'hip-oculta'],
-    comingSoon: []
-  },
+    calculators: ['frax', 'ottawa', 'hip-oculta']  },
   {
     id: 'extras',
     icon: '📐',
@@ -315,9 +286,7 @@ const CALC_AREAS = [
     calculators: [
       'imc', 'pam', 'map-inv', 'conv-medidas', 'datas', 'superficie',
       'temp', 'lab-conv', 'peso-ideal', 'fio2'
-    ],
-    comingSoon: []
-  }
+    ]  }
 ];
 
 const CALC_FORMS = {
@@ -672,7 +641,7 @@ function showCalcArea (areaId) {
       </div>`;
   }
 
-  if (area.comingSoon.length) {
+  if (area.comingSoon?.length) {
     html += `
       <div class="calc-soon-block">
         <h3>Em breve</h3>
@@ -682,7 +651,7 @@ function showCalcArea (areaId) {
       </div>`;
   }
 
-  if (!area.calculators.length && !area.linkSection && !area.comingSoon.length) {
+  if (!area.calculators.length && !area.linkSection && !(area.comingSoon?.length)) {
     html += '<p class="coming-soon">Calculadoras desta área em construção.</p>';
   }
 

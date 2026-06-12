@@ -56,11 +56,13 @@ console.log('\nCatálogos:\n');
 
 try {
   const med = runScripts([
-    'med-apresentacoes-vo.js', 'med-promoted-meta.js', 'pronto-socorro-interactive-drugs.js',
-    'medicacoes-classes.js', 'medicacoes-data.js', 'medicacoes-rename-loader.js'
+    'med-apresentacoes-vo.js', 'ps-drug-meta-gaps.js', 'med-promoted-meta.js',
+    'pronto-socorro-interactive-drugs.js', 'medicacoes-classes.js', 'medicacoes-data.js',
+    'medicacoes-rename-loader.js'
   ], ['medGetCatalog']);
   const cat = med.medGetCatalog();
-  pass('Medicações · runtime', cat.length + ' fichas carregadas');
+  if (cat.length >= 260) pass('Medicações · runtime', cat.length + ' fichas carregadas');
+  else fail('Medicações · runtime', cat.length + ' fichas (esperado ≥260)');
 } catch (e) { fail('Medicações · runtime', e.message); }
 
 try {
