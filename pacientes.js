@@ -29,7 +29,6 @@ function pacientesFillForm (p) {
     const el = document.getElementById(id);
     if (el) el.value = val || '';
   });
-  if (p.id && typeof clinicalSetActivePatient === 'function') clinicalSetActivePatient(p);
 }
 
 function pacientesClearForm () {
@@ -120,7 +119,7 @@ async function pacientesHandleAction (action, id) {
   }
 
   if (action === 'anamnese') {
-    if (typeof clinicalSetActivePatient === 'function') clinicalSetActivePatient(p);
+    if (typeof clinicalBeginEncounter === 'function') clinicalBeginEncounter(p);
     if (typeof anamneseFillForm === 'function') {
       anamneseFillForm({
         paciente: p.nome,
@@ -135,7 +134,7 @@ async function pacientesHandleAction (action, id) {
   }
 
   if (action === 'consulta') {
-    if (typeof clinicalSetActivePatient === 'function') clinicalSetActivePatient(p);
+    if (typeof clinicalBeginEncounter === 'function') clinicalBeginEncounter(p);
     if (typeof consultasOpenForPatient === 'function') {
       consultasOpenForPatient(p);
     }
@@ -164,12 +163,6 @@ async function pacientesHandleSubmit (e) {
   }
 
   await pacientesSaveAll(list);
-  if (typeof clinicalSetActivePatient === 'function') {
-    const saved = pacientesEditingId
-      ? list.find(p => p.id === pacientesEditingId)
-      : list[list.length - 1];
-    if (saved) clinicalSetActivePatient(saved);
-  }
   pacientesClearForm();
   pacientesRenderList();
 

@@ -1,6 +1,7 @@
 /* Alergias do paciente ativo — filtra opções de prescrição */
 
 const MEDHUB_ACTIVE_PACIENTE_ALERGIAS = 'medhub-active-paciente-alergias';
+const MEDHUB_ACTIVE_ENCOUNTER = 'medhub-active-encounter';
 
 const CLINICAL_ALLERGY_RULES = [
   {
@@ -35,12 +36,42 @@ function clinicalInvalidateAllergyCache () {
   _clinicalAllergyCache = null;
 }
 
+function clinicalHasActiveEncounter () {
+  return sessionStorage.getItem(MEDHUB_ACTIVE_ENCOUNTER) === '1';
+}
+
+function clinicalBeginEncounter (patient) {
+  sessionStorage.setItem(MEDHUB_ACTIVE_ENCOUNTER, '1');
+  if (patient) clinicalSetActivePatient(patient);
+  else clinicalInvalidateAllergyCache();
+}
+
+function clinicalEndEncounter () {
+  sessionStorage.removeItem(MEDHUB_ACTIVE_ENCOUNTER);
+  sessionStorage.removeItem(MEDHUB_ACTIVE_PACIENTE_ALERGIAS);
+  sessionStorage.removeItem('medhub-active-paciente-id');
+  sessionStorage.removeItem('medhub-active-paciente');
+  sessionStorage.removeItem('medhub-active-queixa');
+  sessionStorage.removeItem('medhub-active-idade');
+  clinicalInvalidateAllergyCache();
+  clinicalRefreshAllergyUi();
+}
+
+function clinicalRefreshAllergyUi () {
+  if (typeof medRefreshGrid === 'function' &&
+      document.getElementById('section-medicacoes')?.classList.contains('active')) {
+    medRefreshGrid();
+  }
+  if (typeof rxClearSelection === 'function' &&
+      document.getElementById('section-receituario')?.classList.contains('active')) {
+    rxClearSelection();
+  }
+}
+
 function clinicalSetActivePatient (patient) {
   if (!patient) {
     sessionStorage.removeItem(MEDHUB_ACTIVE_PACIENTE_ALERGIAS);
-    if (typeof MEDHUB_ACTIVE_PACIENTE !== 'undefined') {
-      sessionStorage.removeItem('medhub-active-paciente');
-    }
+    sessionStorage.removeItem('medhub-active-paciente');
     sessionStorage.removeItem('medhub-active-paciente-id');
     clinicalInvalidateAllergyCache();
     return;
@@ -52,11 +83,14 @@ function clinicalSetActivePatient (patient) {
 }
 
 function clinicalSetActiveAllergies (text) {
-  sessionStorage.setItem(MEDHUB_ACTIVE_PACIENTE_ALERGIAS, (text || '').trim());
+  const val = (text || '').trim();
+  sessionStorage.setItem(MEDHUB_ACTIVE_PACIENTE_ALERGIAS, val);
+  if (val) clinicalBeginEncounter();
   clinicalInvalidateAllergyCache();
 }
 
 function clinicalGetActiveAllergyText () {
+  if (!clinicalHasActiveEncounter()) return '';
   const anam = document.getElementById('anam-alergias')?.value?.trim();
   if (anam) return anam;
   const pac = document.getElementById('pac-alergias')?.value?.trim();
@@ -183,6 +217,7 @@ function clinicalAllergyBannerHtml () {
 async function clinicalSyncActivePatientFromAnamnese () {
   const nome = document.getElementById('anam-paciente')?.value?.trim();
   const alergias = document.getElementById('anam-alergias')?.value?.trim() || '';
+  if (nome || alergias) clinicalBeginEncounter();
   if (alergias) clinicalSetActiveAllergies(alergias);
   if (!nome || typeof pacientesLoadAll !== 'function') return;
   const list = await pacientesLoadAll();

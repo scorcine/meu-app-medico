@@ -109,6 +109,7 @@ function anamneseFillForm (data) {
     const el = document.getElementById('anam-' + key);
     if (el && typeof val === 'string') el.value = val;
   });
+  if (typeof clinicalBeginEncounter === 'function') clinicalBeginEncounter();
   if (typeof clinicalSetActiveAllergies === 'function' && data.alergias) {
     clinicalSetActiveAllergies(data.alergias);
   }
@@ -391,15 +392,27 @@ async function anamneseHandleSave (e) {
   } else {
     anamneseShowSaveStatus('Anamnese salva localmente.' + consultaMsg + (gdriveGetClientId() ? ' Conecte o Drive para envio automático.' : ''), 'ok');
   }
+
+  anamneseFinishEncounter();
 }
 
-function anamneseClearForm () {
+function anamneseFinishEncounter () {
+  anamneseClearForm({ endEncounter: false });
+  if (typeof clinicalEndEncounter === 'function') clinicalEndEncounter();
+  if (typeof rxUpdateQueixaHint === 'function') rxUpdateQueixaHint();
+}
+
+function anamneseClearForm (opts) {
   anamneseFieldIds().forEach(id => {
     const el = document.getElementById(id);
     if (el) el.value = '';
   });
   const dateEl = document.getElementById('anam-data');
   if (dateEl) dateEl.value = new Date().toLocaleString('pt-BR');
+  if (!opts || opts.endEncounter !== false) {
+    if (typeof clinicalEndEncounter === 'function') clinicalEndEncounter();
+    if (typeof rxUpdateQueixaHint === 'function') rxUpdateQueixaHint();
+  }
 }
 
 const ANAMNESE_GUIDE_DISMISS_PREFIX = 'medhub-anamnese-guide-dismissed-';

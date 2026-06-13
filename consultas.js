@@ -49,11 +49,14 @@ function consultasFillForm (c) {
   set('cons-notas', c.notas);
 }
 
-function consultasClearForm () {
+function consultasClearForm (opts) {
   consultasEditingId = null;
   consultasFillForm({ data: new Date().toLocaleString('pt-BR') });
   const title = document.getElementById('cons-form-title');
   if (title) title.textContent = 'Nova consulta';
+  if (!opts || opts.endEncounter !== false) {
+    if (typeof clinicalEndEncounter === 'function') clinicalEndEncounter();
+  }
 }
 
 async function consultasLoadAll () {
@@ -76,8 +79,8 @@ async function consultasPopulatePatientSelect () {
 }
 
 function consultasOpenForPatient (patient) {
-  if (typeof clinicalSetActivePatient === 'function') clinicalSetActivePatient(patient);
-  consultasClearForm();
+  consultasClearForm({ endEncounter: false });
+  if (typeof clinicalBeginEncounter === 'function') clinicalBeginEncounter(patient);
   consultasFillForm({
     pacienteId: patient.id,
     pacienteNome: patient.nome,
@@ -302,7 +305,8 @@ async function consultasHandleSubmit (e) {
   }
 
   await consultasSaveAll(list);
-  consultasClearForm();
+  consultasClearForm({ endEncounter: false });
+  if (typeof clinicalEndEncounter === 'function') clinicalEndEncounter();
   consultasRenderList();
   await consultasPopulatePatientSelect();
 
@@ -390,7 +394,7 @@ function initConsultas () {
       if (p) {
         document.getElementById('cons-paciente-id').value = p.id;
         document.getElementById('cons-paciente-nome').value = p.nome;
-        if (typeof clinicalSetActivePatient === 'function') clinicalSetActivePatient(p);
+        if (typeof clinicalBeginEncounter === 'function') clinicalBeginEncounter(p);
       }
     });
   }
