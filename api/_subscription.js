@@ -2,7 +2,8 @@ const {
   billingEnabled,
   getStripe,
   findCustomerByEmail,
-  getActiveSubscription
+  getActiveSubscription,
+  customerExists
 } = require('./_stripe');
 const { allowDevBypass } = require('./_platform');
 const { getUser } = require('./_users');
@@ -40,13 +41,18 @@ function isOwnerEmail (email) {
 }
 
 async function resolveCustomerId (email, options = {}) {
-  if (options.customerId) return options.customerId;
-  if (options.user?.stripeCustomerId) return options.user.stripeCustomerId;
-
-  const kvCustomerId = await getCustomerIdByEmail(email);
-  if (kvCustomerId) return kvCustomerId;
-
   const stripe = getStripe();
+  const candidates = [
+    options.customerId,
+    options.user?.stripeCustomerId,
+    await getCustomerIdByEmail(email)
+  ].filter(Boolean);
+
+  for (const id of candidates) {
+    if (!stripe) return id;
+    if (await customerExists(stripe, id)) return id;
+  }
+
   if (!stripe) return null;
 
   const customer = await findCustomerByEmail(stripe, email);

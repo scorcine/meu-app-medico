@@ -13,7 +13,7 @@
   <script defer src="compliance.js"></script>
   <script defer src="subscription.js?v=billing-v3"></script>
   <script defer src="auth-cloud.js?v=cloud-v2"></script>
-  <script defer src="auth.js"></script>
+  <script defer src="auth.js?v=register-stripe-v1"></script>
   <script defer>
     document.addEventListener('DOMContentLoaded', async () => {
       medhubInitComplianceShell();
@@ -26,6 +26,13 @@
       if (emailParam && emailInput) emailInput.value = emailParam;
 
       if (sessionId) {
+        if (sessionId.startsWith('cs_test_')) {
+          document.getElementById('checkout-session-id').value = '';
+          if (notice) {
+            notice.hidden = false;
+            notice.textContent = 'Pagamento de teste detectado. Assine em Planos e use o link da confirmação após pagar com cartão real.';
+          }
+        } else {
         document.getElementById('checkout-session-id').value = sessionId;
 
         try {
@@ -41,6 +48,7 @@
           }
         } catch {
           /* cadastro ainda tenta validar session_id no servidor */
+        }
         }
       }
     });

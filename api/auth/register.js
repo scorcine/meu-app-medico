@@ -157,6 +157,10 @@ module.exports = async (req, res) => {
       subscription: sub
     });
   } catch (err) {
-    json(res, 500, { error: err.message || 'Erro ao cadastrar' });
+    const msg = err.message || 'Erro ao cadastrar';
+    const friendly = /No such customer/i.test(msg)
+      ? 'Pagamento desatualizado. Assine novamente e use o link da página de confirmação após pagar.'
+      : msg;
+    json(res, 500, { error: friendly, code: 'register_failed' });
   }
 };

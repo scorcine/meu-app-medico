@@ -154,16 +154,39 @@ async function verifyCheckoutForRegister (sessionId) {
     return { ok: false, code: 'invalid_session', error: 'Sessão de pagamento inválida.' };
   }
 
-  let record = await getCheckoutRecord(sessionId);
+  const keyIsLive = String(process.env.STRIPE_SECRET_KEY || '').includes('_live_');
+  const sessionIsTest = String(sessionId).startsWith('cs_test_');
+  const sessionIsLive = String(sessionId).startsWith('cs_live_');
+
+  if (keyIsLive && sessionIsTest) {
+    return {
+      ok: false,
+      code: 'test_session_on_live',
+      error: 'Este pagamento foi feito em modo teste. Assine novamente em meu-app-medico.vercel.app/#planos e use o link da confirmação.'
+    };
+  }
+
+  if (!keyIsLive && sessionIsLive) {
+    return {
+      ok: false,
+      code: 'live_session_on_test',
+      error: 'Ambiente de pagamento inconsistente. Contate o suporte.'
+    };
+  }
+
+  let session;
+  try {
+    session = await stripe.checkout.sessions.retrieve(sessionId, {
+      expand: ['subscription']
+    });
+  } catch {
+    return { ok: false, code: 'invalid_session', error: 'Sessão de pagamento não encontrada ou expirada.' };
+  }
+
+  const record = await syncCheckoutSession(session);
+
   if (!record) {
-    try {
-      const session = await stripe.checkout.sessions.retrieve(sessionId, {
-        expand: ['subscription']
-      });
-      record = await syncCheckoutSession(session);
-    } catch {
-      return { ok: false, code: 'invalid_session', error: 'Sessão de pagamento não encontrada.' };
-    }
+    return { ok: false, code: 'invalid_session', error: 'Não foi possível validar o pagamento.' };
   }
 
   if (!record.paid) {
@@ -207,9 +230,15 @@ async function syncSubscriptionEvent (subscription) {
   if (!email && customerId) {
     const existing = await getCustomerBilling(customerId);
     email = existing?.email || '';
-    if (!email) {
-      const customer = await stripe.customers.retrieve(customerId);
-      email = customer.email || '';
+    if (!email && stripe) {
+      try {
+        const customer = await stripe.customers.retrieve(customerId);
+        email = customer.email || '';
+      } catch (err) {
+        if (!(err.code === 'resource_missing' || /No such customer/i.test(err.message || ''))) {
+          throw err;
+        }
+      }
     }
   }
 

@@ -157,6 +157,11 @@ async function handleRegister (e) {
         window.location.href = 'register.html?' + q.toString();
         return;
       }
+      if (result.code === 'test_session_on_live') {
+        alert(result.error);
+        window.location.href = 'index.html?email=' + encodeURIComponent(email) + '#planos';
+        return;
+      }
       alert(result.error || 'Erro ao cadastrar.');
       return;
     }

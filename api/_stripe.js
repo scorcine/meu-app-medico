@@ -32,17 +32,38 @@ async function findCustomerByEmail (stripe, email) {
 }
 
 async function getActiveSubscription (stripe, customerId) {
-  const statuses = ['active', 'trialing'];
-  for (const status of statuses) {
-    const subs = await stripe.subscriptions.list({
-      customer: customerId,
-      status,
-      limit: 1,
-      expand: ['data.items.data.price']
-    });
-    if (subs.data.length) return subs.data[0];
+  if (!customerId) return null;
+  try {
+    const statuses = ['active', 'trialing'];
+    for (const status of statuses) {
+      const subs = await stripe.subscriptions.list({
+        customer: customerId,
+        status,
+        limit: 1,
+        expand: ['data.items.data.price']
+      });
+      if (subs.data.length) return subs.data[0];
+    }
+    return null;
+  } catch (err) {
+    if (err.code === 'resource_missing' || /No such customer/i.test(err.message || '')) {
+      return null;
+    }
+    throw err;
   }
-  return null;
+}
+
+async function customerExists (stripe, customerId) {
+  if (!stripe || !customerId) return false;
+  try {
+    const c = await stripe.customers.retrieve(customerId);
+    return !c.deleted;
+  } catch (err) {
+    if (err.code === 'resource_missing' || /No such customer/i.test(err.message || '')) {
+      return false;
+    }
+    throw err;
+  }
 }
 
 module.exports = {
@@ -51,5 +72,6 @@ module.exports = {
   siteOrigin,
   json,
   findCustomerByEmail,
-  getActiveSubscription
+  getActiveSubscription,
+  customerExists
 };
