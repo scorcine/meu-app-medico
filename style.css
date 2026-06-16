@@ -278,7 +278,7 @@ form.card label {
   color: var(--text-secondary);
 }
 
-form.card input {
+form.card input:not([type="checkbox"]):not([type="radio"]) {
   width: 100%;
   padding: 0.65rem 0.85rem;
   border: 1px solid var(--border-strong);
@@ -287,6 +287,15 @@ form.card input {
   background: var(--bg-input);
   color: var(--text-primary);
   transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+form.card input[type="checkbox"],
+form.card input[type="radio"] {
+  width: auto;
+  flex-shrink: 0;
+  margin: 0;
+  padding: 0;
+  accent-color: var(--accent);
 }
 
 form.card input:focus {
@@ -3916,13 +3925,48 @@ form.card .auth-hint {
 }
 
 form.card .auth-terms-check {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.5rem;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: start;
+  column-gap: 0.65rem;
+  row-gap: 0;
   margin: 0.85rem 0 0.5rem;
   font-size: 0.85rem;
-  line-height: 1.45;
+  line-height: 1.5;
   color: var(--text-secondary);
+  text-align: left;
+  font-weight: 400;
+  cursor: pointer;
+}
+
+form.card .auth-terms-check input[type="checkbox"] {
+  grid-column: 1;
+  grid-row: 1;
+  margin-top: 0.2rem;
+}
+
+form.card .auth-terms-check span {
+  grid-column: 2;
+  grid-row: 1;
+  min-width: 0;
+}
+
+form.card .auth-terms-check a {
+  margin-top: 0;
+  text-align: inherit;
+  display: inline;
+  font-size: inherit;
+  white-space: normal;
+}
+
+.auth-main > form.card.auth-card {
+  text-align: left;
+}
+
+.auth-main > form.card.auth-card h1,
+.auth-main > form.card.auth-card > button,
+.auth-main > form.card.auth-card > a[href="login.html"] {
+  text-align: center;
 }
 
 form.card .auth-terms-link {
@@ -4446,6 +4490,8 @@ body.pricing-page .pricing-v2 {
 .auth-pricing-note {
   margin: 0.65rem 0 0;
   font-size: 0.82rem;
+  text-align: left;
+  line-height: 1.45;
 }
 
 .legal-page header,

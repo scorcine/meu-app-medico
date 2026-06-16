@@ -1,86 +1,88 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cadastro • MedHub</title>
-  <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <script src="theme.js"></script>
-  <link rel="stylesheet" href="style.css?v=compliance-v1">
-  <script defer src="app.js"></script>
-  <script defer src="security-crypto.js"></script>
-  <script defer src="legal-content.js"></script>
-  <script defer src="compliance.js"></script>
-  <script defer src="subscription.js?v=billing-v3"></script>
-  <script defer src="auth-cloud.js?v=cloud-v2"></script>
-  <script defer src="auth.js"></script>
-  <script defer>
-    document.addEventListener('DOMContentLoaded', async () => {
-      medhubInitComplianceShell();
-      const params = new URLSearchParams(window.location.search);
-      const emailParam = params.get('email');
-      const sessionId = params.get('session_id');
-      const emailInput = document.getElementById('email');
-      const notice = document.getElementById('register-checkout-notice');
-
-      if (emailParam && emailInput) emailInput.value = emailParam;
-
-      if (sessionId) {
-        document.getElementById('checkout-session-id').value = sessionId;
-
-        try {
-          const res = await fetch('/api/checkout-session?session_id=' + encodeURIComponent(sessionId));
-          const data = await res.json();
-          if (res.ok && data.email) {
-            emailInput.value = data.email;
-            emailInput.readOnly = true;
-            if (notice) {
-              notice.hidden = false;
-              notice.textContent = 'Assinatura vinculada ao pagamento. Use este e-mail para criar sua conta.';
-            }
-          }
-        } catch {
-          /* cadastro ainda tenta validar session_id no servidor */
-        }
-      }
-    });
-  </script>
-</head>
-<body onload="redirectIfLogged()">
-  <header>MedHub</header>
-
-  <form class="card" onsubmit="handleRegister(event)">
-    <h1>Criar conta</h1>
-
-    <p id="register-checkout-notice" class="auth-notice" role="note" hidden></p>
-
-    <input type="hidden" id="checkout-session-id" name="checkoutSessionId" value="">
-
-    <label for="name">Nome</label>
-    <input id="name" name="name" required>
-
-    <label for="email">E-mail</label>
-    <input id="email" name="email" type="email" required>
-
-    <label for="password">Senha</label>
-    <input id="password" name="password" type="password" required minlength="8" autocomplete="new-password">
-    <p class="auth-hint muted">Mínimo 8 caracteres. Usada para login e criptografia local das anamneses.</p>
-
-    <label class="auth-terms-check">
-      <input id="acceptTerms" name="acceptTerms" type="checkbox" required>
-      Li e aceito o <a href="termos.html" target="_blank" rel="noopener">termo de uso</a> (ferramenta educacional; não substitui prontuário legal).
-    </label>
-
-    <label class="auth-terms-check">
-      <input id="acceptPrivacy" name="acceptPrivacy" type="checkbox" required>
-      Li e aceito a <a href="privacidade.html" target="_blank" rel="noopener">política de privacidade</a>.
-    </label>
-
-    <p class="auth-pricing-note muted">Após pagar no Stripe, use o link da página de confirmação para cadastrar com a assinatura já vinculada.</p>
-
-    <button type="submit">Cadastrar</button>
-
-    <a href="login.html">Já tem conta? Fazer login</a>
-  </form>
-</body>
-</html>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cadastro • MedHub</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <script src="theme.js"></script>
+  <link rel="stylesheet" href="style.css?v=auth-register-v2">
+  <script defer src="app.js"></script>
+  <script defer src="security-crypto.js"></script>
+  <script defer src="legal-content.js"></script>
+  <script defer src="compliance.js"></script>
+  <script defer src="subscription.js?v=billing-v3"></script>
+  <script defer src="auth-cloud.js?v=cloud-v2"></script>
+  <script defer src="auth.js"></script>
+  <script defer>
+    document.addEventListener('DOMContentLoaded', async () => {
+      medhubInitComplianceShell();
+      const params = new URLSearchParams(window.location.search);
+      const emailParam = params.get('email');
+      const sessionId = params.get('session_id');
+      const emailInput = document.getElementById('email');
+      const notice = document.getElementById('register-checkout-notice');
+
+      if (emailParam && emailInput) emailInput.value = emailParam;
+
+      if (sessionId) {
+        document.getElementById('checkout-session-id').value = sessionId;
+
+        try {
+          const res = await fetch('/api/checkout-session?session_id=' + encodeURIComponent(sessionId));
+          const data = await res.json();
+          if (res.ok && data.email) {
+            emailInput.value = data.email;
+            emailInput.readOnly = true;
+            if (notice) {
+              notice.hidden = false;
+              notice.textContent = 'Assinatura vinculada ao pagamento. Use este e-mail para criar sua conta.';
+            }
+          }
+        } catch {
+          /* cadastro ainda tenta validar session_id no servidor */
+        }
+      }
+    });
+  </script>
+</head>
+<body class="auth-body" onload="redirectIfLogged()">
+  <header>MedHub</header>
+
+  <main class="auth-main">
+  <form class="card auth-card" onsubmit="handleRegister(event)">
+    <h1>Criar conta</h1>
+
+    <p id="register-checkout-notice" class="auth-notice" role="note" hidden></p>
+
+    <input type="hidden" id="checkout-session-id" name="checkoutSessionId" value="">
+
+    <label for="name">Nome</label>
+    <input id="name" name="name" required>
+
+    <label for="email">E-mail</label>
+    <input id="email" name="email" type="email" required>
+
+    <label for="password">Senha</label>
+    <input id="password" name="password" type="password" required minlength="8" autocomplete="new-password">
+    <p class="auth-hint muted">Mínimo 8 caracteres. Usada para login e criptografia local das anamneses.</p>
+
+    <label class="auth-terms-check">
+      <input id="acceptTerms" name="acceptTerms" type="checkbox" required>
+      <span>Li e aceito o <a href="termos.html" target="_blank" rel="noopener">termo de uso</a> (ferramenta educacional; não substitui prontuário legal).</span>
+    </label>
+
+    <label class="auth-terms-check">
+      <input id="acceptPrivacy" name="acceptPrivacy" type="checkbox" required>
+      <span>Li e aceito a <a href="privacidade.html" target="_blank" rel="noopener">política de privacidade</a>.</span>
+    </label>
+
+    <p class="auth-pricing-note muted">Após pagar no Stripe, use o link da página de confirmação para cadastrar com a assinatura já vinculada.</p>
+
+    <button type="submit">Cadastrar</button>
+
+    <a href="login.html">Já tem conta? Fazer login</a>
+  </form>
+  </main>
+</body>
+</html>
