@@ -7,7 +7,8 @@
 const {
   normalizeProfile,
   identityConfigured,
-  profileOnboardingComplete
+  profileOnboardingComplete,
+  identityChanged
 } = require('../api/_profile');
 
 const { sessionVersionValid } = require('../api/_auth');
@@ -57,6 +58,11 @@ const doctorReady = normalizeProfile({
 if (profileOnboardingComplete(doctorReady) && identityConfigured(doctorReady)) {
   pass('doctor onboarding complete');
 } else fail('doctor onboarding complete');
+
+const studentProfile = normalizeProfile({ userType: 'student', rxDisplayName: 'João' });
+const doctorUpgrade = normalizeProfile({ userType: 'doctor', rxDisplayName: 'João', crmNumber: '123', crmUf: 'SP' });
+if (identityChanged(studentProfile, doctorUpgrade)) pass('student to doctor is identity change');
+else fail('student to doctor is identity change');
 
 if (sessionVersionValid({ email: 'a@b.com', sv: 2 }, { sessionVersion: 2 })) pass('session version match');
 else fail('session version match');

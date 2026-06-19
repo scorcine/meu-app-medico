@@ -558,6 +558,17 @@ footer {
   margin-top: 0.5rem;
 }
 
+.profile-student-upgrade {
+  margin: 0.75rem 0;
+  padding: 0.85rem 1rem;
+  border-radius: 8px;
+  background: var(--bg-surface-muted);
+}
+
+.profile-student-upgrade .btn {
+  margin-top: 0.5rem;
+}
+
 .profile-identity-lock {
   margin: 0.75rem 0 1rem;
   padding: 0.85rem 1rem;

@@ -50,7 +50,7 @@
   <script defer src="med-apresentacoes-vo.js?v=ist-pep-v1"></script>
   <script defer src="receituario-data.js?v=rx-multi-v1"></script>
   <script defer src="receituario-ps-bridge.js?v=ps-etiology-v4"></script>
-  <script defer src="user-profile.js?v=profile-v2"></script>
+  <script defer src="user-profile.js?v=profile-v3"></script>
   <script defer src="receituario.js?v=ps-etiology-v4"></script>
   <script defer src="google-drive.js?v=compliance-v1"></script>
   <script defer src="security-crypto.js?v=compliance-v1"></script>
@@ -148,22 +148,29 @@
           <section class="perfil-block">
             <h3>👤 Dados profissionais</h3>
             <p id="profile-user-type" class="profile-user-type muted" hidden></p>
-            <p class="muted">Nome e CRM aparecem no receituário, PDFs e documentos gerados pelo app.</p>
+            <p id="profile-prof-lead" class="muted">Nome e CRM aparecem no receituário, PDFs e documentos gerados pelo app.</p>
             <form class="perfil-form" id="profile-form" onsubmit="return false">
               <label for="profile-rx-name">Nome completo (como na receita)</label>
               <input id="profile-rx-name" type="text" autocomplete="name" placeholder="Ex.: Maria Silva">
 
-              <div class="profile-crm-row">
-                <label for="profile-crm-uf">CRM — UF</label>
-                <select id="profile-crm-uf" class="profile-crm-uf" aria-label="UF do CRM"></select>
-                <label for="profile-crm-number">Número</label>
-                <input id="profile-crm-number" class="profile-crm-number" type="text" inputmode="numeric" pattern="[0-9]*" placeholder="123456" autocomplete="off">
+              <div id="profile-student-upgrade" class="profile-student-upgrade" hidden>
+                <p class="muted">Formou-se? Informe seu CRM para aparecer no receituário e documentos.</p>
+                <button type="button" class="btn btn-secondary" id="profile-upgrade-doctor-btn">Sou médico(a) formado(a)</button>
               </div>
 
-              <p id="profile-rx-preview" class="profile-rx-preview" aria-live="polite"></p>
+              <div id="profile-crm-section">
+                <div class="profile-crm-row">
+                  <label for="profile-crm-uf">CRM — UF</label>
+                  <select id="profile-crm-uf" class="profile-crm-uf" aria-label="UF do CRM"></select>
+                  <label for="profile-crm-number">Número</label>
+                  <input id="profile-crm-number" class="profile-crm-number" type="text" inputmode="numeric" pattern="[0-9]*" placeholder="123456" autocomplete="off">
+                </div>
+
+                <p id="profile-rx-preview" class="profile-rx-preview" aria-live="polite"></p>
+              </div>
 
               <div id="profile-identity-lock" class="profile-identity-lock" hidden>
-                <p class="muted">Nome e CRM ficam vinculados à sua conta na nuvem. Para alterá-los, informe sua senha.</p>
+                <p id="profile-identity-lock-msg" class="muted">Nome e CRM ficam vinculados à sua conta na nuvem. Para alterá-los, informe sua senha.</p>
                 <label for="profile-current-password">Senha atual</label>
                 <input id="profile-current-password" type="password" autocomplete="current-password" placeholder="Obrigatória para mudar nome ou CRM">
               </div>

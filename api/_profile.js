@@ -69,6 +69,7 @@ function profileOnboardingComplete (profile) {
 }
 
 function identityChanged (current, next) {
+  if (String(current.userType || '') !== String(next.userType || '')) return true;
   return IDENTITY_FIELDS.some(field => String(current[field] || '') !== String(next[field] || ''));
 }
 
@@ -128,6 +129,7 @@ module.exports = {
   normalizeProfile,
   identityConfigured,
   profileOnboardingComplete,
+  identityChanged,
   getProfessionalProfile,
   saveProfessionalProfile,
   publicProfile

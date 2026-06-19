@@ -112,10 +112,59 @@ function medhubFillProfileForm (profile, user) {
   if (zipEl) zipEl.value = profile.addressZip || '';
 }
 
-function medhubUpdateProfileLockUi (profile) {
+function medhubUpdateProfileLockUi (profile, options) {
   const lockBox = document.getElementById('profile-identity-lock');
+  const lockMsg = document.getElementById('profile-identity-lock-msg');
   const locked = medhubProfileIsIdentityLocked(profile);
-  if (lockBox) lockBox.hidden = !locked;
+  const upgrading = !!options?.upgradingToDoctor;
+
+  if (lockBox) lockBox.hidden = !locked && !upgrading;
+
+  if (lockMsg) {
+    if (profile?.userType === 'student' && upgrading) {
+      lockMsg.textContent = 'Informe sua senha para confirmar a mudança para médico(a) formado(a) e salvar o CRM.';
+    } else if (profile?.userType === 'student') {
+      lockMsg.textContent = 'Seu nome fica vinculado à conta na nuvem. Para alterá-lo, informe sua senha.';
+    } else {
+      lockMsg.textContent = 'Nome e CRM ficam vinculados à sua conta na nuvem. Para alterá-los, informe sua senha.';
+    }
+  }
+}
+
+function medhubUpdateProfileUserTypeUi (profile, options) {
+  const opts = options || {};
+  const upgrading = !!opts.upgradingToDoctor;
+  const p = profile || medhubLoadUserProfile();
+  const isStudent = p.userType === 'student';
+  const isDoctor = p.userType === 'doctor';
+
+  const leadEl = document.getElementById('profile-prof-lead');
+  const userTypeEl = document.getElementById('profile-user-type');
+  const upgradeEl = document.getElementById('profile-student-upgrade');
+  const crmSection = document.getElementById('profile-crm-section');
+  const crmNumEl = document.getElementById('profile-crm-number');
+
+  if (leadEl) {
+    leadEl.textContent = isStudent && !upgrading
+      ? 'Seu nome aparece no receituário. CRM não é obrigatório para estudantes.'
+      : 'Nome e CRM aparecem no receituário, PDFs e documentos gerados pelo app.';
+  }
+
+  if (userTypeEl) {
+    const label = medhubUserTypeLabel(p.userType);
+    if (label) {
+      userTypeEl.hidden = false;
+      userTypeEl.textContent = upgrading
+        ? 'Perfil: Estudante → informe CRM para médico(a) formado(a)'
+        : 'Perfil: ' + label;
+    } else {
+      userTypeEl.hidden = true;
+    }
+  }
+
+  if (upgradeEl) upgradeEl.hidden = !isStudent || upgrading;
+  if (crmSection) crmSection.hidden = isStudent && !upgrading;
+  if (crmNumEl) crmNumEl.required = isDoctor || upgrading;
 }
 
 function medhubGetRxDoctorName () {
@@ -167,6 +216,7 @@ function initUserProfilePage () {
   const stateEl = document.getElementById('profile-address-state');
   const zipEl = document.getElementById('profile-address-zip');
   const previewEl = document.getElementById('profile-rx-preview');
+  let upgradingToDoctor = false;
 
   if (crmUfEl && !crmUfEl.options.length) {
     MEDHUB_CRM_UFS.forEach(uf => {
@@ -178,21 +228,21 @@ function initUserProfilePage () {
   }
 
   medhubFillProfileForm(profile, user);
-  medhubUpdateProfileLockUi(profile);
+  medhubUpdateProfileUserTypeUi(profile, { upgradingToDoctor });
+  medhubUpdateProfileLockUi(profile, { upgradingToDoctor });
 
-  const userTypeEl = document.getElementById('profile-user-type');
-  if (userTypeEl) {
-    const label = medhubUserTypeLabel(profile.userType);
-    if (label) {
-      userTypeEl.hidden = false;
-      userTypeEl.textContent = 'Perfil: ' + label + (profile.userType === 'student' ? ' — CRM opcional.' : '');
-    } else {
-      userTypeEl.hidden = true;
-    }
-  }
+  document.getElementById('profile-upgrade-doctor-btn')?.addEventListener('click', () => {
+    upgradingToDoctor = true;
+    medhubUpdateProfileUserTypeUi(medhubLoadUserProfile(), { upgradingToDoctor });
+    medhubUpdateProfileLockUi(medhubLoadUserProfile(), { upgradingToDoctor });
+    document.getElementById('profile-crm-number')?.focus();
+    updatePreview();
+  });
 
   function updatePreview () {
     if (!previewEl) return;
+    const current = medhubLoadUserProfile();
+    if (current.userType === 'student' && !upgradingToDoctor) return;
     const name = (nameEl?.value || '').trim() || user?.name || '________________';
     const uf = crmUfEl?.value || 'SP';
     const num = (crmNumEl?.value || '').replace(/\D/g, '');
@@ -217,8 +267,10 @@ function initUserProfilePage () {
       const cloud = await medhubCloudFetchProfile();
       if (!cloud.ok || !cloud.profile) return;
       medhubApplyCloudProfileLocal(cloud.profile);
+      upgradingToDoctor = false;
       medhubFillProfileForm(medhubLoadUserProfile(), user);
-      medhubUpdateProfileLockUi(medhubLoadUserProfile());
+      medhubUpdateProfileUserTypeUi(medhubLoadUserProfile(), { upgradingToDoctor });
+      medhubUpdateProfileLockUi(medhubLoadUserProfile(), { upgradingToDoctor });
       updatePreview();
     });
   }
@@ -226,11 +278,20 @@ function initUserProfilePage () {
   document.getElementById('profile-save-btn')?.addEventListener('click', async () => {
     const status = document.getElementById('profile-save-status');
     const passEl = document.getElementById('profile-current-password');
+    const currentProfile = medhubLoadUserProfile();
+    const isUpgrade = currentProfile.userType === 'student' && upgradingToDoctor;
+    const crmNumber = crmNumEl?.value?.replace(/\D/g, '') || '';
+
+    if (isUpgrade && !crmNumber) {
+      alert('Informe o número do CRM para concluir a mudança para médico(a) formado(a).');
+      return;
+    }
+
     const payload = {
-      userType: medhubLoadUserProfile().userType || '',
+      userType: isUpgrade ? 'doctor' : (currentProfile.userType || ''),
       rxDisplayName: nameEl?.value?.trim() || '',
       crmUf: crmUfEl?.value || 'SP',
-      crmNumber: crmNumEl?.value?.replace(/\D/g, '') || '',
+      crmNumber: (currentProfile.userType === 'doctor' || isUpgrade) ? crmNumber : '',
       address: addressEl?.value?.trim() || '',
       addressCity: cityEl?.value?.trim() || '',
       addressState: (stateEl?.value || '').toUpperCase().slice(0, 2),
@@ -238,9 +299,17 @@ function initUserProfilePage () {
     };
     const currentPassword = passEl?.value || '';
     const wasLocked = medhubProfileIsIdentityLocked();
+    const needsPassword = wasLocked || isUpgrade;
+
+    if (needsPassword && !currentPassword) {
+      alert(isUpgrade
+        ? 'Informe sua senha para confirmar a mudança para médico(a) formado(a).'
+        : 'Informe sua senha atual para alterar nome ou CRM.');
+      return;
+    }
 
     if (typeof medhubCloudSyncAvailable === 'function' && await medhubCloudSyncAvailable()) {
-      const saved = await medhubCloudSaveProfile(payload, wasLocked ? currentPassword : '');
+      const saved = await medhubCloudSaveProfile(payload, needsPassword ? currentPassword : '');
       if (!saved.ok) {
         if (status) {
           status.hidden = false;
@@ -251,18 +320,23 @@ function initUserProfilePage () {
       }
       medhubApplyCloudProfileLocal(saved.profile);
       if (passEl) passEl.value = '';
+      upgradingToDoctor = false;
     } else {
       medhubSaveUserProfileLocal(payload);
+      upgradingToDoctor = false;
     }
 
     if (status) {
       status.hidden = false;
-      status.textContent = medhubProfileIsIdentityLocked()
-        ? 'Dados profissionais salvos. Nome e CRM estão protegidos na nuvem.'
-        : 'Dados profissionais salvos.';
+      status.textContent = isUpgrade
+        ? 'Perfil atualizado para médico(a) formado(a). Nome e CRM estão protegidos na nuvem.'
+        : (medhubProfileIsIdentityLocked()
+          ? 'Dados profissionais salvos. Nome e CRM estão protegidos na nuvem.'
+          : 'Dados profissionais salvos.');
       status.className = 'anamnese-save-status anamnese-save-status--ok';
     }
-    medhubUpdateProfileLockUi(medhubLoadUserProfile());
+    medhubUpdateProfileUserTypeUi(medhubLoadUserProfile(), { upgradingToDoctor });
+    medhubUpdateProfileLockUi(medhubLoadUserProfile(), { upgradingToDoctor });
     updatePreview();
   });
 
