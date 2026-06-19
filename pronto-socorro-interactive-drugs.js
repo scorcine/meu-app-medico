@@ -51,6 +51,8 @@ const PS_DRUG_META = {
   midazolam: { name: 'Midazolam', classes: ['benzodiazepine'] },
   lorazepam: { name: 'Lorazepam', classes: ['benzodiazepine'] },
   clonazepam: { name: 'Clonazepam', classes: ['benzodiazepine'] },
+  alprazolam: { name: 'Alprazolam', classes: ['benzodiazepine'] },
+  hidroxizina: { name: 'Hidroxizina', classes: ['antihistamine'] },
   fenitoina: { name: 'Fenitoína', classes: ['anticonvulsant'] },
   acido_valproico: { name: 'Ácido valpróico', classes: ['anticonvulsant'] },
   fenobarbital: { name: 'Fenobarbital', classes: ['anticonvulsant'] },
@@ -451,6 +453,75 @@ function psMergeContextFields (custom, standard) {
   standard.forEach(f => { map[f.id] = f; });
   (custom || []).forEach(f => { map[f.id] = f; });
   return Object.values(map);
+}
+
+/** Regras por contexto clínico — hide remove da lista; todas geram alerta ao analisar */
+const PS_POPULATION_RULES = [
+  { context: 'gestante', classes: ['benzodiazepine'], severity: 'error', hide: true,
+    message: name => `${name} — contraindicado/evitar na gestação (benzodiazepínico). Preferir hidroxizina conforme protocolo.` },
+  { context: 'gestante', classes: ['fluoroquinolone'], severity: 'error', hide: true,
+    message: name => `${name} — contraindicado na gestação.` },
+  { context: 'gestante', classes: ['tetracycline'], severity: 'error', hide: true,
+    message: name => `${name} — contraindicado na gestação.` },
+  { context: 'gestante', classes: ['nsaid'], severity: 'error', hide: true,
+    message: name => `${name} — evitar AINE na gestação; preferir paracetamol/dipirona.` },
+  { context: 'gestante', classes: ['acei', 'arb'], severity: 'error', hide: true,
+    message: name => `${name} — contraindicado na gestação (IECA/BRA).` },
+  { context: 'gestante', ids: ['acido_valproico', 'warfarina', 'ivermectina', 'primaquina', 'mefloquina', 'doxiciclina', 'tetraciclina'], severity: 'error', hide: true,
+    message: name => `${name} — contraindicado ou evitar na gestação.` },
+  { context: 'gestante', classes: ['triptan'], severity: 'warning', hide: false,
+    message: name => `${name} — revisar risco/benefício na gestação (preferir paracetamol/metoclopramida).` },
+  { context: 'drc', classes: ['nsaid'], severity: 'warning', hide: false,
+    message: name => `${name} — cautela ou evitar em DRC (risco de piora renal).` }
+];
+
+function psDrugMatchesPopulationRule (drugId, rule) {
+  const meta = PS_DRUG_META[drugId];
+  if (rule.ids && rule.ids.includes(drugId)) return true;
+  if (!meta || !rule.classes) return false;
+  return rule.classes.some(c => meta.classes.includes(c));
+}
+
+function psMedDrugIds (med) {
+  const ids = new Set();
+  (med.drugs || []).forEach(d => { if (d.id) ids.add(d.id); });
+  psExtractDrugsFromText(med.label || '').forEach(id => ids.add(id));
+  return [...ids];
+}
+
+function psMedPopulationBlock (med, context) {
+  if (!med || !context) return null;
+  const drugIds = psMedDrugIds(med);
+  for (const rule of PS_POPULATION_RULES) {
+    if (!context[rule.context] || !rule.hide) continue;
+    for (const id of drugIds) {
+      if (psDrugMatchesPopulationRule(id, rule)) {
+        const name = (PS_DRUG_META[id] && PS_DRUG_META[id].name) || id;
+        return { rule, drugId: id, message: rule.message(name) };
+      }
+    }
+  }
+  return null;
+}
+
+function psFilterMedsByPopulation (meds, context) {
+  return (meds || []).filter(m => !psMedPopulationBlock(m, context));
+}
+
+function psPopulationValidationMessages (drugs, context) {
+  const messages = [];
+  const seen = new Set();
+  (drugs || []).forEach(d => {
+    PS_POPULATION_RULES.forEach(rule => {
+      if (!context[rule.context] || !psDrugMatchesPopulationRule(d.id, rule)) return;
+      const key = `${rule.context}|${d.id}|${rule.severity}`;
+      if (seen.has(key)) return;
+      seen.add(key);
+      const name = (PS_DRUG_META[d.id] && PS_DRUG_META[d.id].name) || d.id;
+      messages.push({ severity: rule.severity || 'error', text: rule.message(name) });
+    });
+  });
+  return messages;
 }
 
 function psGetInteractiveConfig (conditionId) {

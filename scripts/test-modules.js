@@ -226,6 +226,16 @@ try {
     else fail('UI · PS abrir sepse', 'vazio');
   } else fail('UI · PS abrir sepse', 'botão não encontrado');
 
+  if (typeof psGetInteractiveConfig === 'function' && typeof psFilterMedsByPopulation === 'function') {
+    const anxCfg = psGetInteractiveConfig('ansiedade-crise');
+    const gestanteMeds = psFilterMedsByPopulation(anxCfg.medications, { gestante: true });
+    const gestanteText = gestanteMeds.map(m => m.label.toLowerCase()).join(' ');
+    const hasBzd = /diazepam|lorazepam|alprazolam/.test(gestanteText);
+    const hasHydro = /hidroxizina/.test(gestanteText);
+    if (!hasBzd && hasHydro) pass('PS · gestante ansiedade', 'BZD ocultos, hidroxizina mantida');
+    else fail('PS · gestante ansiedade', hasBzd ? 'BZD visível' : 'hidroxizina ausente');
+  }
+
   showSection('medicacoes');
   const medBtn = document.querySelector('#med-drug-grid button[data-med-id]') ||
     document.querySelector('#med-drug-grid button');

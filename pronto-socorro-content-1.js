@@ -363,7 +363,8 @@ const PS_CONTENT_1 = {
         <li><strong>Ambiente calmo</strong> — verbalização tranquilizadora; evitar excesso de exames se baixa suspeita orgânica e exame normal.</li>
         <li><strong>Farmacológico se intenso</strong> — após exclusão orgânica:
           <ul class="ps-med-options">
-            <li><strong>1ª linha:</strong> diazepam 5–10 mg VO/SL ou lorazepam 1–2 mg VO/SL (cautela idoso, gestante, dependência)</li>
+            <li><strong>Gestante:</strong> hidroxizina 25–50 mg VO 6/6 h (evitar benzodiazepínico)</li>
+            <li><strong>1ª linha:</strong> diazepam 5–10 mg VO/SL ou lorazepam 1–2 mg VO/SL (cautela idoso, dependência)</li>
             <li><strong>Alternativa / resistência:</strong> hidroxizina 25–50 mg VO 6/6 h (menor potencial de dependência)</li>
             <li><strong>Refratário / grave:</strong> alprazolam 0,25–0,5 mg VO (dose única, cautela) + encaminhamento psiquiatria urgente se ideação suicida</li>
           </ul>

@@ -389,29 +389,7 @@ function psValidatePrescription (conditionId, config, selectedMedIds, context, s
     }
   }
 
-  if (context.gestante) {
-    drugs.forEach(d => {
-      if (['nsaid', 'triptan'].some(c => (PS_DRUG_META[d.id]?.classes || []).includes(c))) {
-        if (d.id !== 'paracetamol' && d.id !== 'dipirona') {
-          messages.push({
-            severity: 'warning',
-            text: `${psDrugLabel(d.id)} — revisar risco/benefício na gestação (preferir paracetamol/dipirona e metoclopramida).`
-          });
-        }
-      }
-    });
-  }
-
-  if (context.drc) {
-    drugs.forEach(d => {
-      if ((PS_DRUG_META[d.id]?.classes || []).includes('nsaid')) {
-        messages.push({
-          severity: 'warning',
-          text: `${psDrugLabel(d.id)} — cautela ou evitar em DRC (risco de piora renal).`
-        });
-      }
-    });
-  }
+  psPopulationValidationMessages(drugs, context).forEach(m => messages.push(m));
 
   if (context.alergia_aine) {
     drugs.forEach(d => {
@@ -544,29 +522,41 @@ function psRenderInteractiveRx (conditionId, container) {
     ctxEl.hidden = true;
   }
 
-  const filterMeds = typeof clinicalFilterDrugsByAllergy === 'function'
-    ? clinicalFilterDrugsByAllergy
-    : meds => meds;
+  const filterMeds = (meds, ctx) => {
+    let list = meds || [];
+    if (typeof clinicalFilterDrugsByAllergy === 'function') {
+      list = clinicalFilterDrugsByAllergy(list);
+    }
+    if (typeof psFilterMedsByPopulation === 'function') {
+      list = psFilterMedsByPopulation(list, ctx || {});
+    }
+    return list;
+  };
 
-  const groups = (config.groups || [{ id: 'all', label: 'Opções terapêuticas do protocolo', medications: config.medications }])
-    .map(g => ({ ...g, medications: filterMeds(g.medications) }));
+  function renderMedGroups (ctx) {
+    const context = ctx || getContext();
+    const groups = (config.groups || [{ id: 'all', label: 'Opções terapêuticas do protocolo', medications: config.medications }])
+      .map(g => ({ ...g, medications: filterMeds(g.medications, context) }));
 
-  medsEl.innerHTML = groups.map(g => {
-    if (!g.medications.length) {
-      return `
+    const selectedBefore = new Set(getSelected());
+
+    medsEl.innerHTML = groups.map(g => {
+      if (!g.medications.length) {
+        return `
         <fieldset class="ps-rx-fieldset" data-group="${g.id}">
           <legend>${g.label}</legend>
-          <p class="muted">Nenhuma opção disponível — medicamentos ocultados por alergia do paciente.</p>
+          <p class="muted">Nenhuma opção disponível — ocultada por alergia ou contexto clínico.</p>
         </fieldset>`;
-    }
-    return `
-    <fieldset class="ps-rx-fieldset" data-group="${g.id}">
-      <legend>${g.label}</legend>
-      <div class="ps-rx-med-list">
-        ${g.medications.map(m => psRenderMedOption(m)).join('')}
-      </div>
-    </fieldset>`;
-  }).join('');
+      }
+      return `
+      <fieldset class="ps-rx-fieldset" data-group="${g.id}">
+        <legend>${g.label}</legend>
+        <div class="ps-rx-med-list">
+          ${g.medications.map(m => psRenderMedOption(m, selectedBefore.has(m.id))).join('')}
+        </div>
+      </fieldset>`;
+    }).join('');
+  }
 
   function getContext () {
     const ctx = {};
@@ -584,6 +574,15 @@ function psRenderInteractiveRx (conditionId, container) {
     });
     return ids;
   }
+
+  renderMedGroups();
+
+  wrap.querySelectorAll('[data-ctx-field]').forEach(el => {
+    el.addEventListener('change', () => {
+      renderMedGroups();
+      resultEl.hidden = true;
+    });
+  });
 
   wrap.querySelector('#ps-rx-analyze').addEventListener('click', () => {
     let analysis;
@@ -616,6 +615,7 @@ function psRenderInteractiveRx (conditionId, container) {
       else if (el.tagName === 'SELECT') el.selectedIndex = 0;
       else el.value = '';
     });
+    renderMedGroups({});
     resultEl.hidden = true;
   });
 
@@ -641,11 +641,12 @@ function psRenderContextField (field) {
   return '';
 }
 
-function psRenderMedOption (med) {
+function psRenderMedOption (med, checked) {
   const tier = med.tier ? `<span class="ps-rx-tier ps-rx-tier--${med.tier.replace(/\s+/g, '')}">${med.tier}</span>` : '';
+  const isChecked = checked ? ' checked' : '';
   return `
     <label class="ps-rx-med-card">
-      <input type="checkbox" class="ps-rx-med-check" value="${med.id}">
+      <input type="checkbox" class="ps-rx-med-check" value="${med.id}"${isChecked}>
       <span class="ps-rx-med-body">
         ${tier}
         <strong>${med.label}</strong>
