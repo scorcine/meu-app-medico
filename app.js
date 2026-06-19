@@ -718,7 +718,7 @@ function handleCalcFormSubmit (e) {
 }
 
 function redirectLoggedFromHome () {
-  if (getSession()) window.location.href = 'app.html';
+  /* Landing permanece pública — entrada pelo login ou app.html */
 }
 
 document.addEventListener('DOMContentLoaded', bindAppLogoHome);
