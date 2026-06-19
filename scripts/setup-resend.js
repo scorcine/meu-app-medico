@@ -127,7 +127,7 @@ async function main () {
     process.exit(1);
   }
 
-  console.log('\n✅ Pronto! Teste: https://meu-app-medico.vercel.app/reset-password.html');
+  console.log('\n✅ Pronto! Teste: https://www.medhub.ia.br/reset-password.html');
   console.log('   /api/auth/config → passwordResetEnabled: true\n');
   console.log('Nota: sem domínio verificado no Resend, e-mails só vão para o e-mail da sua conta Resend.\n');
 }

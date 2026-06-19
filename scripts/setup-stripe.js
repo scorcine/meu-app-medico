@@ -170,7 +170,7 @@ async function main () {
   const portal = await ensurePortal(stripe);
   console.log('✓ Customer Portal configurado:', portal.id);
 
-  const siteUrl = process.env.MEDHUB_SITE_URL || 'https://meu-app-medico.vercel.app';
+  const siteUrl = process.env.MEDHUB_SITE_URL || 'https://www.medhub.ia.br';
 
   console.log('\n--- Cole na Vercel (Settings → Environment Variables) ---\n');
   console.log(`STRIPE_SECRET_KEY=${secretKey}`);

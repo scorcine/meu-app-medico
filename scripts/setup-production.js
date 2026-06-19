@@ -23,7 +23,7 @@ const { spawnSync } = require('child_process');
 
 const ROOT = path.join(__dirname, '..');
 const ENV_PATH = path.join(ROOT, '.env');
-const SITE_URL = process.env.MEDHUB_SITE_URL || 'https://meu-app-medico.vercel.app';
+const SITE_URL = process.env.MEDHUB_SITE_URL || 'https://www.medhub.ia.br';
 const ENVS = ['production', 'preview'];
 
 function log (msg) {

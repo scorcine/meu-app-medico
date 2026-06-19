@@ -3,6 +3,20 @@
   "name": "meu-app-medico",
   "buildCommand": null,
   "outputDirectory": ".",
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "meu-app-medico.vercel.app" }],
+      "destination": "https://www.medhub.ia.br/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "medhub.ia.br" }],
+      "destination": "https://www.medhub.ia.br/:path*",
+      "permanent": true
+    }
+  ],
   "headers": [
     {
       "source": "/(.*\\.html)",

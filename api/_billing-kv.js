@@ -159,10 +159,11 @@ async function verifyCheckoutForRegister (sessionId) {
   const sessionIsLive = String(sessionId).startsWith('cs_live_');
 
   if (keyIsLive && sessionIsTest) {
+    const site = (process.env.MEDHUB_SITE_URL || 'https://www.medhub.ia.br').replace(/\/$/, '');
     return {
       ok: false,
       code: 'test_session_on_live',
-      error: 'Este pagamento foi feito em modo teste. Assine novamente em meu-app-medico.vercel.app/#planos e use o link da confirmação.'
+      error: 'Este pagamento foi feito em modo teste. Assine novamente em ' + site.replace(/^https:\/\//, '') + '/#planos e use o link da confirmação.'
     };
   }
 

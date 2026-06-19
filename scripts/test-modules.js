@@ -147,7 +147,7 @@ try {
 console.log('\nRender UI (jsdom):\n');
 
 const dom = new JSDOM(read('app.html'), {
-  url: 'https://meu-app-medico.vercel.app/app.html',
+  url: 'https://www.medhub.ia.br/app.html',
   pretendToBeVisual: true
 });
 const { window } = dom;

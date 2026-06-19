@@ -14,7 +14,7 @@ const Stripe = require('stripe');
 
 const ROOT = path.join(__dirname, '..');
 const ENV_PATH = path.join(ROOT, '.env');
-const SITE_URL = process.env.MEDHUB_SITE_URL || 'https://meu-app-medico.vercel.app';
+const SITE_URL = process.env.MEDHUB_SITE_URL || 'https://www.medhub.ia.br';
 const WEBHOOK_PATH = '/api/stripe-webhook';
 const EVENTS = [
   'checkout.session.completed',
@@ -23,6 +23,23 @@ const EVENTS = [
   'customer.subscription.deleted'
 ];
 const ENVS = ['production', 'preview'];
+
+['.env.production.local', '.env.local', '.env'].forEach(file => {
+  const filePath = path.join(ROOT, file);
+  if (!fs.existsSync(filePath)) return;
+  fs.readFileSync(filePath, 'utf8').split(/\r?\n/).forEach(line => {
+    const t = line.trim();
+    if (!t || t.startsWith('#')) return;
+    const i = t.indexOf('=');
+    if (i < 1) return;
+    const key = t.slice(0, i).trim();
+    let val = t.slice(i + 1).trim();
+    if ((val.startsWith('"') && val.endsWith('"')) || (val.startsWith("'") && val.endsWith("'"))) {
+      val = val.slice(1, -1);
+    }
+    if (!process.env[key]) process.env[key] = val;
+  });
+});
 
 function getSecretKey () {
   if (process.env.STRIPE_SECRET_KEY) return process.env.STRIPE_SECRET_KEY.trim();

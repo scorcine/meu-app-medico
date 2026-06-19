@@ -438,7 +438,7 @@ function shotChrome (activeNav, contentHtml) {
         '<span class="shot-dot shot-dot-r"></span>' +
         '<span class="shot-dot shot-dot-y"></span>' +
         '<span class="shot-dot shot-dot-g"></span>' +
-        '<span class="shot-url">meu-app-medico.vercel.app/app.html</span>' +
+        '<span class="shot-url">www.medhub.ia.br/app.html</span>' +
       '</div>' +
       '<div class="shot-app">' +
         '<div class="shot-app-header"><strong>MedHub</strong><span class="shot-user">Dr. Silva</span><span class="shot-pill">Sair</span></div>' +

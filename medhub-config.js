@@ -1,4 +1,6 @@
 /** Configuração global MedHub — atualize quando o app pediátrico estiver no ar */
+const MEDHUB_SITE_URL = 'https://www.medhub.ia.br';
+
 const MEDHUB_PED_APP = {
   name: 'MedHub Pediatria',
   url: 'https://medhub-pediatria.vercel.app',
@@ -33,3 +35,16 @@ function medhubRenderPedAppPromo (container, variant) {
     : `<a href="${MEDHUB_PED_APP.url}" target="_blank" rel="noopener noreferrer" class="btn medhub-ped-app-btn">Abrir ${MEDHUB_PED_APP.name} ↗</a>`}
     </aside>`;
 }
+
+function medhubApplySiteUrlLabels () {
+  document.querySelectorAll('[data-medhub-site]').forEach(el => {
+    el.textContent = MEDHUB_SITE_URL.replace(/^https:\/\//, '');
+  });
+  document.querySelectorAll('[data-medhub-site-full]').forEach(el => {
+    el.textContent = MEDHUB_SITE_URL;
+  });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  medhubApplySiteUrlLabels();
+});

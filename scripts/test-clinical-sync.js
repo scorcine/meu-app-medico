@@ -7,7 +7,7 @@
  *   node scripts/test-clinical-sync.js --email teste@medhub.app --password MedHubTeste2026!
  */
 
-const BASE = process.env.MEDHUB_SITE_URL || 'https://meu-app-medico.vercel.app';
+const BASE = process.env.MEDHUB_SITE_URL || 'https://www.medhub.ia.br';
 
 function parseArgs () {
   const args = process.argv.slice(2);

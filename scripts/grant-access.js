@@ -125,7 +125,7 @@ async function grantAccess ({ email, password, name }) {
       console.log('\nPronto! Assinatura ativa no KV por 1 ano.');
       console.log('E-mail:', norm);
       console.log('Conta ainda nao criada — o usuario pode cadastrar em login com este e-mail.');
-      console.log('Login: https://meu-app-medico.vercel.app/login.html');
+      console.log('Login: https://www.medhub.ia.br/login.html');
       return;
     }
     user = {
@@ -154,7 +154,7 @@ async function grantAccess ({ email, password, name }) {
   console.log('\nPronto!');
   console.log('E-mail:', norm);
   console.log('Assinatura: ativa (KV)');
-  console.log('Login: https://meu-app-medico.vercel.app/login.html');
+  console.log('Login: https://www.medhub.ia.br/login.html');
   if (password) console.log('Senha definida — use a informada no comando.');
 }
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /** Teste produção — login, sessão e estrutura de todos os módulos */
-const BASE = process.env.MEDHUB_SITE_URL || 'https://meu-app-medico.vercel.app';
+const BASE = process.env.MEDHUB_SITE_URL || 'https://www.medhub.ia.br';
 const TEST_EMAIL = process.env.MEDHUB_TEST_EMAIL || 'teste@medhub.app';
 const TEST_PASSWORD = process.env.MEDHUB_TEST_PASSWORD || 'MedHubTeste2026!';
 let failures = 0;
