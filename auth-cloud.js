@@ -327,6 +327,20 @@ function medhubGoProfileOnboarding () {
   window.location.href = 'onboarding-profile.html';
 }
 
+const MEDHUB_FRESH_LOGIN_KEY = 'medhub-post-login';
+
+function medhubMarkFreshLogin () {
+  try { sessionStorage.setItem(MEDHUB_FRESH_LOGIN_KEY, '1'); } catch { /* ignore */ }
+}
+
+function medhubHasFreshLogin () {
+  try { return sessionStorage.getItem(MEDHUB_FRESH_LOGIN_KEY) === '1'; } catch { return false; }
+}
+
+function medhubClearFreshLogin () {
+  try { sessionStorage.removeItem(MEDHUB_FRESH_LOGIN_KEY); } catch { /* ignore */ }
+}
+
 async function medhubEnsureProfileOnboarding () {
   if (typeof medhubIsProfileSetupComplete !== 'function') return true;
 
@@ -346,7 +360,13 @@ async function medhubEnsureProfileOnboarding () {
         await medhubCloudSaveProfile({ onboardingComplete: true });
       }
     }
+    medhubClearFreshLogin();
     return true;
+  }
+
+  if (!medhubHasFreshLogin()) {
+    window.location.href = 'login.html';
+    return false;
   }
 
   medhubGoProfileOnboarding();
@@ -355,6 +375,7 @@ async function medhubEnsureProfileOnboarding () {
 
 async function medhubAfterCloudAuth (loginData, password) {
   medhubApplyCloudSession(loginData, password);
+  medhubMarkFreshLogin();
   await medhubUnlockSession(password, loginData.user.email);
 
   if (typeof medhubCloudSyncAfterUnlock === 'function') {

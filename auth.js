@@ -24,13 +24,19 @@ async function redirectAuthenticatedUser () {
     if (!user) return;
   }
 
-  if (typeof medhubEnsureProfileOnboarding === 'function') {
-    const ok = await medhubEnsureProfileOnboarding();
-    if (ok) authGoApp();
-    return;
+  if (typeof medhubCloudSyncAvailable === 'function' && await medhubCloudSyncAvailable()) {
+    const cloud = await medhubCloudFetchProfile();
+    if (cloud.ok && cloud.profile && typeof medhubApplyCloudProfileLocal === 'function') {
+      medhubApplyCloudProfileLocal(cloud.profile);
+    }
   }
 
-  authGoApp();
+  if (typeof medhubIsProfileSetupComplete === 'function') {
+    const profile = typeof medhubLoadUserProfile === 'function' ? medhubLoadUserProfile() : null;
+    if (medhubIsProfileSetupComplete(profile)) {
+      authGoApp();
+    }
+  }
 }
 
 function authNormalizedEmail (email) {
@@ -258,6 +264,7 @@ async function handleLogin (e) {
   }
 
   medhubSetSession(upgraded);
+  if (typeof medhubMarkFreshLogin === 'function') medhubMarkFreshLogin();
   await medhubUnlockSession(pass, email);
 
   if (typeof medhubRequireSubscription === 'function') {
@@ -285,6 +292,7 @@ function redirectDashboardLegacy () {
 
 function logout () {
   localStorage.removeItem('session');
+  if (typeof medhubClearFreshLogin === 'function') medhubClearFreshLogin();
   if (typeof medhubClearCloudSession === 'function') medhubClearCloudSession();
   medhubClearSessionCrypto();
   window.location.href = 'login.html';

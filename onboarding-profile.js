@@ -150,6 +150,11 @@ async function initOnboardingProfileGate () {
 
   if (!user) return;
 
+  if (typeof medhubHasFreshLogin === 'function' && !medhubHasFreshLogin()) {
+    window.location.replace('login.html');
+    return;
+  }
+
   if (typeof medhubCloudSyncAvailable === 'function' && await medhubCloudSyncAvailable()) {
     const cloud = await medhubCloudFetchProfile();
     if (cloud.ok && cloud.profile) {
