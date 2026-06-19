@@ -290,14 +290,14 @@ async function consultasHandleSubmit (e) {
   if (consultasEditingId) {
     const idx = list.findIndex(c => c.id === consultasEditingId);
     if (idx >= 0) {
-      list[idx] = { ...list[idx], ...data, medico: list[idx].medico || user?.name || '', updatedAt: now };
+      list[idx] = { ...list[idx], ...data, medico: list[idx].medico || (typeof medhubGetRxDoctorName === 'function' ? medhubGetRxDoctorName() : user?.name || ''), updatedAt: now };
       saved = list[idx];
     }
   } else {
     saved = {
       id: clinicalNewId(),
       ...data,
-      medico: user?.name || '',
+      medico: typeof medhubGetRxDoctorName === 'function' ? medhubGetRxDoctorName() : (user?.name || ''),
       createdAt: now,
       updatedAt: now
     };
@@ -376,7 +376,7 @@ function initConsultas () {
       const user = typeof getSession === 'function' ? getSession() : null;
       consultasExportPdf({
         ...draft,
-        medico: user?.name || '',
+        medico: typeof medhubGetRxDoctorName === 'function' ? medhubGetRxDoctorName() : (user?.name || ''),
         createdAt: new Date().toISOString()
       });
     });

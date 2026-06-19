@@ -98,7 +98,7 @@ function anamneseCollectData () {
     if (el) data[id.replace('anam-', '')] = el.value.trim();
   });
   const user = typeof getSession === 'function' ? getSession() : null;
-  data.medico = user?.name || '';
+  data.medico = typeof medhubGetRxDoctorName === 'function' ? medhubGetRxDoctorName() : (user?.name || '');
   data.medicoEmail = user?.email || '';
   return data;
 }

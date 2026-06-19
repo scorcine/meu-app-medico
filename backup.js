@@ -9,7 +9,7 @@ function backupUserEmail () {
 
 function backupStorageKeys (email) {
   const e = email || backupUserEmail();
-  return [
+  const keys = [
     'medhub-anamneses-' + e,
     'medhub-pacientes-' + e,
     'medhub-consultas-' + e,
@@ -19,6 +19,12 @@ function backupStorageKeys (email) {
     'medhub-gdrive-client-id',
     'medhub-gdrive-auto-upload'
   ];
+  if (typeof medhubProfileStorageKey === 'function') {
+    keys.push(medhubProfileStorageKey(e));
+  } else {
+    keys.push('medhub-user-profile-' + e);
+  }
+  return keys;
 }
 
 function backupRemapKey (key, sourceEmail, targetEmail) {
@@ -74,6 +80,11 @@ function backupRefreshUi () {
   const crmInput = document.getElementById('rx-crm');
   if (crmInput && typeof rxParseCrmNumber === 'function') {
     crmInput.value = rxParseCrmNumber(localStorage.getItem('medhub-rx-crm') || '');
+  }
+  if (typeof initUserProfilePage === 'function') {
+    const section = document.getElementById('section-perfil');
+    if (section) section.dataset.profileBound = '';
+    initUserProfilePage();
   }
 
   const gdriveId = document.getElementById('anamnese-gdrive-client-id');
@@ -175,7 +186,7 @@ function initBackup () {
 function backupMaybePromptFirstUse () {
   const banner = document.getElementById('backup-first-use-banner');
   if (!banner) return;
-  if (!document.getElementById('section-conta')?.classList.contains('active')) return;
+  if (!document.getElementById('section-perfil')?.classList.contains('active')) return;
 
   const key = 'medhub-backup-prompt-' + backupUserEmail();
   if (localStorage.getItem(key)) {

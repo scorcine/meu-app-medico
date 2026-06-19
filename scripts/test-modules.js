@@ -169,7 +169,7 @@ const SCRIPTS = [
   'pronto-socorro-content-4.js', 'pronto-socorro-content-5.js', 'ps-drug-meta-gaps.js', 'med-promoted-meta.js',
   'pronto-socorro-interactive-drugs.js', 'pronto-socorro-interactive-data.js', 'pronto-socorro-interactive-core.js',
   'pronto-socorro.js', 'medicacoes-classes.js', 'medicacoes-data.js', 'medicacoes-rename-loader.js', 'medicacoes.js',
-  'med-apresentacoes-vo.js', 'receituario-data.js', 'receituario-ps-bridge.js', 'receituario.js',
+  'med-apresentacoes-vo.js', 'receituario-data.js', 'receituario-ps-bridge.js', 'user-profile.js', 'receituario.js',
   'exames-data.js', 'exames.js', 'interpretacao-exame-data.js', 'interpretacao-exame.js',
   'pacientes.js', 'consultas.js', 'anamnese.js', 'legal-content.js', 'compliance.js', 'ferramentas.js', 'backup.js', 'app.js'
 ];

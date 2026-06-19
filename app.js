@@ -110,7 +110,8 @@ function initAppCore (user) {
       initFerramentas();
       initBackup();
       if (typeof initCloudSyncPanel === 'function') initCloudSyncPanel();
-      if (typeof initBillingPanel === 'function') initBillingPanel(user);
+      if (typeof initUserProfilePage === 'function') initUserProfilePage();
+      if (typeof initUserProfileHeader === 'function') initUserProfileHeader();
       initAccountPanel();
       patchEmergenciaCacheGuard();
 
@@ -155,7 +156,7 @@ function showSection (sectionId) {
   if (sectionId === 'pacientes' && typeof pacientesOnSectionShow === 'function') pacientesOnSectionShow();
   if (sectionId === 'consultas' && typeof consultasOnSectionShow === 'function') consultasOnSectionShow();
   if (sectionId === 'anamnese' && typeof anamneseOnSectionShow === 'function') anamneseOnSectionShow();
-  if (sectionId === 'conta' && typeof backupMaybePromptFirstUse === 'function') backupMaybePromptFirstUse();
+  if (sectionId === 'perfil' && typeof backupMaybePromptFirstUse === 'function') backupMaybePromptFirstUse();
 }
 
 function calcPediatrica (e) {

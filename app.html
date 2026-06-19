@@ -9,7 +9,7 @@
   <title>MedHub</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <script src="theme.js"></script>
-  <link rel="stylesheet" href="style.css?v=home-welcome-v1">
+  <link rel="stylesheet" href="style.css?v=profile-v1">
   <script defer src="calculators-risco.js"></script>
   <script defer src="calculators-cardio.js"></script>
   <script defer src="calculators-pneumo.js?v=rsi-patient"></script>
@@ -48,7 +48,8 @@
   <script defer src="med-apresentacoes-vo.js?v=ist-pep-v1"></script>
   <script defer src="receituario-data.js?v=rx-multi-v1"></script>
   <script defer src="receituario-ps-bridge.js?v=rx-multi-v1"></script>
-  <script defer src="receituario.js?v=rx-crm-sp"></script>
+  <script defer src="user-profile.js?v=profile-v1"></script>
+  <script defer src="receituario.js?v=profile-v1"></script>
   <script defer src="google-drive.js?v=compliance-v1"></script>
   <script defer src="security-crypto.js?v=compliance-v1"></script>
   <script defer src="compliance.js?v=compliance-v1"></script>
@@ -73,7 +74,9 @@
   <header class="app-header">
     <h1>MedHub</h1>
     <div class="header-actions">
-      <span id="user-name"></span>
+      <button type="button" class="user-menu-btn" id="user-menu-btn" title="Minha conta e configurações">
+        <span id="user-name"></span>
+      </button>
       <button type="button" class="btn-outline" onclick="logout()">Sair</button>
     </div>
   </header>
@@ -105,7 +108,7 @@
         <button type="button" class="sidebar-link" data-section="calc-pediatrica">Calculadora pediátrica</button>
 
         <p class="sidebar-group">Sistema</p>
-        <button type="button" class="sidebar-link" data-section="conta">Conta e backup</button>
+        <button type="button" class="sidebar-link" data-section="perfil">Minha conta</button>
       </nav>
       <p class="sidebar-build" id="app-build" title="Confira se esta versão bate com a última atualização do projeto">Build 2026.06.07 · Exames 30 ✓</p>
     </aside>
@@ -132,57 +135,68 @@
         </article>
       </section>
 
-      <section id="section-conta" class="content-panel">
-        <article class="card dashboard-card conta-card">
-          <h2>Conta, sync e backup</h2>
-          <p class="muted conta-lead">Assinatura, cópia na nuvem, backup JSON e alteração de senha.</p>
+      <section id="section-perfil" class="content-panel">
+        <article class="card dashboard-card perfil-card">
+          <h2>Minha conta</h2>
+          <p class="muted perfil-lead">Dados profissionais, assinatura, senha e backup.</p>
 
-          <section class="home-section billing-section" id="billing-panel" hidden>
-            <h3>💳 Assinatura MedHub Pro</h3>
-            <p class="muted">Plano para médico solo — cartão com renovação automática (mensal ou anual com desconto).</p>
+          <section class="perfil-block">
+            <h3>👤 Dados profissionais</h3>
+            <p class="muted">Nome e CRM aparecem no receituário, PDFs e documentos gerados pelo app.</p>
+            <form class="perfil-form" id="profile-form" onsubmit="return false">
+              <label for="profile-rx-name">Nome completo (como na receita)</label>
+              <input id="profile-rx-name" type="text" autocomplete="name" placeholder="Ex.: Maria Silva">
+
+              <div class="profile-crm-row">
+                <label for="profile-crm-uf">CRM — UF</label>
+                <select id="profile-crm-uf" class="profile-crm-uf" aria-label="UF do CRM"></select>
+                <label for="profile-crm-number">Número</label>
+                <input id="profile-crm-number" class="profile-crm-number" type="text" inputmode="numeric" pattern="[0-9]*" placeholder="123456" autocomplete="off">
+              </div>
+
+              <p id="profile-rx-preview" class="profile-rx-preview" aria-live="polite"></p>
+
+              <label for="profile-address">Endereço profissional</label>
+              <input id="profile-address" type="text" autocomplete="street-address" placeholder="Rua, número, complemento">
+
+              <div class="profile-address-grid">
+                <div>
+                  <label for="profile-address-city">Cidade</label>
+                  <input id="profile-address-city" type="text" autocomplete="address-level2">
+                </div>
+                <div>
+                  <label for="profile-address-state">UF</label>
+                  <input id="profile-address-state" type="text" maxlength="2" autocomplete="address-level1" placeholder="SP">
+                </div>
+                <div>
+                  <label for="profile-address-zip">CEP</label>
+                  <input id="profile-address-zip" type="text" inputmode="numeric" autocomplete="postal-code" placeholder="00000-000">
+                </div>
+              </div>
+
+              <button type="button" class="btn" id="profile-save-btn">Salvar dados profissionais</button>
+              <p id="profile-save-status" class="anamnese-save-status" hidden></p>
+            </form>
+          </section>
+
+          <section class="perfil-block">
+            <h3>✉️ E-mail da conta</h3>
+            <p class="profile-email-readonly"><strong id="profile-email">—</strong></p>
+            <p class="muted auth-hint">O e-mail é o login da conta MedHub e não pode ser alterado aqui.</p>
+          </section>
+
+          <section class="perfil-block billing-section" id="billing-panel" hidden>
+            <h3>💳 Plano e pagamento</h3>
+            <p class="muted">Assinatura MedHub Pro — renovação automática no cartão cadastrado.</p>
             <p id="billing-status-text" class="billing-status-text"></p>
             <div class="billing-actions">
               <button type="button" class="btn" id="billing-subscribe-btn" hidden>Ver planos</button>
-              <button type="button" class="btn-outline" id="billing-portal-btn" hidden>Gerenciar assinatura</button>
+              <button type="button" class="btn-outline" id="billing-portal-btn" hidden>Gerenciar cartão e faturas</button>
             </div>
           </section>
 
-          <section class="home-section cloud-sync-section" id="cloud-sync-panel" hidden>
-            <h3>☁️ Sync criptografado na nuvem</h3>
-            <p class="muted">Cópia automática das suas notas locais na nuvem MedHub. O servidor <strong>não lê</strong> o conteúdo — só armazena ciphertext. Use a mesma senha para desbloquear em outro aparelho.</p>
-            <label class="auth-terms-check">
-              <input type="checkbox" id="cloud-sync-enabled" checked>
-              <span>Ativar backup automático na nuvem</span>
-            </label>
-            <div class="backup-actions">
-              <button type="button" class="btn-outline" id="cloud-sync-now">Sincronizar agora</button>
-            </div>
-            <p id="cloud-sync-status" class="anamnese-save-status" hidden></p>
-          </section>
-
-          <section class="home-section backup-section">
-            <div id="backup-first-use-banner" class="backup-first-use-banner" hidden role="note">
-              <p><strong>Proteja seus dados clínicos.</strong> Ative o sync na nuvem acima ou exporte backup JSON — ao trocar de celular ou PC, restaure com a mesma senha.</p>
-              <button type="button" class="btn-outline btn-sm" id="backup-dismiss-prompt">Entendi</button>
-            </div>
-            <h3>💾 Backup JSON (manual)</h3>
-            <p class="muted">Exporte ou restaure um arquivo JSON neste navegador — complementar ao sync na nuvem.</p>
-            <p class="compliance-inline-notice" role="note">
-              O arquivo JSON contém dados clínicos sensíveis (incluindo conteúdo criptografado). Guarde em local seguro; não envie por apps públicos sem proteção.
-            </p>
-            <div class="backup-actions">
-              <button type="button" class="btn" id="backup-export">Exportar backup</button>
-              <label class="btn-outline backup-import-label">
-                Restaurar backup
-                <input type="file" id="backup-import-file" accept="application/json,.json" hidden>
-              </label>
-            </div>
-            <p id="backup-status" class="anamnese-save-status" hidden></p>
-          </section>
-
-          <section class="home-section account-section" id="account-panel">
-            <h3>🔐 Conta e senha</h3>
-            <p class="muted">Conta MedHub na nuvem (e-mail e assinatura). Dados clínicos: sync criptografado opcional + armazenamento local.</p>
+          <section class="perfil-block account-section" id="account-panel">
+            <h3>🔐 Alterar senha</h3>
             <form class="account-password-form" id="change-password-form" onsubmit="handleChangePassword(event)">
               <label for="account-current-password">Senha atual</label>
               <input id="account-current-password" name="currentPassword" type="password" required autocomplete="current-password">
@@ -193,12 +207,47 @@
               <label for="account-new-password-confirm">Confirmar nova senha</label>
               <input id="account-new-password-confirm" name="newPasswordConfirm" type="password" required minlength="8" autocomplete="new-password">
 
-              <p class="auth-hint muted">Com a senha atual, recriptografamos suas notas locais automaticamente. Esqueceu a senha? Use o link na tela de login.</p>
+              <p class="auth-hint muted">Com a senha atual, recriptografamos suas notas locais automaticamente.</p>
 
               <button type="submit" class="btn-outline">Alterar senha</button>
               <p id="account-password-status" class="anamnese-save-status" hidden></p>
             </form>
           </section>
+
+          <details class="perfil-fold">
+            <summary>Backup na nuvem e JSON</summary>
+            <div class="perfil-fold-body">
+              <section class="home-section cloud-sync-section" id="cloud-sync-panel" hidden>
+                <h3>☁️ Sync criptografado na nuvem</h3>
+                <p class="muted">Cópia automática das suas notas locais na nuvem MedHub. O servidor <strong>não lê</strong> o conteúdo.</p>
+                <label class="auth-terms-check">
+                  <input type="checkbox" id="cloud-sync-enabled" checked>
+                  <span>Ativar backup automático na nuvem</span>
+                </label>
+                <div class="backup-actions">
+                  <button type="button" class="btn-outline" id="cloud-sync-now">Sincronizar agora</button>
+                </div>
+                <p id="cloud-sync-status" class="anamnese-save-status" hidden></p>
+              </section>
+
+              <section class="home-section backup-section">
+                <div id="backup-first-use-banner" class="backup-first-use-banner" hidden role="note">
+                  <p><strong>Proteja seus dados clínicos.</strong> Ative o sync na nuvem ou exporte backup JSON.</p>
+                  <button type="button" class="btn-outline btn-sm" id="backup-dismiss-prompt">Entendi</button>
+                </div>
+                <h3>💾 Backup JSON (manual)</h3>
+                <p class="muted">Exporte ou restaure um arquivo JSON neste navegador.</p>
+                <div class="backup-actions">
+                  <button type="button" class="btn" id="backup-export">Exportar backup</button>
+                  <label class="btn-outline backup-import-label">
+                    Restaurar backup
+                    <input type="file" id="backup-import-file" accept="application/json,.json" hidden>
+                  </label>
+                </div>
+                <p id="backup-status" class="anamnese-save-status" hidden></p>
+              </section>
+            </div>
+          </details>
         </article>
       </section>
 
@@ -225,13 +274,9 @@
         <div class="card dashboard-card rx-wrap">
           <div id="rx-list-view">
             <h2>Receituário</h2>
-            <p class="compliance-inline-notice" role="note"><strong>Modelo educacional.</strong> Sugestões VO por condição com CRM-SP opcional. Valide conforme sua UF, tipo de receita e normas locais antes de prescrever.</p>
+            <p class="compliance-inline-notice" role="note"><strong>Modelo educacional.</strong> Sugestões VO por condição. Nome e CRM vêm de <button type="button" class="link-btn" onclick="medhubOpenUserProfile()">Minha conta</button>. Valide conforme sua UF antes de prescrever.</p>
             <p class="muted">Todas as condições do PS estão disponíveis. Com várias queixas no roteiro (ex.: cefaleia + náuseas), o app monta uma receita combinada.</p>
-            <label class="ps-search-label" for="rx-crm">CRM-SP (opcional — aparece na receita)</label>
-            <div class="rx-crm-field">
-              <span class="rx-crm-prefix" aria-hidden="true">CRM-SP</span>
-              <input id="rx-crm" class="ps-search rx-crm-input" type="text" inputmode="numeric" pattern="[0-9]*" placeholder="123456" autocomplete="off" aria-label="Número do CRM-SP">
-            </div>
+            <p id="rx-profile-hint" class="rx-profile-hint muted" hidden></p>
             <div id="rx-suggest-banner" class="rx-suggest-banner" hidden></div>
             <label class="ps-search-label" for="rx-search">Buscar condição</label>
             <input id="rx-search" class="ps-search" type="search" placeholder="Ex.: cefaleia, amigdalite, cistite…" autocomplete="off">

@@ -20,7 +20,29 @@ function rxFormatCrmDisplay (num) {
 }
 
 function rxGetStoredCrmDisplay () {
+  if (typeof medhubGetRxCrmFormatted === 'function') return medhubGetRxCrmFormatted();
   return rxFormatCrmDisplay(localStorage.getItem(MEDHUB_RX_CRM_KEY));
+}
+
+function rxGetDoctorName () {
+  if (typeof medhubGetRxDoctorName === 'function') return medhubGetRxDoctorName();
+  const user = typeof getSession === 'function' ? getSession() : null;
+  return (user?.name || '').trim();
+}
+
+function rxUpdateProfileHint () {
+  const el = document.getElementById('rx-profile-hint');
+  if (!el) return;
+  const name = rxGetDoctorName();
+  const crm = rxGetStoredCrmDisplay();
+  const hasCrm = !crm.includes('____________');
+  if (name && hasCrm) {
+    el.hidden = true;
+    return;
+  }
+  el.hidden = false;
+  el.innerHTML = 'Configure <strong>nome e CRM</strong> em Minha conta para aparecer na receita. ' +
+    '<button type="button" class="link-btn" onclick="medhubOpenUserProfile()">Abrir configurações</button>';
 }
 
 let rxActiveConditionIds = [];
@@ -236,8 +258,12 @@ function rxFormatReceitaPrint (conditions, medEntries, orientacoesList, validati
   lines.push('');
   lines.push('______________________________, ' + date);
   lines.push('');
-  lines.push('Dr(a). ' + (user?.name || '________________________'));
+  lines.push('Dr(a). ' + (rxGetDoctorName() || '________________________'));
   lines.push('CRM: ' + crm);
+  const addr = typeof medhubGetProfileAddressBlock === 'function' ? medhubGetProfileAddressBlock() : '';
+  if (addr) {
+    lines.push(addr);
+  }
   lines.push('');
   lines.push('— Gerado pelo MedHub. Conteúdo educacional; revisar antes de prescrever.');
 
@@ -288,8 +314,12 @@ function rxRenderPrintPreview (conditions, medEntries, orientacoesList) {
         </div>` : ''}
       <div class="rx-print-sign">
         <p>______________________________, ${date}</p>
-        <p>Dr(a). ${user?.name || '________________________'}</p>
+        <p>Dr(a). ${rxGetDoctorName() || '________________________'}</p>
         <p>CRM: ${crm}</p>
+        ${(() => {
+          const addr = typeof medhubGetProfileAddressBlock === 'function' ? medhubGetProfileAddressBlock() : '';
+          return addr ? `<p class="rx-print-address">${addr.replace(/\n/g, '<br>')}</p>` : '';
+        })()}
       </div>
     </div>
   `;
@@ -839,6 +869,7 @@ function rxPrintReceita () {
 }
 
 function rxOnSectionShow () {
+  rxUpdateProfileHint();
   if (typeof clinicalInvalidateAllergyCache === 'function') clinicalInvalidateAllergyCache();
   rxRenderConditionList(document.getElementById('rx-search')?.value || '');
   const activeQueixa = rxGetActiveQueixa();
@@ -875,6 +906,8 @@ function initReceituario () {
     crmInput.addEventListener('change', saveCrm);
     crmInput.addEventListener('blur', saveCrm);
   }
+
+  rxUpdateProfileHint();
 
   if (search) search.addEventListener('input', () => rxRenderConditionList(search.value));
   if (backBtn) backBtn.addEventListener('click', rxShowList);

@@ -102,6 +102,7 @@ async function medhubOpenBillingPortal () {
 async function initBillingPanel (user) {
   const panel = document.getElementById('billing-panel');
   if (!panel || !user) return;
+  if (panel.dataset.billingBound) return;
 
   const config = await medhubFetchBillingConfig();
   if (!config.enabled) {
@@ -130,4 +131,5 @@ async function initBillingPanel (user) {
     window.location.href = 'index.html?email=' + encodeURIComponent(user.email) + '#planos';
   });
   portalBtn?.addEventListener('click', () => medhubOpenBillingPortal());
+  panel.dataset.billingBound = '1';
 }
