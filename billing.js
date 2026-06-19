@@ -1,6 +1,9 @@
 /* Página de planos — checkout Stripe */
 
 async function initPricingPage () {
+  if (typeof medhubCaptureAttributionFromUrl === 'function') {
+    medhubCaptureAttributionFromUrl();
+  }
   const params = new URLSearchParams(window.location.search);
   const checkoutEmail = params.get('email') || '';
 

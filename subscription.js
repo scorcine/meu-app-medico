@@ -62,6 +62,10 @@ async function medhubOpenCheckout (plan, email) {
   try {
     const payload = { plan };
     if (norm) payload.email = norm;
+    if (typeof medhubGetAttributionPayload === 'function') {
+      const attribution = medhubGetAttributionPayload();
+      if (Object.keys(attribution).length) payload.attribution = attribution;
+    }
 
     const res = await fetch('/api/create-checkout-session', {
       method: 'POST',

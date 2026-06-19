@@ -1,6 +1,9 @@
 /* Landing page — preços, checkout e navegação por âncoras */
 
 async function initLandingPage () {
+  if (typeof medhubCaptureAttributionFromUrl === 'function') {
+    medhubCaptureAttributionFromUrl();
+  }
   initLandingAnchorNav();
 
   if (typeof mountAppShowcase === 'function') {

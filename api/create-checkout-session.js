@@ -58,6 +58,12 @@ module.exports = async (req, res) => {
       };
     }
 
+    const attribution = body.attribution && typeof body.attribution === 'object' ? body.attribution : {};
+    ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'].forEach(function (key) {
+      const value = String(attribution[key] || '').trim();
+      if (value) sessionParams.metadata[key] = value.slice(0, 500);
+    });
+
     const trialDays = Number(process.env.MEDHUB_TRIAL_DAYS || 0);
     if (trialDays > 0) {
       sessionParams.subscription_data = {

@@ -1,6 +1,13 @@
 /** Configuração global MedHub — atualize quando o app pediátrico estiver no ar */
 const MEDHUB_SITE_URL = 'https://www.medhub.ia.br';
 
+/** Divulgação — edite com o @ e link reais do Instagram */
+const MEDHUB_MARKETING = {
+  instagramUrl: 'https://www.instagram.com/medhub.ia.br/',
+  instagramHandle: '@medhub.ia.br',
+  supportEmail: ''
+};
+
 const MEDHUB_PED_APP = {
   name: 'MedHub Pediatria',
   url: 'https://medhub-pediatria.vercel.app',
