@@ -240,13 +240,13 @@ async function medhubSyncProfileAfterLogin () {
 
   const remote = cloud.profile || {};
   const hasRemote = !!(remote.onboardingComplete || remote.userType || remote.crmNumber);
-  const local = typeof medhubLoadUserProfile === 'function' ? medhubLoadUserProfile() : null;
-  const hasLocal = !!(local?.onboardingComplete || local?.userType || local?.crmNumber);
+  const localProfile = typeof medhubLoadUserProfile === 'function' ? medhubLoadUserProfile() : null;
+  const hasLocalData = !!(localProfile?.onboardingComplete || localProfile?.userType || localProfile?.crmNumber);
 
   if (hasRemote) {
     if (
-      !local ||
-      !medhubIsProfileSetupComplete(local) ||
+      !localProfile ||
+      !medhubIsProfileSetupComplete(localProfile) ||
       medhubIsProfileSetupComplete(remote)
     ) {
       medhubApplyCloudProfileLocal(remote);
@@ -254,17 +254,17 @@ async function medhubSyncProfileAfterLogin () {
     return;
   }
 
-  if (hasLocal && typeof medhubCloudSaveProfile === 'function') {
+  if (hasLocalData && typeof medhubCloudSaveProfile === 'function') {
     const saved = await medhubCloudSaveProfile({
-      rxDisplayName: local.rxDisplayName,
-      userType: local.userType,
-      crmUf: local.crmUf,
-      crmNumber: local.crmNumber,
-      address: local.address,
-      addressCity: local.addressCity,
-      addressState: local.addressState,
-      addressZip: local.addressZip,
-      onboardingComplete: !!local.onboardingComplete || medhubIsProfileSetupComplete(local)
+      rxDisplayName: localProfile.rxDisplayName,
+      userType: localProfile.userType,
+      crmUf: localProfile.crmUf,
+      crmNumber: localProfile.crmNumber,
+      address: localProfile.address,
+      addressCity: localProfile.addressCity,
+      addressState: localProfile.addressState,
+      addressZip: localProfile.addressZip,
+      onboardingComplete: !!localProfile.onboardingComplete || medhubIsProfileSetupComplete(localProfile)
     });
     if (saved.ok) medhubApplyCloudProfileLocal(saved.profile);
   }
@@ -356,6 +356,11 @@ function medhubClearFreshLogin () {
 
 async function medhubEnsureProfileOnboarding () {
   if (typeof medhubIsProfileSetupComplete !== 'function') return true;
+
+  const user = typeof getSession === 'function' ? getSession() : null;
+  if (user?.email && typeof medhubRestoreProfileFromSetupBackup === 'function') {
+    medhubRestoreProfileFromSetupBackup(user.email);
+  }
 
   if (typeof medhubCloudSyncAvailable === 'function' && await medhubCloudSyncAvailable()) {
     const cloud = await medhubCloudFetchProfile();

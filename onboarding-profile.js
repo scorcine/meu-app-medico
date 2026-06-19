@@ -118,24 +118,20 @@ function initOnboardingProfilePage () {
       medhubSaveUserProfileLocal(payload);
       savedOk = true;
     }
+    if (typeof medhubPersistProfileSetupBackup === 'function') {
+      medhubPersistProfileSetupBackup(sessionUser.email, payload);
+    }
 
+    let cloudWarning = '';
     if (typeof medhubCloudSyncAvailable === 'function' && await medhubCloudSyncAvailable()) {
       const saved = await medhubCloudSaveProfile(payload);
-      if (!saved.ok) {
-        if (btn) btn.disabled = false;
-        if (statusEl) {
-          statusEl.hidden = false;
-          statusEl.textContent = saved.error || 'Erro ao salvar perfil.';
-          statusEl.className = 'anamnese-save-status anamnese-save-status--err';
-        } else {
-          alert(saved.error || 'Erro ao salvar perfil.');
+      if (saved.ok) {
+        if (typeof medhubApplyCloudProfileLocal === 'function') {
+          medhubApplyCloudProfileLocal(saved.profile || payload);
         }
-        return;
+      } else {
+        cloudWarning = saved.error || 'Perfil salvo neste aparelho; sync na nuvem falhou.';
       }
-      if (typeof medhubApplyCloudProfileLocal === 'function') {
-        medhubApplyCloudProfileLocal(saved.profile || payload);
-      }
-      savedOk = true;
     }
 
     if (!savedOk) {
@@ -145,6 +141,13 @@ function initOnboardingProfilePage () {
     }
 
     if (typeof medhubClearFreshLogin === 'function') medhubClearFreshLogin();
+    if (cloudWarning && statusEl) {
+      statusEl.hidden = false;
+      statusEl.textContent = cloudWarning + ' Entrando no app…';
+      statusEl.className = 'anamnese-save-status anamnese-save-status--ok';
+      setTimeout(() => { window.location.replace('app.html'); }, 600);
+      return;
+    }
     window.location.replace('app.html');
   });
 }

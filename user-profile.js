@@ -1,6 +1,7 @@
 /* Perfil do usuário — nome/CRM para receitas, endereço e dados locais */
 
 const MEDHUB_PROFILE_PREFIX = 'medhub-user-profile-';
+const MEDHUB_SETUP_DONE_PREFIX = 'medhub-profile-setup-v1-';
 const MEDHUB_RX_CRM_LEGACY_KEY = 'medhub-rx-crm';
 
 const MEDHUB_CRM_UFS = [
@@ -48,8 +49,69 @@ function medhubMigrateLegacyCrm (profile) {
   return profile;
 }
 
+function medhubNormalizedProfileEmail (email) {
+  if (typeof authNormalizedEmail === 'function') return authNormalizedEmail(email);
+  return String(email || '').trim().toLowerCase();
+}
+
+function medhubProfileSetupBackupKey (email) {
+  return MEDHUB_SETUP_DONE_PREFIX + medhubNormalizedProfileEmail(email);
+}
+
+function medhubSnapshotProfileSetupComplete (snapshot) {
+  if (!snapshot?.onboardingComplete && !snapshot?.userType) return false;
+  if (snapshot?.onboardingComplete) return true;
+  if (!snapshot?.userType) return false;
+  if (!String(snapshot.rxDisplayName || '').trim()) return false;
+  if (snapshot.userType === 'student') return true;
+  if (snapshot.userType === 'doctor') {
+    return !!String(snapshot.crmNumber || '').replace(/\D/g, '');
+  }
+  return false;
+}
+
+function medhubLoadProfileSetupBackup (email) {
+  try {
+    const raw = localStorage.getItem(medhubProfileSetupBackupKey(email));
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+}
+
+function medhubPersistProfileSetupBackup (email, profile) {
+  const norm = medhubNormalizedProfileEmail(email);
+  if (!norm || !profile) return;
+  const snapshot = {
+    userType: profile.userType,
+    rxDisplayName: profile.rxDisplayName,
+    crmUf: profile.crmUf || 'SP',
+    crmNumber: profile.crmNumber || '',
+    onboardingComplete: true,
+    savedAt: Date.now()
+  };
+  if (!medhubSnapshotProfileSetupComplete(snapshot)) return;
+  try {
+    localStorage.setItem(medhubProfileSetupBackupKey(norm), JSON.stringify(snapshot));
+  } catch { /* ignore */ }
+}
+
+function medhubRestoreProfileFromSetupBackup (email) {
+  const norm = medhubNormalizedProfileEmail(email);
+  if (!norm) return null;
+  const snap = medhubLoadProfileSetupBackup(norm);
+  if (!medhubSnapshotProfileSetupComplete(snap)) return null;
+  return medhubSaveUserProfileLocal({
+    userType: snap.userType,
+    rxDisplayName: snap.rxDisplayName,
+    crmUf: snap.crmUf || 'SP',
+    crmNumber: snap.crmNumber || '',
+    onboardingComplete: true
+  });
+}
+
 function medhubMigrateWrongLocalProfileKey (email) {
-  const norm = String(email || '').trim().toLowerCase();
+  const norm = medhubNormalizedProfileEmail(email);
   if (!norm) return;
   const wrongKey = MEDHUB_PROFILE_PREFIX + 'local';
   const rightKey = medhubProfileStorageKey(norm);
@@ -76,6 +138,10 @@ function medhubLoadUserProfile () {
   profile = medhubMigrateLegacyCrm(profile);
   if (!MEDHUB_CRM_UFS.includes(profile.crmUf)) profile.crmUf = 'SP';
   profile.crmNumber = String(profile.crmNumber || '').replace(/\D/g, '');
+  if (user?.email && !medhubProfileDataComplete(profile)) {
+    const restored = medhubRestoreProfileFromSetupBackup(user.email);
+    if (restored) profile = restored;
+  }
   return profile;
 }
 
@@ -111,14 +177,25 @@ function medhubNeedsProfileOnboarding (profile) {
   return !medhubIsProfileSetupComplete(profile);
 }
 
+function medhubProfileDataComplete (profile) {
+  if (!profile) return false;
+  if (profile.onboardingComplete) return true;
+  if (!profile.userType) return false;
+  if (!String(profile.rxDisplayName || '').trim()) return false;
+  if (profile.userType === 'student') return true;
+  if (profile.userType === 'doctor') {
+    return !!String(profile.crmNumber || '').replace(/\D/g, '');
+  }
+  return false;
+}
+
 function medhubIsProfileSetupComplete (profile) {
   const p = profile || medhubLoadUserProfile();
-  if (p.onboardingComplete) return true;
-  if (!p?.userType) return false;
-  if (!String(p.rxDisplayName || '').trim()) return false;
-  if (p.userType === 'student') return true;
-  if (p.userType === 'doctor') {
-    return !!String(p.crmNumber || '').replace(/\D/g, '');
+  if (medhubProfileDataComplete(p)) return true;
+  const user = typeof getSession === 'function' ? getSession() : null;
+  if (user?.email) {
+    const snap = medhubLoadProfileSetupBackup(user.email);
+    if (medhubSnapshotProfileSetupComplete(snap)) return true;
   }
   return false;
 }
