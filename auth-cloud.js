@@ -202,7 +202,8 @@ function medhubApplyCloudProfileLocal (profile) {
     addressCity: profile.addressCity || '',
     addressState: profile.addressState || '',
     addressZip: profile.addressZip || '',
-    identityLocked: !!profile.identityLocked
+    identityLocked: !!profile.identityLocked,
+    identityChangeCount: profile.identityChangeCount || 0
   });
 }
 

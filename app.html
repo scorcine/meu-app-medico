@@ -50,7 +50,7 @@
   <script defer src="med-apresentacoes-vo.js?v=ist-pep-v1"></script>
   <script defer src="receituario-data.js?v=rx-multi-v1"></script>
   <script defer src="receituario-ps-bridge.js?v=ps-etiology-v4"></script>
-  <script defer src="user-profile.js?v=profile-v3"></script>
+  <script defer src="user-profile.js?v=profile-v4"></script>
   <script defer src="receituario.js?v=ps-etiology-v4"></script>
   <script defer src="google-drive.js?v=compliance-v1"></script>
   <script defer src="security-crypto.js?v=compliance-v1"></script>
@@ -170,6 +170,11 @@
               </div>
 
               <div id="profile-identity-lock" class="profile-identity-lock" hidden>
+                <p id="profile-identity-limit-notice" class="profile-identity-limit-notice" hidden role="note">
+                  <strong>Uso pessoal.</strong>
+                  Este é um aplicativo de uso pessoal. Nome e CRM podem ser alterados no máximo 2 vezes após o cadastro.
+                  <span id="profile-identity-limit-detail"></span>
+                </p>
                 <p id="profile-identity-lock-msg" class="muted">Nome e CRM ficam vinculados à sua conta na nuvem. Para alterá-los, informe sua senha.</p>
                 <label for="profile-current-password">Senha atual</label>
                 <input id="profile-current-password" type="password" autocomplete="current-password" placeholder="Obrigatória para mudar nome ou CRM">

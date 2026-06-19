@@ -62,6 +62,13 @@ async function handlePost (req, res) {
       });
       return;
     }
+    if (err.code === 'account_deleted') {
+      json(res, 403, {
+        error: err.message || 'Conta excluída.',
+        code: 'account_deleted'
+      });
+      return;
+    }
     json(res, 500, { error: err.message || 'Erro ao salvar perfil' });
   }
 }

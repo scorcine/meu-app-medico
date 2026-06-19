@@ -577,6 +577,21 @@ footer {
   background: rgba(255, 193, 7, 0.08);
 }
 
+.profile-identity-limit-notice {
+  margin: 0 0 0.75rem;
+  padding: 0.65rem 0.75rem;
+  border-radius: 8px;
+  background: rgba(234, 179, 8, 0.12);
+  border: 1px solid rgba(234, 179, 8, 0.35);
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.profile-identity-limit-notice strong {
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
 .profile-identity-lock label {
   margin-top: 0.5rem;
 }

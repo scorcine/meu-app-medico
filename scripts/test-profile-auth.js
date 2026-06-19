@@ -8,7 +8,9 @@ const {
   normalizeProfile,
   identityConfigured,
   profileOnboardingComplete,
-  identityChanged
+  identityChanged,
+  identityChangesRemaining,
+  MAX_IDENTITY_CHANGES
 } = require('../api/_profile');
 
 const { sessionVersionValid } = require('../api/_auth');
@@ -63,6 +65,14 @@ const studentProfile = normalizeProfile({ userType: 'student', rxDisplayName: 'J
 const doctorUpgrade = normalizeProfile({ userType: 'doctor', rxDisplayName: 'João', crmNumber: '123', crmUf: 'SP' });
 if (identityChanged(studentProfile, doctorUpgrade)) pass('student to doctor is identity change');
 else fail('student to doctor is identity change');
+
+const usedOnce = normalizeProfile({ identityChangeCount: 1, identityLocked: true, userType: 'doctor', rxDisplayName: 'Ana', crmNumber: '1', crmUf: 'SP' });
+if (identityChangesRemaining(usedOnce) === 1) pass('identity changes remaining');
+else fail('identity changes remaining');
+
+const usedTwice = normalizeProfile({ identityChangeCount: MAX_IDENTITY_CHANGES, identityLocked: true, userType: 'doctor', rxDisplayName: 'Ana', crmNumber: '1', crmUf: 'SP' });
+if (identityChangesRemaining(usedTwice) === 0) pass('no identity changes remaining');
+else fail('no identity changes remaining');
 
 if (sessionVersionValid({ email: 'a@b.com', sv: 2 }, { sessionVersion: 2 })) pass('session version match');
 else fail('session version match');

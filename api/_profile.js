@@ -7,6 +7,11 @@ const CRM_UFS = new Set([
 ]);
 
 const IDENTITY_FIELDS = ['rxDisplayName', 'crmUf', 'crmNumber'];
+const MAX_IDENTITY_CHANGES = 2;
+
+const IDENTITY_LIMIT_NOTICE =
+  'Este é um aplicativo de uso pessoal. Nome e CRM podem ser alterados no máximo 2 vezes após o cadastro. ' +
+  'Se você realizar mais uma troca além do limite, sua conta será excluída.';
 
 function profileKey (email) {
   return 'medhub:profile:' + normalizeEmail(email);
@@ -23,6 +28,7 @@ function defaultProfile (sessionName) {
     addressState: '',
     addressZip: '',
     identityLocked: false,
+    identityChangeCount: 0,
     updatedAt: null
   };
 }
@@ -42,6 +48,7 @@ function normalizeProfile (raw, sessionName) {
     addressState: String(raw.addressState || '').toUpperCase().slice(0, 2),
     addressZip: String(raw.addressZip || '').trim(),
     identityLocked: !!raw.identityLocked,
+    identityChangeCount: Math.max(0, Number(raw.identityChangeCount) || 0),
     updatedAt: raw.updatedAt || null
   };
 
@@ -73,6 +80,41 @@ function identityChanged (current, next) {
   return IDENTITY_FIELDS.some(field => String(current[field] || '') !== String(next[field] || ''));
 }
 
+function identityChangesRemaining (profile) {
+  const count = Number(profile?.identityChangeCount || 0);
+  return Math.max(0, MAX_IDENTITY_CHANGES - count);
+}
+
+async function deleteUserAccount (email, user) {
+  const norm = normalizeEmail(email);
+  if (!norm) return;
+
+  const { clinicalKey } = require('./_clinical-kv');
+  const { saveCustomerBilling, getCustomerIdByEmail, getCustomerBilling } = require('./_billing-kv');
+  const { userKey } = require('./_auth');
+
+  await kv.del(profileKey(norm));
+  await kv.del(userKey(norm));
+  await kv.del(clinicalKey(norm));
+
+  let customerId = user?.stripeCustomerId || await getCustomerIdByEmail(norm);
+  if (!customerId) {
+    customerId = 'manual_' + norm.replace(/[^a-z0-9]/g, '_');
+  }
+
+  const prev = await getCustomerBilling(customerId);
+  await saveCustomerBilling({
+    email: norm,
+    customerId,
+    subscriptionId: prev?.subscriptionId || user?.stripeSubscriptionId || 'manual_sub',
+    status: 'canceled',
+    plan: prev?.plan || 'monthly',
+    active: false,
+    currentPeriodEnd: prev?.currentPeriodEnd || null,
+    updatedAt: new Date().toISOString(),
+    source: 'identity_change_limit'
+  });
+}
 async function getProfessionalProfile (email, sessionName) {
   if (!cloudAuthEnabled()) return null;
   const stored = await kv.get(profileKey(email));
@@ -88,8 +130,17 @@ async function saveProfessionalProfile (email, updates, options = {}) {
 
   const locked = current.identityLocked || identityConfigured(current);
   const changingIdentity = identityChanged(current, next);
+  const changeCount = Number(current.identityChangeCount || 0);
+  const isPostLockIdentityChange = locked && changingIdentity;
 
-  if (locked && changingIdentity) {
+  if (isPostLockIdentityChange) {
+    if (changeCount >= MAX_IDENTITY_CHANGES) {
+      await deleteUserAccount(email, user);
+      const err = new Error('Sua conta foi excluída por excesso de alterações de nome ou CRM.');
+      err.code = 'account_deleted';
+      throw err;
+    }
+
     if (!currentPassword || !user || !verifyPassword(currentPassword, user)) {
       const err = new Error('Senha atual incorreta.');
       err.code = 'password_required';
@@ -101,6 +152,12 @@ async function saveProfessionalProfile (email, updates, options = {}) {
     next.identityLocked = true;
   } else {
     next.identityLocked = locked;
+  }
+
+  if (isPostLockIdentityChange) {
+    next.identityChangeCount = changeCount + 1;
+  } else {
+    next.identityChangeCount = changeCount;
   }
 
   next.updatedAt = new Date().toISOString();
@@ -120,6 +177,10 @@ function publicProfile (profile) {
     addressState: profile.addressState,
     addressZip: profile.addressZip,
     identityLocked: profile.identityLocked,
+    identityChangeCount: profile.identityChangeCount || 0,
+    identityChangesRemaining: identityChangesRemaining(profile),
+    maxIdentityChanges: MAX_IDENTITY_CHANGES,
+    identityLimitNotice: IDENTITY_LIMIT_NOTICE,
     updatedAt: profile.updatedAt
   };
 }
@@ -130,6 +191,9 @@ module.exports = {
   identityConfigured,
   profileOnboardingComplete,
   identityChanged,
+  identityChangesRemaining,
+  MAX_IDENTITY_CHANGES,
+  IDENTITY_LIMIT_NOTICE,
   getProfessionalProfile,
   saveProfessionalProfile,
   publicProfile

@@ -8,6 +8,11 @@ const MEDHUB_CRM_UFS = [
   'PA', 'PB', 'PR', 'PE', 'PI', 'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO'
 ];
 
+const MEDHUB_MAX_IDENTITY_CHANGES = 2;
+const MEDHUB_IDENTITY_LIMIT_NOTICE =
+  'Este é um aplicativo de uso pessoal. Nome e CRM podem ser alterados no máximo 2 vezes após o cadastro. ' +
+  'Se você realizar mais uma troca além do limite, sua conta será excluída.';
+
 function medhubProfileStorageKey (email) {
   const e = String(email || (typeof getSession === 'function' ? getSession()?.email : '') || 'local')
     .trim().toLowerCase();
@@ -24,7 +29,8 @@ function medhubDefaultProfile (sessionUser) {
     addressCity: '',
     addressState: '',
     addressZip: '',
-    identityLocked: false
+    identityLocked: false,
+    identityChangeCount: 0
   };
 }
 
@@ -62,6 +68,9 @@ function medhubSaveUserProfileLocal (updates) {
   const next = { ...current, ...updates };
   if (next.crmNumber) next.crmNumber = String(next.crmNumber).replace(/\D/g, '');
   if (next.crmUf) next.crmUf = String(next.crmUf).toUpperCase().slice(0, 2);
+  if (next.identityChangeCount != null) {
+    next.identityChangeCount = Math.max(0, Number(next.identityChangeCount) || 0);
+  }
   localStorage.setItem(key, JSON.stringify(next));
   if (next.crmNumber) {
     localStorage.setItem(MEDHUB_RX_CRM_LEGACY_KEY, next.crmNumber);
@@ -92,6 +101,72 @@ function medhubUserTypeLabel (userType) {
   if (userType === 'student') return 'Estudante de medicina';
   if (userType === 'doctor') return 'Médico(a) formado(a)';
   return '';
+}
+
+function medhubIdentityChangesRemaining (profile) {
+  const count = Number(profile?.identityChangeCount || 0);
+  return Math.max(0, MEDHUB_MAX_IDENTITY_CHANGES - count);
+}
+
+function medhubProfilePayloadChangesIdentity (current, payload) {
+  const locked = medhubProfileIsIdentityLocked(current);
+  if (!locked) return false;
+  if (String(current.userType || '') !== String(payload.userType || '')) return true;
+  if (String(current.rxDisplayName || '') !== String(payload.rxDisplayName || '')) return true;
+  if (String(current.crmUf || 'SP') !== String(payload.crmUf || 'SP')) return true;
+  if (String(current.crmNumber || '') !== String(payload.crmNumber || '')) return true;
+  return false;
+}
+
+function medhubIdentityLimitDetail (profile) {
+  const remaining = medhubIdentityChangesRemaining(profile);
+  if (remaining >= 2) return ' Você ainda pode alterar nome ou CRM 2 vezes.';
+  if (remaining === 1) {
+    return ' Resta 1 alteração. Se você realizar mais uma troca, sua conta será excluída.';
+  }
+  return ' Limite atingido. Qualquer nova troca de nome ou CRM excluirá sua conta permanentemente.';
+}
+
+function medhubConfirmIdentityChange (profile) {
+  const count = Number(profile?.identityChangeCount || 0);
+  if (count >= MEDHUB_MAX_IDENTITY_CHANGES) {
+    return confirm(
+      'Esta alteração excluirá sua conta permanentemente.\n\n' + MEDHUB_IDENTITY_LIMIT_NOTICE + '\n\nDeseja continuar?'
+    );
+  }
+  if (count === MEDHUB_MAX_IDENTITY_CHANGES - 1) {
+    return confirm(
+      'Este é um aplicativo de uso pessoal. Se você realizar mais uma troca, sua conta será excluída.\n\nDeseja continuar com esta alteração?'
+    );
+  }
+  return confirm(
+    MEDHUB_IDENTITY_LIMIT_NOTICE + '\n\nDeseja continuar com esta alteração?'
+  );
+}
+
+function medhubUpdateProfileIdentityLimitUi (profile) {
+  const notice = document.getElementById('profile-identity-limit-notice');
+  const detail = document.getElementById('profile-identity-limit-detail');
+  const p = profile || medhubLoadUserProfile();
+  const show = medhubProfileIsIdentityLocked(p);
+
+  if (notice) notice.hidden = !show;
+  if (detail && show) {
+    detail.textContent = medhubIdentityLimitDetail(p);
+  }
+}
+
+function medhubHandleAccountDeleted (message) {
+  const msg = message || 'Sua conta foi excluída por excesso de alterações de nome ou CRM.';
+  alert(msg);
+  if (typeof logout === 'function') {
+    logout();
+    return;
+  }
+  localStorage.removeItem('session');
+  if (typeof medhubClearCloudSession === 'function') medhubClearCloudSession();
+  if (typeof medhubClearSessionCrypto === 'function') medhubClearSessionCrypto();
+  window.location.href = 'login.html';
 }
 
 function medhubFillProfileForm (profile, user) {
@@ -129,6 +204,8 @@ function medhubUpdateProfileLockUi (profile, options) {
       lockMsg.textContent = 'Nome e CRM ficam vinculados à sua conta na nuvem. Para alterá-los, informe sua senha.';
     }
   }
+
+  medhubUpdateProfileIdentityLimitUi(profile);
 }
 
 function medhubUpdateProfileUserTypeUi (profile, options) {
@@ -230,6 +307,7 @@ function initUserProfilePage () {
   medhubFillProfileForm(profile, user);
   medhubUpdateProfileUserTypeUi(profile, { upgradingToDoctor });
   medhubUpdateProfileLockUi(profile, { upgradingToDoctor });
+  medhubUpdateProfileIdentityLimitUi(profile);
 
   document.getElementById('profile-upgrade-doctor-btn')?.addEventListener('click', () => {
     upgradingToDoctor = true;
@@ -271,6 +349,7 @@ function initUserProfilePage () {
       medhubFillProfileForm(medhubLoadUserProfile(), user);
       medhubUpdateProfileUserTypeUi(medhubLoadUserProfile(), { upgradingToDoctor });
       medhubUpdateProfileLockUi(medhubLoadUserProfile(), { upgradingToDoctor });
+      medhubUpdateProfileIdentityLimitUi(medhubLoadUserProfile());
       updatePreview();
     });
   }
@@ -308,9 +387,18 @@ function initUserProfilePage () {
       return;
     }
 
+    const willChangeIdentity = medhubProfilePayloadChangesIdentity(currentProfile, payload);
+    if (willChangeIdentity && !medhubConfirmIdentityChange(currentProfile)) {
+      return;
+    }
+
     if (typeof medhubCloudSyncAvailable === 'function' && await medhubCloudSyncAvailable()) {
       const saved = await medhubCloudSaveProfile(payload, needsPassword ? currentPassword : '');
       if (!saved.ok) {
+        if (saved.code === 'account_deleted') {
+          medhubHandleAccountDeleted(saved.error);
+          return;
+        }
         if (status) {
           status.hidden = false;
           status.textContent = saved.error || 'Erro ao salvar.';
@@ -322,6 +410,24 @@ function initUserProfilePage () {
       if (passEl) passEl.value = '';
       upgradingToDoctor = false;
     } else {
+      if (willChangeIdentity) {
+        const count = Number(currentProfile.identityChangeCount || 0);
+        if (count >= MEDHUB_MAX_IDENTITY_CHANGES) {
+          const user = typeof getSession === 'function' ? getSession() : null;
+          if (user?.email && typeof getUsers === 'function' && typeof saveUsers === 'function') {
+            const norm = typeof authNormalizedEmail === 'function'
+              ? authNormalizedEmail(user.email)
+              : String(user.email).trim().toLowerCase();
+            saveUsers(getUsers().filter(u => {
+              const e = typeof authNormalizedEmail === 'function' ? authNormalizedEmail(u.email) : u.email;
+              return e !== norm;
+            }));
+          }
+          medhubHandleAccountDeleted();
+          return;
+        }
+        payload.identityChangeCount = count + 1;
+      }
       medhubSaveUserProfileLocal(payload);
       upgradingToDoctor = false;
     }
@@ -337,6 +443,7 @@ function initUserProfilePage () {
     }
     medhubUpdateProfileUserTypeUi(medhubLoadUserProfile(), { upgradingToDoctor });
     medhubUpdateProfileLockUi(medhubLoadUserProfile(), { upgradingToDoctor });
+    medhubUpdateProfileIdentityLimitUi(medhubLoadUserProfile());
     updatePreview();
   });
 
