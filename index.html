@@ -5,7 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MedHub — Apoio clínico no plantão</title>
   <meta name="description" content="106 protocolos de PS, prescrição interativa, 266+ fichas de medicação e calculadoras — apoio à decisão no plantão. MedHub Pro para médico solo. Garantia de 7 dias.">
-  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="assets/medhub-logo.png?v=logo-v1" type="image/png">
+  <link rel="apple-touch-icon" href="assets/medhub-logo.png?v=logo-v1">
   <script src="theme.js"></script>
   <link rel="stylesheet" href="style.css?v=landing-v13">
   <script defer src="subscription.js?v=billing-v2"></script>
@@ -17,7 +18,9 @@
 <body class="home-page landing-single-page" onload="redirectLoggedFromHome(); initLandingPage();">
   <header class="landing-header">
     <div class="landing-header-inner">
-      <a href="#topo" class="landing-logo">MedHub</a>
+      <a href="#topo" class="landing-logo" aria-label="MedHub.ia.br">
+        <img src="assets/medhub-logo.png?v=logo-v1" alt="MedHub.ia.br" class="medhub-logo medhub-logo--landing" width="220" height="62">
+      </a>
       <nav class="landing-nav landing-nav-links">
         <a href="#incluso">O que inclui</a>
         <a href="#modulos">O app</a>

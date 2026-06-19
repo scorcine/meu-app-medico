@@ -95,6 +95,14 @@ function initAppCore (user) {
         link.addEventListener('click', () => showSection(link.dataset.section));
       });
 
+      const logoHome = document.getElementById('medhub-logo-home');
+      if (logoHome) {
+        logoHome.addEventListener('click', e => {
+          e.preventDefault();
+          showSection('inicio');
+        });
+      }
+
       initCalcEssenciais();
       initGuiaEmergencia();
       initTratamentoHospitalar();

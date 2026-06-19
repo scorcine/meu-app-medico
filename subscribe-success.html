@@ -4,14 +4,16 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Assinatura confirmada • MedHub</title>
-  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="assets/medhub-logo.png?v=logo-v1" type="image/png">
   <script src="theme.js"></script>
   <link rel="stylesheet" href="style.css?v=billing-v1">
   <script defer src="subscription.js?v=billing-v1"></script>
   <script defer src="billing.js?v=billing-v3"></script>
 </head>
 <body onload="initSubscribeSuccessPage()">
-  <header>MedHub</header>
+  <header class="auth-page-header">
+    <img src="assets/medhub-logo.png?v=logo-v1" alt="MedHub.ia.br" class="medhub-logo medhub-logo--auth" width="200" height="56">
+  </header>
 
   <article class="card pricing-success-card">
     <h1 id="success-title">Assinatura confirmada</h1>

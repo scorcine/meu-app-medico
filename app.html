@@ -7,9 +7,10 @@
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
   <title>MedHub</title>
-  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="assets/medhub-logo.png?v=logo-v1" type="image/png">
+  <link rel="apple-touch-icon" href="assets/medhub-logo.png?v=logo-v1">
   <script src="theme.js"></script>
-  <link rel="stylesheet" href="style.css?v=profile-v1">
+  <link rel="stylesheet" href="style.css?v=logo-v1">
   <script defer src="calculators-risco.js"></script>
   <script defer src="calculators-cardio.js"></script>
   <script defer src="calculators-pneumo.js?v=rsi-patient"></script>
@@ -74,7 +75,9 @@
 </head>
 <body class="app-page" onload="initApp()">
   <header class="app-header">
-    <h1>MedHub</h1>
+    <a class="medhub-logo-link" href="#" id="medhub-logo-home" aria-label="MedHub — início">
+      <img src="assets/medhub-logo.png?v=logo-v1" alt="MedHub.ia.br" class="medhub-logo medhub-logo--header" width="200" height="56">
+    </a>
     <div class="header-actions">
       <button type="button" class="user-menu-btn" id="user-menu-btn" title="Minha conta e configurações">
         <span id="user-name"></span>

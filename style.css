@@ -364,6 +364,40 @@ footer {
   gap: 1rem;
 }
 
+.medhub-logo-link {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  text-decoration: none;
+  line-height: 0;
+}
+
+.medhub-logo {
+  display: block;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+
+.medhub-logo--header {
+  max-height: 44px;
+  max-width: min(210px, 48vw);
+}
+
+.medhub-logo--auth {
+  max-height: 48px;
+  max-width: min(220px, 72vw);
+}
+
+.medhub-logo--landing {
+  max-height: 56px;
+  max-width: min(240px, 58vw);
+}
+
+.auth-page-header {
+  justify-content: center;
+}
+
 .header-actions {
   display: flex;
   align-items: center;
@@ -2561,10 +2595,10 @@ body.landing-single-page #planos {
 }
 
 .landing-logo {
-  font-weight: 700;
-  font-size: 1.25rem;
-  color: var(--text-heading, #1a2b3c);
+  display: flex;
+  align-items: center;
   text-decoration: none;
+  line-height: 0;
 }
 
 .landing-nav {

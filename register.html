@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Cadastro • MedHub</title>
-  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="assets/medhub-logo.png?v=logo-v1" type="image/png">
   <script src="theme.js"></script>
   <link rel="stylesheet" href="style.css?v=auth-register-v2">
   <script defer src="app.js"></script>
@@ -55,7 +55,9 @@
   </script>
 </head>
 <body class="auth-body" onload="redirectIfLogged()">
-  <header>MedHub</header>
+  <header class="auth-page-header">
+    <img src="assets/medhub-logo.png?v=logo-v1" alt="MedHub.ia.br" class="medhub-logo medhub-logo--auth" width="200" height="56">
+  </header>
 
   <main class="auth-main">
   <form class="card auth-card" onsubmit="handleRegister(event)">
