@@ -5,7 +5,10 @@ const MEDHUB_SITE_URL = 'https://www.medhub.ia.br';
 const MEDHUB_MARKETING = {
   instagramUrl: 'https://www.instagram.com/medhub.ia.br/',
   instagramHandle: '@medhub.ia.br',
-  supportEmail: ''
+  supportEmail: '',
+  linksBio: 'https://www.medhub.ia.br/links.html',
+  linksEstudantes: 'https://www.medhub.ia.br/links-estudantes.html',
+  landingEstudantes: 'https://www.medhub.ia.br/estudantes.html'
 };
 
 const MEDHUB_PED_APP = {

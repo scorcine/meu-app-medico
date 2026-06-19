@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>MedHub para estudantes e recém-formados — plantão e internato</title>
+  <meta name="description" content="Estudante de medicina ou recém-formado: 106 protocolos de pronto-socorro, prescrição interativa e calculadoras focadas no plantão. Cadastro como estudante sem CRM. Garantia de 7 dias.">
+  <meta name="keywords" content="estudante medicina plantão, internato pronto socorro, app protocolos PS, calculadoras medicina, recém formado plantão">
+  <link rel="icon" href="assets/medhub-logo.png?v=logo-v1" type="image/png">
+  <script src="theme.js"></script>
+  <link rel="stylesheet" href="style.css?v=landing-v15">
+  <link rel="stylesheet" href="landing-mobile.css?v=landing-mobile-v1">
+  <link rel="stylesheet" href="estudantes.css?v=estudantes-v1">
+  <script defer src="medhub-config.js?v=site-v2"></script>
+  <script defer src="medhub-attribution.js?v=attr-v1"></script>
+  <script defer src="subscription.js?v=billing-v3"></script>
+  <script defer src="billing.js?v=billing-v4"></script>
+  <script defer src="estudantes.js?v=estudantes-v1"></script>
+</head>
+<body class="home-page landing-single-page estudantes-page" onload="initEstudantesPage();">
+  <header class="landing-header">
+    <div class="landing-header-inner">
+      <a href="#topo" class="landing-logo" aria-label="MedHub.ia.br">
+        <img src="assets/medhub-logo.png?v=logo-v1" alt="MedHub.ia.br" class="medhub-logo medhub-logo--landing" width="220" height="62">
+      </a>
+      <nav class="landing-nav landing-nav-links">
+        <a href="#por-que">Por quê</a>
+        <a href="#como">Como funciona</a>
+        <a href="#planos">Planos</a>
+      </nav>
+      <div class="landing-header-actions">
+        <a href="login.html" class="landing-header-login">Entrar</a>
+        <a href="#planos" class="btn landing-nav-cta">Testar 7 dias</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="landing-main" id="topo">
+    <section class="landing-hero">
+      <div class="landing-hero-content">
+        <span class="estudantes-kicker">🎓 Estudantes · internato · recém-formados</span>
+        <span class="landing-badge landing-badge-guarantee">🛡️ Garantia de 7 dias — reembolso integral</span>
+        <h1>No internato e no primeiro plantão, você não precisa improvisar.</h1>
+        <p class="landing-hero-lead">
+          Apps de consulta generalista ajudam a revisar conteúdo. O <strong>MedHub Pro</strong> é diferente: foco em <strong>conduta no leito</strong> — abra a queixa, siga o protocolo de PS e monte a prescrição interativa, com <strong>106 protocolos</strong>, medicações e calculadoras num só lugar.
+        </p>
+        <p class="landing-hero-benefit">📋 Cadastro como estudante — sem CRM no receituário até você se formar</p>
+        <p class="landing-price-line" id="landing-price-from">A partir de R$ 29,90/mês</p>
+        <p class="landing-price-sub" id="landing-price-annual">ou plano anual com desconto · parcelável no cartão</p>
+        <div class="landing-hero-actions">
+          <a href="#planos" class="btn landing-btn-lg" id="estudantes-cta-primary">Quero testar — 7 dias grátis de garantia</a>
+          <a href="index.html#modulos" class="btn-outline landing-btn-lg" id="estudantes-cta-demo">Ver demonstração do app</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="landing-section card" id="por-que">
+      <header class="landing-section-head">
+        <h2>Plantão pede fluxo, não só leitura</h2>
+        <p>Na urgência você precisa de <strong>próximo passo</strong> — não ficar pulando entre PDF, busca e anotações.</p>
+      </header>
+      <div class="estudantes-compare">
+        <article class="estudantes-compare-card">
+          <h3>📚 App de consulta generalista</h3>
+          <p>Ótimo para revisar tema por tema, bulas e resumos amplos — estilo “biblioteca médica” no bolso.</p>
+        </article>
+        <article class="estudantes-compare-card estudantes-compare-card--medhub">
+          <h3>⚡ MedHub Pro — foco plantão</h3>
+          <p>Queixa → protocolo de PS → prescrição interativa → calculadora na hora. Pensado para quem <strong>atende sozinho</strong> no plantão ou internato.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="landing-section card" id="como">
+      <header class="landing-section-head">
+        <h2>Como funciona para estudante</h2>
+      </header>
+      <ol class="estudantes-steps">
+        <li><strong>1</strong><span>Assine com garantia de 7 dias (mesmo e-mail no pagamento e cadastro).</span></li>
+        <li><strong>2</strong><span>No cadastro, escolha <strong>Estudante de medicina</strong> — nome no receituário, sem CRM por enquanto.</span></li>
+        <li><strong>3</strong><span>Use no celular no plantão: protocolos, medicações e calculadoras offline-friendly no navegador.</span></li>
+        <li><strong>4</strong><span>Quando formar, atualize para médico(a) e informe CRM no perfil.</span></li>
+      </ol>
+    </section>
+
+    <section class="landing-section card">
+      <header class="landing-section-head">
+        <h2>Perguntas comuns</h2>
+      </header>
+      <ul class="estudantes-faq">
+        <li><strong>Já uso outro app de medicina?</strong> Pode complementar — MedHub não substitui sua biblioteca de estudo; entra forte quando você está <em>atendendo</em> uma queixa aguda.</li>
+        <li><strong>Preciso de CRM?</strong> Não, enquanto estudante. Ao se formar, você troca o perfil para médico(a) formado(a).</li>
+        <li><strong>Funciona no celular?</strong> Sim — acesse medhub.ia.br pelo navegador (salve na tela inicial como atalho).</li>
+      </ul>
+    </section>
+
+    <section class="landing-section pricing-v2-checkout" id="planos">
+      <header class="landing-section-head">
+        <h2>Plano para começar no internato</h2>
+        <p>Mesmo plano completo — todos os módulos. Cancele quando quiser.</p>
+      </header>
+
+      <p id="pricing-notice" class="pricing-notice pricing-v2-notice" hidden role="status"></p>
+      <p id="pricing-dev-note" class="pricing-dev-note pricing-v2-notice" hidden role="note"></p>
+
+      <div class="pricing-v2-plans" aria-label="Planos de assinatura">
+        <article class="pricing-v2-plan card">
+          <p class="pricing-v2-plan-name">Mensal</p>
+          <p class="pricing-amount" id="price-monthly">R$ 29,90/mês</p>
+          <p class="pricing-v2-plan-tagline">Ideal para testar no internato</p>
+          <ul class="pricing-v2-plan-features">
+            <li>✓ Perfil estudante (sem CRM)</li>
+            <li>✓ 106 protocolos de PS</li>
+            <li>✓ Garantia de 7 dias</li>
+          </ul>
+          <button type="button" class="btn pricing-v2-cta" id="btn-plan-monthly">Assinar mensal</button>
+        </article>
+
+        <article class="pricing-v2-plan card pricing-v2-plan-featured">
+          <span class="pricing-v2-popular">Melhor custo</span>
+          <span class="pricing-v2-discount-badge" id="price-annual-badge">15% de desconto</span>
+          <p class="pricing-v2-plan-name">Anual</p>
+          <p class="pricing-amount" id="price-annual">R$ 304,98/ano</p>
+          <p class="pricing-desc" id="price-savings">Economize vs 12 meses avulsos.</p>
+          <p class="pricing-v2-installments">💳 Parcelável no cartão</p>
+          <ul class="pricing-v2-plan-features">
+            <li>✓ Tudo do mensal</li>
+            <li>✓ Um pagamento por ano</li>
+            <li>✓ Garantia de 7 dias</li>
+          </ul>
+          <button type="button" class="btn pricing-v2-cta pricing-v2-cta-primary" id="btn-plan-annual">Assinar anual</button>
+        </article>
+      </div>
+
+      <div class="pricing-v2-trust">
+        <span>🔒 Pagamento Stripe</span>
+        <span>🎓 Perfil estudante no cadastro</span>
+        <span>↩️ Reembolso em 7 dias</span>
+      </div>
+
+      <p class="landing-plan-login">
+        Já assinou? <a href="login.html">Entrar</a> · <a href="index.html">Site geral</a>
+      </p>
+    </section>
+
+    <p class="home-disclaimer landing-disclaimer" role="note">
+      <strong>Aviso:</strong> ferramenta educacional de apoio à decisão. Não substitui supervisor, protocolo da instituição nem prontuário legal.
+    </p>
+  </main>
+
+  <footer class="landing-footer">
+    <p>&copy; 2026 MedHub · <a href="index.html">Início</a> · <a href="links-estudantes.html">Links estudantes</a> · <a href="termos.html">Termos</a></p>
+  </footer>
+</body>
+</html>

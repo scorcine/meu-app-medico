@@ -2,7 +2,8 @@
 
 @media (max-width: 860px) {
   html:has(body.landing-single-page),
-  body.landing-single-page {
+  body.landing-single-page,
+  body.estudantes-page {
     overflow-x: hidden;
     max-width: 100%;
   }
