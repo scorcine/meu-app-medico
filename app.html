@@ -9,7 +9,7 @@
   <title>MedHub</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <script src="theme.js"></script>
-  <link rel="stylesheet" href="style.css?v=home-tools-main-v1">
+  <link rel="stylesheet" href="style.css?v=home-welcome-v1">
   <script defer src="calculators-risco.js"></script>
   <script defer src="calculators-cardio.js"></script>
   <script defer src="calculators-pneumo.js?v=rsi-patient"></script>
@@ -103,6 +103,9 @@
         <p class="sidebar-group">Calculadoras</p>
         <button type="button" class="sidebar-link" data-section="calc-essenciais">Calculadoras essenciais</button>
         <button type="button" class="sidebar-link" data-section="calc-pediatrica">Calculadora pediátrica</button>
+
+        <p class="sidebar-group">Sistema</p>
+        <button type="button" class="sidebar-link" data-section="conta">Conta e backup</button>
       </nav>
       <p class="sidebar-build" id="app-build" title="Confira se esta versão bate com a última atualização do projeto">Build 2026.06.07 · Exames 30 ✓</p>
     </aside>
@@ -110,12 +113,29 @@
     <main class="app-content">
       <section id="section-inicio" class="content-panel active">
         <article class="card dashboard-card home-card">
+          <header class="home-hero">
+            <p class="home-emoji" aria-hidden="true">👋</p>
+            <h2>Seja bem-vindo ao MedHub</h2>
+            <p id="user-greeting" class="home-greeting"></p>
+            <p class="home-tagline">Apoio clínico no plantão — protocolos, prescrição e calculadoras em um só lugar.</p>
+          </header>
+
           <section class="home-section home-main-section">
-            <h2 class="home-main-title">🧰 Ferramentas rápidas</h2>
-            <p class="home-main-lead muted">Atalhos para os módulos mais usados — acesse direto da home sem item extra no menu lateral.</p>
-            <p id="user-greeting" class="home-greeting-inline"></p>
+            <h3 class="home-main-title">🧰 Ferramentas rápidas</h3>
+            <p class="home-main-lead muted">Atalhos para os módulos mais usados — toque para abrir.</p>
             <div id="home-ferramentas-grid" class="calc-category-grid ferramentas-grid home-ferramentas-grid"></div>
           </section>
+
+          <p class="home-disclaimer" role="note">
+            <strong>Aviso:</strong> ferramenta educacional de apoio à decisão. Não substitui julgamento clínico, bula, protocolo institucional nem prontuário legal. Revise sempre antes de prescrever ou orientar o paciente.
+          </p>
+        </article>
+      </section>
+
+      <section id="section-conta" class="content-panel">
+        <article class="card dashboard-card conta-card">
+          <h2>Conta, sync e backup</h2>
+          <p class="muted conta-lead">Assinatura, cópia na nuvem, backup JSON e alteração de senha.</p>
 
           <section class="home-section billing-section" id="billing-panel" hidden>
             <h3>💳 Assinatura MedHub Pro</h3>
@@ -127,9 +147,6 @@
             </div>
           </section>
 
-          <details class="home-settings-fold">
-            <summary>Conta, sync e backup</summary>
-            <div class="home-settings-fold-body">
           <section class="home-section cloud-sync-section" id="cloud-sync-panel" hidden>
             <h3>☁️ Sync criptografado na nuvem</h3>
             <p class="muted">Cópia automática das suas notas locais na nuvem MedHub. O servidor <strong>não lê</strong> o conteúdo — só armazena ciphertext. Use a mesma senha para desbloquear em outro aparelho.</p>
@@ -182,13 +199,6 @@
               <p id="account-password-status" class="anamnese-save-status" hidden></p>
             </form>
           </section>
-
-            </div>
-          </details>
-
-          <p class="home-disclaimer" role="note">
-            <strong>Aviso:</strong> ferramenta educacional de apoio à decisão. Não substitui julgamento clínico, bula, protocolo institucional nem prontuário legal. Revise sempre antes de prescrever ou orientar o paciente.
-          </p>
         </article>
       </section>
 

@@ -548,7 +548,25 @@ body.app-page {
 }
 
 .home-main-section {
-  margin-bottom: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.home-main-section .home-main-title {
+  font-size: 1.15rem;
+  margin: 0 0 0.35rem;
+}
+
+.conta-card {
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.conta-card > h2 {
+  margin-bottom: 0.35rem;
+}
+
+.conta-lead {
+  margin: 0 0 1.25rem;
 }
 
 .home-main-title {

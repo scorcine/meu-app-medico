@@ -155,6 +155,7 @@ function showSection (sectionId) {
   if (sectionId === 'pacientes' && typeof pacientesOnSectionShow === 'function') pacientesOnSectionShow();
   if (sectionId === 'consultas' && typeof consultasOnSectionShow === 'function') consultasOnSectionShow();
   if (sectionId === 'anamnese' && typeof anamneseOnSectionShow === 'function') anamneseOnSectionShow();
+  if (sectionId === 'conta' && typeof backupMaybePromptFirstUse === 'function') backupMaybePromptFirstUse();
 }
 
 function calcPediatrica (e) {

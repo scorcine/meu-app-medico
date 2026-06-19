@@ -170,13 +170,12 @@ function initBackup () {
       importInput.value = '';
     });
   }
-
-  backupMaybePromptFirstUse();
 }
 
 function backupMaybePromptFirstUse () {
   const banner = document.getElementById('backup-first-use-banner');
   if (!banner) return;
+  if (!document.getElementById('section-conta')?.classList.contains('active')) return;
 
   const key = 'medhub-backup-prompt-' + backupUserEmail();
   if (localStorage.getItem(key)) {
