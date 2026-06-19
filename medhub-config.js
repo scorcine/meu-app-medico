@@ -11,6 +11,17 @@ const MEDHUB_MARKETING = {
   landingEstudantes: 'https://www.medhub.ia.br/estudantes.html'
 };
 
+/**
+ * Meta Ads (Instagram/Facebook) — Pixel para medir anúncios.
+ * 1) business.facebook.com → Configurações → Origens de dados → Pixel → Copiar ID
+ * 2) Cole em pixelId abaixo (só números)
+ * 3) No Ads Manager: campanha Tráfego ou Conversões apontando para links.html
+ */
+const MEDHUB_META = {
+  pixelId: '',
+  debug: false
+};
+
 const MEDHUB_PED_APP = {
   name: 'MedHub Pediatria',
   url: 'https://medhub-pediatria.vercel.app',

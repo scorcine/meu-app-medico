@@ -79,6 +79,10 @@ function medhubApplyPlatformGate (config) {
   document.querySelectorAll('#btn-plan-monthly, #btn-plan-annual').forEach(function (btn) {
     btn.disabled = !checkoutReady;
   });
+
+  if (typeof medhubMetaTrackPlanosView === 'function') {
+    medhubMetaTrackPlanosView();
+  }
 }
 
 async function initSubscribeSuccessPage () {
@@ -115,6 +119,9 @@ async function initSubscribeSuccessPage () {
       if (bodyEl) {
         bodyEl.textContent = 'Último passo: crie sua conta com o e-mail acima. Sua assinatura já está vinculada ao pagamento.';
       }
+      if (typeof medhubMetaTrackPurchase === 'function') {
+        medhubMetaTrackPurchase(data.plan);
+      }
       if (registerLink) {
         const q = new URLSearchParams({
           email: data.email,
@@ -124,6 +131,9 @@ async function initSubscribeSuccessPage () {
         registerLink.textContent = 'Criar conta agora';
       }
     } else if (data.paid) {
+      if (typeof medhubMetaTrackPurchase === 'function') {
+        medhubMetaTrackPurchase(data.plan);
+      }
       if (bodyEl) bodyEl.textContent = 'Pagamento recebido. Aguarde alguns segundos e clique em criar conta, ou faça login se já tiver cadastro.';
       if (registerLink && data.email) {
         registerLink.href = 'register.html?email=' + encodeURIComponent(data.email) + '&session_id=' + encodeURIComponent(sessionId);

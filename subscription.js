@@ -67,6 +67,10 @@ async function medhubOpenCheckout (plan, email) {
       if (Object.keys(attribution).length) payload.attribution = attribution;
     }
 
+    if (typeof medhubMetaTrackCheckoutStart === 'function') {
+      medhubMetaTrackCheckoutStart(plan);
+    }
+
     const res = await fetch('/api/create-checkout-session', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
