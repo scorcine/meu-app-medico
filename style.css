@@ -555,7 +555,12 @@ footer {
 }
 
 .onboarding-crm-fields {
+  display: none;
   margin-top: 0.5rem;
+}
+
+.onboarding-profile-card:has(input[name="userType"][value="doctor"]:checked) .onboarding-crm-fields {
+  display: block;
 }
 
 .profile-student-upgrade {

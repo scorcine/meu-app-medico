@@ -13,13 +13,18 @@ function initOnboardingProfilePage () {
   const statusEl = document.getElementById('onboarding-status');
   const roleInputs = form.querySelectorAll('input[name="userType"]');
 
-  if (crmUfEl && !crmUfEl.options.length && typeof MEDHUB_CRM_UFS !== 'undefined') {
-    MEDHUB_CRM_UFS.forEach(uf => {
+  if (crmUfEl && !crmUfEl.options.length) {
+    const ufs = typeof MEDHUB_CRM_UFS !== 'undefined'
+      ? MEDHUB_CRM_UFS
+      : ['AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MT', 'MS', 'MG',
+        'PA', 'PB', 'PR', 'PE', 'PI', 'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO'];
+    ufs.forEach(uf => {
       const opt = document.createElement('option');
       opt.value = uf;
       opt.textContent = uf;
       crmUfEl.appendChild(opt);
     });
+    if (!crmUfEl.value) crmUfEl.value = 'SP';
   }
 
   function selectedUserType () {
@@ -28,13 +33,17 @@ function initOnboardingProfilePage () {
 
   function updateCrmVisibility () {
     const isDoctor = selectedUserType() === 'doctor';
-    if (crmBlock) crmBlock.hidden = !isDoctor;
     if (crmNumEl) crmNumEl.required = isDoctor;
+    if (crmBlock) crmBlock.setAttribute('aria-hidden', isDoctor ? 'false' : 'true');
     updatePreview();
   }
 
   function updatePreview () {
-    if (!previewEl || crmBlock?.hidden) return;
+    if (!previewEl) return;
+    if (selectedUserType() !== 'doctor') {
+      previewEl.textContent = '';
+      return;
+    }
     const name = (nameEl?.value || '').trim() || '________________';
     const uf = crmUfEl?.value || 'SP';
     const num = (crmNumEl?.value || '').replace(/\D/g, '');
@@ -42,7 +51,15 @@ function initOnboardingProfilePage () {
     previewEl.textContent = `Dr(a). ${name} · ${crm}`;
   }
 
-  roleInputs.forEach(input => input.addEventListener('change', updateCrmVisibility));
+  roleInputs.forEach(input => {
+    input.addEventListener('change', updateCrmVisibility);
+    input.addEventListener('click', updateCrmVisibility);
+  });
+  form.querySelectorAll('.onboarding-role-card').forEach(card => {
+    card.addEventListener('click', () => {
+      setTimeout(updateCrmVisibility, 0);
+    });
+  });
   [nameEl, crmUfEl, crmNumEl].forEach(el => {
     el?.addEventListener('input', updatePreview);
     el?.addEventListener('change', updatePreview);
@@ -52,6 +69,7 @@ function initOnboardingProfilePage () {
       crmNumEl.value = crmNumEl.value.replace(/\D/g, '');
     });
   }
+  updateCrmVisibility();
 
   form.addEventListener('submit', async e => {
     e.preventDefault();
@@ -72,6 +90,7 @@ function initOnboardingProfilePage () {
     }
     if (userType === 'doctor' && !crmNumber) {
       alert('Informe o número do CRM.');
+      crmNumEl?.focus();
       return;
     }
 
@@ -120,6 +139,8 @@ function initOnboardingProfilePage () {
 }
 
 async function initOnboardingProfileGate () {
+  initOnboardingProfilePage();
+
   const user = typeof requireAuthAsync === 'function'
     ? await requireAuthAsync()
     : (typeof getSession === 'function' ? getSession() : null);
@@ -127,7 +148,7 @@ async function initOnboardingProfileGate () {
   if (!user) return;
 
   const nameInput = document.getElementById('onboarding-rx-name');
-  if (nameInput) {
+  if (nameInput && !nameInput.value) {
     const profile = typeof medhubLoadUserProfile === 'function' ? medhubLoadUserProfile() : null;
     nameInput.value = profile?.rxDisplayName || user.name || '';
   }
@@ -142,9 +163,19 @@ async function initOnboardingProfileGate () {
         window.location.href = 'app.html';
         return;
       }
-      const nameInput = document.getElementById('onboarding-rx-name');
       if (nameInput && cloud.profile.rxDisplayName) {
         nameInput.value = cloud.profile.rxDisplayName;
+      }
+      if (cloud.profile.userType === 'doctor') {
+        const doctorRadio = document.querySelector('input[name="userType"][value="doctor"]');
+        if (doctorRadio) doctorRadio.checked = true;
+        const crmUfEl = document.getElementById('onboarding-crm-uf');
+        const crmNumEl = document.getElementById('onboarding-crm-number');
+        if (crmUfEl && cloud.profile.crmUf) crmUfEl.value = cloud.profile.crmUf;
+        if (crmNumEl && cloud.profile.crmNumber) crmNumEl.value = cloud.profile.crmNumber;
+      } else if (cloud.profile.userType === 'student') {
+        const studentRadio = document.querySelector('input[name="userType"][value="student"]');
+        if (studentRadio) studentRadio.checked = true;
       }
     }
   } else {
@@ -155,7 +186,9 @@ async function initOnboardingProfileGate () {
     }
   }
 
-  initOnboardingProfilePage();
+  const form = document.getElementById('onboarding-profile-form');
+  form?.querySelector('input[name="userType"]:checked')
+    ?.dispatchEvent(new Event('change', { bubbles: true }));
 }
 
 document.addEventListener('DOMContentLoaded', () => {
