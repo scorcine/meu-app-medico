@@ -1,11 +1,10 @@
 const {
   cloudAuthEnabled,
-  verifyToken,
-  readBearer,
   json,
   parseBody
 } = require('../_auth');
 const { getUser, saveUser, publicUser } = require('../_users');
+const { authenticateRequest } = require('../_request-auth');
 
 const TERMS_VERSION = process.env.MEDHUB_TERMS_VERSION || '2026-06-07-v2';
 const PRIVACY_VERSION = process.env.MEDHUB_PRIVACY_VERSION || '2026-06-07-v2';
@@ -21,11 +20,8 @@ module.exports = async (req, res) => {
     return;
   }
 
-  const payload = verifyToken(readBearer(req));
-  if (!payload?.email) {
-    json(res, 401, { error: 'Sessão inválida.' });
-    return;
-  }
+  const auth = await authenticateRequest(req, res);
+  if (!auth) return;
 
   let body;
   try {
@@ -41,7 +37,7 @@ module.exports = async (req, res) => {
   }
 
   try {
-    const user = await getUser(payload.email);
+    const user = await getUser(auth.user.email);
     if (!user) {
       json(res, 404, { error: 'Conta não encontrada.' });
       return;

@@ -79,15 +79,25 @@ function readBearer (req) {
   return match ? match[1].trim() : '';
 }
 
-function createSessionToken (user) {
+function createSessionToken (user, sessionVersion) {
   const now = Math.floor(Date.now() / 1000);
+  const sv = sessionVersion ?? user.sessionVersion ?? 1;
   return signToken({
     sub: user.email,
     email: user.email,
     name: user.name,
+    sv,
     iat: now,
     exp: now + 60 * 60 * 24 * 30
   });
+}
+
+function sessionVersionValid (payload, user) {
+  if (!payload?.email || !user) return false;
+  const expected = user.sessionVersion || 1;
+  const got = payload.sv;
+  if (got == null) return expected === 1;
+  return got === expected;
 }
 
 function json (res, status, body) {
@@ -112,6 +122,7 @@ module.exports = {
   verifyToken,
   readBearer,
   createSessionToken,
+  sessionVersionValid,
   json,
   parseBody,
   PBKDF2_ITER

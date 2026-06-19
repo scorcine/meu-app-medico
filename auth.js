@@ -396,6 +396,10 @@ async function requireAuthAsync () {
     if (config.cloudEnabled) {
       const valid = await medhubValidateCloudSession();
       if (!valid) {
+        if (sessionStorage.getItem('medhub-session-revoked') === '1') {
+          sessionStorage.removeItem('medhub-session-revoked');
+          alert('Sua sessão foi encerrada porque a conta foi acessada em outro dispositivo. Faça login novamente.');
+        }
         logout();
         return null;
       }

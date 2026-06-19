@@ -5,8 +5,8 @@ const {
   json,
   findCustomerByEmail
 } = require('./_stripe');
-const { verifyToken, readBearer } = require('./_auth');
 const { getUser, saveUser } = require('./_users');
+const { authenticateRequest } = require('./_request-auth');
 
 module.exports = async (req, res) => {
   if (req.method !== 'POST') {
@@ -19,14 +19,11 @@ module.exports = async (req, res) => {
     return;
   }
 
-  const payload = verifyToken(readBearer(req));
-  if (!payload?.email) {
-    json(res, 401, { error: 'Faça login para gerenciar sua assinatura.' });
-    return;
-  }
+  const auth = await authenticateRequest(req, res);
+  if (!auth) return;
 
   try {
-    const user = await getUser(payload.email);
+    const user = await getUser(auth.user.email);
     if (!user) {
       json(res, 401, { error: 'Conta não encontrada.' });
       return;

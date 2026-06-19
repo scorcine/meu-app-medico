@@ -662,7 +662,13 @@ const PS_CONTENT_1 = {
       <p class="emerg-note">Referência: MS/RENAME · SBPT. Conteúdo educacional — não substitui julgamento clínico.</p>`,
 
   'candidiase': `
-      <p class="muted">Infecção por <em>Candida</em> (oral, vaginal, cutânea/balanite) — antifúngico tópico ou sistêmico conforme extensão e imunidade.</p>
+      <p class="muted">Infecção por <em>Candida</em> — escolher antifúngico conforme <strong>local</strong>: oral, vaginal, balanite ou esofágica/imunossuprimido.</p>
+      <ul class="ps-med-options">
+        <li><strong>Oral leve:</strong> nistatina suspensão gargarejo 4×/dia · 7–14 dias.</li>
+        <li><strong>Vaginal não complicada:</strong> fluconazol 150 mg VO dose única.</li>
+        <li><strong>Balanite:</strong> clotrimazol creme 1% 2×/dia · 7–14 dias.</li>
+        <li><strong>Esofágica/imunossuprimido:</strong> fluconazol 200 mg VO 24/24 h · 14–21 dias.</li>
+      </ul>
       <h4>Prescrições de pronto-socorro</h4>
       <ol class="emerg-steps">
         <li><strong>Candidíase oral leve</strong>:

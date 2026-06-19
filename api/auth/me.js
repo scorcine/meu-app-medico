@@ -1,7 +1,4 @@
 const {
-  cloudAuthEnabled,
-  verifyToken,
-  readBearer,
   verifyPassword,
   hashPassword,
   json,
@@ -11,6 +8,7 @@ const {
 const { getUser, saveUser, publicUser } = require('../_users');
 const { getSubscriptionStatus } = require('../_subscription');
 const { getClinicalBundle, saveClinicalBundle } = require('../_clinical-kv');
+const { authenticateRequest } = require('../_request-auth');
 
 module.exports = async (req, res) => {
   if (req.method === 'GET') {
@@ -27,33 +25,19 @@ module.exports = async (req, res) => {
 };
 
 async function handleGet (req, res) {
-  if (!cloudAuthEnabled()) {
-    json(res, 503, { error: 'Login na nuvem não configurado.' });
-    return;
-  }
-
-  const payload = verifyToken(readBearer(req));
-  if (!payload?.email) {
-    json(res, 401, { error: 'Sessão inválida ou expirada.' });
-    return;
-  }
+  const auth = await authenticateRequest(req, res);
+  if (!auth) return;
 
   try {
-    const user = await getUser(payload.email);
-    if (!user) {
-      json(res, 401, { error: 'Conta não encontrada.' });
-      return;
-    }
-
-    const sub = await getSubscriptionStatus(user.email, { user, loadUser: false });
+    const sub = await getSubscriptionStatus(auth.user.email, { user: auth.user, loadUser: false });
     const out = {
-      user: publicUser(user),
+      user: publicUser(auth.user),
       subscription: sub
     };
 
     const wantClinical = String(req.query?.clinical || '') === '1';
     if (wantClinical) {
-      const bundle = await getClinicalBundle(user.email);
+      const bundle = await getClinicalBundle(auth.user.email);
       out.clinical = bundle
         ? {
           updatedAt: bundle.updatedAt,
@@ -70,16 +54,8 @@ async function handleGet (req, res) {
 }
 
 async function handlePost (req, res) {
-  if (!cloudAuthEnabled()) {
-    json(res, 503, { error: 'Login na nuvem não configurado.' });
-    return;
-  }
-
-  const payload = verifyToken(readBearer(req));
-  if (!payload?.email) {
-    json(res, 401, { error: 'Sessão inválida ou expirada.' });
-    return;
-  }
+  const auth = await authenticateRequest(req, res);
+  if (!auth) return;
 
   let body;
   try {
@@ -90,19 +66,19 @@ async function handlePost (req, res) {
   }
 
   if (body.action === 'changePassword') {
-    await handleChangePassword(req, res, payload, body);
+    await handleChangePassword(req, res, auth, body);
     return;
   }
 
   if (body.action === 'syncClinical') {
-    await handleSyncClinical(res, payload, body);
+    await handleSyncClinical(res, auth, body);
     return;
   }
 
   json(res, 400, { error: 'Ação inválida.' });
 }
 
-async function handleChangePassword (req, res, payload, body) {
+async function handleChangePassword (req, res, auth, body) {
   const currentPassword = String(body.currentPassword || '');
   const newPassword = String(body.newPassword || '');
 
@@ -122,13 +98,14 @@ async function handleChangePassword (req, res, payload, body) {
   }
 
   try {
-    const user = await getUser(payload.email);
+    const user = await getUser(auth.user.email);
     if (!user || !verifyPassword(currentPassword, user)) {
       json(res, 401, { error: 'Senha atual incorreta.' });
       return;
     }
 
     Object.assign(user, hashPassword(newPassword));
+    user.sessionVersion = (user.sessionVersion || 0) + 1;
     await saveUser(user);
 
     json(res, 200, { ok: true });
@@ -137,7 +114,7 @@ async function handleChangePassword (req, res, payload, body) {
   }
 }
 
-async function handleSyncClinical (res, payload, body) {
+async function handleSyncClinical (res, auth, body) {
   const entries = body.entries;
   if (!entries || typeof entries !== 'object' || Array.isArray(entries)) {
     json(res, 400, { error: 'Payload de sync inválido.' });
@@ -145,7 +122,7 @@ async function handleSyncClinical (res, payload, body) {
   }
 
   const updatedAt = String(body.updatedAt || new Date().toISOString());
-  const email = normalizeEmail(payload.email);
+  const email = normalizeEmail(auth.user.email);
 
   try {
     const existing = await getClinicalBundle(email);

@@ -317,7 +317,13 @@ const PS_CONTENT_4 = {
     <p class="emerg-note">Referência: Diretriz SBC SCA 2025 · MONABH. Ver Guia de emergência → SCA para fluxos STEMI/NSTEMI detalhados. Não atrasar reperfusão por exames complementares.</p>`,
 
   'sinusite-aguda': `
-    <p class="muted">Inflamação dos seios paranasais, geralmente pós-viral. Antibiótico apenas se sintomas persistentes (&gt; 10 dias), piora após melhora inicial ou quadro grave.</p>
+    <p class="muted">Inflamação dos seios paranasais, geralmente <strong>pós-viral</strong>. Antibiótico <strong>apenas</strong> se sintomas &gt; 10 dias, piora após melhora inicial ou quadro grave/complicado.</p>
+    <ul class="ps-med-options">
+      <li><strong>Viral/pós-viral (1ª linha — &lt; 10 dias):</strong> lavagem nasal SF 0,9% + dipirona ou paracetamol + hidratação; budesonida nasal ou oximetazolina ≤ 3 dias — <strong>sem ATB</strong>.</li>
+      <li><strong>Bacteriana (&gt; 10 dias ou critérios):</strong> amoxicilina + clavulanato 875/125 mg VO 12/12 h · 5–7 dias.</li>
+      <li><strong>Alternativa (bacteriana):</strong> amoxicilina 1 g VO 8/8 h · 7 dias (leve, sem comorbidades).</li>
+      <li><strong>Alérgico (bacteriana):</strong> levofloxacino 500 mg VO 24/24 h · 5–7 dias <em>ou</em> doxiciclina 100 mg VO 12/12 h · 7 dias.</li>
+    </ul>
     <h4>Prescrições de pronto-socorro</h4>
     <ol class="emerg-steps">
       <li><strong>Suporte</strong> — lavagem nasal com SF 0,9%; analgesia (dipirona, paracetamol); hidratação.</li>
@@ -886,7 +892,12 @@ const PS_CONTENT_4 = {
     <p class="emerg-note">Referência: MS — gastroenterite aguda. Ondansetrona prolonga QT — cautela com outros QT-prolongadores. Obstrução intestinal: antiemético não substitui avaliação cirúrgica.</p>`,
 
   'vulvovaginites': `
-    <p class="muted">Inflamação vulvovaginal por vaginose bacteriana (VB), candidíase ou tricomoníase. Diagnóstico clínico (corrimento, pH, Whiff, microscopia) orienta tratamento específico.</p>
+    <p class="muted">Inflamação vulvovaginal — <strong>diagnóstico orienta tratamento</strong>: vaginose bacteriana (VB), candidíase ou tricomoníase. Não misturar esquemas sem critério clínico.</p>
+    <ul class="ps-med-options">
+      <li><strong>Vaginose bacteriana (VB):</strong> metronidazol 500 mg VO 12/12 h · 7 dias <em>ou</em> secnidazol 2 g dose única.</li>
+      <li><strong>Candidíase:</strong> fluconazol 150 mg VO dose única <em>ou</em> miconazol creme vaginal 2% · 7 noites.</li>
+      <li><strong>Tricomoníase:</strong> metronidazol 2 g VO dose única + tratar parceiro.</li>
+    </ul>
     <h4>Prescrições de pronto-socorro</h4>
     <ol class="emerg-steps">
       <li><strong>Avaliar</strong> — corrimento (cor, odor, prurido), pH vaginal, sinais de PID (dor pélvica, febre) → encaminhar ginecologia.</li>

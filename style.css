@@ -465,6 +465,18 @@ footer {
   color: var(--text-secondary);
 }
 
+.profile-identity-lock {
+  margin: 0.75rem 0 1rem;
+  padding: 0.85rem 1rem;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 193, 7, 0.35);
+  background: rgba(255, 193, 7, 0.08);
+}
+
+.profile-identity-lock label {
+  margin-top: 0.5rem;
+}
+
 .profile-address-grid {
   display: grid;
   grid-template-columns: 1fr 4rem 6.5rem;

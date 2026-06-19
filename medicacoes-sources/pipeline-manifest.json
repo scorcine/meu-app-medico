@@ -3,14 +3,14 @@
   "renameEntries": 148,
   "renameSeed": 332,
   "renameParsed": 53,
-  "updatedAt": "2026-06-10T23:02:24.634Z",
+  "updatedAt": "2026-06-19T17:26:25.366Z",
   "protocolBlocks": 195,
   "protocolDrugs": 204,
   "protocolGaps": 0,
-  "fullCatalog": 266,
+  "fullCatalog": 278,
   "renameCatalog": 148,
   "auditOk": true,
   "auditGaps": 0,
   "auditDuplicates": 0,
-  "auditMissingPosology": 0
+  "auditMissingPosology": 3
 }

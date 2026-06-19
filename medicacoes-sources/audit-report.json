@@ -1,14 +1,36 @@
 {
-  "generatedAt": "2026-06-10T23:02:04.269Z",
+  "generatedAt": "2026-06-19T17:26:25.364Z",
   "counts": {
-    "fullCatalog": 266,
+    "fullCatalog": 278,
     "renameCatalog": 148,
     "protocolGaps": 0
   },
   "protocolGaps": [],
   "duplicateCoreNames": [],
-  "missingPosology": [],
+  "missingPosology": [
+    {
+      "id": "acetilcisteina",
+      "name": "Acetilcisteína",
+      "issue": "sem_posologia"
+    },
+    {
+      "id": "ambroxol",
+      "name": "Ambroxol",
+      "issue": "sem_posologia"
+    },
+    {
+      "id": "oximetazolina",
+      "name": "Oximetazolina",
+      "issue": "sem_posologia"
+    }
+  ],
   "rxInteractiveMissing": [],
-  "renameOverlaps": [],
+  "renameOverlaps": [
+    {
+      "id": "ref-miconazol",
+      "name": "Miconazol",
+      "issue": "rename_duplicates_full"
+    }
+  ],
   "ok": true
 }

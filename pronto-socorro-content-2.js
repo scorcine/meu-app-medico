@@ -76,11 +76,12 @@ const PS_CONTENT_2 = {
   `,
 
   'conjuntivite': `
-    <p class="muted">Conjuntivite viral (mais comum), bacteriana ou alérgica — diferenciar pela história, exame e ausência de dor ocular profunda ou perda visual (red flags de ceratite/uveíte/glaucoma).</p>
+    <p class="muted">Conjuntivite <strong>viral (mais comum)</strong>, bacteriana ou alérgica — diferenciar pela história e exame. Red flags: dor ocular profunda, fotofobia marcada, visão turva → oftalmologia.</p>
     <ul class="ps-med-options">
-      <li><strong>1ª linha (bacteriana):</strong> tobramicina 0,3% colírio 1 gota 4/4 h · 5–7 dias (Tobrex®).</li>
-      <li><strong>Alternativa:</strong> ciprofloxacino 0,3% colírio 1 gota 4/4 h · 5–7 dias (Ciloxan®) <em>ou</em> moxifloxacino 0,5% 1 gota 8/8 h (Vigamox®).</li>
-      <li><strong>Alérgico / contraindicação:</strong> viral — lágrimas artificiais e compressas frias (sem ATB); alérgica — loratadina 10 mg/dia + olopatadina 0,1% colírio 12/12 h. Dor, fotofobia ou visão turva → oftalmologia.</li>
+      <li><strong>Viral (1ª linha — mais comum):</strong> lágrimas artificiais 4–6×/dia + compressas frias + higiene SF 0,9%; <strong>sem antibiótico</strong>.</li>
+      <li><strong>Bacteriana (purulenta moderada/grave):</strong> tobramicina 0,3% colírio 1 gota 4/4 h · 5–7 dias (Tobrex®).</li>
+      <li><strong>Alternativa (bacteriana):</strong> ciprofloxacino 0,3% colírio 1 gota 4/4 h · 5–7 dias (Ciloxan®) <em>ou</em> moxifloxacino 0,5% 1 gota 8/8 h (Vigamox®).</li>
+      <li><strong>Alérgica:</strong> loratadina 10 mg/dia + olopatadina 0,1% colírio 12/12 h. Dor, fotofobia ou visão turva → oftalmologia.</li>
     </ul>
     <h4>Prescrições de pronto-socorro</h4>
     <ol class="emerg-steps">
@@ -462,11 +463,11 @@ const PS_CONTENT_2 = {
   `,
 
   'dpoc-exacerbada': `
-    <p class="muted">Exacerbação de DPOC — dispneia ↑, volume/purulência do escarro; broncodilatador + corticoide sistêmico ± antibiótico se infecção bacteriana provável.</p>
+    <p class="muted">Exacerbação de DPOC — dispneia ↑, volume/purulência do escarro; <strong>1ª linha: broncodilatador + corticoide sistêmico</strong>; antibiótico só se ≥ 2 critérios Anthonisen.</p>
     <ul class="ps-med-options">
-      <li><strong>1ª linha (ATB):</strong> amoxicilina + clavulanato 875/125 mg VO 12/12 h · 5–7 dias (Clavulin®).</li>
-      <li><strong>Alternativa:</strong> levofloxacino 500 mg VO/EV 24/24 h · 5 dias.</li>
-      <li><strong>Alérgico / contraindicação:</strong> ceftriaxona 1 g EV 24/24 h + azitromicina 500 mg VO/EV 24/24 h · 5 dias se pneumonia grave ou alergia a penicilina com quadro sistêmico. Broncodilatador: salbutamol + ipratrópio; corticoide: prednisona 40 mg/dia · 5 dias.</li>
+      <li><strong>1ª linha (base):</strong> salbutamol 4–10 puffs q20 min × 3 + ipratrópio 6/6 h + prednisona 40 mg VO 24/24 h · 5 dias.</li>
+      <li><strong>Com ATB (Anthonisen ≥ 2):</strong> amoxicilina + clavulanato 875/125 mg VO 12/12 h · 5–7 dias (Clavulin®).</li>
+      <li><strong>Alternativa (ATB):</strong> levofloxacino 500 mg VO/EV 24/24 h · 5 dias.</li>
     </ul>
     <h4>Prescrições de pronto-socorro</h4>
     <ol class="emerg-steps">

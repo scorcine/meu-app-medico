@@ -30,17 +30,17 @@
   <script defer src="tratamento-hospitalar-content-1.js?v=th-expand-v1"></script>
   <script defer src="tratamento-hospitalar-content-2.js?v=th-expand-v1"></script>
   <script defer src="tratamento-hospitalar.js?v=th-expand-v1"></script>
-  <script defer src="pronto-socorro-content-1.js?v=ps-gestante-v1"></script>
-  <script defer src="pronto-socorro-content-2.js?v=ps-opcoes"></script>
-  <script defer src="pronto-socorro-content-3.js?v=ps-opcoes"></script>
-  <script defer src="pronto-socorro-content-4.js?v=violencia-pep-v2"></script>
-  <script defer src="pronto-socorro-content-5.js?v=diverticulite"></script>
+  <script defer src="pronto-socorro-content-1.js?v=ps-etiology-v3"></script>
+  <script defer src="pronto-socorro-content-2.js?v=ps-etiology-v3"></script>
+  <script defer src="pronto-socorro-content-3.js?v=ps-etiology-v3"></script>
+  <script defer src="pronto-socorro-content-4.js?v=ps-etiology-v3"></script>
+  <script defer src="pronto-socorro-content-5.js?v=ps-etiology-v3"></script>
   <script defer src="ps-drug-meta-gaps.js?v=med-v2-gaps"></script>
   <script defer src="med-promoted-meta.js?v=med-v6-batch2"></script>
-  <script defer src="pronto-socorro-interactive-drugs.js?v=ps-populations-v2"></script>
-  <script defer src="pronto-socorro-interactive-data.js?v=ps-populations-v2"></script>
-  <script defer src="pronto-socorro-interactive-core.js?v=ps-populations-v2"></script>
-  <script defer src="pronto-socorro.js?v=ps-populations-v2"></script>
+  <script defer src="pronto-socorro-interactive-drugs.js?v=ps-etiology-v3"></script>
+  <script defer src="pronto-socorro-interactive-data.js?v=ps-etiology-v3"></script>
+  <script defer src="pronto-socorro-interactive-core.js?v=ps-etiology-v3"></script>
+  <script defer src="pronto-socorro.js?v=ps-etiology-v3"></script>
   <script defer src="medicacoes-classes.js?v=med-v2-gaps"></script>
   <script defer src="medicacoes-data.js?v=med-v6-batch2"></script>
   <script defer src="medicacoes-rename-loader.js?v=med-v6-batch2"></script>
@@ -48,7 +48,7 @@
   <script defer src="med-apresentacoes-vo.js?v=ist-pep-v1"></script>
   <script defer src="receituario-data.js?v=rx-multi-v1"></script>
   <script defer src="receituario-ps-bridge.js?v=rx-multi-v1"></script>
-  <script defer src="user-profile.js?v=profile-v1"></script>
+  <script defer src="user-profile.js?v=profile-v2"></script>
   <script defer src="receituario.js?v=profile-v1"></script>
   <script defer src="google-drive.js?v=compliance-v1"></script>
   <script defer src="security-crypto.js?v=compliance-v1"></script>
@@ -66,7 +66,7 @@
   <script defer src="backup.js?v=backup-v2"></script>
   <script defer src="clinical-cloud.js?v=cloud-sync-v1"></script>
   <script defer src="subscription.js?v=billing-v4"></script>
-  <script defer src="auth-cloud.js?v=cloud-v4"></script>
+  <script defer src="auth-cloud.js?v=cloud-v5"></script>
   <script defer src="app.js?v=atendimento-v3"></script>
   <script defer src="auth.js?v=compliance-v1"></script>
 </head>
@@ -155,6 +155,12 @@
               </div>
 
               <p id="profile-rx-preview" class="profile-rx-preview" aria-live="polite"></p>
+
+              <div id="profile-identity-lock" class="profile-identity-lock" hidden>
+                <p class="muted">Nome e CRM ficam vinculados à sua conta na nuvem. Para alterá-los, informe sua senha.</p>
+                <label for="profile-current-password">Senha atual</label>
+                <input id="profile-current-password" type="password" autocomplete="current-password" placeholder="Obrigatória para mudar nome ou CRM">
+              </div>
 
               <label for="profile-address">Endereço profissional</label>
               <input id="profile-address" type="text" autocomplete="street-address" placeholder="Rua, número, complemento">

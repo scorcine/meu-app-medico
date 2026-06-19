@@ -62,7 +62,11 @@ module.exports = async (req, res) => {
       await saveUser(user);
     }
 
-    const token = createSessionToken(user);
+    user.sessionVersion = (user.sessionVersion || 0) + 1;
+    user.lastLoginAt = new Date().toISOString();
+    await saveUser(user);
+
+    const token = createSessionToken(user, user.sessionVersion);
 
     json(res, 200, {
       token,

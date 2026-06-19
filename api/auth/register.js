@@ -128,6 +128,7 @@ module.exports = async (req, res) => {
       name,
       email,
       ...hashed,
+      sessionVersion: 1,
       termsVersion: TERMS_VERSION,
       privacyVersion: PRIVACY_VERSION,
       createdAt: new Date().toISOString(),
@@ -149,7 +150,7 @@ module.exports = async (req, res) => {
       });
     }
 
-    const token = createSessionToken(user);
+    const token = createSessionToken(user, user.sessionVersion);
 
     json(res, 201, {
       token,

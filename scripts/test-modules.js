@@ -101,11 +101,12 @@ try {
 
 try {
   const pi = runScripts([
-    'med-apresentacoes-vo.js', 'med-promoted-meta.js', 'pronto-socorro-interactive-drugs.js',
-    'pronto-socorro-interactive-data.js', 'pronto-socorro-interactive-core.js'
+    'med-apresentacoes-vo.js', 'med-promoted-meta.js', 'ps-drug-meta-gaps.js',
+    'pronto-socorro-interactive-drugs.js',
+    'pronto-socorro-interactive-data.js'
   ], ['PS_INTERACTIVE']);
   const n = Object.keys(pi.PS_INTERACTIVE || {}).length;
-  if (n >= 80) pass('PS interativo', n + ' rx templates');
+  if (n >= 20) pass('PS interativo', n + ' rx templates custom');
   else if (n >= 1) pass('PS interativo', n + ' templates (parcial em isolate)');
   else fail('PS interativo', n + ' templates');
 } catch (e) { fail('PS interativo', e.message); }
@@ -167,7 +168,8 @@ const SCRIPTS = [
   'tratamento-hospitalar-content-1.js', 'tratamento-hospitalar-content-2.js', 'tratamento-hospitalar.js',
   'pronto-socorro-content-1.js', 'pronto-socorro-content-2.js', 'pronto-socorro-content-3.js',
   'pronto-socorro-content-4.js', 'pronto-socorro-content-5.js', 'ps-drug-meta-gaps.js', 'med-promoted-meta.js',
-  'pronto-socorro-interactive-drugs.js', 'pronto-socorro-interactive-data.js', 'pronto-socorro-interactive-core.js',
+  'pronto-socorro-interactive-drugs.js', 'pronto-socorro-interactive-data.js',
+  'pronto-socorro-interactive-core.js',
   'pronto-socorro.js', 'medicacoes-classes.js', 'medicacoes-data.js', 'medicacoes-rename-loader.js', 'medicacoes.js',
   'med-apresentacoes-vo.js', 'receituario-data.js', 'receituario-ps-bridge.js', 'user-profile.js', 'receituario.js',
   'exames-data.js', 'exames.js', 'interpretacao-exame-data.js', 'interpretacao-exame.js',
@@ -253,6 +255,38 @@ try {
     if (!/ceftriaxona|oxacilina|cef/.test(celPen.map(m => m.label.toLowerCase()).join(' '))) {
       pass('PS · alergia penicilina celulite', 'beta-lactâmicos ocultos');
     } else fail('PS · alergia penicilina celulite', 'ATB beta-lactâmico visível');
+
+    const conjCfg = psGetInteractiveConfig('conjuntivite');
+    const conjViral = psFilterInteractiveMeds(
+      (conjCfg.groups || []).find(g => g.id === 'viral')?.medications || [],
+      { subtype: 'viral' },
+      'conjuntivite'
+    );
+    const conjViralAb = conjViral.filter(m => psMedHasAntibiotic(m));
+    if (conjViralAb.length === 0 && conjViral.length > 0) {
+      pass('PS · conjuntivite viral', 'sem ATB no grupo viral');
+    } else fail('PS · conjuntivite viral', conjViralAb.length ? 'ATB no viral' : 'grupo vazio');
+
+    const sinCfg = psGetInteractiveConfig('sinusite-aguda');
+    const sinViral = (sinCfg.groups || []).find(g => g.id === 'viral')?.medications || [];
+    const sinViralAb = sinViral.filter(m => psMedHasAntibiotic(m));
+    if (sinViralAb.length === 0 && sinViral.length > 0) {
+      pass('PS · sinusite viral', 'suporte sem ATB');
+    } else fail('PS · sinusite viral', sinViralAb.length ? 'ATB no viral' : 'grupo vazio');
+
+    const conjVal = psValidatePrescription('conjuntivite', conjCfg, ['conj-bact-tobra'], { subtype: 'viral' });
+    if (conjVal.status === 'error') pass('PS · conjuntivite validação', 'bloqueia ATB em viral');
+    else fail('PS · conjuntivite validação', 'não bloqueou ATB em viral');
+
+    const vvCfg = psGetInteractiveConfig('vulvovaginites');
+    const vvCandVal = psValidatePrescription('vulvovaginites', vvCfg, ['vv-vb-metro'], { subtype: 'candida' });
+    if (vvCandVal.status === 'error') pass('PS · vulvovaginites candida', 'bloqueia metronidazol isolado');
+    else fail('PS · vulvovaginites candida', 'não bloqueou metronidazol em candida');
+
+    const parCfg = psGetInteractiveConfig('parasitoses-intestinais');
+    const parOxiVal = psValidatePrescription('parasitoses-intestinais', parCfg, ['par-giard-metro'], { subtype: 'oxiurose' });
+    if (parOxiVal.status === 'error') pass('PS · parasitoses oxiurose', 'bloqueia metronidazol em oxiurose');
+    else fail('PS · parasitoses oxiurose', 'não bloqueou esquema errado');
 
     const dengueCfg = psGetInteractiveConfig('dengue');
     const dengueBase = psFilterInteractiveMeds(dengueCfg.medications, {}, 'dengue');

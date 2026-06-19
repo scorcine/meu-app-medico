@@ -182,7 +182,20 @@ const PS_DRUG_ALIASES = [
   ['tranexamico', ['ácido tranexâmico', 'acido tranexamico', 'transamin']],
   ['nitroprussiato', ['nitroprussiato', 'nipride']],
   ['levetiracetam', ['levetiracetam', 'keppra']],
-  ['tobramicina', ['tobramicina']],
+  ['tobramicina', ['tobramicina', 'tobrex']],
+  ['olopatadina', ['olopatadina', 'patanol']],
+  ['dexclorfeniramina', ['dexclorfeniramina', 'polaramine']],
+  ['oximetazolina', ['oximetazolina', 'afrin']],
+  ['racecadotrilo', ['racecadotril', 'tiorfan']],
+  ['lagrimas_artificiais', ['lágrimas artificiais', 'lagrimas artificiais']],
+  ['lavagem_nasal', ['lavagem nasal', 'sf 0,9% nasal']],
+  ['fenoterol', ['fenoterol', 'berotec']],
+  ['ambroxol', ['ambroxol', 'mucosolvan']],
+  ['acetilcisteina', ['acetilcisteína', 'acetilcisteina', 'fluimucil']],
+  ['nistatina', ['nistatina']],
+  ['miconazol', ['miconazol']],
+  ['clotrimazol', ['clotrimazol', 'canesten']],
+  ['neomicina_polimixina', ['neomicina-polimixina', 'neomicina polimixina', 'polimixina b']],
   ['albendazol', ['albendazol']],
   ['mebendazol', ['mebendazol']],
   ['ivermectina', ['ivermectina']],
@@ -578,11 +591,40 @@ function psPopulationValidationMessages (drugs, context, conditionId) {
   return messages;
 }
 
+function psRuleBlockAbUnless (field, allowedValue, label) {
+  return {
+    check: ({ drugs, context }) => {
+      if (context[field] === allowedValue) return null;
+      const hasAb = drugs.some(d => (PS_DRUG_META[d.id]?.classes || []).includes('antibiotic'));
+      if (!hasAb) return null;
+      return {
+        severity: 'error',
+        text: `Antibiótico não indicado para ${label || 'este subtipo'} — revise o tipo clínico selecionado.`
+      };
+    }
+  };
+}
+
+function psRuleRequireSelection (field, label) {
+  return {
+    check: ({ context }) => {
+      if (!context[field]) {
+        return { severity: 'warning', text: `Selecione: ${label}.` };
+      }
+      return null;
+    }
+  };
+}
+
 function psGetInteractiveConfig (conditionId) {
   const custom = typeof PS_INTERACTIVE !== 'undefined' ? PS_INTERACTIVE[conditionId] : null;
   const html = typeof PS_CONTENT !== 'undefined' ? PS_CONTENT[conditionId] : null;
+  const hasCustomRx = custom && (
+    (custom.medications && custom.medications.length && !custom.useAutoMeds) ||
+    (custom.groups && custom.groups.length)
+  );
 
-  if (custom && custom.medications && custom.medications.length && !custom.useAutoMeds) {
+  if (hasCustomRx) {
     return {
       ...custom,
       contextFields: psMergeContextFields(custom.contextFields, psStandardContextFields(conditionId)),

@@ -685,7 +685,13 @@ const PS_CONTENT_3 = {
   `,
 
   'otite-externa': `
-    <p class="muted">Infecção do conduto auditivo externo — otalgia intensa, tragalgesia, edema do CAE. Predisponentes: natação, trauma local, umidade.</p>
+    <p class="muted">Infecção do conduto auditivo externo — otalgia intensa, tragalgesia. <strong>Não complicada:</strong> gotas otológicas tópicas; <strong>celulite periauricular</strong> ou imunossupressão: ATB sistêmico.</p>
+    <ul class="ps-med-options">
+      <li><strong>Não complicada (1ª linha):</strong> ciprofloxacino 0,3% + dexametasona gotas otológicas 3–4 gotas 12/12 h · 7–10 dias.</li>
+      <li><strong>Alternativa (tópico):</strong> ciprofloxacino 0,3% gotas 4 gotas 8/8 h · 7–10 dias.</li>
+      <li><strong>Celulite periauricular:</strong> ciprofloxacino 500 mg VO 12/12 h · 7–10 dias <em>ou</em> amoxicilina-clavulanato 875/125 mg VO 12/12 h.</li>
+      <li><strong>Maligna (diabético/idoso):</strong> ciprofloxacino EV + internação + ORL.</li>
+    </ul>
     <h4>Prescrições de pronto-socorro</h4>
     <ol class="emerg-steps">
       <li><strong>Forma não complicada</strong> —
@@ -753,7 +759,13 @@ const PS_CONTENT_3 = {
   `,
 
   'parasitoses-intestinais': `
-    <p class="muted">Helmintíases e protozooses intestinais — giardíase, amebíase, oxiurose, ancilostomíase. Diagnóstico por clínica e exame de fezes; tratar conforme agente.</p>
+    <p class="muted">Helmintíases e protozooses intestinais — <strong>tratar conforme agente</strong> (giardíase, amebíase, oxiurose, ascaridíase). Diagnóstico por clínica e exame de fezes.</p>
+    <ul class="ps-med-options">
+      <li><strong>Giardíase:</strong> metronidazol 250 mg VO 8/8 h · 5 dias <em>ou</em> tinidazol 2 g dose única.</li>
+      <li><strong>Amebíase intestinal:</strong> metronidazol 750 mg VO 8/8 h · 7–10 dias.</li>
+      <li><strong>Oxiurose:</strong> albendazol 400 mg dose única; repetir em 14 dias.</li>
+      <li><strong>Ascaridíase/ancilostomíase:</strong> albendazol 400 mg dose única <em>ou</em> mebendazol 100 mg 12/12 h · 3 dias.</li>
+    </ul>
     <h4>Prescrições de pronto-socorro</h4>
     <ol class="emerg-steps">
       <li><strong>Giardíase</strong> —

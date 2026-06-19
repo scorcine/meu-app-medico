@@ -22,7 +22,8 @@ function medhubDefaultProfile (sessionUser) {
     address: '',
     addressCity: '',
     addressState: '',
-    addressZip: ''
+    addressZip: '',
+    identityLocked: false
   };
 }
 
@@ -53,7 +54,7 @@ function medhubLoadUserProfile () {
   return profile;
 }
 
-function medhubSaveUserProfile (updates) {
+function medhubSaveUserProfileLocal (updates) {
   const user = typeof getSession === 'function' ? getSession() : null;
   const key = medhubProfileStorageKey(user?.email);
   const current = medhubLoadUserProfile();
@@ -65,6 +66,40 @@ function medhubSaveUserProfile (updates) {
     localStorage.setItem(MEDHUB_RX_CRM_LEGACY_KEY, next.crmNumber);
   }
   return next;
+}
+
+function medhubSaveUserProfile (updates) {
+  return medhubSaveUserProfileLocal(updates);
+}
+
+function medhubProfileIsIdentityLocked (profile) {
+  const p = profile || medhubLoadUserProfile();
+  if (p.identityLocked) return true;
+  return !!(String(p.rxDisplayName || '').trim() && String(p.crmNumber || '').replace(/\D/g, ''));
+}
+
+function medhubFillProfileForm (profile, user) {
+  const nameEl = document.getElementById('profile-rx-name');
+  const crmUfEl = document.getElementById('profile-crm-uf');
+  const crmNumEl = document.getElementById('profile-crm-number');
+  const addressEl = document.getElementById('profile-address');
+  const cityEl = document.getElementById('profile-address-city');
+  const stateEl = document.getElementById('profile-address-state');
+  const zipEl = document.getElementById('profile-address-zip');
+
+  if (nameEl) nameEl.value = profile.rxDisplayName || user?.name || '';
+  if (crmUfEl) crmUfEl.value = profile.crmUf || 'SP';
+  if (crmNumEl) crmNumEl.value = profile.crmNumber || '';
+  if (addressEl) addressEl.value = profile.address || '';
+  if (cityEl) cityEl.value = profile.addressCity || '';
+  if (stateEl) stateEl.value = profile.addressState || '';
+  if (zipEl) zipEl.value = profile.addressZip || '';
+}
+
+function medhubUpdateProfileLockUi (profile) {
+  const lockBox = document.getElementById('profile-identity-lock');
+  const locked = medhubProfileIsIdentityLocked(profile);
+  if (lockBox) lockBox.hidden = !locked;
 }
 
 function medhubGetRxDoctorName () {
@@ -126,13 +161,8 @@ function initUserProfilePage () {
     });
   }
 
-  if (nameEl) nameEl.value = profile.rxDisplayName || user?.name || '';
-  if (crmUfEl) crmUfEl.value = profile.crmUf || 'SP';
-  if (crmNumEl) crmNumEl.value = profile.crmNumber || '';
-  if (addressEl) addressEl.value = profile.address || '';
-  if (cityEl) cityEl.value = profile.addressCity || '';
-  if (stateEl) stateEl.value = profile.addressState || '';
-  if (zipEl) zipEl.value = profile.addressZip || '';
+  medhubFillProfileForm(profile, user);
+  medhubUpdateProfileLockUi(profile);
 
   function updatePreview () {
     if (!previewEl) return;
@@ -154,8 +184,22 @@ function initUserProfilePage () {
   }
   updatePreview();
 
-  document.getElementById('profile-save-btn')?.addEventListener('click', () => {
-    medhubSaveUserProfile({
+  if (typeof medhubCloudSyncAvailable === 'function') {
+    medhubCloudSyncAvailable().then(async available => {
+      if (!available || typeof medhubCloudFetchProfile !== 'function') return;
+      const cloud = await medhubCloudFetchProfile();
+      if (!cloud.ok || !cloud.profile) return;
+      medhubApplyCloudProfileLocal(cloud.profile);
+      medhubFillProfileForm(medhubLoadUserProfile(), user);
+      medhubUpdateProfileLockUi(medhubLoadUserProfile());
+      updatePreview();
+    });
+  }
+
+  document.getElementById('profile-save-btn')?.addEventListener('click', async () => {
+    const status = document.getElementById('profile-save-status');
+    const passEl = document.getElementById('profile-current-password');
+    const payload = {
       rxDisplayName: nameEl?.value?.trim() || '',
       crmUf: crmUfEl?.value || 'SP',
       crmNumber: crmNumEl?.value?.replace(/\D/g, '') || '',
@@ -163,13 +207,34 @@ function initUserProfilePage () {
       addressCity: cityEl?.value?.trim() || '',
       addressState: (stateEl?.value || '').toUpperCase().slice(0, 2),
       addressZip: zipEl?.value?.trim() || ''
-    });
-    const status = document.getElementById('profile-save-status');
+    };
+    const currentPassword = passEl?.value || '';
+    const wasLocked = medhubProfileIsIdentityLocked();
+
+    if (typeof medhubCloudSyncAvailable === 'function' && await medhubCloudSyncAvailable()) {
+      const saved = await medhubCloudSaveProfile(payload, wasLocked ? currentPassword : '');
+      if (!saved.ok) {
+        if (status) {
+          status.hidden = false;
+          status.textContent = saved.error || 'Erro ao salvar.';
+          status.className = 'anamnese-save-status anamnese-save-status--err';
+        }
+        return;
+      }
+      medhubApplyCloudProfileLocal(saved.profile);
+      if (passEl) passEl.value = '';
+    } else {
+      medhubSaveUserProfileLocal(payload);
+    }
+
     if (status) {
       status.hidden = false;
-      status.textContent = 'Dados profissionais salvos.';
+      status.textContent = medhubProfileIsIdentityLocked()
+        ? 'Dados profissionais salvos. Nome e CRM estão protegidos na nuvem.'
+        : 'Dados profissionais salvos.';
       status.className = 'anamnese-save-status anamnese-save-status--ok';
     }
+    medhubUpdateProfileLockUi(medhubLoadUserProfile());
     updatePreview();
   });
 

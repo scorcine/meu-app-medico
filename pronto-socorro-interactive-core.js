@@ -412,6 +412,38 @@ function psValidatePrescription (conditionId, config, selectedMedIds, context, s
   return { status, messages };
 }
 
+function psGroupVisible (group, context) {
+  if (!group || !group.when) return true;
+  const ctx = context || {};
+  return Object.entries(group.when).every(([key, val]) => {
+    const got = ctx[key];
+    if (Array.isArray(val)) return val.includes(got);
+    return got === val;
+  });
+}
+
+/** Subtipo padrão ao abrir — maioria viral/suporte (evita lista vazia ou só HTML bacteriano). */
+const PS_DEFAULT_SUBTYPE = {
+  conjuntivite: 'viral',
+  'sinusite-aguda': 'viral',
+  'bronquite-aguda': 'viral',
+  tosse: 'posviral',
+  'diarreia-gastroenterite': 'viral',
+  'gripe-influenza': 'leve',
+  'otite-media': 'observacao',
+  'otite-externa': 'topico',
+  'dpoc-exacerbada': 'sem_atb',
+  mononucleose: 'suporte'
+};
+
+function psApplyDefaultSubtype (wrap, conditionId, config) {
+  const defaults = config.defaultContext || {};
+  const subtype = defaults.subtype || PS_DEFAULT_SUBTYPE[conditionId];
+  if (!subtype) return;
+  const el = wrap.querySelector('[data-ctx-field="subtype"]');
+  if (el && !el.value) el.value = subtype;
+}
+
 function psRenderInteractiveRx (conditionId, container) {
   const config = typeof psGetInteractiveConfig === 'function'
     ? psGetInteractiveConfig(conditionId)
@@ -463,6 +495,8 @@ function psRenderInteractiveRx (conditionId, container) {
     ctxEl.hidden = true;
   }
 
+  psApplyDefaultSubtype(wrap, conditionId, config);
+
   const filterMeds = (meds, ctx) => {
     if (typeof psFilterInteractiveMeds === 'function') {
       return psFilterInteractiveMeds(meds, ctx || {}, conditionId);
@@ -473,9 +507,15 @@ function psRenderInteractiveRx (conditionId, container) {
   function renderMedGroups (ctx) {
     const context = ctx || getContext();
     const groups = (config.groups || [{ id: 'all', label: 'Opções terapêuticas do protocolo', medications: config.medications }])
+      .filter(g => psGroupVisible(g, context))
       .map(g => ({ ...g, medications: filterMeds(g.medications, context) }));
 
     const selectedBefore = new Set(getSelected());
+
+    if (!groups.length) {
+      medsEl.innerHTML = '<p class="ps-rx-pick-subtype muted"><strong>Selecione o tipo clínico acima</strong> para ver as opções de tratamento.</p>';
+      return;
+    }
 
     medsEl.innerHTML = groups.map(g => {
       if (!g.medications.length) {

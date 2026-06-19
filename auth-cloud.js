@@ -147,10 +147,92 @@ async function medhubCloudMe () {
 
   try {
     const res = await fetch('/api/auth/me', { headers: medhubAuthHeaders() });
-    if (!res.ok) return null;
-    return res.json();
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      if (data.code === 'session_revoked') return { sessionRevoked: true };
+      return null;
+    }
+    return data;
   } catch {
     return null;
+  }
+}
+
+async function medhubCloudFetchProfile () {
+  const res = await fetch('/api/auth/profile', { headers: medhubAuthHeaders() });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) {
+    return {
+      ok: false,
+      error: data.error || 'Erro ao carregar perfil.',
+      code: data.code
+    };
+  }
+  return { ok: true, profile: data.profile || null };
+}
+
+async function medhubCloudSaveProfile (profile, currentPassword) {
+  const payload = { profile };
+  if (currentPassword) payload.currentPassword = currentPassword;
+
+  const res = await fetch('/api/auth/profile', {
+    method: 'POST',
+    headers: medhubAuthHeaders(),
+    body: JSON.stringify(payload)
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) {
+    return {
+      ok: false,
+      error: data.error || 'Erro ao salvar perfil.',
+      code: data.code
+    };
+  }
+  return { ok: true, profile: data.profile || null };
+}
+
+function medhubApplyCloudProfileLocal (profile) {
+  if (!profile || typeof medhubSaveUserProfileLocal !== 'function') return;
+  medhubSaveUserProfileLocal({
+    rxDisplayName: profile.rxDisplayName || '',
+    crmUf: profile.crmUf || 'SP',
+    crmNumber: profile.crmNumber || '',
+    address: profile.address || '',
+    addressCity: profile.addressCity || '',
+    addressState: profile.addressState || '',
+    addressZip: profile.addressZip || '',
+    identityLocked: !!profile.identityLocked
+  });
+}
+
+async function medhubSyncProfileAfterLogin () {
+  if (typeof medhubCloudSyncAvailable !== 'function') return;
+  if (!(await medhubCloudSyncAvailable())) return;
+
+  const cloud = await medhubCloudFetchProfile();
+  if (!cloud.ok) return;
+
+  const remote = cloud.profile || {};
+  const hasRemote = !!(remote.rxDisplayName || remote.crmNumber);
+  const local = typeof medhubLoadUserProfile === 'function' ? medhubLoadUserProfile() : null;
+  const hasLocal = !!(local?.rxDisplayName || local?.crmNumber);
+
+  if (hasRemote) {
+    medhubApplyCloudProfileLocal(remote);
+    return;
+  }
+
+  if (hasLocal && typeof medhubCloudSaveProfile === 'function') {
+    const saved = await medhubCloudSaveProfile({
+      rxDisplayName: local.rxDisplayName,
+      crmUf: local.crmUf,
+      crmNumber: local.crmNumber,
+      address: local.address,
+      addressCity: local.addressCity,
+      addressState: local.addressState,
+      addressZip: local.addressZip
+    });
+    if (saved.ok) medhubApplyCloudProfileLocal(saved.profile);
   }
 }
 
@@ -162,6 +244,10 @@ async function medhubValidateCloudSession () {
   if (!token) return false;
 
   const me = await medhubCloudMe();
+  if (me?.sessionRevoked) {
+    sessionStorage.setItem('medhub-session-revoked', '1');
+    return false;
+  }
   return !!me?.user;
 }
 
@@ -222,6 +308,10 @@ async function medhubAfterCloudAuth (loginData, password) {
 
   if (typeof medhubCloudSyncAfterUnlock === 'function') {
     await medhubCloudSyncAfterUnlock();
+  }
+
+  if (typeof medhubSyncProfileAfterLogin === 'function') {
+    await medhubSyncProfileAfterLogin();
   }
 
   if (medhubSubscriptionBlocked(loginData.subscription)) {
