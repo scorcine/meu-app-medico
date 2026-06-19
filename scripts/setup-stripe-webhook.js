@@ -14,7 +14,6 @@ const Stripe = require('stripe');
 
 const ROOT = path.join(__dirname, '..');
 const ENV_PATH = path.join(ROOT, '.env');
-const SITE_URL = process.env.MEDHUB_SITE_URL || 'https://www.medhub.ia.br';
 const WEBHOOK_PATH = '/api/stripe-webhook';
 const EVENTS = [
   'checkout.session.completed',
@@ -40,6 +39,10 @@ const ENVS = ['production', 'preview'];
     if (!process.env[key]) process.env[key] = val;
   });
 });
+
+function getSiteUrl () {
+  return (process.env.MEDHUB_SITE_URL || 'https://www.medhub.ia.br').replace(/\/$/, '');
+}
 
 function getSecretKey () {
   if (process.env.STRIPE_SECRET_KEY) return process.env.STRIPE_SECRET_KEY.trim();
@@ -115,7 +118,7 @@ async function main () {
     process.exit(1);
   }
 
-  const webhookUrl = SITE_URL.replace(/\/$/, '') + WEBHOOK_PATH;
+  const webhookUrl = getSiteUrl() + WEBHOOK_PATH;
   const stripe = new Stripe(secretKey, { apiVersion: '2024-06-20' });
   const mode = secretKey.includes('_test_') ? 'TESTE' : 'PRODUÇÃO';
 
