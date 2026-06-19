@@ -21,10 +21,9 @@ function initFerramentas () {
   grid.dataset.ferBound = '1';
 
   grid.innerHTML = FERRAMENTAS_ITEMS.map(item => `
-    <button type="button" class="calc-category-btn ferramentas-card" data-section="${item.section}">
+    <button type="button" class="calc-category-btn ferramentas-card home-quick-card" data-section="${item.section}" title="${item.desc}">
       <span class="calc-category-icon">${item.icon}</span>
       <span class="calc-category-name">${item.name}</span>
-      <span class="ferramentas-card-desc muted">${item.desc}</span>
     </button>
   `).join('');
 

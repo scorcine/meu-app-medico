@@ -9,7 +9,7 @@
   <title>MedHub</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <script src="theme.js"></script>
-  <link rel="stylesheet" href="style.css?v=home-hero-v1">
+  <link rel="stylesheet" href="style.css?v=home-quick-v1">
   <script defer src="calculators-risco.js"></script>
   <script defer src="calculators-cardio.js"></script>
   <script defer src="calculators-pneumo.js?v=rsi-patient"></script>
@@ -117,74 +117,9 @@
             <p class="home-tagline">Apoio clínico no plantão — protocolos, prescrição e calculadoras em um só lugar.</p>
           </header>
 
-          <section class="home-section">
-            <h3>Por que abrir o MedHub agora?</h3>
-            <p class="home-lead">
-              Porque cada segundo conta: aqui você encontra, em poucos toques, protocolos, sugestões de prescrição e ferramentas para apoiar sua decisão no plantão.
-            </p>
-          </section>
-
-          <section class="home-section">
-            <h3>🔑 O que o MedHub entrega hoje</h3>
-            <ul class="home-features">
-              <li>
-                <strong>⚡ Guia Rápido de Emergência</strong>
-                <span>Algoritmos passo a passo e fluxogramas — ACLS, AVC, sepse, trauma e muito mais.</span>
-              </li>
-              <li>
-                <strong>🧮 Calculadoras &amp; Escalas Clínicas</strong>
-                <span>CHA₂DS₂-VASc, CURB-65, MELD, Cockcroft-Gault, doses pediátricas por peso — resultado interpretado na hora.</span>
-              </li>
-              <li>
-                <strong>💊 Receituário e prescrição hospitalar</strong>
-                <span>106 condições com sugestões VO no receituário e posologias IM/EV no tratamento hospitalar, com checagem de interações comuns.</span>
-              </li>
-              <li>
-                <strong>📚 106 protocolos de Pronto-Socorro</strong>
-                <span>Condutas por queixa, prescrição interativa e referências bibliográficas quando disponíveis.</span>
-              </li>
-              <li>
-                <strong>🔍 Busca por módulo</strong>
-                <span>Filtre condições em Pronto-Socorro, Receituário, Tratamento hospitalar e Medicações — cada seção tem sua própria busca.</span>
-              </li>
-              <li>
-                <strong>💊 Guia de medicações</strong>
-                <span>266+ fichas MedHub · 148 referência RENAME · consulta ANVISA.</span>
-              </li>
-              <li>
-                <strong>📝 Anamnese (local)</strong>
-                <span>Formulário clínico para guiar queixa → protocolo → prescrição. Histórico criptografado e PDF educacional — não substitui prontuário legal.</span>
-              </li>
-              <li>
-                <strong>👤 Cadastro do paciente</strong>
-                <span>Cadastro local opcional (alergias, medicações) para apoiar anamnese e histórico — não é prontuário institucional.</span>
-              </li>
-              <li>
-                <strong>🔬 Exames e interpretação</strong>
-                <span>30 cenários de solicitação e 30 guias de interpretação — pediatria, obstetrícia, toxicologia e mais.</span>
-              </li>
-              <li>
-                <strong>☁️ Sync criptografado na nuvem</strong>
-                <span>Backup automático das suas notas locais (ciphertext — MedHub não lê o conteúdo).</span>
-              </li>
-              <li>
-                <strong>💾 Backup JSON local</strong>
-                <span>Exporte e restaure manualmente — útil como cópia extra ou offline.</span>
-              </li>
-              <li>
-                <strong>🌐 Uso online</strong>
-                <span>O app precisa de internet para carregar conteúdo clínico e sincronizar conta/dados.</span>
-              </li>
-              <li>
-                <strong>🔐 Conta local e privacidade</strong>
-                <span>Login simples por navegador, sem prontuário certificado. Use com cautela em dados de pacientes e conforme a política da sua instituição.</span>
-              </li>
-            </ul>
-          </section>
-
-          <section class="home-section">
-            <h3>🧰 Ferramentas rápidas</h3>
-            <p class="muted">Atalhos para os módulos mais usados — acesse direto da home sem item extra no menu lateral.</p>
+          <section class="home-section home-quick-section">
+            <h3>Acesso rápido</h3>
+            <p class="home-quick-hint muted">Toque para abrir o módulo no menu.</p>
             <div id="home-ferramentas-grid" class="calc-category-grid ferramentas-grid home-ferramentas-grid"></div>
           </section>
 
@@ -198,6 +133,9 @@
             </div>
           </section>
 
+          <details class="home-settings-fold">
+            <summary>Conta, sync e backup</summary>
+            <div class="home-settings-fold-body">
           <section class="home-section cloud-sync-section" id="cloud-sync-panel" hidden>
             <h3>☁️ Sync criptografado na nuvem</h3>
             <p class="muted">Cópia automática das suas notas locais na nuvem MedHub. O servidor <strong>não lê</strong> o conteúdo — só armazena ciphertext. Use a mesma senha para desbloquear em outro aparelho.</p>
@@ -251,11 +189,12 @@
             </form>
           </section>
 
+            </div>
+          </details>
+
           <p class="home-disclaimer" role="note">
             <strong>Aviso:</strong> ferramenta educacional de apoio à decisão. Não substitui julgamento clínico, bula, protocolo institucional nem prontuário legal. Revise sempre antes de prescrever ou orientar o paciente.
           </p>
-
-          <p class="home-cta-text">🚀 Use o menu ao lado e veja como o MedHub economiza minutos preciosos no plantão.</p>
         </article>
       </section>
 

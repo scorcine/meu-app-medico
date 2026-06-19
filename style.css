@@ -3217,6 +3217,78 @@ textarea {
   padding: 0.3rem 0.55rem;
 }
 
+.home-quick-section {
+  margin-bottom: 1rem;
+}
+
+.home-quick-section h3 {
+  margin-bottom: 0.35rem;
+}
+
+.home-quick-hint {
+  margin: 0 0 0.75rem;
+  font-size: 0.85rem;
+}
+
+.home-ferramentas-grid {
+  grid-template-columns: repeat(auto-fill, minmax(9.5rem, 1fr));
+  gap: 0.5rem;
+}
+
+.home-quick-card {
+  min-height: 4.25rem;
+  padding: 0.65rem 0.55rem;
+  text-align: center;
+  align-items: center;
+}
+
+.home-quick-card .calc-category-name {
+  font-size: 0.78rem;
+  line-height: 1.3;
+}
+
+.home-settings-fold {
+  margin: 0.5rem 0 0;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--bg-surface-muted);
+}
+
+.home-settings-fold summary {
+  padding: 0.65rem 0.85rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  cursor: pointer;
+  list-style: none;
+}
+
+.home-settings-fold summary::-webkit-details-marker {
+  display: none;
+}
+
+.home-settings-fold summary::before {
+  content: '▸ ';
+  color: var(--text-muted);
+}
+
+.home-settings-fold[open] summary::before {
+  content: '▾ ';
+}
+
+.home-settings-fold-body {
+  padding: 0 0.85rem 0.85rem;
+  border-top: 1px solid var(--border);
+}
+
+.home-settings-fold-body .home-section {
+  margin-bottom: 1rem;
+}
+
+.home-settings-fold-body .home-section:last-child {
+  margin-bottom: 0;
+}
+
 .ferramentas-grid .ferramentas-card {
   flex-direction: column;
   align-items: flex-start;
