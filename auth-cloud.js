@@ -194,6 +194,13 @@ async function medhubCloudSaveProfile (profile, currentPassword) {
 function medhubApplyCloudProfileLocal (profile) {
   if (!profile || typeof medhubSaveUserProfileLocal !== 'function') return;
   const local = medhubLoadUserProfile();
+  if (
+    typeof medhubIsProfileSetupComplete === 'function' &&
+    medhubIsProfileSetupComplete(local) &&
+    !medhubIsProfileSetupComplete({ ...local, ...profile })
+  ) {
+    return;
+  }
   const merged = { ...local };
 
   if (profile.rxDisplayName != null && String(profile.rxDisplayName).trim()) {
@@ -237,7 +244,13 @@ async function medhubSyncProfileAfterLogin () {
   const hasLocal = !!(local?.onboardingComplete || local?.userType || local?.crmNumber);
 
   if (hasRemote) {
-    medhubApplyCloudProfileLocal(remote);
+    if (
+      !local ||
+      !medhubIsProfileSetupComplete(local) ||
+      medhubIsProfileSetupComplete(remote)
+    ) {
+      medhubApplyCloudProfileLocal(remote);
+    }
     return;
   }
 
@@ -357,7 +370,17 @@ async function medhubEnsureProfileOnboarding () {
     if (!profile.onboardingComplete && typeof medhubSaveUserProfileLocal === 'function') {
       profile = medhubSaveUserProfileLocal({ onboardingComplete: true });
       if (typeof medhubCloudSyncAvailable === 'function' && await medhubCloudSyncAvailable()) {
-        await medhubCloudSaveProfile({ onboardingComplete: true });
+        await medhubCloudSaveProfile({
+          rxDisplayName: profile.rxDisplayName,
+          userType: profile.userType,
+          crmUf: profile.crmUf,
+          crmNumber: profile.crmNumber,
+          address: profile.address,
+          addressCity: profile.addressCity,
+          addressState: profile.addressState,
+          addressZip: profile.addressZip,
+          onboardingComplete: true
+        });
       }
     }
     medhubClearFreshLogin();

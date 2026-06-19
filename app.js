@@ -1,20 +1,3 @@
-function getSession () {
-  const raw = localStorage.getItem('session');
-  if (!raw) return null;
-
-  try {
-    const user = JSON.parse(raw);
-    if (user && ('pass' in user || 'passHash' in user) && typeof medhubSetSession === 'function') {
-      medhubSetSession(user);
-      return { name: user.name, email: user.email };
-    }
-    return user;
-  } catch {
-    localStorage.removeItem('session');
-    return null;
-  }
-}
-
 function requireAuth () {
   const user = getSession();
   if (!user) {

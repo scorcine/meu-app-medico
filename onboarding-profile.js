@@ -94,6 +94,13 @@ function initOnboardingProfilePage () {
       return;
     }
 
+    const sessionUser = typeof getSession === 'function' ? getSession() : null;
+    if (!sessionUser?.email) {
+      alert('Sessão expirada. Faça login novamente.');
+      window.location.replace('login.html');
+      return;
+    }
+
     const payload = {
       userType,
       rxDisplayName,
@@ -106,6 +113,11 @@ function initOnboardingProfilePage () {
     if (btn) btn.disabled = true;
 
     let savedOk = false;
+
+    if (typeof medhubSaveUserProfileLocal === 'function') {
+      medhubSaveUserProfileLocal(payload);
+      savedOk = true;
+    }
 
     if (typeof medhubCloudSyncAvailable === 'function' && await medhubCloudSyncAvailable()) {
       const saved = await medhubCloudSaveProfile(payload);
@@ -122,12 +134,7 @@ function initOnboardingProfilePage () {
       }
       if (typeof medhubApplyCloudProfileLocal === 'function') {
         medhubApplyCloudProfileLocal(saved.profile || payload);
-      } else if (typeof medhubSaveUserProfileLocal === 'function') {
-        medhubSaveUserProfileLocal(payload);
       }
-      savedOk = true;
-    } else if (typeof medhubSaveUserProfileLocal === 'function') {
-      medhubSaveUserProfileLocal(payload);
       savedOk = true;
     }
 
@@ -137,6 +144,7 @@ function initOnboardingProfilePage () {
       return;
     }
 
+    if (typeof medhubClearFreshLogin === 'function') medhubClearFreshLogin();
     window.location.replace('app.html');
   });
 }

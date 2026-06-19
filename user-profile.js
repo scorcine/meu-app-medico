@@ -48,8 +48,25 @@ function medhubMigrateLegacyCrm (profile) {
   return profile;
 }
 
+function medhubMigrateWrongLocalProfileKey (email) {
+  const norm = String(email || '').trim().toLowerCase();
+  if (!norm) return;
+  const wrongKey = MEDHUB_PROFILE_PREFIX + 'local';
+  const rightKey = medhubProfileStorageKey(norm);
+  if (wrongKey === rightKey) return;
+  try {
+    const wrongRaw = localStorage.getItem(wrongKey);
+    const rightRaw = localStorage.getItem(rightKey);
+    if (wrongRaw && !rightRaw) {
+      localStorage.setItem(rightKey, wrongRaw);
+      localStorage.removeItem(wrongKey);
+    }
+  } catch { /* ignore */ }
+}
+
 function medhubLoadUserProfile () {
   const user = typeof getSession === 'function' ? getSession() : null;
+  if (user?.email) medhubMigrateWrongLocalProfileKey(user.email);
   const key = medhubProfileStorageKey(user?.email);
   let profile = medhubDefaultProfile(user);
   try {
