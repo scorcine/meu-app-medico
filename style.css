@@ -170,7 +170,8 @@ body {
   transition: background 0.25s ease, color 0.25s ease;
 }
 
-header {
+header.app-header,
+body > header:not(.landing-header):not(.landing-section-head):not(.home-hero) {
   background: var(--bg-header);
   color: var(--text-on-accent);
   padding: 1rem 2rem;
@@ -182,7 +183,8 @@ header {
   flex-wrap: wrap;
 }
 
-header h1 {
+header.app-header h1,
+body > header:not(.landing-header):not(.landing-section-head):not(.home-hero) h1 {
   font-size: 1.5rem;
   font-weight: 600;
 }
@@ -542,13 +544,61 @@ body.app-page {
 
 .app-content .home-card {
   max-width: 720px;
+  overflow: hidden;
 }
 
 .home-greeting {
-  font-size: 1rem;
-  color: var(--text-accent);
+  font-size: 1.05rem;
   font-weight: 600;
-  margin: 0 0 0.5rem;
+  margin: 0 0 0.35rem;
+}
+
+.home-hero {
+  text-align: center;
+  margin: -2rem -2rem 1.75rem;
+  padding: 1.65rem 1.5rem 1.5rem;
+  border-radius: 12px 12px 0 0;
+  background: linear-gradient(
+    135deg,
+    var(--accent) 0%,
+    color-mix(in srgb, var(--accent) 82%, #0a3d8f) 100%
+  );
+  color: var(--text-on-accent);
+  box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.12);
+}
+
+.home-emoji {
+  font-size: 2.5rem;
+  line-height: 1;
+  margin-bottom: 0.5rem;
+}
+
+.home-hero h2 {
+  font-size: 1.65rem;
+  margin-bottom: 0.5rem;
+  color: var(--text-on-accent);
+  font-weight: 700;
+}
+
+.home-hero .home-greeting {
+  color: var(--text-on-accent);
+  opacity: 0.98;
+}
+
+.home-tagline {
+  font-size: 1rem;
+  line-height: 1.55;
+  margin: 0;
+  color: rgba(255, 255, 255, 0.92);
+  max-width: 36rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.home-card .card p.home-tagline,
+.home-hero .home-tagline {
+  color: rgba(255, 255, 255, 0.92);
+  margin-bottom: 0;
 }
 
 .coming-soon {
@@ -2658,30 +2708,7 @@ body.landing-single-page #planos {
   margin: 0 auto;
   text-align: left;
   padding: 2rem 2rem 2.25rem;
-}
-
-.home-hero {
-  text-align: center;
-  margin-bottom: 1.75rem;
-}
-
-.home-emoji {
-  font-size: 2.5rem;
-  line-height: 1;
-  margin-bottom: 0.5rem;
-}
-
-.home-hero h2 {
-  font-size: 1.85rem;
-  margin-bottom: 0.65rem;
-  color: var(--text-heading);
-}
-
-.home-tagline {
-  font-size: 1.05rem;
-  color: var(--text-secondary);
-  line-height: 1.55;
-  margin: 0;
+  overflow: hidden;
 }
 
 .home-section {
