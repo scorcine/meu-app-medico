@@ -15,24 +15,41 @@ function medhubPrivacyStorageKey (email) {
   return 'medhub-privacy-' + String(email || '').toLowerCase();
 }
 
+function medhubLegalAcceptedKey (email) {
+  return 'medhub-legal-accepted-' + String(email || '').toLowerCase();
+}
+
 function medhubHasAcceptedTerms (email) {
+  const stored = localStorage.getItem(medhubTermsStorageKey(email));
+  if (!stored) return false;
+  if (localStorage.getItem(medhubLegalAcceptedKey(email)) === '1') return true;
   const v = medhubLegalVersions();
-  return localStorage.getItem(medhubTermsStorageKey(email)) === v.terms;
+  return stored === v.terms;
 }
 
 function medhubHasAcceptedPrivacy (email) {
+  const stored = localStorage.getItem(medhubPrivacyStorageKey(email));
+  if (!stored) return false;
+  if (localStorage.getItem(medhubLegalAcceptedKey(email)) === '1') return true;
   const v = medhubLegalVersions();
-  return localStorage.getItem(medhubPrivacyStorageKey(email)) === v.privacy;
+  return stored === v.privacy;
 }
 
 function medhubHasAcceptedLegal (email) {
+  if (localStorage.getItem(medhubLegalAcceptedKey(email)) === '1') return true;
+  const terms = localStorage.getItem(medhubTermsStorageKey(email));
+  const privacy = localStorage.getItem(medhubPrivacyStorageKey(email));
+  if (terms && privacy) return true;
   return medhubHasAcceptedTerms(email) && medhubHasAcceptedPrivacy(email);
 }
 
 function medhubAcceptLegalLocal (email, config) {
   const v = config || medhubLegalVersions();
-  localStorage.setItem(medhubTermsStorageKey(email), v.terms || v.termsVersion || medhubLegalVersions().terms);
-  localStorage.setItem(medhubPrivacyStorageKey(email), v.privacy || v.privacyVersion || medhubLegalVersions().privacy);
+  const norm = String(email || '').toLowerCase();
+  if (!norm) return;
+  localStorage.setItem(medhubTermsStorageKey(norm), v.terms || v.termsVersion || medhubLegalVersions().terms);
+  localStorage.setItem(medhubPrivacyStorageKey(norm), v.privacy || v.privacyVersion || medhubLegalVersions().privacy);
+  localStorage.setItem(medhubLegalAcceptedKey(norm), '1');
 }
 
 function medhubAcceptTerms (email) {

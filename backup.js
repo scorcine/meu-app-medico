@@ -15,6 +15,8 @@ function backupStorageKeys (email) {
     'medhub-consultas-' + e,
     'medhub-anam-registrar-consulta-' + e,
     'medhub-terms-' + e,
+    'medhub-privacy-' + e,
+    'medhub-legal-accepted-' + e,
     'medhub-rx-crm',
     'medhub-gdrive-client-id',
     'medhub-gdrive-auto-upload'

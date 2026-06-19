@@ -233,6 +233,13 @@ async function medhubAfterCloudAuth (loginData, password) {
   }
 
   const config = await medhubFetchAuthConfig();
+
+  if (medhubHasAcceptedLegal(loginData.user.email)) {
+    medhubAcceptLegalLocal(loginData.user.email, config);
+    authGoApp();
+    return true;
+  }
+
   const legal = loginData.user?.legal;
   const termsOk = legal?.termsVersion === config.termsVersion;
   const privacyOk = legal?.privacyVersion === config.privacyVersion;
