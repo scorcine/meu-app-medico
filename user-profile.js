@@ -91,18 +91,23 @@ function medhubProfileIsIdentityLocked (profile) {
 }
 
 function medhubNeedsProfileOnboarding (profile) {
+  return !medhubIsProfileSetupComplete(profile);
+}
+
+function medhubIsProfileSetupComplete (profile) {
   const p = profile || medhubLoadUserProfile();
-  if (p.onboardingComplete) return false;
-  if (!p?.userType) return true;
-  if (p.userType === 'student') return false;
-  if (p.userType === 'doctor') return !String(p.crmNumber || '').replace(/\D/g, '');
-  return true;
+  if (p.onboardingComplete) return true;
+  if (!p?.userType) return false;
+  if (!String(p.rxDisplayName || '').trim()) return false;
+  if (p.userType === 'student') return true;
+  if (p.userType === 'doctor') {
+    return !!String(p.crmNumber || '').replace(/\D/g, '');
+  }
+  return false;
 }
 
 function medhubProfileOnboardingComplete (profile) {
-  const p = profile || medhubLoadUserProfile();
-  if (p.onboardingComplete) return true;
-  return !medhubNeedsProfileOnboarding(p);
+  return medhubIsProfileSetupComplete(profile);
 }
 
 function medhubUserTypeLabel (userType) {

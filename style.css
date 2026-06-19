@@ -611,6 +611,15 @@ footer {
   padding-bottom: 1.5rem;
 }
 
+.auth-step-badge {
+  display: inline-block;
+  margin: 0 0 0.5rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
 .onboarding-crm-fields {
   display: none;
   margin-top: 0.75rem;

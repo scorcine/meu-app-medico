@@ -1,4 +1,4 @@
-/* Onboarding — tipo de usuário e CRM logo após cadastro */
+/* Onboarding — passo 2: tipo de usuário e CRM (somente no primeiro acesso) */
 
 function initOnboardingProfilePage () {
   const form = document.getElementById('onboarding-profile-form');
@@ -137,10 +137,6 @@ function initOnboardingProfilePage () {
       return;
     }
 
-    try {
-      sessionStorage.setItem('medhub-onboarding-complete', '1');
-    } catch { /* ignore */ }
-
     window.location.replace('app.html');
   });
 }
@@ -148,60 +144,44 @@ function initOnboardingProfilePage () {
 async function initOnboardingProfileGate () {
   initOnboardingProfilePage();
 
-  try {
-    if (sessionStorage.getItem('medhub-onboarding-complete') === '1') {
-      window.location.replace('app.html');
-      return;
-    }
-  } catch { /* ignore */ }
-
   const user = typeof requireAuthAsync === 'function'
     ? await requireAuthAsync()
     : (typeof getSession === 'function' ? getSession() : null);
 
   if (!user) return;
 
-  const local = typeof medhubLoadUserProfile === 'function' ? medhubLoadUserProfile() : null;
-  if (typeof medhubNeedsProfileOnboarding === 'function' && !medhubNeedsProfileOnboarding(local)) {
+  if (typeof medhubCloudSyncAvailable === 'function' && await medhubCloudSyncAvailable()) {
+    const cloud = await medhubCloudFetchProfile();
+    if (cloud.ok && cloud.profile) {
+      medhubApplyCloudProfileLocal(cloud.profile);
+    }
+  }
+
+  const profile = typeof medhubLoadUserProfile === 'function' ? medhubLoadUserProfile() : null;
+  if (typeof medhubIsProfileSetupComplete === 'function' && medhubIsProfileSetupComplete(profile)) {
     window.location.replace('app.html');
     return;
   }
 
   const nameInput = document.getElementById('onboarding-rx-name');
   if (nameInput && !nameInput.value) {
-    nameInput.value = local?.rxDisplayName || user.name || '';
+    nameInput.value = profile?.rxDisplayName || user.name || '';
   }
 
-  if (typeof medhubCloudSyncAvailable === 'function' && await medhubCloudSyncAvailable()) {
-    const cloud = await medhubCloudFetchProfile();
-    if (cloud.ok && cloud.profile) {
-      if (typeof medhubApplyCloudProfileLocal === 'function') {
-        medhubApplyCloudProfileLocal(cloud.profile);
-      }
-      const synced = typeof medhubLoadUserProfile === 'function' ? medhubLoadUserProfile() : null;
-      if (typeof medhubNeedsProfileOnboarding === 'function' && !medhubNeedsProfileOnboarding(synced)) {
-        window.location.replace('app.html');
-        return;
-      }
-      if (nameInput && synced?.rxDisplayName) {
-        nameInput.value = synced.rxDisplayName;
-      }
-      if (synced?.userType === 'doctor') {
-        const doctorRadio = document.querySelector('input[name="userType"][value="doctor"]');
-        if (doctorRadio) doctorRadio.checked = true;
-        const crmUfEl = document.getElementById('onboarding-crm-uf');
-        const crmNumEl = document.getElementById('onboarding-crm-number');
-        if (crmUfEl && synced.crmUf) crmUfEl.value = synced.crmUf;
-        if (crmNumEl && synced.crmNumber) crmNumEl.value = synced.crmNumber;
-      } else if (synced?.userType === 'student') {
-        const studentRadio = document.querySelector('input[name="userType"][value="student"]');
-        if (studentRadio) studentRadio.checked = true;
-      }
-    }
+  if (profile?.userType === 'doctor') {
+    const doctorRadio = document.querySelector('input[name="userType"][value="doctor"]');
+    if (doctorRadio) doctorRadio.checked = true;
+    const crmUfEl = document.getElementById('onboarding-crm-uf');
+    const crmNumEl = document.getElementById('onboarding-crm-number');
+    if (crmUfEl && profile.crmUf) crmUfEl.value = profile.crmUf;
+    if (crmNumEl && profile.crmNumber) crmNumEl.value = profile.crmNumber;
+  } else if (profile?.userType === 'student') {
+    const studentRadio = document.querySelector('input[name="userType"][value="student"]');
+    if (studentRadio) studentRadio.checked = true;
   }
 
-  const form = document.getElementById('onboarding-profile-form');
-  form?.querySelector('input[name="userType"]:checked')
+  document.getElementById('onboarding-profile-form')
+    ?.querySelector('input[name="userType"]:checked')
     ?.dispatchEvent(new Event('change', { bubbles: true }));
 }
 

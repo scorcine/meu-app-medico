@@ -12,9 +12,9 @@
   <script defer src="legal-content.js"></script>
   <script defer src="compliance.js"></script>
   <script defer src="subscription.js?v=billing-v3"></script>
-  <script defer src="user-profile.js?v=profile-v2"></script>
-  <script defer src="auth-cloud.js?v=cloud-v3"></script>
-  <script defer src="auth.js?v=register-stripe-v2"></script>
+  <script defer src="user-profile.js?v=profile-v6"></script>
+  <script defer src="auth-cloud.js?v=cloud-v7"></script>
+  <script defer src="auth.js?v=register-v3"></script>
   <script defer>
     document.addEventListener('DOMContentLoaded', async () => {
       medhubInitComplianceShell();
@@ -63,7 +63,7 @@
   <main class="auth-main">
   <form class="card auth-card" onsubmit="handleRegister(event)">
     <h1>Criar conta</h1>
-
+    <p class="auth-hint muted">Passo 1 de 2 — e-mail, senha e assinatura. Em seguida você configura se é estudante ou médico(a).</p>
     <p id="register-checkout-notice" class="auth-notice" role="note" hidden></p>
 
     <input type="hidden" id="checkout-session-id" name="checkoutSessionId" value="">

@@ -13,7 +13,24 @@ function authGoApp () {
 }
 
 function redirectIfLogged () {
-  if (getSession()) authGoApp();
+  return redirectAuthenticatedUser();
+}
+
+async function redirectAuthenticatedUser () {
+  if (!getSession()) return;
+
+  if (typeof requireAuthAsync === 'function') {
+    const user = await requireAuthAsync();
+    if (!user) return;
+  }
+
+  if (typeof medhubEnsureProfileOnboarding === 'function') {
+    const ok = await medhubEnsureProfileOnboarding();
+    if (ok) authGoApp();
+    return;
+  }
+
+  authGoApp();
 }
 
 function authNormalizedEmail (email) {
@@ -249,12 +266,14 @@ async function handleLogin (e) {
   }
 
   if (medhubHasAcceptedLegal(email)) {
+    if (!(await medhubEnsureProfileOnboarding())) return;
     authGoApp();
     return;
   }
 
-  medhubShowLegalModal(() => {
+  medhubShowLegalModal(async () => {
     medhubAcceptLegalLocal(email, config);
+    if (!(await medhubEnsureProfileOnboarding())) return;
     authGoApp();
   });
 }

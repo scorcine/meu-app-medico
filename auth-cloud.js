@@ -196,21 +196,29 @@ function medhubApplyCloudProfileLocal (profile) {
   const local = medhubLoadUserProfile();
   const merged = { ...local };
 
-  if (profile.rxDisplayName) merged.rxDisplayName = profile.rxDisplayName;
-  if (profile.userType === 'student' || profile.userType === 'doctor') merged.userType = profile.userType;
+  if (profile.rxDisplayName != null && String(profile.rxDisplayName).trim()) {
+    merged.rxDisplayName = String(profile.rxDisplayName).trim();
+  }
+  if (profile.userType === 'student' || profile.userType === 'doctor') {
+    merged.userType = profile.userType;
+  }
   if (profile.crmUf) merged.crmUf = profile.crmUf;
-  if (profile.crmNumber) merged.crmNumber = profile.crmNumber;
-  if (profile.address) merged.address = profile.address;
-  if (profile.addressCity) merged.addressCity = profile.addressCity;
-  if (profile.addressState) merged.addressState = profile.addressState;
-  if (profile.addressZip) merged.addressZip = profile.addressZip;
+  if (profile.crmNumber != null) {
+    merged.crmNumber = String(profile.crmNumber).replace(/\D/g, '');
+  }
+  if (profile.address != null) merged.address = profile.address;
+  if (profile.addressCity != null) merged.addressCity = profile.addressCity;
+  if (profile.addressState != null) merged.addressState = profile.addressState;
+  if (profile.addressZip != null) merged.addressZip = profile.addressZip;
   if (profile.identityLocked) merged.identityLocked = true;
-  if (profile.onboardingComplete) merged.onboardingComplete = true;
   if (profile.identityChangeCount != null) {
     merged.identityChangeCount = Math.max(
       Number(local.identityChangeCount) || 0,
       Number(profile.identityChangeCount) || 0
     );
+  }
+  if (profile.onboardingComplete || medhubIsProfileSetupComplete({ ...merged, ...profile })) {
+    merged.onboardingComplete = true;
   }
 
   medhubSaveUserProfileLocal(merged);
@@ -242,7 +250,8 @@ async function medhubSyncProfileAfterLogin () {
       address: local.address,
       addressCity: local.addressCity,
       addressState: local.addressState,
-      addressZip: local.addressZip
+      addressZip: local.addressZip,
+      onboardingComplete: !!local.onboardingComplete || medhubIsProfileSetupComplete(local)
     });
     if (saved.ok) medhubApplyCloudProfileLocal(saved.profile);
   }
@@ -319,25 +328,25 @@ function medhubGoProfileOnboarding () {
 }
 
 async function medhubEnsureProfileOnboarding () {
-  if (typeof medhubNeedsProfileOnboarding !== 'function') return true;
-
-  try {
-    if (sessionStorage.getItem('medhub-onboarding-complete') === '1') {
-      sessionStorage.removeItem('medhub-onboarding-complete');
-      return true;
-    }
-  } catch { /* ignore */ }
-
-  const local = typeof medhubLoadUserProfile === 'function' ? medhubLoadUserProfile() : null;
-  if (!medhubNeedsProfileOnboarding(local)) return true;
+  if (typeof medhubIsProfileSetupComplete !== 'function') return true;
 
   if (typeof medhubCloudSyncAvailable === 'function' && await medhubCloudSyncAvailable()) {
     const cloud = await medhubCloudFetchProfile();
     if (cloud.ok && cloud.profile) {
       medhubApplyCloudProfileLocal(cloud.profile);
     }
-    const synced = typeof medhubLoadUserProfile === 'function' ? medhubLoadUserProfile() : null;
-    if (!medhubNeedsProfileOnboarding(synced)) return true;
+  }
+
+  let profile = typeof medhubLoadUserProfile === 'function' ? medhubLoadUserProfile() : null;
+
+  if (medhubIsProfileSetupComplete(profile)) {
+    if (!profile.onboardingComplete && typeof medhubSaveUserProfileLocal === 'function') {
+      profile = medhubSaveUserProfileLocal({ onboardingComplete: true });
+      if (typeof medhubCloudSyncAvailable === 'function' && await medhubCloudSyncAvailable()) {
+        await medhubCloudSaveProfile({ onboardingComplete: true });
+      }
+    }
+    return true;
   }
 
   medhubGoProfileOnboarding();
