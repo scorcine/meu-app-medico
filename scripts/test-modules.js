@@ -278,6 +278,14 @@ try {
     if (conjVal.status === 'error') pass('PS · conjuntivite validação', 'bloqueia ATB em viral');
     else fail('PS · conjuntivite validação', 'não bloqueou ATB em viral');
 
+    if (typeof rxBuildConditionFromPs === 'function' && typeof PS_CONDITIONS !== 'undefined') {
+      const conjPs = PS_CONDITIONS.find(c => c.id === 'conjuntivite');
+      const conjRx = conjPs ? rxBuildConditionFromPs(conjPs) : null;
+      if (conjRx?.hasEtiology && conjRx.groups[0]?.id === 'viral' && !/Protocolo resumido/i.test(conjRx.groups.map(g => g.label).join(' '))) {
+        pass('RX · conjuntivite etiologia', 'viral primeiro, sem protocolo resumido');
+      } else fail('RX · conjuntivite etiologia', conjRx ? conjRx.groups.map(g => g.id).join(',') : 'sem rx');
+    }
+
     const vvCfg = psGetInteractiveConfig('vulvovaginites');
     const vvCandVal = psValidatePrescription('vulvovaginites', vvCfg, ['vv-vb-metro'], { subtype: 'candida' });
     if (vvCandVal.status === 'error') pass('PS · vulvovaginites candida', 'bloqueia metronidazol isolado');

@@ -697,8 +697,8 @@ function rxRenderConditionList (filterText) {
 }
 
 function rxRenderConditionOptions (condition) {
-  return condition.groups.map(group => `
-    <fieldset class="ps-rx-fieldset rx-options-group">
+  return condition.groups.map((group, idx) => `
+    <fieldset class="ps-rx-fieldset rx-options-group${condition.hasEtiology ? ' rx-options-group--etiology' : ''}${condition.hasEtiology && idx === 0 ? ' rx-options-group--primary' : ''}">
       <legend>${group.label}</legend>
       <div class="rx-option-list">
         ${group.options.map(opt => {
@@ -752,9 +752,13 @@ function rxShowCombinedConditions (conditionIds, opts) {
       : conditions[0].icon + ' ' + conditions[0].name;
   }
   if (detailHint) {
-    detailHint.textContent = conditions.length > 1
-      ? 'Receita combinada — marque esquemas de cada queixa abaixo. Todos os medicamentos sairão em uma única receita.'
-      : '1) Marque o esquema (ex.: AINE). 2) Escolha o medicamento na lista. 3) Gere a receita para imprimir.';
+    if (conditions.length === 1 && conditions[0].hasEtiology) {
+      detailHint.textContent = '1) Confirme a etiologia (seções numeradas por frequência). 2) Marque o esquema da seção correta. 3) Escolha os medicamentos e gere a receita.';
+    } else if (conditions.length > 1) {
+      detailHint.textContent = 'Receita combinada — marque esquemas de cada queixa abaixo. Todos os medicamentos sairão em uma única receita.';
+    } else {
+      detailHint.textContent = '1) Marque o esquema (ex.: AINE). 2) Escolha o medicamento na lista. 3) Gere a receita para imprimir.';
+    }
   }
   if (resultEl) resultEl.hidden = true;
   if (medsPanel) { medsPanel.hidden = true; medsPanel.innerHTML = ''; }
@@ -766,7 +770,9 @@ function rxShowCombinedConditions (conditionIds, opts) {
       sourceBanner.innerHTML = '📋 <strong>Receita combinada</strong> — selecione opções em cada queixa. Validações (ex.: dois AINEs) aplicam-se à receita inteira.';
     } else if (conditions[0].source === 'guideline') {
       sourceBanner.hidden = false;
-      sourceBanner.innerHTML = '📋 Opções extraídas do <strong>protocolo PS MedHub</strong> (diretriz). Selecione o esquema, escolha os medicamentos e edite a receita antes de imprimir.';
+      sourceBanner.innerHTML = conditions[0].hasEtiology
+        ? '📋 <strong>Protocolo com múltiplas etiologias</strong> — seções ordenadas da mais comum à menos comum. Prescreva apenas a seção compatível com o quadro.'
+        : '📋 Opções extraídas do <strong>protocolo PS MedHub</strong> (diretriz). Selecione o esquema, escolha os medicamentos e edite a receita antes de imprimir.';
     } else if (conditions[0].source === 'reference') {
       sourceBanner.hidden = false;
       sourceBanner.innerHTML = '📖 Condição sem modelo VO detalhado — use o protocolo PS como referência, selecione a opção abaixo e <strong>edite a receita</strong> manualmente.';
@@ -779,6 +785,7 @@ function rxShowCombinedConditions (conditionIds, opts) {
   optionsEl.innerHTML = conditions.map(condition => `
     <section class="rx-multi-block" data-rx-cond-id="${condition.id}">
       <h3 class="rx-multi-title">${condition.icon} ${condition.name}</h3>
+      ${condition.hasEtiology && condition.etiologyHint ? `<p class="rx-etiology-hint">${condition.etiologyHint}</p>` : ''}
       ${rxRenderConditionOptions(condition)}
     </section>
   `).join('');

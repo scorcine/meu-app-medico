@@ -440,6 +440,11 @@ function psApplyDefaultSubtype (wrap, conditionId, config) {
   const defaults = config.defaultContext || {};
   const subtype = defaults.subtype || PS_DEFAULT_SUBTYPE[conditionId];
   if (!subtype) return;
+  const radio = wrap.querySelector('[data-ctx-field="subtype"][value="' + subtype + '"]');
+  if (radio && radio.type === 'radio') {
+    radio.checked = true;
+    return;
+  }
   const el = wrap.querySelector('[data-ctx-field="subtype"]');
   if (el && !el.value) el.value = subtype;
 }
@@ -484,8 +489,13 @@ function psRenderInteractiveRx (conditionId, container) {
   const resultEl = wrap.querySelector('#ps-rx-result');
 
   if (config.contextFields && config.contextFields.length) {
-    ctxEl.innerHTML = '<fieldset class="ps-rx-fieldset"><legend>Contexto clínico</legend>' +
-      config.contextFields.map(field => psRenderContextField(field)).join('') +
+    ctxEl.innerHTML = '<fieldset class="ps-rx-fieldset ps-rx-fieldset--context"><legend>Contexto clínico</legend>' +
+      config.contextFields.map(field => {
+        if (field.id === 'subtype' && field.type === 'select' && typeof psHasEtiologyConfig === 'function' && psHasEtiologyConfig(config)) {
+          return psRenderEtiologyPicker(field, config, conditionId);
+        }
+        return psRenderContextField(field);
+      }).join('') +
       '</fieldset>';
     Object.entries(allergyCtx).forEach(([fieldId, val]) => {
       const el = wrap.querySelector('[data-ctx-field="' + fieldId + '"]');
@@ -506,7 +516,11 @@ function psRenderInteractiveRx (conditionId, container) {
 
   function renderMedGroups (ctx) {
     const context = ctx || getContext();
-    const groups = (config.groups || [{ id: 'all', label: 'Opções terapêuticas do protocolo', medications: config.medications }])
+    const baseGroups = config.groups || [{ id: 'all', label: 'Opções terapêuticas do protocolo', medications: config.medications }];
+    const ordered = typeof psSortByEtiologyOrder === 'function' && psHasEtiologyConfig(config)
+      ? psSortByEtiologyOrder(conditionId, baseGroups)
+      : baseGroups;
+    const groups = ordered
       .filter(g => psGroupVisible(g, context))
       .map(g => ({ ...g, medications: filterMeds(g.medications, context) }));
 
@@ -517,17 +531,23 @@ function psRenderInteractiveRx (conditionId, container) {
       return;
     }
 
+    const orderAll = typeof psSortByEtiologyOrder === 'function' ? psSortByEtiologyOrder(conditionId, baseGroups) : baseGroups;
+
     medsEl.innerHTML = groups.map(g => {
+      const rank = orderAll.findIndex(x => x.id === g.id);
+      const legend = (psHasEtiologyConfig(config) && rank >= 0 && typeof psFormatEtiologyGroupLegend === 'function')
+        ? psFormatEtiologyGroupLegend(g, rank)
+        : g.label;
       if (!g.medications.length) {
         return `
-        <fieldset class="ps-rx-fieldset" data-group="${g.id}">
-          <legend>${g.label}</legend>
+        <fieldset class="ps-rx-fieldset ps-rx-fieldset--etiology" data-group="${g.id}">
+          <legend>${legend}</legend>
           <p class="muted">Nenhuma opção disponível — ocultada por alergia ou contexto clínico.</p>
         </fieldset>`;
       }
       return `
-      <fieldset class="ps-rx-fieldset" data-group="${g.id}">
-        <legend>${g.label}</legend>
+      <fieldset class="ps-rx-fieldset ps-rx-fieldset--etiology${rank === 0 ? ' ps-rx-fieldset--primary' : ''}" data-group="${g.id}">
+        <legend>${legend}</legend>
         <div class="ps-rx-med-list">
           ${g.medications.map(m => psRenderMedOption(m, selectedBefore.has(m.id))).join('')}
         </div>
@@ -535,11 +555,20 @@ function psRenderInteractiveRx (conditionId, container) {
     }).join('');
   }
 
+  function syncEtiologyTabs () {
+    wrap.querySelectorAll('.ps-etiology-tab').forEach(tab => {
+      const input = tab.querySelector('input[type="radio"]');
+      tab.classList.toggle('ps-etiology-tab--active', !!(input && input.checked));
+    });
+  }
+
   function getContext () {
     const ctx = {};
     wrap.querySelectorAll('[data-ctx-field]').forEach(el => {
       if (el.type === 'checkbox') ctx[el.dataset.ctxField] = el.checked;
-      else ctx[el.dataset.ctxField] = el.value;
+      else if (el.type === 'radio') {
+        if (el.checked) ctx[el.dataset.ctxField] = el.value;
+      } else ctx[el.dataset.ctxField] = el.value;
     });
     return ctx;
   }
@@ -553,9 +582,11 @@ function psRenderInteractiveRx (conditionId, container) {
   }
 
   renderMedGroups();
+  syncEtiologyTabs();
 
   wrap.querySelectorAll('[data-ctx-field]').forEach(el => {
     el.addEventListener('change', () => {
+      syncEtiologyTabs();
       renderMedGroups();
       resultEl.hidden = true;
     });
@@ -589,14 +620,48 @@ function psRenderInteractiveRx (conditionId, container) {
     wrap.querySelectorAll('.ps-rx-med-check').forEach(el => { el.checked = false; });
     wrap.querySelectorAll('[data-ctx-field]').forEach(el => {
       if (el.type === 'checkbox') el.checked = false;
+      else if (el.type === 'radio') el.checked = false;
       else if (el.tagName === 'SELECT') el.selectedIndex = 0;
       else el.value = '';
     });
-    renderMedGroups({});
+    psApplyDefaultSubtype(wrap, conditionId, config);
+    syncEtiologyTabs();
+    renderMedGroups();
     resultEl.hidden = true;
   });
 
   return true;
+}
+
+function psRenderEtiologyPicker (field, config, conditionId) {
+  const defaultVal = config.defaultContext?.subtype || PS_DEFAULT_SUBTYPE[conditionId] || '';
+  const options = typeof psSortByEtiologyOrder === 'function'
+    ? psSortByEtiologyOrder(conditionId, field.options, 'value')
+    : field.options.slice();
+  return `
+    <div class="ps-etiology-picker" role="radiogroup" aria-label="${field.label}">
+      <p class="ps-etiology-picker-title">${field.label}</p>
+      <p class="ps-etiology-picker-hint muted">Ordem por frequência na urgência — escolha o quadro que melhor descreve o paciente.</p>
+      <div class="ps-etiology-tabs">
+        ${options.map((o, i) => {
+          const checked = o.value === defaultVal;
+          const short = typeof psEtiologyOptionShortLabel === 'function'
+            ? psEtiologyOptionShortLabel(o.label)
+            : o.label.split('(')[0].trim();
+          const detail = o.label.includes('(') ? o.label.slice(o.label.indexOf('(')).replace(/^\(/, '').replace(/\)$/, '') : '';
+          return `
+          <label class="ps-etiology-tab${checked ? ' ps-etiology-tab--active' : ''}">
+            <input type="radio" name="ps-subtype-${conditionId}" data-ctx-field="${field.id}" value="${o.value}"${checked ? ' checked' : ''}>
+            <span class="ps-etiology-tab-rank">${typeof psEtiologyRankPrefix === 'function' ? psEtiologyRankPrefix(i) : i + 1}</span>
+            <span class="ps-etiology-tab-body">
+              <span class="ps-etiology-tab-text">${short}</span>
+              ${detail ? `<span class="ps-etiology-tab-detail">${detail}</span>` : ''}
+            </span>
+            ${i === 0 ? '<span class="ps-etiology-tab-badge">Mais comum</span>' : ''}
+          </label>`;
+        }).join('')}
+      </div>
+    </div>`;
 }
 
 function psRenderContextField (field) {
@@ -636,11 +701,19 @@ function initPsInteractive (conditionId, contentEl) {
   const block = contentEl.querySelector('.emerg-algo-single') || contentEl;
   block.querySelectorAll('.ps-rx-wrap, .ps-rx-soon, .ps-rx-protocol-divider').forEach(el => el.remove());
 
+  const config = typeof psGetInteractiveConfig === 'function' ? psGetInteractiveConfig(conditionId) : null;
+  const hasEtiology = typeof psHasEtiologyConfig === 'function' && psHasEtiologyConfig(config);
+
   const hasInteractive = psRenderInteractiveRx(conditionId, block);
   if (hasInteractive) {
+    if (hasEtiology) {
+      block.querySelectorAll(':scope > .ps-med-options, :scope > p + .ps-med-options, :scope > .muted + .ps-med-options').forEach(el => {
+        el.classList.add('ps-html-meds--hidden');
+      });
+    }
     const divider = document.createElement('p');
     divider.className = 'ps-rx-protocol-divider';
-    divider.textContent = 'Protocolo completo (referência)';
+    divider.textContent = 'Protocolo completo (referência clínica)';
     const rxWrap = block.querySelector('.ps-rx-wrap');
     if (rxWrap) rxWrap.after(divider);
   }

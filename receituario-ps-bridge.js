@@ -227,16 +227,52 @@ function rxParseGroupedMedsFromHtml (conditionId, html) {
   return groups.length ? rxSortGroups(groups) : null;
 }
 
+function rxBuildGroupsFromEtiologyConfig (psCondition, config) {
+  const sorted = typeof psSortByEtiologyOrder === 'function'
+    ? psSortByEtiologyOrder(psCondition.id, config.groups)
+    : config.groups.slice();
+  return sorted.map((g, rank) => {
+    const options = (g.medications || [])
+      .filter(m => !rxShouldSkipPsMedLine(m.tier, m.label, m.label))
+      .map(m => rxPsMedToRxOption(psCondition.id, m));
+    if (!options.length) return null;
+    const label = typeof psFormatEtiologyGroupLegend === 'function'
+      ? psFormatEtiologyGroupLegend(g, rank)
+      : g.label;
+    return {
+      id: g.id,
+      label,
+      options
+    };
+  }).filter(Boolean);
+}
+
 function rxBuildConditionFromPs (psCondition) {
   if (typeof psGetInteractiveConfig !== 'function') return null;
   const config = psGetInteractiveConfig(psCondition.id);
   if (!config || !config.medications || !config.medications.length) return null;
 
+  const shortName = psCondition.name.split('—')[0].split('(')[0].trim();
+
+  if (typeof psHasEtiologyConfig === 'function' && psHasEtiologyConfig(config)) {
+    const groups = rxBuildGroupsFromEtiologyConfig(psCondition, config);
+    if (!groups.length) return null;
+    return {
+      id: psCondition.id,
+      name: shortName,
+      icon: psCondition.icon,
+      aliases: rxGenerateAliasesFromPs(psCondition),
+      source: 'guideline',
+      hasEtiology: true,
+      etiologyHint: config.etiologyHint || 'Identifique a etiologia abaixo. As seções estão ordenadas da mais comum à menos comum — escolha apenas a que corresponde ao quadro.',
+      groups
+    };
+  }
+
   const html = typeof PS_CONTENT !== 'undefined' ? PS_CONTENT[psCondition.id] : null;
   const sectionGroups = html ? rxParseGroupedMedsFromHtml(psCondition.id, html) : null;
 
   if (sectionGroups && sectionGroups.length) {
-    const shortName = psCondition.name.split('—')[0].split('(')[0].trim();
     return {
       id: psCondition.id,
       name: shortName,
@@ -257,8 +293,6 @@ function rxBuildConditionFromPs (psCondition) {
 
   const tiers = Object.keys(tierGroups);
   if (!tiers.length) return null;
-
-  const shortName = psCondition.name.split('—')[0].split('(')[0].trim();
 
   return {
     id: psCondition.id,

@@ -616,6 +616,52 @@ function psRuleRequireSelection (field, label) {
   };
 }
 
+/** Ordem por incidência/frequência na urgência (1º = mais comum). */
+const PS_ETIOLOGY_ORDER = {
+  conjuntivite: ['viral', 'bacteriana', 'alergica'],
+  'sinusite-aguda': ['viral', 'bacteriana', 'complicada'],
+  'otite-media': ['observacao', 'bacteriana', 'recorrente'],
+  'otite-externa': ['topico', 'celulite', 'maligna'],
+  'bronquite-aguda': ['viral', 'bacteriana'],
+  tosse: ['posviral', 'bacteriana', 'pneumonia'],
+  'dpoc-exacerbada': ['sem_atb', 'com_atb'],
+  'diarreia-gastroenterite': ['viral', 'bacteriana', 'disenteria'],
+  'gripe-influenza': ['leve', 'moderada', 'alto_risco'],
+  'pneumonia-comunitaria': ['ambulatorial', 'internacao', 'grave'],
+  mononucleose: ['suporte', 'complicada'],
+  candidiase: ['oral', 'vag', 'bal', 'eso'],
+  vulvovaginites: ['vb', 'cand', 'tri'],
+  'parasitoses-intestinais': ['oxi', 'helm', 'giard', 'ameb']
+};
+
+function psHasEtiologyConfig (config) {
+  return !!(config?.groups?.length && config.contextFields?.some(f => f.id === 'subtype'));
+}
+
+function psSortByEtiologyOrder (conditionId, items, idKey) {
+  const key = idKey || 'id';
+  const order = PS_ETIOLOGY_ORDER[conditionId] || [];
+  return items.slice().sort((a, b) => {
+    const ia = order.indexOf(a[key]);
+    const ib = order.indexOf(b[key]);
+    return (ia === -1 ? 99 : ia) - (ib === -1 ? 99 : ib);
+  });
+}
+
+function psEtiologyRankPrefix (rank) {
+  return ['①', '②', '③', '④', '⑤', '⑥'][rank] || `${rank + 1}.`;
+}
+
+function psFormatEtiologyGroupLegend (group, rank) {
+  const badge = rank === 0 ? ' <span class="ps-etiology-incidence">mais comum</span>' : '';
+  return `${psEtiologyRankPrefix(rank)} ${group.label}${badge}`;
+}
+
+function psEtiologyOptionShortLabel (label) {
+  const main = (label || '').split('(')[0].trim();
+  return main.length > 48 ? main.slice(0, 45) + '…' : main;
+}
+
 function psGetInteractiveConfig (conditionId) {
   const custom = typeof PS_INTERACTIVE !== 'undefined' ? PS_INTERACTIVE[conditionId] : null;
   const html = typeof PS_CONTENT !== 'undefined' ? PS_CONTENT[conditionId] : null;
