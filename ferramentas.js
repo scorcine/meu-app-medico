@@ -2,7 +2,7 @@
 
 const FERRAMENTAS_ITEMS = [
   { section: 'calc-essenciais', icon: '🧮', name: 'Calculadoras essenciais', desc: 'Escalas, scores e doses por especialidade.' },
-  { section: 'calc-pediatrica', icon: '👶', name: 'Calculadora pediátrica', desc: 'Doses comuns, mg/kg, hidratação e emergência por peso.' },
+  { section: 'calc-pediatrica', icon: '👶', name: 'Calculadora pediátrica', desc: 'Prescrição prática por peso/idade — suspensão, gotas, SRO e emergência.' },
   { section: 'guia-emergencia', icon: '⚡', name: 'Guia rápido de emergência', desc: 'ACLS, AVC, sepse, trauma e fluxogramas.' },
   { section: 'pronto-socorro', icon: '🏥', name: 'Prescrições PS', desc: '106 condições com prescrição interativa.' },
   { section: 'tratamento-hospitalar', icon: '💉', name: 'Tratamento hospitalar', desc: 'Posologias IM/EV e internação.' },

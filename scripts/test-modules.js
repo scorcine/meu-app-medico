@@ -330,13 +330,15 @@ try {
   else fail('UI · Calc pediátrica', 'ausente');
   if (typeof initPediatricCalcPanel === 'function') initPediatricCalcPanel();
   const pedPeso = document.getElementById('ped-calc-peso');
+  const pedAnos = document.getElementById('ped-calc-idade-anos');
   if (pedPeso) {
     pedPeso.value = '12';
+    if (pedAnos) pedAnos.value = '3';
     if (typeof pedCalcRun === 'function') pedCalcRun();
     const pedRes = document.getElementById('ped-calc-result');
-    if (pedRes && !pedRes.hidden && /Amoxicilina|Dipirona/i.test(pedRes.innerHTML)) {
-      pass('UI · Calc pediátrica meds', 'tabela por peso OK');
-    } else fail('UI · Calc pediátrica meds', 'sem resultado');
+    if (pedRes && !pedRes.hidden && /Como prescrever|ampola 4 mg\/2 mL|Ondansetrona/i.test(pedRes.innerHTML)) {
+      pass('UI · Calc pediátrica meds', 'prescrição prática OK');
+    } else fail('UI · Calc pediátrica meds', 'sem prescrição prática');
   }
 } catch (e) {
   fail('jsdom', e.message);

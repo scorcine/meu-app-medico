@@ -19,7 +19,7 @@
   <script defer src="calculators-onco.js"></script>
   <script defer src="calculators-obstetricia.js"></script>
   <script defer src="calculators-pediatria.js?v=pediatrica"></script>
-  <script defer src="pediatric-calc-panel.js?v=ped-v2"></script>
+  <script defer src="pediatric-calc-panel.js?v=ped-v3"></script>
   <script defer src="calculators-urgencia.js?v=toxicologia"></script>
   <script defer src="calculators-hemato.js"></script>
   <script defer src="calculators-farma.js"></script>
@@ -425,12 +425,22 @@
       <section id="section-calc-pediatrica" class="content-panel">
         <div class="card dashboard-card" id="ped-calc-wrap">
           <h2>Calculadora pediátrica</h2>
-          <p class="muted">Informe o peso uma vez — doses por kg, medicamentos frequentes, hidratação e emergência.</p>
+          <p class="muted">Informe peso e idade — doses teóricas traduzidas para apresentações reais (suspensão, gotas, ampola).</p>
 
           <form id="ped-calc-form" class="calc-form ped-calc-form">
-            <div class="ped-calc-weight-row">
-              <label for="ped-calc-peso">Peso (kg)</label>
-              <input id="ped-calc-peso" type="number" step="0.1" min="0.5" max="80" placeholder="Ex.: 12.5" required>
+            <div class="ped-calc-patient-row">
+              <div class="ped-calc-field">
+                <label for="ped-calc-peso">Peso (kg)</label>
+                <input id="ped-calc-peso" type="number" step="0.1" min="0.5" max="80" placeholder="Ex.: 12" required>
+              </div>
+              <div class="ped-calc-field">
+                <label for="ped-calc-idade-anos">Idade (anos)</label>
+                <input id="ped-calc-idade-anos" type="number" step="1" min="0" max="18" placeholder="Ex.: 3">
+              </div>
+              <div class="ped-calc-field ped-calc-field--short">
+                <label for="ped-calc-idade-meses">+ meses</label>
+                <input id="ped-calc-idade-meses" type="number" step="1" min="0" max="11" value="0" placeholder="0">
+              </div>
             </div>
 
             <div class="ped-calc-tabs" role="tablist" aria-label="Tipo de cálculo">
@@ -443,7 +453,7 @@
             <div class="ped-calc-panel" data-ped-panel="meds">
               <label for="ped-calc-med-filter">Filtrar medicamento (opcional)</label>
               <input id="ped-calc-med-filter" type="search" placeholder="Ex.: amoxicilina, dipirona, ceftriaxona">
-              <p class="muted ped-calc-panel-hint">Calcula dose por peso dos antibióticos, analgésicos e fármacos de urgência mais usados.</p>
+              <p class="muted ped-calc-panel-hint">Dose teórica + texto de prescrição (suspensão, gotas, ampola 4 mg/2 mL, etc.) conforme peso e idade.</p>
             </div>
 
             <div class="ped-calc-panel" data-ped-panel="dose" hidden>
@@ -461,7 +471,7 @@
                 <option value="B">Plano B — moderada (75 mL/kg SRO/4 h)</option>
                 <option value="C">Plano C — grave (30 mL/kg SF 0,9%/1 h)</option>
               </select>
-              <p class="muted ped-calc-panel-hint">Inclui Holliday-Segar, bolus 10–20 mL/kg e planos A/B/C para gastroenterite.</p>
+              <p class="muted ped-calc-panel-hint">Planos OMS A/B/C com volumes em mL, saches de 200 mL e taxa por hora — ajustado à idade quando informada.</p>
             </div>
 
             <div class="ped-calc-panel" data-ped-panel="emerg" hidden>
