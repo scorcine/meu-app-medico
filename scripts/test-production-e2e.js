@@ -18,7 +18,7 @@ const MODULES = [
   { id: 'pronto-socorro', grid: 'ps-condition-grid' },
   { id: 'tratamento-hospitalar', grid: 'th-condition-grid' },
   { id: 'calc-essenciais', grid: 'calc-category-grid' },
-  { id: 'calc-pediatrica', form: 'ped-peso' },
+  { id: 'calc-pediatrica', form: 'ped-calc-peso' },
   { id: 'anamnese', form: 'anamnese-form' },
   { id: 'pacientes', form: 'pac-form' },
   { id: 'consultas', form: 'cons-form' }

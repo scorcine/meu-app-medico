@@ -173,7 +173,8 @@ const SCRIPTS = [
   'pronto-socorro.js', 'medicacoes-classes.js', 'medicacoes-data.js', 'medicacoes-rename-loader.js', 'medicacoes.js',
   'med-apresentacoes-vo.js', 'receituario-data.js', 'receituario-ps-bridge.js', 'user-profile.js', 'receituario.js',
   'exames-data.js', 'exames.js', 'interpretacao-exame-data.js', 'interpretacao-exame.js',
-  'pacientes.js', 'consultas.js', 'anamnese.js', 'legal-content.js', 'compliance.js', 'ferramentas.js', 'backup.js', 'app.js'
+  'pacientes.js', 'consultas.js', 'anamnese.js', 'legal-content.js', 'compliance.js', 'ferramentas.js', 'backup.js',
+  'pediatric-calc-panel.js', 'app.js'
 ];
 
 const UI = [
@@ -325,8 +326,18 @@ try {
   } else fail('UI · Med ficha', 'nenhum item na grade');
 
   showSection('calc-pediatrica');
-  if (document.getElementById('ped-peso')) pass('UI · Calc pediátrica', 'form OK');
+  if (document.getElementById('ped-calc-peso')) pass('UI · Calc pediátrica', 'form OK');
   else fail('UI · Calc pediátrica', 'ausente');
+  if (typeof initPediatricCalcPanel === 'function') initPediatricCalcPanel();
+  const pedPeso = document.getElementById('ped-calc-peso');
+  if (pedPeso) {
+    pedPeso.value = '12';
+    if (typeof pedCalcRun === 'function') pedCalcRun();
+    const pedRes = document.getElementById('ped-calc-result');
+    if (pedRes && !pedRes.hidden && /Amoxicilina|Dipirona/i.test(pedRes.innerHTML)) {
+      pass('UI · Calc pediátrica meds', 'tabela por peso OK');
+    } else fail('UI · Calc pediátrica meds', 'sem resultado');
+  }
 } catch (e) {
   fail('jsdom', e.message);
 }

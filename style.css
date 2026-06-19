@@ -1286,6 +1286,76 @@ body.app-page {
   box-shadow: inset 0 0 0 1px var(--accent-soft);
 }
 
+/* Calculadora pediátrica — painel principal */
+.ped-calc-form {
+  margin-top: 0.5rem;
+}
+
+.ped-calc-weight-row input {
+  max-width: 220px;
+}
+
+.ped-calc-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 1rem 0 0.85rem;
+}
+
+.ped-calc-tab {
+  padding: 0.45rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--bg-surface);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s, color 0.15s;
+}
+
+.ped-calc-tab:hover {
+  border-color: var(--accent-soft);
+}
+
+.ped-calc-tab--active {
+  border-color: var(--accent);
+  background: var(--rx-wrap-bg);
+  color: var(--text-accent-dark);
+}
+
+.ped-calc-panel-hint {
+  margin: 0.35rem 0 0;
+  font-size: 0.82rem;
+}
+
+.ped-calc-result-block {
+  margin-bottom: 1rem;
+}
+
+.ped-calc-result-block h4 {
+  margin: 0 0 0.65rem;
+  font-size: 0.95rem;
+  color: var(--text-accent);
+}
+
+.ped-calc-med-table td {
+  vertical-align: top;
+  font-size: 0.88rem;
+}
+
+.ped-calc-capped {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+.ped-calc-adult-note {
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  background: var(--bg-surface-muted);
+  font-size: 0.88rem;
+}
+
 .calc-form {
   display: flex;
   flex-direction: column;

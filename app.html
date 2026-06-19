@@ -19,6 +19,7 @@
   <script defer src="calculators-onco.js"></script>
   <script defer src="calculators-obstetricia.js"></script>
   <script defer src="calculators-pediatria.js?v=pediatrica"></script>
+  <script defer src="pediatric-calc-panel.js?v=ped-v2"></script>
   <script defer src="calculators-urgencia.js?v=toxicologia"></script>
   <script defer src="calculators-hemato.js"></script>
   <script defer src="calculators-farma.js"></script>
@@ -422,24 +423,55 @@
       </section>
 
       <section id="section-calc-pediatrica" class="content-panel">
-        <div class="card dashboard-card">
+        <div class="card dashboard-card" id="ped-calc-wrap">
           <h2>Calculadora pediátrica</h2>
-          <p class="muted">Cálculo rápido de dose por peso e hidratação de manutenção (Holliday-Segar).</p>
+          <p class="muted">Informe o peso uma vez — doses por kg, medicamentos frequentes, hidratação e emergência.</p>
 
-          <form class="calc-form" onsubmit="calcPediatrica(event)">
-            <label for="ped-peso">Peso (kg)</label>
-            <input id="ped-peso" type="number" step="0.1" min="0.1" placeholder="Ex.: 12.5" required>
+          <form id="ped-calc-form" class="calc-form ped-calc-form">
+            <div class="ped-calc-weight-row">
+              <label for="ped-calc-peso">Peso (kg)</label>
+              <input id="ped-calc-peso" type="number" step="0.1" min="0.5" max="80" placeholder="Ex.: 12.5" required>
+            </div>
 
-            <label for="ped-dose-kg">Dose (mg/kg)</label>
-            <input id="ped-dose-kg" type="number" step="0.01" min="0" placeholder="Ex.: 10">
+            <div class="ped-calc-tabs" role="tablist" aria-label="Tipo de cálculo">
+              <button type="button" class="ped-calc-tab ped-calc-tab--active" data-ped-tab="meds" role="tab" aria-selected="true">Medicamentos comuns</button>
+              <button type="button" class="ped-calc-tab" data-ped-tab="dose" role="tab" aria-selected="false">Dose mg/kg</button>
+              <button type="button" class="ped-calc-tab" data-ped-tab="fluid" role="tab" aria-selected="false">Hidratação</button>
+              <button type="button" class="ped-calc-tab" data-ped-tab="emerg" role="tab" aria-selected="false">Emergência</button>
+            </div>
 
-            <label for="ped-conc">Concentração (mg/mL) — opcional</label>
-            <input id="ped-conc" type="number" step="0.1" min="0" placeholder="Ex.: 50">
+            <div class="ped-calc-panel" data-ped-panel="meds">
+              <label for="ped-calc-med-filter">Filtrar medicamento (opcional)</label>
+              <input id="ped-calc-med-filter" type="search" placeholder="Ex.: amoxicilina, dipirona, ceftriaxona">
+              <p class="muted ped-calc-panel-hint">Calcula dose por peso dos antibióticos, analgésicos e fármacos de urgência mais usados.</p>
+            </div>
+
+            <div class="ped-calc-panel" data-ped-panel="dose" hidden>
+              <label for="ped-calc-dose-kg">Dose (mg/kg)</label>
+              <input id="ped-calc-dose-kg" type="number" step="0.01" min="0" placeholder="Ex.: 10">
+              <label for="ped-calc-conc">Concentração (mg/mL) — opcional</label>
+              <input id="ped-calc-conc" type="number" step="0.1" min="0" placeholder="Ex.: 50">
+            </div>
+
+            <div class="ped-calc-panel" data-ped-panel="fluid" hidden>
+              <label for="ped-calc-fluid-plan">Plano de desidratação (OMS)</label>
+              <select id="ped-calc-fluid-plan">
+                <option value="">Manutenção + bolus (referência)</option>
+                <option value="A">Plano A — desidratação leve</option>
+                <option value="B">Plano B — moderada (75 mL/kg SRO/4 h)</option>
+                <option value="C">Plano C — grave (30 mL/kg SF 0,9%/1 h)</option>
+              </select>
+              <p class="muted ped-calc-panel-hint">Inclui Holliday-Segar, bolus 10–20 mL/kg e planos A/B/C para gastroenterite.</p>
+            </div>
+
+            <div class="ped-calc-panel" data-ped-panel="emerg" hidden>
+              <p class="muted ped-calc-panel-hint">Adrenalina PCR, choques, amiodarona, atropina, midazolam e glicose — faixa Broselow quando aplicável.</p>
+            </div>
 
             <button type="submit">Calcular</button>
           </form>
 
-          <div id="ped-resultado" class="calc-result" hidden></div>
+          <div id="ped-calc-result" class="calc-result" hidden></div>
         </div>
       </section>
 
