@@ -457,8 +457,10 @@ function psMergeContextFields (custom, standard) {
 
 /** Regras por contexto clínico — hide remove da lista; todas geram alerta ao analisar */
 const PS_POPULATION_RULES = [
+  /* Gestação */
   { context: 'gestante', classes: ['benzodiazepine'], severity: 'error', hide: true,
-    message: name => `${name} — contraindicado/evitar na gestação (benzodiazepínico). Preferir hidroxizina conforme protocolo.` },
+    exceptConditions: ['crise-convulsiva-em', 'abstinencia-alcoolica', 'alcoolismo-intox-abstinencia'],
+    message: name => `${name} — contraindicado/evitar na gestação (benzodiazepínico).` },
   { context: 'gestante', classes: ['fluoroquinolone'], severity: 'error', hide: true,
     message: name => `${name} — contraindicado na gestação.` },
   { context: 'gestante', classes: ['tetracycline'], severity: 'error', hide: true,
@@ -467,13 +469,55 @@ const PS_POPULATION_RULES = [
     message: name => `${name} — evitar AINE na gestação; preferir paracetamol/dipirona.` },
   { context: 'gestante', classes: ['acei', 'arb'], severity: 'error', hide: true,
     message: name => `${name} — contraindicado na gestação (IECA/BRA).` },
-  { context: 'gestante', ids: ['acido_valproico', 'warfarina', 'ivermectina', 'primaquina', 'mefloquina', 'doxiciclina', 'tetraciclina'], severity: 'error', hide: true,
+  { context: 'gestante', classes: ['triptan'], severity: 'error', hide: true,
+    message: name => `${name} — evitar triptano na gestação; preferir paracetamol/metoclopramida.` },
+  { context: 'gestante', ids: [
+    'acido_valproico', 'warfarina', 'ivermectina', 'primaquina', 'mefloquina',
+    'doxiciclina', 'tetraciclina', 'nitrofurantoina', 'misoprostol', 'metilergonovina',
+    'carbamazepina', 'fenobarbital', 'topiramato', 'sulfametoxazol_trimetoprim', 'cloroquina'
+  ], severity: 'error', hide: true,
     message: name => `${name} — contraindicado ou evitar na gestação.` },
-  { context: 'gestante', classes: ['triptan'], severity: 'warning', hide: false,
-    message: name => `${name} — revisar risco/benefício na gestação (preferir paracetamol/metoclopramida).` },
-  { context: 'drc', classes: ['nsaid'], severity: 'warning', hide: false,
-    message: name => `${name} — cautela ou evitar em DRC (risco de piora renal).` }
+
+  /* DRC / IRA */
+  { context: 'drc', classes: ['nsaid'], severity: 'error', hide: true,
+    message: name => `${name} — evitar AINE em DRC/IRA (risco de piora renal).` },
+
+  /* Alergia a AINE/AAS */
+  { context: 'alergia_aine', classes: ['nsaid'], severity: 'error', hide: true,
+    message: name => `${name} — contraindicado com alergia a AINE/AAS.` },
+  { context: 'alergia_aine', ids: ['aspirina'], severity: 'error', hide: true,
+    message: name => `${name} — contraindicado com alergia a AINE/AAS.` },
+
+  /* Alergia grave à penicilina */
+  { context: 'alergia_penicilina', classes: ['penicillin', 'cephalosporin'], severity: 'error', hide: true,
+    message: name => `${name} — contraindicado/evitar com alergia grave à penicilina.` },
+
+  /* Contraindicação a triptano */
+  { context: 'contraindicacao_triptano', classes: ['triptan'], severity: 'error', hide: true,
+    message: name => `${name} — contraindicado (DAC, AVC prévio ou PA não controlada).` },
+
+  /* Dengue fase crítica / plaquetopenia */
+  { context: 'dengue_fase_critica', classes: ['nsaid'], severity: 'error', hide: true,
+    message: name => `${name} — AINE contraindicado na dengue (risco hemorrágico).` },
+  { context: 'plaquetopenia', classes: ['nsaid'], severity: 'error', hide: true,
+    message: name => `${name} — evitar AINE com plaquetopenia (risco hemorrágico).` },
+  { context: 'plaquetopenia', classes: ['anticoagulant', 'antiplatelet'], severity: 'warning', hide: false,
+    message: name => `${name} — cautela com plaquetopenia/sangramento.` }
 ];
+
+function psRuleAppliesToCondition (rule, conditionId) {
+  if (rule.onlyConditions && rule.onlyConditions.length) {
+    return rule.onlyConditions.includes(conditionId);
+  }
+  if (rule.exceptConditions && rule.exceptConditions.includes(conditionId)) {
+    return false;
+  }
+  return true;
+}
+
+function psMedTierEvitar (med) {
+  return med && /evitar/i.test(med.tier || '');
+}
 
 function psDrugMatchesPopulationRule (drugId, rule) {
   const meta = PS_DRUG_META[drugId];
@@ -489,11 +533,12 @@ function psMedDrugIds (med) {
   return [...ids];
 }
 
-function psMedPopulationBlock (med, context) {
+function psMedPopulationBlock (med, context, conditionId) {
   if (!med || !context) return null;
   const drugIds = psMedDrugIds(med);
   for (const rule of PS_POPULATION_RULES) {
     if (!context[rule.context] || !rule.hide) continue;
+    if (!psRuleAppliesToCondition(rule, conditionId)) continue;
     for (const id of drugIds) {
       if (psDrugMatchesPopulationRule(id, rule)) {
         const name = (PS_DRUG_META[id] && PS_DRUG_META[id].name) || id;
@@ -504,16 +549,25 @@ function psMedPopulationBlock (med, context) {
   return null;
 }
 
-function psFilterMedsByPopulation (meds, context) {
-  return (meds || []).filter(m => !psMedPopulationBlock(m, context));
+function psFilterMedsByPopulation (meds, context, conditionId) {
+  return (meds || []).filter(m => !psMedPopulationBlock(m, context, conditionId));
 }
 
-function psPopulationValidationMessages (drugs, context) {
+function psFilterInteractiveMeds (meds, context, conditionId) {
+  let list = (meds || []).filter(m => !psMedTierEvitar(m));
+  if (typeof clinicalFilterDrugsByAllergy === 'function') {
+    list = clinicalFilterDrugsByAllergy(list);
+  }
+  return psFilterMedsByPopulation(list, context, conditionId);
+}
+
+function psPopulationValidationMessages (drugs, context, conditionId) {
   const messages = [];
   const seen = new Set();
   (drugs || []).forEach(d => {
     PS_POPULATION_RULES.forEach(rule => {
       if (!context[rule.context] || !psDrugMatchesPopulationRule(d.id, rule)) return;
+      if (!psRuleAppliesToCondition(rule, conditionId)) return;
       const key = `${rule.context}|${d.id}|${rule.severity}`;
       if (seen.has(key)) return;
       seen.add(key);

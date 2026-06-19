@@ -226,14 +226,50 @@ try {
     else fail('UI · PS abrir sepse', 'vazio');
   } else fail('UI · PS abrir sepse', 'botão não encontrado');
 
-  if (typeof psGetInteractiveConfig === 'function' && typeof psFilterMedsByPopulation === 'function') {
+  if (typeof psGetInteractiveConfig === 'function' && typeof psFilterInteractiveMeds === 'function') {
     const anxCfg = psGetInteractiveConfig('ansiedade-crise');
-    const gestanteMeds = psFilterMedsByPopulation(anxCfg.medications, { gestante: true });
+    const gestanteMeds = psFilterInteractiveMeds(anxCfg.medications, { gestante: true }, 'ansiedade-crise');
     const gestanteText = gestanteMeds.map(m => m.label.toLowerCase()).join(' ');
     const hasBzd = /diazepam|lorazepam|alprazolam/.test(gestanteText);
     const hasHydro = /hidroxizina/.test(gestanteText);
     if (!hasBzd && hasHydro) pass('PS · gestante ansiedade', 'BZD ocultos, hidroxizina mantida');
     else fail('PS · gestante ansiedade', hasBzd ? 'BZD visível' : 'hidroxizina ausente');
+
+    const convCfg = psGetInteractiveConfig('crise-convulsiva-em');
+    const convMeds = psFilterInteractiveMeds(convCfg.medications, { gestante: true }, 'crise-convulsiva-em');
+    if (/diazepam/.test(convMeds.map(m => m.label.toLowerCase()).join(' '))) {
+      pass('PS · gestante convulsão', 'BZD mantido na emergência');
+    } else fail('PS · gestante convulsão', 'diazepam oculto indevidamente');
+
+    const cefCfg = psGetInteractiveConfig('cefaleias');
+    const cefGest = psFilterInteractiveMeds(cefCfg.medications, { gestante: true }, 'cefaleias');
+    const cefGestText = cefGest.map(m => m.label.toLowerCase()).join(' ');
+    if (!/naproxeno|ibuprofeno|sumatriptano|zolmitriptano/.test(cefGestText) && /paracetamol|dipirona/.test(cefGestText)) {
+      pass('PS · gestante cefaleia', 'AINE/triptano ocultos');
+    } else fail('PS · gestante cefaleia', 'opções indevidas visíveis');
+
+    const celCfg = psGetInteractiveConfig('celulite');
+    const celPen = psFilterInteractiveMeds(celCfg.medications, { alergia_penicilina: true }, 'celulite');
+    if (!/ceftriaxona|oxacilina|cef/.test(celPen.map(m => m.label.toLowerCase()).join(' '))) {
+      pass('PS · alergia penicilina celulite', 'beta-lactâmicos ocultos');
+    } else fail('PS · alergia penicilina celulite', 'ATB beta-lactâmico visível');
+
+    const dengueCfg = psGetInteractiveConfig('dengue');
+    const dengueBase = psFilterInteractiveMeds(dengueCfg.medications, {}, 'dengue');
+    if (!/diclofenaco|aine/.test(dengueBase.map(m => m.label.toLowerCase()).join(' '))) {
+      pass('PS · dengue evitar', 'tier Evitar oculto');
+    } else fail('PS · dengue evitar', 'AINE evitar visível');
+
+    let interactiveCount = 0;
+    PS_CONDITIONS.forEach(c => {
+      const cfg = psGetInteractiveConfig(c.id);
+      if (cfg && cfg.medications && cfg.medications.length) interactiveCount++;
+    });
+    if (interactiveCount === PS_CONDITIONS.length) {
+      pass('PS · populações cobertura', interactiveCount + ' protocolos interativos');
+    } else {
+      fail('PS · populações cobertura', interactiveCount + '/' + PS_CONDITIONS.length);
+    }
   }
 
   showSection('medicacoes');

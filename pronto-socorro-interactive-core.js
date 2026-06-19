@@ -389,66 +389,7 @@ function psValidatePrescription (conditionId, config, selectedMedIds, context, s
     }
   }
 
-  psPopulationValidationMessages(drugs, context).forEach(m => messages.push(m));
-
-  if (context.alergia_aine) {
-    drugs.forEach(d => {
-      if ((PS_DRUG_META[d.id]?.classes || []).includes('nsaid')) {
-        messages.push({
-          severity: 'error',
-          text: `${psDrugLabel(d.id)} contraindicado — alergia a AINE informada.`
-        });
-      }
-    });
-  }
-
-  if (context.contraindicacao_triptano) {
-    drugs.forEach(d => {
-      if ((PS_DRUG_META[d.id]?.classes || []).includes('triptan')) {
-        messages.push({
-          severity: 'error',
-          text: `${psDrugLabel(d.id)} contraindicado — DAC, AVC prévio ou PA não controlada.`
-        });
-      }
-    });
-  }
-
-  if (context.alergia_penicilina) {
-    drugs.forEach(d => {
-      const meta = PS_DRUG_META[d.id];
-      if (!meta) return;
-      if (meta.classes.some(c => PS_PENICILLIN_CLASS.includes(c))) {
-        messages.push({
-          severity: 'error',
-          text: `${psDrugLabel(d.id)} contraindicado — alergia grave à penicilina informada.`
-        });
-      } else if (meta.classes.some(c => PS_CEPHALOSPORIN_CLASS.includes(c))) {
-        messages.push({
-          severity: 'warning',
-          text: `${psDrugLabel(d.id)} — reatividade cruzada possível com penicilina; preferir alternativa se alergia grave.`
-        });
-      }
-    });
-  }
-
-  if (context.dengue_fase_critica || context.plaquetopenia) {
-    drugs.forEach(d => {
-      if ((PS_DRUG_META[d.id]?.classes || []).includes('nsaid')) {
-        messages.push({
-          severity: 'error',
-          text: `${psDrugLabel(d.id)} — evitar AINE com plaquetopenia/dengue crítica (risco hemorrágico).`
-        });
-      }
-      if (context.plaquetopenia &&
-          ((PS_DRUG_META[d.id]?.classes || []).includes('anticoagulant') ||
-           (PS_DRUG_META[d.id]?.classes || []).includes('antiplatelet'))) {
-        messages.push({
-          severity: 'warning',
-          text: `${psDrugLabel(d.id)} — cautela com plaquetopenia/sangramento.`
-        });
-      }
-    });
-  }
+  psPopulationValidationMessages(drugs, context, conditionId).forEach(m => messages.push(m));
 
   let hasError = messages.some(m => m.severity === 'error');
   let hasWarning = messages.some(m => m.severity === 'warning');
@@ -523,14 +464,10 @@ function psRenderInteractiveRx (conditionId, container) {
   }
 
   const filterMeds = (meds, ctx) => {
-    let list = meds || [];
-    if (typeof clinicalFilterDrugsByAllergy === 'function') {
-      list = clinicalFilterDrugsByAllergy(list);
+    if (typeof psFilterInteractiveMeds === 'function') {
+      return psFilterInteractiveMeds(meds, ctx || {}, conditionId);
     }
-    if (typeof psFilterMedsByPopulation === 'function') {
-      list = psFilterMedsByPopulation(list, ctx || {});
-    }
-    return list;
+    return meds || [];
   };
 
   function renderMedGroups (ctx) {
