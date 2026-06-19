@@ -15,6 +15,7 @@ function profileKey (email) {
 function defaultProfile (sessionName) {
   return {
     rxDisplayName: String(sessionName || '').trim(),
+    userType: '',
     crmUf: 'SP',
     crmNumber: '',
     address: '',
@@ -33,6 +34,7 @@ function normalizeProfile (raw, sessionName) {
   const profile = {
     ...base,
     rxDisplayName: String(raw.rxDisplayName ?? base.rxDisplayName).trim(),
+    userType: raw.userType === 'student' || raw.userType === 'doctor' ? raw.userType : '',
     crmUf: String(raw.crmUf || base.crmUf).toUpperCase().slice(0, 2),
     crmNumber: String(raw.crmNumber || '').replace(/\D/g, ''),
     address: String(raw.address || '').trim(),
@@ -48,7 +50,22 @@ function normalizeProfile (raw, sessionName) {
 }
 
 function identityConfigured (profile) {
+  if (profile.userType === 'student') {
+    return !!(profile.rxDisplayName && profile.userType === 'student');
+  }
+  if (profile.userType === 'doctor') {
+    return !!(profile.rxDisplayName && profile.crmNumber);
+  }
   return !!(profile.rxDisplayName && profile.crmNumber);
+}
+
+function profileOnboardingComplete (profile) {
+  if (!profile?.userType) return false;
+  if (profile.userType === 'student') return true;
+  if (profile.userType === 'doctor') {
+    return !!(profile.crmNumber && profile.crmUf);
+  }
+  return false;
 }
 
 function identityChanged (current, next) {
@@ -94,6 +111,7 @@ function publicProfile (profile) {
   if (!profile) return null;
   return {
     rxDisplayName: profile.rxDisplayName,
+    userType: profile.userType || '',
     crmUf: profile.crmUf,
     crmNumber: profile.crmNumber,
     address: profile.address,
@@ -109,6 +127,7 @@ module.exports = {
   defaultProfile,
   normalizeProfile,
   identityConfigured,
+  profileOnboardingComplete,
   getProfessionalProfile,
   saveProfessionalProfile,
   publicProfile

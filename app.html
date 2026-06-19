@@ -70,7 +70,7 @@
   <script defer src="clinical-cloud.js?v=cloud-sync-v1"></script>
   <script defer src="subscription.js?v=billing-v4"></script>
   <script defer src="auth-cloud.js?v=cloud-v5"></script>
-  <script defer src="app.js?v=atendimento-v3"></script>
+  <script defer src="app.js?v=onboarding-v1"></script>
   <script defer src="auth.js?v=compliance-v1"></script>
 </head>
 <body class="app-page" onload="initApp()">
@@ -147,6 +147,7 @@
 
           <section class="perfil-block">
             <h3>👤 Dados profissionais</h3>
+            <p id="profile-user-type" class="profile-user-type muted" hidden></p>
             <p class="muted">Nome e CRM aparecem no receituário, PDFs e documentos gerados pelo app.</p>
             <form class="perfil-form" id="profile-form" onsubmit="return false">
               <label for="profile-rx-name">Nome completo (como na receita)</label>

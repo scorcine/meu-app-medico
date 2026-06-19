@@ -17,6 +17,7 @@ function medhubProfileStorageKey (email) {
 function medhubDefaultProfile (sessionUser) {
   return {
     rxDisplayName: sessionUser?.name || '',
+    userType: '',
     crmUf: 'SP',
     crmNumber: '',
     address: '',
@@ -74,8 +75,23 @@ function medhubSaveUserProfile (updates) {
 
 function medhubProfileIsIdentityLocked (profile) {
   const p = profile || medhubLoadUserProfile();
+  if (p.userType === 'student') return !!p.userType;
   if (p.identityLocked) return true;
   return !!(String(p.rxDisplayName || '').trim() && String(p.crmNumber || '').replace(/\D/g, ''));
+}
+
+function medhubNeedsProfileOnboarding (profile) {
+  const p = profile || medhubLoadUserProfile();
+  if (!p?.userType) return true;
+  if (p.userType === 'student') return false;
+  if (p.userType === 'doctor') return !String(p.crmNumber || '').replace(/\D/g, '');
+  return true;
+}
+
+function medhubUserTypeLabel (userType) {
+  if (userType === 'student') return 'Estudante de medicina';
+  if (userType === 'doctor') return 'Médico(a) formado(a)';
+  return '';
 }
 
 function medhubFillProfileForm (profile, user) {
@@ -164,6 +180,17 @@ function initUserProfilePage () {
   medhubFillProfileForm(profile, user);
   medhubUpdateProfileLockUi(profile);
 
+  const userTypeEl = document.getElementById('profile-user-type');
+  if (userTypeEl) {
+    const label = medhubUserTypeLabel(profile.userType);
+    if (label) {
+      userTypeEl.hidden = false;
+      userTypeEl.textContent = 'Perfil: ' + label + (profile.userType === 'student' ? ' — CRM opcional.' : '');
+    } else {
+      userTypeEl.hidden = true;
+    }
+  }
+
   function updatePreview () {
     if (!previewEl) return;
     const name = (nameEl?.value || '').trim() || user?.name || '________________';
@@ -200,6 +227,7 @@ function initUserProfilePage () {
     const status = document.getElementById('profile-save-status');
     const passEl = document.getElementById('profile-current-password');
     const payload = {
+      userType: medhubLoadUserProfile().userType || '',
       rxDisplayName: nameEl?.value?.trim() || '',
       crmUf: crmUfEl?.value || 'SP',
       crmNumber: crmNumEl?.value?.replace(/\D/g, '') || '',

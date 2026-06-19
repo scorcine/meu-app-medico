@@ -6,7 +6,8 @@
 
 const {
   normalizeProfile,
-  identityConfigured
+  identityConfigured,
+  profileOnboardingComplete
 } = require('../api/_profile');
 
 const { sessionVersionValid } = require('../api/_auth');
@@ -37,6 +38,25 @@ const locked = normalizeProfile({
 if (locked.crmUf === 'SP' && locked.crmNumber === '123456' && identityConfigured(locked)) {
   pass('normalize CRM');
 } else fail('normalize CRM');
+
+const student = normalizeProfile({ userType: 'student', rxDisplayName: 'João' });
+if (student.userType === 'student' && identityConfigured(student) && profileOnboardingComplete(student)) {
+  pass('student onboarding complete');
+} else fail('student onboarding complete');
+
+const doctorPending = normalizeProfile({ userType: 'doctor', rxDisplayName: 'Ana' });
+if (!profileOnboardingComplete(doctorPending)) pass('doctor needs CRM');
+else fail('doctor needs CRM');
+
+const doctorReady = normalizeProfile({
+  userType: 'doctor',
+  rxDisplayName: 'Ana',
+  crmNumber: '999',
+  crmUf: 'RJ'
+});
+if (profileOnboardingComplete(doctorReady) && identityConfigured(doctorReady)) {
+  pass('doctor onboarding complete');
+} else fail('doctor onboarding complete');
 
 if (sessionVersionValid({ email: 'a@b.com', sv: 2 }, { sessionVersion: 2 })) pass('session version match');
 else fail('session version match');

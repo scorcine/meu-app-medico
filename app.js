@@ -130,8 +130,13 @@ function initAppCore (user) {
 }
 
 function initApp () {
-  requireAuthAsync().then(user => {
+  requireAuthAsync().then(async user => {
     if (!user) return;
+
+    if (typeof medhubEnsureProfileOnboarding === 'function') {
+      const onboardingOk = await medhubEnsureProfileOnboarding();
+      if (!onboardingOk) return;
+    }
 
     if (typeof medhubRequireSubscription !== 'function') {
       initAppCore(user);

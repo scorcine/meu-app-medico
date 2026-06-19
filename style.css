@@ -495,8 +495,67 @@ footer {
   background: var(--bg-surface-muted);
   border-radius: 8px;
   font-size: 0.92rem;
+}
+
+.profile-user-type {
+  margin: 0 0 0.35rem;
   font-weight: 600;
-  color: var(--text-secondary);
+}
+
+.onboarding-profile-card fieldset {
+  border: 0;
+  margin: 0 0 1rem;
+  padding: 0;
+}
+
+.onboarding-profile-card legend {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  padding: 0;
+}
+
+.onboarding-role-group {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.onboarding-role-card {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto auto;
+  gap: 0.15rem 0.65rem;
+  align-items: start;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.12));
+  border-radius: 10px;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.onboarding-role-card:hover {
+  border-color: var(--accent, #3b82f6);
+}
+
+.onboarding-role-card:has(input:checked) {
+  border-color: var(--accent, #3b82f6);
+  background: var(--bg-surface-muted);
+}
+
+.onboarding-role-card input {
+  margin-top: 0.2rem;
+}
+
+.onboarding-role-title {
+  font-weight: 600;
+}
+
+.onboarding-role-desc {
+  grid-column: 2;
+  font-size: 0.88rem;
+}
+
+.onboarding-crm-fields {
+  margin-top: 0.5rem;
 }
 
 .profile-identity-lock {

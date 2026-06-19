@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Seu perfil • MedHub</title>
+  <link rel="icon" href="assets/medhub-logo.png?v=logo-v1" type="image/png">
+  <script src="theme.js"></script>
+  <link rel="stylesheet" href="style.css?v=onboarding-profile-v1">
+  <script defer src="security-crypto.js"></script>
+  <script defer src="user-profile.js?v=profile-v2"></script>
+  <script defer src="auth-cloud.js?v=cloud-v3"></script>
+  <script defer src="auth.js?v=onboarding-v1"></script>
+  <script defer src="onboarding-profile.js?v=1"></script>
+</head>
+<body class="auth-body">
+  <header class="auth-page-header">
+    <img src="assets/medhub-logo.png?v=logo-v1" alt="MedHub.ia.br" class="medhub-logo medhub-logo--auth" width="200" height="56">
+  </header>
+
+  <main class="auth-main">
+    <form class="card auth-card onboarding-profile-card" id="onboarding-profile-form">
+      <h1>Complete seu perfil</h1>
+      <p class="auth-hint muted">Informe se você é estudante ou médico(a) formado(a). Médicos já podem cadastrar CRM aqui — não precisará alterar depois em Minha conta.</p>
+
+      <fieldset class="onboarding-role-fieldset">
+        <legend>Você é:</legend>
+        <div class="onboarding-role-group" role="radiogroup" aria-label="Tipo de usuário">
+          <label class="onboarding-role-card">
+            <input type="radio" name="userType" value="student" required>
+            <span class="onboarding-role-title">Estudante de medicina</span>
+            <span class="onboarding-role-desc muted">Sem CRM no receituário por enquanto.</span>
+          </label>
+          <label class="onboarding-role-card">
+            <input type="radio" name="userType" value="doctor" required>
+            <span class="onboarding-role-title">Médico(a) formado(a)</span>
+            <span class="onboarding-role-desc muted">Informe UF e número do CRM.</span>
+          </label>
+        </div>
+      </fieldset>
+
+      <label for="onboarding-rx-name">Nome completo (como na receita)</label>
+      <input id="onboarding-rx-name" type="text" autocomplete="name" required placeholder="Ex.: Maria Silva">
+
+      <div id="onboarding-crm-fields" class="onboarding-crm-fields" hidden>
+        <div class="profile-crm-row">
+          <label for="onboarding-crm-uf">CRM — UF</label>
+          <select id="onboarding-crm-uf" class="profile-crm-uf" aria-label="UF do CRM"></select>
+          <label for="onboarding-crm-number">Número</label>
+          <input id="onboarding-crm-number" class="profile-crm-number" type="text" inputmode="numeric" pattern="[0-9]*" placeholder="123456" autocomplete="off">
+        </div>
+        <p id="onboarding-rx-preview" class="profile-rx-preview" aria-live="polite"></p>
+      </div>
+
+      <p id="onboarding-status" class="anamnese-save-status" hidden role="status"></p>
+
+      <button type="submit" id="onboarding-submit-btn">Continuar para o app</button>
+    </form>
+  </main>
+</body>
+</html>

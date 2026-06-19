@@ -195,6 +195,7 @@ function medhubApplyCloudProfileLocal (profile) {
   if (!profile || typeof medhubSaveUserProfileLocal !== 'function') return;
   medhubSaveUserProfileLocal({
     rxDisplayName: profile.rxDisplayName || '',
+    userType: profile.userType || '',
     crmUf: profile.crmUf || 'SP',
     crmNumber: profile.crmNumber || '',
     address: profile.address || '',
@@ -225,6 +226,7 @@ async function medhubSyncProfileAfterLogin () {
   if (hasLocal && typeof medhubCloudSaveProfile === 'function') {
     const saved = await medhubCloudSaveProfile({
       rxDisplayName: local.rxDisplayName,
+      userType: local.userType,
       crmUf: local.crmUf,
       crmNumber: local.crmNumber,
       address: local.address,
@@ -302,6 +304,30 @@ function medhubRedirectPricing (email) {
   window.location.href = 'index.html?' + q.toString() + '#planos';
 }
 
+function medhubGoProfileOnboarding () {
+  window.location.href = 'onboarding-profile.html';
+}
+
+async function medhubEnsureProfileOnboarding () {
+  if (typeof medhubNeedsProfileOnboarding !== 'function') return true;
+
+  let profile = typeof medhubLoadUserProfile === 'function' ? medhubLoadUserProfile() : null;
+
+  if (typeof medhubCloudSyncAvailable === 'function' && await medhubCloudSyncAvailable()) {
+    const cloud = await medhubCloudFetchProfile();
+    if (cloud.ok && cloud.profile) {
+      medhubApplyCloudProfileLocal(cloud.profile);
+      profile = cloud.profile;
+    }
+  }
+
+  if (medhubNeedsProfileOnboarding(profile)) {
+    medhubGoProfileOnboarding();
+    return false;
+  }
+  return true;
+}
+
 async function medhubAfterCloudAuth (loginData, password) {
   medhubApplyCloudSession(loginData, password);
   await medhubUnlockSession(password, loginData.user.email);
@@ -326,6 +352,7 @@ async function medhubAfterCloudAuth (loginData, password) {
 
   if (medhubHasAcceptedLegal(loginData.user.email)) {
     medhubAcceptLegalLocal(loginData.user.email, config);
+    if (!(await medhubEnsureProfileOnboarding())) return true;
     authGoApp();
     return true;
   }
@@ -336,6 +363,7 @@ async function medhubAfterCloudAuth (loginData, password) {
 
   if (termsOk && privacyOk) {
     medhubAcceptLegalLocal(loginData.user.email, config);
+    if (!(await medhubEnsureProfileOnboarding())) return true;
     authGoApp();
     return true;
   }
@@ -347,6 +375,7 @@ async function medhubAfterCloudAuth (loginData, password) {
     } else {
       medhubAcceptLegalLocal(loginData.user.email, config);
     }
+    if (!(await medhubEnsureProfileOnboarding())) return;
     authGoApp();
   });
 
