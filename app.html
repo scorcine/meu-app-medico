@@ -10,7 +10,7 @@
   <link rel="icon" href="assets/medhub-logo.png?v=logo-v1" type="image/png">
   <link rel="apple-touch-icon" href="assets/medhub-logo.png?v=logo-v1">
   <script src="theme.js"></script>
-  <link rel="stylesheet" href="style.css?v=logo-v1">
+  <link rel="stylesheet" href="style.css?v=home-nav-v1">
   <script defer src="calculators-risco.js"></script>
   <script defer src="calculators-cardio.js"></script>
   <script defer src="calculators-pneumo.js?v=rsi-patient"></script>
@@ -70,13 +70,14 @@
   <script defer src="clinical-cloud.js?v=cloud-sync-v1"></script>
   <script defer src="subscription.js?v=billing-v4"></script>
   <script defer src="auth-cloud.js?v=cloud-v6"></script>
-  <script defer src="app.js?v=logo-home-v1"></script>
+  <script defer src="app.js?v=home-nav-v1"></script>
   <script defer src="auth.js?v=compliance-v1"></script>
 </head>
 <body class="app-page" onload="initApp()">
   <header class="app-header">
-    <a class="medhub-logo-link" href="app.html#inicio" id="medhub-logo-home" aria-label="MedHub — início" onclick="return medhubGoAppHome(event)">
+    <a class="medhub-logo-link medhub-home-link" href="app.html#inicio" id="medhub-logo-home" aria-label="MedHub — Início" onclick="return medhubGoAppHome(event)">
       <img src="assets/medhub-logo.png?v=logo-v1" alt="MedHub.ia.br" class="medhub-logo medhub-logo--header" width="200" height="56">
+      <span class="medhub-home-label">Início</span>
     </a>
     <div class="header-actions">
       <button type="button" class="user-menu-btn" id="user-menu-btn" title="Minha conta e configurações">
@@ -160,12 +161,17 @@
 
               <div id="profile-crm-section">
                 <div class="profile-crm-row">
-                  <label for="profile-crm-uf">CRM — UF</label>
-                  <select id="profile-crm-uf" class="profile-crm-uf" aria-label="UF do CRM"></select>
-                  <label for="profile-crm-number">Número</label>
-                  <input id="profile-crm-number" class="profile-crm-number" type="text" inputmode="numeric" pattern="[0-9]*" placeholder="123456" autocomplete="off">
+                  <div class="profile-crm-field">
+                    <label for="profile-crm-uf">Estado (UF)</label>
+                    <select id="profile-crm-uf" class="profile-crm-uf" aria-label="UF do CRM"></select>
+                  </div>
+                  <div class="profile-crm-field">
+                    <label for="profile-crm-number">CRM</label>
+                    <input id="profile-crm-number" class="profile-crm-number" type="text" inputmode="numeric" pattern="[0-9]*" placeholder="123456" autocomplete="off">
+                  </div>
                 </div>
 
+                <p class="profile-rx-preview-label muted">Como aparecerá no receituário</p>
                 <p id="profile-rx-preview" class="profile-rx-preview" aria-live="polite"></p>
               </div>
 

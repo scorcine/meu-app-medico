@@ -6,7 +6,7 @@
   <title>Seu perfil • MedHub</title>
   <link rel="icon" href="assets/medhub-logo.png?v=logo-v1" type="image/png">
   <script src="theme.js"></script>
-  <link rel="stylesheet" href="style.css?v=onboarding-profile-v2">
+  <link rel="stylesheet" href="style.css?v=onboarding-profile-v3">
   <script defer src="security-crypto.js"></script>
   <script defer src="user-profile.js?v=profile-v5"></script>
   <script defer src="auth-cloud.js?v=cloud-v6"></script>
@@ -15,8 +15,9 @@
 </head>
 <body class="auth-body">
   <header class="auth-page-header">
-    <a class="medhub-logo-link" href="app.html#inicio" aria-label="MedHub — início do app">
+    <a class="medhub-logo-link medhub-home-link" href="app.html#inicio" aria-label="MedHub — Início do app">
       <img src="assets/medhub-logo.png?v=logo-v1" alt="MedHub.ia.br" class="medhub-logo medhub-logo--auth" width="200" height="56">
+      <span class="medhub-home-label">Início</span>
     </a>
   </header>
 
@@ -41,18 +42,23 @@
         </div>
       </fieldset>
 
-      <div id="onboarding-crm-fields" class="onboarding-crm-fields">
-        <div class="profile-crm-row">
-          <label for="onboarding-crm-uf">CRM — UF</label>
-          <select id="onboarding-crm-uf" class="profile-crm-uf" aria-label="UF do CRM"></select>
-          <label for="onboarding-crm-number">Número</label>
-          <input id="onboarding-crm-number" class="profile-crm-number" type="text" inputmode="numeric" pattern="[0-9]*" placeholder="123456" autocomplete="off">
-        </div>
-        <p id="onboarding-rx-preview" class="profile-rx-preview" aria-live="polite"></p>
-      </div>
-
       <label for="onboarding-rx-name">Nome completo (como na receita)</label>
       <input id="onboarding-rx-name" type="text" autocomplete="name" required placeholder="Ex.: Maria Silva">
+
+      <div id="onboarding-crm-fields" class="onboarding-crm-fields">
+        <div class="profile-crm-row">
+          <div class="profile-crm-field">
+            <label for="onboarding-crm-uf">Estado (UF)</label>
+            <select id="onboarding-crm-uf" class="profile-crm-uf" aria-label="UF do CRM"></select>
+          </div>
+          <div class="profile-crm-field">
+            <label for="onboarding-crm-number">CRM</label>
+            <input id="onboarding-crm-number" class="profile-crm-number" type="text" inputmode="numeric" pattern="[0-9]*" placeholder="123456" autocomplete="off">
+          </div>
+        </div>
+        <p class="profile-rx-preview-label muted">Como aparecerá no receituário</p>
+        <p id="onboarding-rx-preview" class="profile-rx-preview" aria-live="polite"></p>
+      </div>
 
       <p id="onboarding-status" class="anamnese-save-status" hidden role="status"></p>
 
