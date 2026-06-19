@@ -8,10 +8,10 @@
   <script src="theme.js"></script>
   <link rel="stylesheet" href="style.css?v=onboarding-profile-v2">
   <script defer src="security-crypto.js"></script>
-  <script defer src="user-profile.js?v=profile-v4"></script>
-  <script defer src="auth-cloud.js?v=cloud-v5"></script>
+  <script defer src="user-profile.js?v=profile-v5"></script>
+  <script defer src="auth-cloud.js?v=cloud-v6"></script>
   <script defer src="auth.js?v=onboarding-v2"></script>
-  <script defer src="onboarding-profile.js?v=2"></script>
+  <script defer src="onboarding-profile.js?v=3"></script>
 </head>
 <body class="auth-body">
   <header class="auth-page-header">
@@ -39,9 +39,6 @@
         </div>
       </fieldset>
 
-      <label for="onboarding-rx-name">Nome completo (como na receita)</label>
-      <input id="onboarding-rx-name" type="text" autocomplete="name" required placeholder="Ex.: Maria Silva">
-
       <div id="onboarding-crm-fields" class="onboarding-crm-fields">
         <div class="profile-crm-row">
           <label for="onboarding-crm-uf">CRM — UF</label>
@@ -51,6 +48,9 @@
         </div>
         <p id="onboarding-rx-preview" class="profile-rx-preview" aria-live="polite"></p>
       </div>
+
+      <label for="onboarding-rx-name">Nome completo (como na receita)</label>
+      <input id="onboarding-rx-name" type="text" autocomplete="name" required placeholder="Ex.: Maria Silva">
 
       <p id="onboarding-status" class="anamnese-save-status" hidden role="status"></p>
 

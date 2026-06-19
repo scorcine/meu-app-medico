@@ -29,6 +29,7 @@ function defaultProfile (sessionName) {
     addressZip: '',
     identityLocked: false,
     identityChangeCount: 0,
+    onboardingComplete: false,
     updatedAt: null
   };
 }
@@ -49,6 +50,7 @@ function normalizeProfile (raw, sessionName) {
     addressZip: String(raw.addressZip || '').trim(),
     identityLocked: !!raw.identityLocked,
     identityChangeCount: Math.max(0, Number(raw.identityChangeCount) || 0),
+    onboardingComplete: !!raw.onboardingComplete,
     updatedAt: raw.updatedAt || null
   };
 
@@ -67,6 +69,7 @@ function identityConfigured (profile) {
 }
 
 function profileOnboardingComplete (profile) {
+  if (profile?.onboardingComplete) return true;
   if (!profile?.userType) return false;
   if (profile.userType === 'student') return true;
   if (profile.userType === 'doctor') {
@@ -118,6 +121,7 @@ async function deleteUserAccount (email, user) {
 async function getProfessionalProfile (email, sessionName) {
   if (!cloudAuthEnabled()) return null;
   const stored = await kv.get(profileKey(email));
+  if (!stored) return null;
   return normalizeProfile(stored, sessionName);
 }
 
@@ -160,6 +164,10 @@ async function saveProfessionalProfile (email, updates, options = {}) {
     next.identityChangeCount = changeCount;
   }
 
+  if (profileOnboardingComplete(next)) {
+    next.onboardingComplete = true;
+  }
+
   next.updatedAt = new Date().toISOString();
   await kv.set(profileKey(email), next);
   return next;
@@ -178,6 +186,7 @@ function publicProfile (profile) {
     addressZip: profile.addressZip,
     identityLocked: profile.identityLocked,
     identityChangeCount: profile.identityChangeCount || 0,
+    onboardingComplete: !!profile.onboardingComplete,
     identityChangesRemaining: identityChangesRemaining(profile),
     maxIdentityChanges: MAX_IDENTITY_CHANGES,
     identityLimitNotice: IDENTITY_LIMIT_NOTICE,

@@ -98,7 +98,8 @@ function initOnboardingProfilePage () {
       userType,
       rxDisplayName,
       crmUf: userType === 'doctor' ? crmUf : 'SP',
-      crmNumber: userType === 'doctor' ? crmNumber : ''
+      crmNumber: userType === 'doctor' ? crmNumber : '',
+      onboardingComplete: true
     };
 
     const btn = document.getElementById('onboarding-submit-btn');
@@ -120,7 +121,9 @@ function initOnboardingProfilePage () {
         return;
       }
       if (typeof medhubApplyCloudProfileLocal === 'function') {
-        medhubApplyCloudProfileLocal(saved.profile);
+        medhubApplyCloudProfileLocal(saved.profile || payload);
+      } else if (typeof medhubSaveUserProfileLocal === 'function') {
+        medhubSaveUserProfileLocal(payload);
       }
       savedOk = true;
     } else if (typeof medhubSaveUserProfileLocal === 'function') {
@@ -134,12 +137,23 @@ function initOnboardingProfilePage () {
       return;
     }
 
-    window.location.href = 'app.html';
+    try {
+      sessionStorage.setItem('medhub-onboarding-complete', '1');
+    } catch { /* ignore */ }
+
+    window.location.replace('app.html');
   });
 }
 
 async function initOnboardingProfileGate () {
   initOnboardingProfilePage();
+
+  try {
+    if (sessionStorage.getItem('medhub-onboarding-complete') === '1') {
+      window.location.replace('app.html');
+      return;
+    }
+  } catch { /* ignore */ }
 
   const user = typeof requireAuthAsync === 'function'
     ? await requireAuthAsync()
@@ -147,10 +161,15 @@ async function initOnboardingProfileGate () {
 
   if (!user) return;
 
+  const local = typeof medhubLoadUserProfile === 'function' ? medhubLoadUserProfile() : null;
+  if (typeof medhubNeedsProfileOnboarding === 'function' && !medhubNeedsProfileOnboarding(local)) {
+    window.location.replace('app.html');
+    return;
+  }
+
   const nameInput = document.getElementById('onboarding-rx-name');
   if (nameInput && !nameInput.value) {
-    const profile = typeof medhubLoadUserProfile === 'function' ? medhubLoadUserProfile() : null;
-    nameInput.value = profile?.rxDisplayName || user.name || '';
+    nameInput.value = local?.rxDisplayName || user.name || '';
   }
 
   if (typeof medhubCloudSyncAvailable === 'function' && await medhubCloudSyncAvailable()) {
@@ -159,30 +178,25 @@ async function initOnboardingProfileGate () {
       if (typeof medhubApplyCloudProfileLocal === 'function') {
         medhubApplyCloudProfileLocal(cloud.profile);
       }
-      if (typeof medhubNeedsProfileOnboarding === 'function' && !medhubNeedsProfileOnboarding(cloud.profile)) {
-        window.location.href = 'app.html';
+      const synced = typeof medhubLoadUserProfile === 'function' ? medhubLoadUserProfile() : null;
+      if (typeof medhubNeedsProfileOnboarding === 'function' && !medhubNeedsProfileOnboarding(synced)) {
+        window.location.replace('app.html');
         return;
       }
-      if (nameInput && cloud.profile.rxDisplayName) {
-        nameInput.value = cloud.profile.rxDisplayName;
+      if (nameInput && synced?.rxDisplayName) {
+        nameInput.value = synced.rxDisplayName;
       }
-      if (cloud.profile.userType === 'doctor') {
+      if (synced?.userType === 'doctor') {
         const doctorRadio = document.querySelector('input[name="userType"][value="doctor"]');
         if (doctorRadio) doctorRadio.checked = true;
         const crmUfEl = document.getElementById('onboarding-crm-uf');
         const crmNumEl = document.getElementById('onboarding-crm-number');
-        if (crmUfEl && cloud.profile.crmUf) crmUfEl.value = cloud.profile.crmUf;
-        if (crmNumEl && cloud.profile.crmNumber) crmNumEl.value = cloud.profile.crmNumber;
-      } else if (cloud.profile.userType === 'student') {
+        if (crmUfEl && synced.crmUf) crmUfEl.value = synced.crmUf;
+        if (crmNumEl && synced.crmNumber) crmNumEl.value = synced.crmNumber;
+      } else if (synced?.userType === 'student') {
         const studentRadio = document.querySelector('input[name="userType"][value="student"]');
         if (studentRadio) studentRadio.checked = true;
       }
-    }
-  } else {
-    const profile = typeof medhubLoadUserProfile === 'function' ? medhubLoadUserProfile() : null;
-    if (typeof medhubNeedsProfileOnboarding === 'function' && !medhubNeedsProfileOnboarding(profile)) {
-      window.location.href = 'app.html';
-      return;
     }
   }
 

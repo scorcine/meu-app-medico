@@ -30,7 +30,8 @@ function medhubDefaultProfile (sessionUser) {
     addressState: '',
     addressZip: '',
     identityLocked: false,
-    identityChangeCount: 0
+    identityChangeCount: 0,
+    onboardingComplete: false
   };
 }
 
@@ -91,10 +92,17 @@ function medhubProfileIsIdentityLocked (profile) {
 
 function medhubNeedsProfileOnboarding (profile) {
   const p = profile || medhubLoadUserProfile();
+  if (p.onboardingComplete) return false;
   if (!p?.userType) return true;
   if (p.userType === 'student') return false;
   if (p.userType === 'doctor') return !String(p.crmNumber || '').replace(/\D/g, '');
   return true;
+}
+
+function medhubProfileOnboardingComplete (profile) {
+  const p = profile || medhubLoadUserProfile();
+  if (p.onboardingComplete) return true;
+  return !medhubNeedsProfileOnboarding(p);
 }
 
 function medhubUserTypeLabel (userType) {

@@ -61,6 +61,14 @@ if (profileOnboardingComplete(doctorReady) && identityConfigured(doctorReady)) {
   pass('doctor onboarding complete');
 } else fail('doctor onboarding complete');
 
+const flagged = normalizeProfile({
+  userType: 'student',
+  rxDisplayName: 'João',
+  onboardingComplete: true
+});
+if (profileOnboardingComplete(flagged)) pass('onboardingComplete flag');
+else fail('onboardingComplete flag');
+
 const studentProfile = normalizeProfile({ userType: 'student', rxDisplayName: 'João' });
 const doctorUpgrade = normalizeProfile({ userType: 'doctor', rxDisplayName: 'João', crmNumber: '123', crmUf: 'SP' });
 if (identityChanged(studentProfile, doctorUpgrade)) pass('student to doctor is identity change');
