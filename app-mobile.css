@@ -6,15 +6,25 @@
 }
 
 @media (max-width: 768px) {
+  html,
   body.app-page {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
     -webkit-text-size-adjust: 100%;
   }
 
+  body.app-page {
+    touch-action: pan-y;
+  }
+
   header.app-header {
-    padding: 0.65rem 0.85rem;
-    padding-left: max(0.85rem, env(safe-area-inset-left));
-    padding-right: max(0.85rem, env(safe-area-inset-right));
-    gap: 0.5rem;
+    padding: 0.55rem 0.65rem;
+    padding-left: max(0.65rem, env(safe-area-inset-left));
+    padding-right: max(0.65rem, env(safe-area-inset-right));
+    gap: 0.4rem;
+    min-width: 0;
+    max-width: 100%;
   }
 
   .app-menu-toggle {
@@ -23,9 +33,9 @@
     justify-content: center;
     gap: 5px;
     flex-shrink: 0;
-    width: 2.75rem;
-    height: 2.75rem;
-    padding: 0.45rem;
+    width: 2.65rem;
+    height: 2.65rem;
+    padding: 0.4rem;
     border: 1px solid rgba(255, 255, 255, 0.25);
     border-radius: 8px;
     background: rgba(255, 255, 255, 0.1);
@@ -39,6 +49,7 @@
     height: 2px;
     border-radius: 1px;
     background: currentColor;
+    transition: transform 0.2s ease, opacity 0.2s ease;
   }
 
   body.app-mobile-nav-open .app-menu-toggle-bar:nth-child(1) {
@@ -53,38 +64,44 @@
     transform: translateY(-7px) rotate(-45deg);
   }
 
-  .app-menu-toggle-bar {
-    transition: transform 0.2s ease, opacity 0.2s ease;
+  .medhub-home-link {
+    min-width: 0;
+    flex: 1 1 auto;
+    overflow: hidden;
   }
 
   .medhub-logo--header {
-    max-height: 36px;
-    max-width: min(140px, 34vw);
+    max-height: 34px;
+    max-width: min(118px, 30vw);
   }
 
   .medhub-home-label {
-    font-size: 0.92rem;
+    font-size: 0.88rem;
   }
 
   .header-actions {
-    gap: 0.4rem;
-    margin-left: auto;
+    gap: 0.35rem;
+    margin-left: 0;
+    flex-shrink: 0;
   }
 
   .header-actions .user-menu-btn {
-    max-width: 6.5rem;
-    font-size: 0.85rem;
-    padding: 0.35rem 0.5rem;
+    max-width: 5.25rem;
+    font-size: 0.8rem;
+    padding: 0.35rem 0.45rem;
   }
 
   .header-actions .btn-outline {
-    padding: 0.35rem 0.65rem;
-    font-size: 0.85rem;
+    padding: 0.35rem 0.55rem;
+    font-size: 0.8rem;
   }
 
   .app-shell {
     flex-direction: column;
     min-height: 0;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
   }
 
   .app-mobile-nav-backdrop {
@@ -115,6 +132,7 @@
     border-bottom: none;
     padding: max(0.75rem, env(safe-area-inset-top)) 0 max(0.75rem, env(safe-area-inset-bottom));
     overflow-y: auto;
+    overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
     transform: translateX(-105%);
     transition: transform 0.25s ease;
@@ -127,7 +145,7 @@
 
   .sidebar-nav {
     flex-direction: column;
-    overflow-x: visible;
+    overflow-x: hidden;
     padding: 0;
     gap: 0.15rem;
   }
@@ -157,76 +175,205 @@
     font-size: 0.68rem;
   }
 
-  .app-content {
+  body.app-page main.app-content {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
     flex: 1;
-    width: 100%;
-    padding: 0.85rem;
-    padding-left: max(0.85rem, env(safe-area-inset-left));
-    padding-right: max(0.85rem, env(safe-area-inset-right));
-    padding-bottom: max(1rem, env(safe-area-inset-bottom));
+    padding: 0.65rem;
+    padding-left: max(0.65rem, env(safe-area-inset-left));
+    padding-right: max(0.65rem, env(safe-area-inset-right));
+    padding-bottom: max(0.85rem, env(safe-area-inset-bottom));
+    overflow-x: hidden;
+    overflow-y: auto;
   }
 
-  .app-content .dashboard-card,
-  .app-content .home-card {
-    max-width: none;
+  .content-panel,
+  .content-panel.active {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    overflow-x: hidden;
   }
 
-  .home-card {
+  body.app-page main.app-content .card,
+  body.app-page main.app-content .dashboard-card,
+  body.app-page main.app-content .home-card,
+  .ps-wrap,
+  .rx-wrap,
+  .med-wrap,
+  .clinical-wrap,
+  .emerg-wrap,
+  .perfil-card {
     width: 100%;
-    margin: 0;
-    padding: 1.25rem 1rem 1.5rem;
+    max-width: 100%;
+    min-width: 0;
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  .home-card,
+  .dashboard-card,
+  .perfil-card {
+    padding: 1.1rem 0.85rem 1.25rem;
   }
 
   .home-hero h2 {
-    font-size: 1.35rem;
+    font-size: 1.3rem;
+  }
+
+  .home-card,
+  .dashboard-card,
+  .emerg-content,
+  .med-drug-content,
+  .ps-content,
+  .clinical-wrap {
+    overflow-wrap: anywhere;
+    word-break: break-word;
   }
 
   .calc-category-grid,
   .home-ferramentas-grid,
-  .ferramentas-grid {
-    grid-template-columns: 1fr;
+  .ferramentas-grid,
+  .calc-grid,
+  .med-drug-grid,
+  .anamnese-grid,
+  .profile-crm-row,
+  .profile-address-grid,
+  .rsi-patient-grid,
+  .broselow-legend,
+  .emerg-flowcharts-row,
+  .emerg-rhythm-grid,
+  .emerg-rhythm-grid-2,
+  .emerg-reversible-grid,
+  .home-quick-grid {
+    grid-template-columns: 1fr !important;
     gap: 0.65rem;
   }
 
   .calc-category-btn,
-  .ferramentas-grid .ferramentas-card {
-    min-height: 3.25rem;
+  .ferramentas-grid .ferramentas-card,
+  .home-tool-card {
+    min-height: 3.1rem;
+    width: 100%;
+    max-width: 100%;
   }
 
-  .profile-crm-row,
-  .profile-address-grid {
-    grid-template-columns: 1fr;
+  .calc-form,
+  .ped-calc-form {
+    max-width: 100%;
+    width: 100%;
   }
 
-  .perfil-card,
-  .dashboard-card {
-    padding: 1.15rem 1rem;
+  .calc-block,
+  .emerg-algo-block,
+  .ps-rx-wrap,
+  .ps-rx-fieldset {
+    padding-left: 0.85rem;
+    padding-right: 0.85rem;
   }
 
-  .module-head-row,
-  .rx-head-row,
-  .med-head-row,
-  .exames-head-row {
+  .emerg-algo-block {
+    max-width: 100%;
+  }
+
+  .ps-search,
+  .med-filter-select,
+  .anamnese-input,
+  .anamnese-textarea,
+  .perfil-form input,
+  .perfil-form select {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .rx-crm-prefix {
+    white-space: normal;
+  }
+
+  .rx-selection-bar,
+  .rx-selection-actions,
+  .ps-rx-actions,
+  .clinical-record-actions,
+  .anamnese-history-actions {
     flex-direction: column;
     align-items: stretch;
-    gap: 0.65rem;
   }
 
-  .module-head-row input[type="search"],
-  .module-head-row input[type="text"],
-  .rx-head-row input,
-  .med-head-row input,
-  .exames-head-row input {
+  .rx-selection-actions .btn,
+  .ps-rx-actions .btn {
     width: 100%;
-    min-width: 0;
   }
 
+  /* Tabelas empilhadas — sem scroll lateral */
   .emerg-table,
-  .ps-table-wrap,
-  .med-table-wrap {
+  .rsi-drug-table,
+  .broselow-drug-table {
     display: block;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
+    width: 100%;
+    max-width: 100%;
+    border: 0;
+    overflow: visible;
+  }
+
+  .emerg-table thead,
+  .rsi-drug-table thead,
+  .broselow-drug-table thead {
+    display: none;
+  }
+
+  .emerg-table tbody,
+  .rsi-drug-table tbody,
+  .broselow-drug-table tbody {
+    display: block;
+  }
+
+  .emerg-table tr,
+  .rsi-drug-table tr,
+  .broselow-drug-table tr {
+    display: block;
+    margin-bottom: 0.65rem;
+    padding: 0.55rem 0.65rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--bg-surface-raised);
+  }
+
+  .emerg-table td,
+  .emerg-table th,
+  .rsi-drug-table td,
+  .rsi-drug-table th,
+  .broselow-drug-table td,
+  .broselow-drug-table th {
+    display: block;
+    width: 100%;
+    border: none;
+    padding: 0.2rem 0;
+    text-align: left;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  .emerg-table td + td,
+  .rsi-drug-table td + td,
+  .broselow-drug-table td + td {
+    margin-top: 0.15rem;
+    padding-top: 0.25rem;
+    border-top: 1px dashed var(--border);
+  }
+
+  .emerg-content img,
+  .emerg-content pre,
+  .emerg-content iframe,
+  .emerg-content video {
+    max-width: 100%;
+    height: auto;
+  }
+
+  .emerg-content pre {
+    white-space: pre-wrap;
+    overflow-x: hidden;
   }
 
   .btn,
@@ -239,6 +386,7 @@
   select,
   textarea {
     font-size: 16px;
+    max-width: 100%;
   }
 }
 
@@ -247,7 +395,14 @@
     display: none;
   }
 
+  .header-actions .user-menu-btn {
+    max-width: 4.5rem;
+  }
+}
+
+@media (max-width: 360px) {
   .header-actions .btn-outline {
-    padding: 0.35rem 0.5rem;
+    padding: 0.35rem 0.45rem;
+    min-width: 2.5rem;
   }
 }
