@@ -95,13 +95,7 @@ function initAppCore (user) {
         link.addEventListener('click', () => showSection(link.dataset.section));
       });
 
-      const logoHome = document.getElementById('medhub-logo-home');
-      if (logoHome) {
-        logoHome.addEventListener('click', e => {
-          e.preventDefault();
-          showSection('inicio');
-        });
-      }
+      bindAppLogoHome();
 
       initCalcEssenciais();
       initGuiaEmergencia();
@@ -177,6 +171,32 @@ function showSection (sectionId) {
       medhubRenderPedAppPromo(document.getElementById('medhub-ped-app-footer'), 'footer');
     }
   }
+}
+
+function medhubGoAppHome (e) {
+  if (e) e.preventDefault();
+
+  if (typeof showSection === 'function') {
+    showSection('inicio');
+    if (window.history.replaceState) {
+      window.history.replaceState(null, '', '#inicio');
+    } else {
+      window.location.hash = 'inicio';
+    }
+    window.scrollTo(0, 0);
+    document.querySelector('.app-main')?.scrollTo(0, 0);
+    return false;
+  }
+
+  window.location.href = 'app.html#inicio';
+  return false;
+}
+
+function bindAppLogoHome () {
+  const logo = document.getElementById('medhub-logo-home');
+  if (!logo || logo.dataset.homeBound) return;
+  logo.dataset.homeBound = '1';
+  logo.addEventListener('click', medhubGoAppHome);
 }
 
 function showCalcResultInBlock (form, html) {
@@ -700,3 +720,5 @@ function handleCalcFormSubmit (e) {
 function redirectLoggedFromHome () {
   if (getSession()) window.location.href = 'app.html';
 }
+
+document.addEventListener('DOMContentLoaded', bindAppLogoHome);
