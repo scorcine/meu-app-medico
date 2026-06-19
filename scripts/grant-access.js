@@ -113,7 +113,7 @@ async function grantAccess ({ email, password, name }) {
     customerId,
     subscriptionId,
     status,
-    plan,
+    plan: 'annual',
     active: true,
     currentPeriodEnd: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(),
     updatedAt: new Date().toISOString(),
@@ -122,7 +122,11 @@ async function grantAccess ({ email, password, name }) {
 
   if (!user) {
     if (!password || password.length < 8) {
-      throw new Error('Conta nao existe no KV. Informe --password (min 8 chars) para criar.');
+      console.log('\nPronto! Assinatura ativa no KV por 1 ano.');
+      console.log('E-mail:', norm);
+      console.log('Conta ainda nao criada — o usuario pode cadastrar em login com este e-mail.');
+      console.log('Login: https://meu-app-medico.vercel.app/login.html');
+      return;
     }
     user = {
       name: name || norm.split('@')[0],

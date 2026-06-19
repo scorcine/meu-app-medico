@@ -49,7 +49,7 @@ async function resolveCustomerId (email, options = {}) {
   ].filter(Boolean);
 
   for (const id of candidates) {
-    if (!stripe) return id;
+    if (!stripe || String(id).startsWith('manual_')) return id;
     if (await customerExists(stripe, id)) return id;
   }
 
