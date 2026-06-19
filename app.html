@@ -63,7 +63,8 @@
   <script defer src="interpretacao-exame.js?v=atendimento-v3"></script>
   <script defer src="pacientes.js?v=atendimento-v4"></script>
   <script defer src="consultas.js?v=atendimento-v4"></script>
-  <script defer src="ferramentas.js?v=atendimento-v3"></script>
+  <script defer src="medhub-config.js?v=ped-app-v1"></script>
+  <script defer src="ferramentas.js?v=ped-app-v1"></script>
   <script defer src="backup.js?v=backup-v2"></script>
   <script defer src="clinical-cloud.js?v=cloud-sync-v1"></script>
   <script defer src="subscription.js?v=billing-v4"></script>
@@ -121,7 +122,7 @@
             <p class="home-emoji" aria-hidden="true">👋</p>
             <h2>Seja bem-vindo ao MedHub</h2>
             <p id="user-greeting" class="home-greeting"></p>
-            <p class="home-tagline">Apoio clínico no plantão — protocolos, prescrição e calculadoras em um só lugar.</p>
+            <p class="home-tagline">Apoio clínico no plantão — protocolos, prescrição e calculadoras para <strong>clínica médica do adulto</strong>.</p>
           </header>
 
           <section class="home-section home-main-section">
@@ -424,6 +425,7 @@
 
       <section id="section-calc-pediatrica" class="content-panel">
         <div class="card dashboard-card" id="ped-calc-wrap">
+          <div id="medhub-ped-scope-banner"></div>
           <h2>Calculadora pediátrica</h2>
           <p class="muted">Informe peso e idade — doses teóricas traduzidas para apresentações reais (suspensão, gotas, ampola).</p>
 
@@ -482,6 +484,8 @@
           </form>
 
           <div id="ped-calc-result" class="calc-result" hidden></div>
+
+          <div id="medhub-ped-app-footer"></div>
         </div>
       </section>
 

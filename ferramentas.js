@@ -2,7 +2,6 @@
 
 const FERRAMENTAS_ITEMS = [
   { section: 'calc-essenciais', icon: '🧮', name: 'Calculadoras essenciais', desc: 'Escalas, scores e doses por especialidade.' },
-  { section: 'calc-pediatrica', icon: '👶', name: 'Calculadora pediátrica', desc: 'Prescrição prática por peso/idade — suspensão, gotas, SRO e emergência.' },
   { section: 'guia-emergencia', icon: '⚡', name: 'Guia rápido de emergência', desc: 'ACLS, AVC, sepse, trauma e fluxogramas.' },
   { section: 'pronto-socorro', icon: '🏥', name: 'Prescrições PS', desc: '106 condições com prescrição interativa.' },
   { section: 'tratamento-hospitalar', icon: '💉', name: 'Tratamento hospitalar', desc: 'Posologias IM/EV e internação.' },
@@ -12,7 +11,14 @@ const FERRAMENTAS_ITEMS = [
   { section: 'interpretacao-exame', icon: '📊', name: 'Interpretação do exame', desc: 'Guia rápido de labs e imagem.' },
   { section: 'pacientes', icon: '👤', name: 'Cadastro do paciente', desc: 'Cadastro local opcional (alergias, medicações) para anamnese e histórico.' },
   { section: 'anamnese', icon: '📝', name: 'Anamnese', desc: 'Guia clínico local para queixa → protocolo → prescrição.' },
-  { section: 'consultas', icon: '📅', name: 'Histórico de atendimentos', desc: 'Registro local e PDF educacional.' }
+  { section: 'consultas', icon: '📅', name: 'Histórico de atendimentos', desc: 'Registro local e PDF educacional.' },
+  {
+    section: 'calc-pediatrica',
+    icon: '👶',
+    name: 'Calculadora pediátrica',
+    desc: 'Complemento rápido por peso/idade — o MedHub principal é voltado ao adulto.',
+    pediatricAux: true
+  }
 ];
 
 function initFerramentas () {
@@ -21,9 +27,10 @@ function initFerramentas () {
   grid.dataset.ferBound = '1';
 
   grid.innerHTML = FERRAMENTAS_ITEMS.map(item => `
-    <button type="button" class="calc-category-btn ferramentas-card home-tool-card" data-section="${item.section}">
+    <button type="button" class="calc-category-btn ferramentas-card home-tool-card${item.pediatricAux ? ' home-tool-card--pediatric-aux' : ''}" data-section="${item.section}">
       <span class="calc-category-icon">${item.icon}</span>
       <span class="calc-category-name">${item.name}</span>
+      ${item.pediatricAux ? '<span class="home-tool-card-badge">Complemento · adulto</span>' : ''}
       <span class="ferramentas-card-desc muted">${item.desc}</span>
     </button>
   `).join('');

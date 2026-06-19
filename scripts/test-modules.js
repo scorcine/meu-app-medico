@@ -174,7 +174,7 @@ const SCRIPTS = [
   'med-apresentacoes-vo.js', 'receituario-data.js', 'receituario-ps-bridge.js', 'user-profile.js', 'receituario.js',
   'exames-data.js', 'exames.js', 'interpretacao-exame-data.js', 'interpretacao-exame.js',
   'pacientes.js', 'consultas.js', 'anamnese.js', 'legal-content.js', 'compliance.js', 'ferramentas.js', 'backup.js',
-  'pediatric-calc-panel.js', 'app.js'
+  'medhub-config.js', 'pediatric-calc-panel.js', 'app.js'
 ];
 
 const UI = [

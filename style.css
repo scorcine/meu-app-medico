@@ -3755,6 +3755,113 @@ textarea {
   margin-top: 0.2rem;
 }
 
+.home-tool-card--pediatric-aux {
+  border-style: dashed;
+  border-color: var(--accent-soft);
+  background: var(--bg-surface-muted);
+}
+
+.home-tool-card-badge {
+  display: inline-block;
+  margin-top: 0.15rem;
+  padding: 0.1rem 0.4rem;
+  border-radius: 999px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--text-accent-dark);
+  background: var(--accent-soft);
+}
+
+.medhub-adult-scope-banner {
+  margin: 0 0 1rem;
+  padding: 0.85rem 1rem;
+  border-left: 4px solid var(--accent);
+  border-radius: 0 10px 10px 0;
+  background: var(--rx-wrap-bg);
+  font-size: 0.88rem;
+  line-height: 1.55;
+}
+
+.medhub-adult-scope-banner p {
+  margin: 0 0 0.45rem;
+}
+
+.medhub-adult-scope-banner p:last-child {
+  margin-bottom: 0;
+}
+
+.medhub-adult-scope-title {
+  font-size: 0.92rem;
+  color: var(--text-secondary);
+}
+
+.medhub-adult-scope-link-line {
+  margin-top: 0.5rem !important;
+  font-size: 0.85rem;
+}
+
+.medhub-ped-app-name {
+  font-weight: 700;
+  color: var(--text-accent-dark);
+}
+
+.medhub-ped-app-soon {
+  display: inline-block;
+  margin-left: 0.35rem;
+  padding: 0.08rem 0.4rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  background: var(--bg-surface-muted);
+  color: var(--text-muted);
+}
+
+.medhub-ped-app-anchor {
+  font-weight: 700;
+  color: var(--text-accent);
+}
+
+.medhub-ped-app-footer {
+  margin-top: 1.5rem;
+  padding: 1.1rem 1.15rem;
+  border: 1px dashed var(--border);
+  border-radius: 12px;
+  background: var(--bg-surface-muted);
+  text-align: center;
+}
+
+.medhub-ped-app-footer h3 {
+  margin: 0 0 0.5rem;
+  font-size: 1rem;
+  color: var(--text-accent);
+}
+
+.medhub-ped-app-footer p {
+  margin: 0 0 0.65rem;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+
+.medhub-ped-app-soon-note {
+  font-size: 0.84rem !important;
+  color: var(--text-muted) !important;
+}
+
+.medhub-ped-app-btn {
+  display: inline-block;
+  margin-top: 0.35rem;
+  text-decoration: none;
+}
+
+.medhub-ped-app-btn--soon {
+  cursor: default;
+  opacity: 0.85;
+}
+
 @media (min-width: 720px) {
   .home-ferramentas-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));

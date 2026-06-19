@@ -520,4 +520,9 @@ function initPediatricCalcPanel () {
   });
 
   pedSwitchTab('meds');
+
+  if (typeof medhubRenderPedAppPromo === 'function') {
+    medhubRenderPedAppPromo(document.getElementById('medhub-ped-scope-banner'), 'banner');
+    medhubRenderPedAppPromo(document.getElementById('medhub-ped-app-footer'), 'footer');
+  }
 }

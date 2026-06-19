@@ -157,7 +157,13 @@ function showSection (sectionId) {
   if (sectionId === 'consultas' && typeof consultasOnSectionShow === 'function') consultasOnSectionShow();
   if (sectionId === 'anamnese' && typeof anamneseOnSectionShow === 'function') anamneseOnSectionShow();
   if (sectionId === 'perfil' && typeof backupMaybePromptFirstUse === 'function') backupMaybePromptFirstUse();
-  if (sectionId === 'calc-pediatrica' && typeof initPediatricCalcPanel === 'function') initPediatricCalcPanel();
+  if (sectionId === 'calc-pediatrica' && typeof initPediatricCalcPanel === 'function') {
+    initPediatricCalcPanel();
+    if (typeof medhubRenderPedAppPromo === 'function') {
+      medhubRenderPedAppPromo(document.getElementById('medhub-ped-scope-banner'), 'banner');
+      medhubRenderPedAppPromo(document.getElementById('medhub-ped-app-footer'), 'footer');
+    }
+  }
 }
 
 function showCalcResultInBlock (form, html) {
