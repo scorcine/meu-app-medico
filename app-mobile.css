@@ -1,0 +1,253 @@
+/* MedHub app — layout mobile (max-width: 768px). Desktop inalterado. */
+
+.app-menu-toggle,
+.app-mobile-nav-backdrop {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  body.app-page {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  header.app-header {
+    padding: 0.65rem 0.85rem;
+    padding-left: max(0.85rem, env(safe-area-inset-left));
+    padding-right: max(0.85rem, env(safe-area-inset-right));
+    gap: 0.5rem;
+  }
+
+  .app-menu-toggle {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    flex-shrink: 0;
+    width: 2.75rem;
+    height: 2.75rem;
+    padding: 0.45rem;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    color: inherit;
+    cursor: pointer;
+  }
+
+  .app-menu-toggle-bar {
+    display: block;
+    width: 100%;
+    height: 2px;
+    border-radius: 1px;
+    background: currentColor;
+  }
+
+  body.app-mobile-nav-open .app-menu-toggle-bar:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+  }
+
+  body.app-mobile-nav-open .app-menu-toggle-bar:nth-child(2) {
+    opacity: 0;
+  }
+
+  body.app-mobile-nav-open .app-menu-toggle-bar:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+  }
+
+  .app-menu-toggle-bar {
+    transition: transform 0.2s ease, opacity 0.2s ease;
+  }
+
+  .medhub-logo--header {
+    max-height: 36px;
+    max-width: min(140px, 34vw);
+  }
+
+  .medhub-home-label {
+    font-size: 0.92rem;
+  }
+
+  .header-actions {
+    gap: 0.4rem;
+    margin-left: auto;
+  }
+
+  .header-actions .user-menu-btn {
+    max-width: 6.5rem;
+    font-size: 0.85rem;
+    padding: 0.35rem 0.5rem;
+  }
+
+  .header-actions .btn-outline {
+    padding: 0.35rem 0.65rem;
+    font-size: 0.85rem;
+  }
+
+  .app-shell {
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  .app-mobile-nav-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 180;
+    border: 0;
+    padding: 0;
+    margin: 0;
+    background: rgba(0, 0, 0, 0.45);
+    cursor: pointer;
+  }
+
+  .app-mobile-nav-backdrop[hidden] {
+    display: none !important;
+  }
+
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    z-index: 200;
+    width: min(290px, 88vw);
+    max-width: 100%;
+    border-right: 1px solid var(--border);
+    border-bottom: none;
+    padding: max(0.75rem, env(safe-area-inset-top)) 0 max(0.75rem, env(safe-area-inset-bottom));
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    transform: translateX(-105%);
+    transition: transform 0.25s ease;
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.2);
+  }
+
+  body.app-mobile-nav-open .sidebar {
+    transform: translateX(0);
+  }
+
+  .sidebar-nav {
+    flex-direction: column;
+    overflow-x: visible;
+    padding: 0;
+    gap: 0.15rem;
+  }
+
+  .sidebar-group {
+    display: block;
+    margin: 0.75rem 1.25rem 0.2rem;
+  }
+
+  .sidebar-link {
+    white-space: normal;
+    border-left: 3px solid transparent;
+    border-bottom: none;
+    border-radius: 0;
+    padding: 0.7rem 1.25rem;
+    font-size: 0.92rem;
+    line-height: 1.35;
+  }
+
+  .sidebar-link.active {
+    border-left-color: var(--accent);
+    border-bottom-color: transparent;
+  }
+
+  .sidebar-build {
+    margin-top: auto;
+    font-size: 0.68rem;
+  }
+
+  .app-content {
+    flex: 1;
+    width: 100%;
+    padding: 0.85rem;
+    padding-left: max(0.85rem, env(safe-area-inset-left));
+    padding-right: max(0.85rem, env(safe-area-inset-right));
+    padding-bottom: max(1rem, env(safe-area-inset-bottom));
+  }
+
+  .app-content .dashboard-card,
+  .app-content .home-card {
+    max-width: none;
+  }
+
+  .home-card {
+    width: 100%;
+    margin: 0;
+    padding: 1.25rem 1rem 1.5rem;
+  }
+
+  .home-hero h2 {
+    font-size: 1.35rem;
+  }
+
+  .calc-category-grid,
+  .home-ferramentas-grid,
+  .ferramentas-grid {
+    grid-template-columns: 1fr;
+    gap: 0.65rem;
+  }
+
+  .calc-category-btn,
+  .ferramentas-grid .ferramentas-card {
+    min-height: 3.25rem;
+  }
+
+  .profile-crm-row,
+  .profile-address-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .perfil-card,
+  .dashboard-card {
+    padding: 1.15rem 1rem;
+  }
+
+  .module-head-row,
+  .rx-head-row,
+  .med-head-row,
+  .exames-head-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.65rem;
+  }
+
+  .module-head-row input[type="search"],
+  .module-head-row input[type="text"],
+  .rx-head-row input,
+  .med-head-row input,
+  .exames-head-row input {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .emerg-table,
+  .ps-table-wrap,
+  .med-table-wrap {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .btn,
+  form.card button,
+  .sidebar-link {
+    min-height: 44px;
+  }
+
+  input:not([type="checkbox"]):not([type="radio"]),
+  select,
+  textarea {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 420px) {
+  .medhub-home-label {
+    display: none;
+  }
+
+  .header-actions .btn-outline {
+    padding: 0.35rem 0.5rem;
+  }
+}

@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
@@ -11,6 +11,7 @@
   <link rel="apple-touch-icon" href="assets/medhub-logo.png?v=logo-v1">
   <script src="theme.js"></script>
   <link rel="stylesheet" href="style.css?v=home-nav-v2">
+  <link rel="stylesheet" href="app-mobile.css?v=mobile-v1">
   <script defer src="calculators-risco.js"></script>
   <script defer src="calculators-cardio.js"></script>
   <script defer src="calculators-pneumo.js?v=rsi-patient"></script>
@@ -70,11 +71,16 @@
   <script defer src="clinical-cloud.js?v=cloud-sync-v1"></script>
   <script defer src="subscription.js?v=billing-v4"></script>
   <script defer src="auth-cloud.js?v=cloud-v6"></script>
-  <script defer src="app.js?v=home-nav-v2"></script>
+  <script defer src="app.js?v=mobile-v1"></script>
   <script defer src="auth.js?v=compliance-v1"></script>
 </head>
 <body class="app-page" onload="initApp()">
   <header class="app-header">
+    <button type="button" class="app-menu-toggle" id="app-menu-toggle" aria-expanded="false" aria-controls="app-sidebar" aria-label="Abrir menu">
+      <span class="app-menu-toggle-bar" aria-hidden="true"></span>
+      <span class="app-menu-toggle-bar" aria-hidden="true"></span>
+      <span class="app-menu-toggle-bar" aria-hidden="true"></span>
+    </button>
     <a class="medhub-logo-link medhub-home-link" href="app.html#inicio" id="medhub-logo-home" aria-label="MedHub — Início" onclick="return medhubGoAppHome(event)">
       <img src="assets/medhub-logo.png?v=logo-v1" alt="MedHub.ia.br" class="medhub-logo medhub-logo--header" width="200" height="56">
       <span class="medhub-home-label">Início</span>
@@ -86,9 +92,10 @@
       <button type="button" class="btn-outline" onclick="logout()">Sair</button>
     </div>
   </header>
+  <button type="button" class="app-mobile-nav-backdrop" id="app-mobile-nav-backdrop" hidden aria-label="Fechar menu"></button>
 
   <div class="app-shell">
-    <aside class="sidebar">
+    <aside class="sidebar" id="app-sidebar">
       <p class="sidebar-title">Menu</p>
       <nav class="sidebar-nav">
         <button type="button" class="sidebar-link active" data-section="inicio">Início</button>

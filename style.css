@@ -2534,40 +2534,6 @@ body.emerg-ecg-lightbox-open {
 }
 
 @media (max-width: 768px) {
-  .app-shell {
-    flex-direction: column;
-  }
-
-  .sidebar {
-    width: 100%;
-    border-right: none;
-    border-bottom: 1px solid var(--border);
-    padding: 0.75rem 0;
-  }
-
-  .sidebar-nav {
-    flex-direction: row;
-    overflow-x: auto;
-    padding: 0 0.75rem;
-  }
-
-  .sidebar-group {
-    display: none;
-  }
-
-  .sidebar-link {
-    white-space: nowrap;
-    border-left: none;
-    border-bottom: 3px solid transparent;
-    border-radius: 8px;
-    padding: 0.6rem 1rem;
-  }
-
-  .sidebar-link.active {
-    border-left-color: transparent;
-    border-bottom-color: var(--text-accent);
-  }
-
   .emerg-table {
     display: block;
     overflow-x: auto;

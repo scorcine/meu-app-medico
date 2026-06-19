@@ -96,6 +96,7 @@ function initAppCore (user) {
       });
 
       bindAppLogoHome();
+      initAppMobileNav();
 
       initCalcEssenciais();
       initGuiaEmergencia();
@@ -171,6 +172,8 @@ function showSection (sectionId) {
       medhubRenderPedAppPromo(document.getElementById('medhub-ped-app-footer'), 'footer');
     }
   }
+
+  if (typeof medhubCloseAppMobileNav === 'function') medhubCloseAppMobileNav();
 }
 
 function medhubGoAppHome (e) {
@@ -197,6 +200,40 @@ function bindAppLogoHome () {
   if (!logo || logo.dataset.homeBound) return;
   logo.dataset.homeBound = '1';
   logo.addEventListener('click', medhubGoAppHome);
+}
+
+function initAppMobileNav () {
+  const toggle = document.getElementById('app-menu-toggle');
+  const backdrop = document.getElementById('app-mobile-nav-backdrop');
+  const sidebar = document.getElementById('app-sidebar');
+  if (!toggle || !sidebar || toggle.dataset.bound) return;
+  toggle.dataset.bound = '1';
+
+  function setOpen (open) {
+    document.body.classList.toggle('app-mobile-nav-open', open);
+    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    toggle.setAttribute('aria-label', open ? 'Fechar menu' : 'Abrir menu');
+    if (backdrop) backdrop.hidden = !open;
+    document.body.style.overflow = open ? 'hidden' : '';
+  }
+
+  window.medhubCloseAppMobileNav = () => setOpen(false);
+
+  toggle.addEventListener('click', () => {
+    setOpen(!document.body.classList.contains('app-mobile-nav-open'));
+  });
+
+  backdrop?.addEventListener('click', () => setOpen(false));
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && document.body.classList.contains('app-mobile-nav-open')) {
+      setOpen(false);
+    }
+  });
+
+  sidebar.querySelectorAll('.sidebar-link').forEach(link => {
+    link.addEventListener('click', () => setOpen(false));
+  });
 }
 
 function showCalcResultInBlock (form, html) {
@@ -721,4 +758,7 @@ function redirectLoggedFromHome () {
   /* Landing permanece pública — entrada pelo login ou app.html */
 }
 
-document.addEventListener('DOMContentLoaded', bindAppLogoHome);
+document.addEventListener('DOMContentLoaded', () => {
+  bindAppLogoHome();
+  initAppMobileNav();
+});
