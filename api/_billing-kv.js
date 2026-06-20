@@ -1,6 +1,6 @@
 const { kv } = require('@vercel/kv');
 const { cloudAuthEnabled, normalizeEmail } = require('./_auth');
-const { getStripe, getActiveSubscription, findCustomerByEmail, resolvePromotionCode } = require('./_stripe');
+const { getStripe, getActiveSubscription, findCustomerByEmail, assertPromotionCodeUsable } = require('./_stripe');
 
 const CHECKOUT_TTL_SEC = 60 * 60 * 24 * 7; // 7 dias para concluir cadastro
 
@@ -171,19 +171,19 @@ async function redeemCouponForRegister (email, couponCode) {
     return { ok: false, code: 'invalid_coupon', error: 'Cupom inválido ou expirado.' };
   }
 
-  const promo = await resolvePromotionCode(stripe, code);
-  if (!promo) {
+  const resolved = await assertPromotionCodeUsable(stripe, code);
+  if (!resolved.ok) {
     return {
       ok: false,
       code: 'invalid_coupon',
-      error: 'Cupom inválido ou expirado. Confira o código ou peça um novo cupom ao MedHub.'
+      error: resolved.promo
+        ? 'Este cupom já foi utilizado ou não está mais disponível.'
+        : 'Cupom inválido ou expirado. Confira o código ou peça um novo cupom ao MedHub.'
     };
   }
 
-  let coupon = promo.coupon;
-  if (typeof coupon === 'string') {
-    coupon = await stripe.coupons.retrieve(coupon);
-  }
+  const promo = resolved.promo;
+  const coupon = resolved.coupon;
   if (coupon.percent_off !== 100) {
     return {
       ok: false,

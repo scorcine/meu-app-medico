@@ -14,6 +14,7 @@
     "pipeline:med": "node scripts/run-medicacoes-pipeline.js",
     "setup:stripe": "node scripts/setup-stripe.js",
     "setup:stripe-coupons": "node scripts/setup-stripe-coupons.js",
+    "create:stripe-coupon-once": "node scripts/create-stripe-coupon-once.js",
     "setup:stripe-webhook": "node scripts/setup-stripe-webhook.js",
     "setup:stripe-live": "node scripts/setup-stripe-live.js",
     "setup:resend": "node scripts/setup-resend.js",

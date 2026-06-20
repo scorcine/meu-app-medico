@@ -79,6 +79,27 @@ async function resolvePromotionCode (stripe, code) {
   return list.data[0] || null;
 }
 
+function promotionCodeExhausted (promo, coupon) {
+  if (!promo || promo.active === false) return true;
+  if (promo.max_redemptions != null && promo.times_redeemed >= promo.max_redemptions) return true;
+  if (coupon?.max_redemptions != null && coupon.times_redeemed >= coupon.max_redemptions) return true;
+  return false;
+}
+
+async function assertPromotionCodeUsable (stripe, code) {
+  const promo = await resolvePromotionCode(stripe, code);
+  if (!promo) return { ok: false, promo: null, coupon: null };
+
+  let coupon = promo.coupon;
+  if (typeof coupon === 'string') {
+    coupon = await stripe.coupons.retrieve(coupon);
+  }
+  if (promotionCodeExhausted(promo, coupon)) {
+    return { ok: false, promo, coupon };
+  }
+  return { ok: true, promo, coupon };
+}
+
 module.exports = {
   getStripe,
   billingEnabled,
@@ -87,5 +108,7 @@ module.exports = {
   findCustomerByEmail,
   getActiveSubscription,
   customerExists,
-  resolvePromotionCode
+  resolvePromotionCode,
+  promotionCodeExhausted,
+  assertPromotionCodeUsable
 };

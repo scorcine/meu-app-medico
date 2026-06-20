@@ -3,7 +3,7 @@ const {
   billingEnabled,
   siteOrigin,
   json,
-  resolvePromotionCode
+  assertPromotionCodeUsable
 } = require('./_stripe');
 
 module.exports = async (req, res) => {
@@ -74,14 +74,18 @@ module.exports = async (req, res) => {
     });
 
     if (coupon) {
-      const promo = await resolvePromotionCode(stripe, coupon);
-      if (!promo) {
+      const resolved = await assertPromotionCodeUsable(stripe, coupon);
+      if (!resolved.ok) {
         json(res, 400, {
-          error: 'Cupom inválido ou expirado. Confira o código ou peça um novo cupom ao MedHub.',
+          error: resolved.promo
+            ? 'Este cupom já foi utilizado ou não está mais disponível.'
+            : 'Cupom inválido ou expirado. Confira o código ou peça um novo cupom ao MedHub.',
           code: 'invalid_coupon'
         });
         return;
       }
+
+      const promo = resolved.promo;
 
       const safeCoupon = coupon.slice(0, 100);
       sessionParams.allow_promotion_codes = false;
