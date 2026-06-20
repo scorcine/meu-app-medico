@@ -72,6 +72,8 @@ async function revokeAccess ({ email, deleteUser }) {
 
   if (deleteUser) {
     await kv.del(userKey(norm));
+    await kv.del('medhub:profile:' + norm);
+    await kv.del('medhub:clinical:' + norm);
     console.log('Conta removida do KV:', norm);
   } else {
     console.log('Assinatura desativada no KV:', norm);

@@ -46,7 +46,21 @@ function medhubProfileHasIdentityFields (profile) {
   return false;
 }
 
+function medhubClearProfileStateForNewAccount (email) {
+  const norm = medhubNormalizedProfileEmail(email);
+  if (!norm) return;
+  try {
+    localStorage.removeItem(medhubProfileStorageKey(norm));
+    localStorage.removeItem(medhubProfileSetupBackupKey(norm));
+  } catch { /* ignore */ }
+}
+
+function medhubIsFreshLoginSession () {
+  try { return sessionStorage.getItem('medhub-post-login') === '1'; } catch { return false; }
+}
+
 function medhubSanitizeProfileForFreshOnboarding (sessionUser) {
+  if (sessionUser?.email) medhubClearProfileStateForNewAccount(sessionUser.email);
   if (!sessionUser?.email || typeof medhubSaveUserProfileLocal !== 'function') {
     return typeof medhubLoadUserProfile === 'function' ? medhubLoadUserProfile() : null;
   }
@@ -60,6 +74,7 @@ function medhubSanitizeProfileForFreshOnboarding (sessionUser) {
     identityChangeCount: 0
   });
 }
+
 function medhubMigrateLegacyCrm (profile) {
   if (profile.userType !== 'doctor') return profile;
   const legacy = localStorage.getItem(MEDHUB_RX_CRM_LEGACY_KEY);
@@ -84,15 +99,8 @@ function medhubProfileSetupBackupKey (email) {
 }
 
 function medhubSnapshotProfileSetupComplete (snapshot) {
-  if (!snapshot?.onboardingComplete && !snapshot?.userType) return false;
-  if (snapshot?.onboardingComplete) return true;
-  if (!snapshot?.userType) return false;
-  if (!String(snapshot.rxDisplayName || '').trim()) return false;
-  if (snapshot.userType === 'student') return true;
-  if (snapshot.userType === 'doctor') {
-    return !!String(snapshot.crmNumber || '').replace(/\D/g, '');
-  }
-  return false;
+  if (!snapshot?.onboardingComplete) return false;
+  return medhubProfileHasIdentityFields(snapshot);
 }
 
 function medhubLoadProfileSetupBackup (email) {
@@ -213,6 +221,7 @@ function medhubProfileDataComplete (profile) {
 }
 
 function medhubIsProfileSetupComplete (profile) {
+  if (medhubIsFreshLoginSession()) return false;
   const p = profile || medhubLoadUserProfile();
   if (medhubProfileDataComplete(p)) return true;
   const user = typeof getSession === 'function' ? getSession() : null;

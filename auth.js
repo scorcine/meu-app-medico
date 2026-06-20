@@ -195,7 +195,7 @@ async function handleRegister (e) {
     }
 
     medhubAcceptLegalLocal(email, config);
-    await medhubAfterCloudAuth(result.data, pass);
+    await medhubAfterCloudAuth(result.data, pass, { forceOnboarding: true });
     return;
   }
 
