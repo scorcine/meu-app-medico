@@ -1114,6 +1114,100 @@ body.app-page {
   border-color: #60a5fa;
 }
 
+.pwa-install-banner-later {
+  padding: 0.45rem 0.75rem;
+  font-size: 0.82rem;
+  white-space: nowrap;
+}
+
+.pwa-signup-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 10060;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.pwa-signup-modal[hidden] {
+  display: none !important;
+}
+
+.pwa-signup-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(4px);
+}
+
+.pwa-signup-modal-card {
+  position: relative;
+  z-index: 1;
+  width: min(100%, 420px);
+  margin: 0;
+  padding: 1.5rem 1.35rem 1.25rem;
+  text-align: center;
+  box-shadow: 0 24px 48px rgba(15, 23, 42, 0.22);
+}
+
+.pwa-signup-modal-icon {
+  border-radius: 18px;
+  margin: 0 auto 0.75rem;
+  box-shadow: 0 8px 20px rgba(13, 110, 253, 0.22);
+}
+
+.pwa-signup-modal-badge {
+  display: inline-block;
+  margin: 0 0 0.5rem;
+  padding: 0.2rem 0.65rem;
+  border-radius: 999px;
+  background: var(--accent-ring, rgba(13, 110, 253, 0.15));
+  color: var(--accent, #0d6efd);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.pwa-signup-modal-card h2 {
+  margin: 0 0 0.5rem;
+  font-size: 1.35rem;
+  line-height: 1.25;
+}
+
+.pwa-signup-modal-detail {
+  margin: 0 0 0.85rem;
+  line-height: 1.5;
+  color: var(--text-muted, #6c757d);
+}
+
+.pwa-signup-modal-steps {
+  margin: 0 0 1rem;
+  padding-left: 1.15rem;
+  text-align: left;
+  line-height: 1.45;
+}
+
+.pwa-signup-modal-steps li + li {
+  margin-top: 0.35rem;
+}
+
+.pwa-signup-modal-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.pwa-signup-modal-install,
+.pwa-signup-modal-later {
+  width: 100%;
+}
+
+[data-theme="dark"] .pwa-signup-modal-backdrop {
+  background: rgba(2, 6, 23, 0.72);
+}
+
 .retention-banner {
   margin: 0;
   padding: 0.75rem 1rem;

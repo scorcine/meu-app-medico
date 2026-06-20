@@ -347,8 +347,21 @@ function medhubGoProfileOnboarding () {
 
 const MEDHUB_FRESH_LOGIN_KEY = 'medhub-post-login';
 
+const MEDHUB_PWA_SIGNUP_KEY = 'medhub-pwa-after-signup';
+
 function medhubMarkFreshLogin () {
   try { sessionStorage.setItem(MEDHUB_FRESH_LOGIN_KEY, '1'); } catch { /* ignore */ }
+  try { sessionStorage.setItem(MEDHUB_PWA_SIGNUP_KEY, '1'); } catch { /* ignore */ }
+}
+
+function medhubTakePwaAfterSignup () {
+  try {
+    if (sessionStorage.getItem(MEDHUB_PWA_SIGNUP_KEY) === '1') {
+      sessionStorage.removeItem(MEDHUB_PWA_SIGNUP_KEY);
+      return true;
+    }
+  } catch { /* ignore */ }
+  return false;
 }
 
 function medhubHasFreshLogin () {
