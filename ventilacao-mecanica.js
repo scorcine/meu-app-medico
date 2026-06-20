@@ -1,6 +1,6 @@
 /* Ventilação mecânica — calculadora + parâmetros iniciais e ajustes */
 
-const MEDHUB_VM_BUILD = 'vm-calc-v1';
+const MEDHUB_VM_BUILD = 'vm-calc-v2';
 
 const VM_PEEP_FIO2 = [
   { fio2Max: 0.3, peep: '5' },
@@ -39,10 +39,26 @@ function medhubVmInitialSettings (ctx, pbw) {
   const vt8 = medhubVmRoundVt(pbw * 8);
 
   const presets = {
-    padrao: { vt: vt7, fr: 14, peep: 5, fio2: '100% → titular (SpO₂ 92–96%)', ie: '1:2', flow: '50–60 L/min', note: 'VCV pós-IOT estável' },
-    sdr: { vt: vt6, fr: 16, peep: 8, fio2: '60% → titular (meta SpO₂ 88–95%)', ie: '1:2', flow: '≥ 60 L/min', note: 'Ventilação protetora — driving pressure &lt; 15' },
-    dpoc: { vt: vt6, fr: 12, peep: 5, fio2: 'Titular (SpO₂ 88–92%)', ie: '1:3 ou 1:4', flow: '50 L/min', note: 'Hipercapnia permissiva se pH ≥ 7,20' },
-    obeso: { vt: vt6, fr: 14, peep: 10, fio2: 'Titular', ie: '1:2', flow: '60 L/min', note: 'Vt sempre pelo PBW, não pelo peso real' }
+    padrao: {
+      vt: vt6,
+      fr: 12,
+      peep: 5,
+      fio2: '100% só pós-IOT → reduzir logo (SpO₂ alvo 92–96%)',
+      ie: '1:2',
+      flow: '50–55 L/min',
+      note: 'Ventilação protetora — <strong>inicie 6 mL/kg</strong>; 7–8 mL/kg só se hipercapnia/acidose persistir'
+    },
+    sdr: {
+      vt: vt6,
+      fr: 14,
+      peep: 8,
+      fio2: '40–60% → titular (SpO₂ 88–95%)',
+      ie: '1:2',
+      flow: '≥ 55 L/min',
+      note: 'SDRA — mantenha 6 mL/kg; oxigene com FiO₂/PEEP, não com Vt'
+    },
+    dpoc: { vt: vt6, fr: 10, peep: 5, fio2: 'Titular (SpO₂ 88–92%)', ie: '1:3 ou 1:4', flow: '45–50 L/min', note: 'Hipercapnia permissiva se pH ≥ 7,20' },
+    obeso: { vt: vt6, fr: 12, peep: 8, fio2: 'Titular', ie: '1:2', flow: '55 L/min', note: 'Vt sempre pelo PBW, não pelo peso real' }
   };
 
   return { ...(presets[ctx] || presets.padrao), vt6, vt7, vt8 };
@@ -84,8 +100,15 @@ function medhubVmBuildAdjustments (opts) {
   }
 
   if (active === 'hipercapnia') {
-    steps.push(`Aumentar <strong>FR para ${frUp} irpm</strong> (+2–4) — evitar FR &gt; 30–35 se DPOC/auto-PEEP.`);
-    steps.push(`Se ainda acidótico: <strong>Vt ${vtUp} mL</strong> (+1 mL/kg, máx. ${vt8} mL = 8 mL/kg).`);
+    steps.push(`Primeiro ↑ <strong>FR para ${frUp} irpm</strong> (+2–4) — evitar FR &gt; 30–35 se DPOC/auto-PEEP.`);
+    const vtNext = medhubVmRoundVt(Math.min(preset.vt8, preset.vt + pbw));
+    if (preset.vt <= preset.vt6 && vtNext > preset.vt6) {
+      steps.push(`Se acidose persiste: subir <strong>Vt para ${vtNext} mL</strong> (+1 mL/kg; teto ${preset.vt8} mL = 8 mL/kg).`);
+    } else if (preset.vt >= preset.vt8) {
+      steps.push(`Vt já no teto protetor (${preset.vt8} mL) — priorize FR, sedação e causas reversíveis.`);
+    } else {
+      steps.push(`Se ainda acidótico: <strong>Vt ${vtNext} mL</strong> (+1 mL/kg, máx. ${preset.vt8} mL).`);
+    }
     steps.push('Tratar febre, dor, broncoespasmo e sedação insuficiente.');
     if (ctx === 'sdr' || ctx === 'dpoc') steps.push('Se pH ≥ 7,20 com SDRA/DPOC → hipercapnia permissiva aceitável.');
   }
@@ -159,12 +182,12 @@ function medhubVmCalculate (form) {
   if (obese) {
     html += '<p class="vm-result-warn">Obesidade provável — use <strong>PBW</strong> para Vt, não o peso real.</p>';
   }
-  html += '<p class="muted">Faixa Vt: <strong>' + preset.vt6 + ' mL</strong> (6 mL/kg) · <strong>' + preset.vt7 + ' mL</strong> (7) · <strong>' + preset.vt8 + ' mL</strong> (8 mL/kg máx.)</p>';
+  html += '<p class="muted">Vt protetor: <strong>' + preset.vt6 + ' mL</strong> (6 mL/kg — <em>inicial recomendado</em>) · teto ' + preset.vt8 + ' mL (8 mL/kg) se hipercapnia refratária</p>';
 
   html += '<h4 class="vm-result-title">Configure no ventilador (inicial)</h4>';
   html += '<table class="emerg-table vm-result-table"><tr><th>Parâmetro</th><th>Sugestão</th></tr>';
   html += '<tr><td>Modo</td><td><strong>VCV</strong> (ou PCV local)</td></tr>';
-  html += '<tr><td>Vt</td><td><strong>' + preset.vt + ' mL</strong></td></tr>';
+  html += '<tr><td>Vt</td><td><strong>' + preset.vt + ' mL</strong> <span class="muted">(6 mL/kg PBW)</span></td></tr>';
   html += '<tr><td>FR</td><td><strong>' + preset.fr + ' irpm</strong></td></tr>';
   html += '<tr><td>FiO₂</td><td>' + preset.fio2 + '</td></tr>';
   html += '<tr><td>PEEP</td><td><strong>' + preset.peep + ' cmH₂O</strong></td></tr>';
@@ -247,7 +270,7 @@ const VM_CALC_HTML = `
           <div>
             <label for="vm-contexto">Situação clínica</label>
             <select id="vm-contexto" name="vm-contexto">
-              <option value="padrao">Pós-IOT padrão</option>
+              <option value="padrao">Pós-IOT — protetora (padrão)</option>
               <option value="sdr">SDRA / hipoxemia grave</option>
               <option value="dpoc">DPOC / asma (risco auto-PEEP)</option>
               <option value="obeso">Obesidade (Vt pelo PBW)</option>
