@@ -40,12 +40,13 @@ const { getStripe, findCustomerByEmail, getActiveSubscription } = require('../ap
 
 function parseArgs () {
   const args = process.argv.slice(2);
-  const out = { list: false };
+  const out = { list: false, lifetime: false };
   for (let i = 0; i < args.length; i++) {
     if (args[i] === '--email' && args[i + 1]) out.email = args[++i];
     else if (args[i] === '--password' && args[i + 1]) out.password = args[++i];
     else if (args[i] === '--name' && args[i + 1]) out.name = args[++i];
     else if (args[i] === '--list') out.list = true;
+    else if (args[i] === '--lifetime') out.lifetime = true;
   }
   return out;
 }
@@ -73,7 +74,7 @@ async function listAll () {
   }
 }
 
-async function grantAccess ({ email, password, name }) {
+async function grantAccess ({ email, password, name, lifetime }) {
   const norm = normalizeEmail(email);
   if (!norm) throw new Error('Informe --email valido.');
 
@@ -113,16 +114,16 @@ async function grantAccess ({ email, password, name }) {
     customerId,
     subscriptionId,
     status,
-    plan: 'annual',
+    plan: lifetime ? 'lifetime' : 'annual',
     active: true,
-    currentPeriodEnd: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(),
+    currentPeriodEnd: lifetime ? null : new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(),
     updatedAt: new Date().toISOString(),
     source: 'admin_grant'
   });
 
   if (!user) {
     if (!password || password.length < 8) {
-      console.log('\nPronto! Assinatura ativa no KV por 1 ano.');
+      console.log('\nPronto! Assinatura ativa no KV' + (lifetime ? ' (vitalício).' : ' por 1 ano.'));
       console.log('E-mail:', norm);
       console.log('Conta ainda nao criada — o usuario pode cadastrar em login com este e-mail.');
       console.log('Login: https://www.medhub.ia.br/login.html');
@@ -153,7 +154,7 @@ async function grantAccess ({ email, password, name }) {
 
   console.log('\nPronto!');
   console.log('E-mail:', norm);
-  console.log('Assinatura: ativa (KV)');
+  console.log('Assinatura:', lifetime ? 'ativa (vitalício · KV)' : 'ativa (KV · 1 ano)');
   console.log('Login: https://www.medhub.ia.br/login.html');
   if (password) console.log('Senha definida — use a informada no comando.');
 }
@@ -170,7 +171,7 @@ async function main () {
     return;
   }
   if (!args.email) {
-    console.log('Uso: node scripts/grant-access.js --email seu@email.com [--password NovaSenha123] [--list]');
+    console.log('Uso: node scripts/grant-access.js --email seu@email.com [--password NovaSenha123] [--lifetime] [--list]');
     process.exit(1);
   }
   await grantAccess(args);

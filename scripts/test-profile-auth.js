@@ -14,6 +14,7 @@ const {
 } = require('../api/_profile');
 
 const { sessionVersionValid } = require('../api/_auth');
+const { billingGrantStillValid } = require('../api/_subscription');
 
 let failures = 0;
 
@@ -93,6 +94,18 @@ else fail('legacy token on v1');
 
 if (!sessionVersionValid({ email: 'a@b.com' }, { sessionVersion: 3 })) pass('legacy token rejected after rotation');
 else fail('legacy token rejected after rotation');
+
+if (billingGrantStillValid({ active: true, source: 'admin_grant', plan: 'lifetime', customerId: 'manual_x' })) {
+  pass('admin lifetime grant');
+} else fail('admin lifetime grant');
+
+if (!billingGrantStillValid({
+  active: true,
+  source: 'admin_grant',
+  customerId: 'manual_x',
+  currentPeriodEnd: '2020-01-01T00:00:00.000Z'
+})) pass('expired admin grant');
+else fail('expired admin grant');
 
 console.log('');
 if (failures) {

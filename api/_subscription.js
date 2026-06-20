@@ -26,8 +26,19 @@ function statusFromSnapshot (snapshot, email) {
     currentPeriodEnd: snapshot.currentPeriodEnd || null,
     courtesyEndsAt: snapshot.courtesyEndsAt || null,
     isCourtesy: !!snapshot.isCourtesy,
-    source: 'kv'
+    source: snapshot.source || 'kv'
   };
+}
+
+function billingGrantStillValid (snapshot) {
+  if (!snapshot?.active) return false;
+  const isGrant =
+    snapshot.source === 'admin_grant' ||
+    snapshot.plan === 'lifetime' ||
+    String(snapshot.customerId || '').startsWith('manual_');
+  if (!isGrant) return false;
+  if (!snapshot.currentPeriodEnd) return true;
+  return new Date(snapshot.currentPeriodEnd).getTime() > Date.now();
 }
 
 function normalizeEmail (email) {
@@ -96,6 +107,11 @@ async function getSubscriptionStatus (email, options = {}) {
 
   const cached = await getCustomerBilling(customerId);
   const cachedStatus = statusFromSnapshot(cached, norm);
+
+  if (billingGrantStillValid(cached)) {
+    return cachedStatus;
+  }
+
   const cacheMissingCourtesy = cachedStatus?.active && cached && cached.courtesyEndsAt == null && cached.isCourtesy == null;
   if (cachedStatus?.active && !cacheMissingCourtesy) {
     return cachedStatus;
@@ -104,6 +120,9 @@ async function getSubscriptionStatus (email, options = {}) {
   const stripe = getStripe();
   const sub = await getActiveSubscription(stripe, customerId);
   if (!sub) {
+    if (billingGrantStillValid(cached)) {
+      return cachedStatus;
+    }
     if (cachedStatus) {
       return { ...cachedStatus, active: false, reason: 'no_subscription' };
     }
@@ -127,4 +146,4 @@ async function getSubscriptionStatus (email, options = {}) {
   };
 }
 
-module.exports = { getSubscriptionStatus, resolveCustomerId };
+module.exports = { getSubscriptionStatus, resolveCustomerId, billingGrantStillValid };
