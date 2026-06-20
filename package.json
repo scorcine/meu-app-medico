@@ -20,7 +20,8 @@
     "setup:resend": "node scripts/setup-resend.js",
     "setup:production": "node scripts/setup-production.js",
     "grant:access": "node scripts/grant-access.js",
-    "revoke:access": "node scripts/revoke-access.js"
+    "revoke:access": "node scripts/revoke-access.js",
+    "retention:report": "node scripts/retention-report.js"
   },
   "dependencies": {
     "@vercel/kv": "^3.0.0",

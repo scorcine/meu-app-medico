@@ -63,6 +63,87 @@ async function medhubUpdateHomeWelcome (user) {
   countdownEl.hidden = false;
 }
 
+async function medhubAppPing (section) {
+  if (medhubIsLocalDev()) return null;
+  if (typeof medhubGetAuthToken !== 'function' || !medhubGetAuthToken()) return null;
+
+  try {
+    const res = await fetch('/api/auth/me', {
+      method: 'POST',
+      headers: medhubAuthHeaders(),
+      body: JSON.stringify({ action: 'ping', section: String(section || 'app').slice(0, 64) })
+    });
+    const data = await res.json();
+    if (!res.ok) return null;
+    return data;
+  } catch {
+    return null;
+  }
+}
+
+function medhubRetentionDismissKey (banner) {
+  return 'medhub-retention-dismiss-' + String(banner?.daysLeft ?? 'x');
+}
+
+function medhubShowRetentionBanner (banner) {
+  const el = document.getElementById('retention-banner');
+  if (!el || !banner) {
+    if (el) el.hidden = true;
+    return;
+  }
+
+  try {
+    if (sessionStorage.getItem(medhubRetentionDismissKey(banner)) === '1') {
+      el.hidden = true;
+      return;
+    }
+  } catch { /* ignore */ }
+
+  const headlineEl = document.getElementById('retention-banner-headline');
+  const detailEl = document.getElementById('retention-banner-detail');
+  const ctaEl = document.getElementById('retention-banner-cta');
+  if (headlineEl) headlineEl.textContent = banner.headline || '';
+  if (detailEl) detailEl.textContent = banner.detail || '';
+  if (ctaEl && banner.subscribeUrl) ctaEl.href = banner.subscribeUrl;
+
+  el.classList.remove('retention-banner--high', 'retention-banner--medium');
+  if (banner.urgency === 'high') el.classList.add('retention-banner--high');
+  else if (banner.urgency === 'medium') el.classList.add('retention-banner--medium');
+
+  el.hidden = false;
+}
+
+function medhubBindRetentionBanner () {
+  const dismiss = document.getElementById('retention-banner-dismiss');
+  if (!dismiss || dismiss.dataset.bound) return;
+  dismiss.dataset.bound = '1';
+  dismiss.addEventListener('click', () => {
+    const el = document.getElementById('retention-banner');
+    const days = el?.dataset?.daysLeft;
+    if (days != null) {
+      try { sessionStorage.setItem('medhub-retention-dismiss-' + days, '1'); } catch { /* ignore */ }
+    }
+    if (el) el.hidden = true;
+  });
+}
+
+async function medhubInitRetention (user) {
+  medhubBindRetentionBanner();
+  const ping = await medhubAppPing('session_start');
+  if (ping?.retention) {
+    const el = document.getElementById('retention-banner');
+    if (el) el.dataset.daysLeft = String(ping.retention.daysLeft ?? '');
+    medhubShowRetentionBanner(ping.retention);
+  }
+  return ping;
+}
+
+function medhubTrackAppSection (sectionId) {
+  const id = String(sectionId || '').trim();
+  if (!id || id === 'inicio' || id === 'perfil') return;
+  medhubAppPing(id);
+}
+
 async function medhubVerifySubscription (email) {
   const norm = String(email || '').trim().toLowerCase();
   if (!norm) return { active: false };
@@ -79,7 +160,7 @@ async function medhubVerifySubscription (email) {
           return { active: false, misconfigured: true, reason: me.subscription.reason };
         }
         if (me.subscription.devBypass) return { active: true, devBypass: true };
-        return me.subscription;
+        return { ...me.subscription, activity: me.activity || null };
       }
     } catch {
       /* fallback abaixo removido em produção */
@@ -178,7 +259,10 @@ async function initBillingPanel (user) {
   if (status.active && !status.devBypass && !status.localDev) {
     const courtesyText = medhubCourtesyCountdownText(status);
     if (courtesyText) {
-      statusEl.textContent = courtesyText + ' Conta: ' + user.email + '.';
+      const used = status.activity?.hasUsedApp;
+      statusEl.textContent = courtesyText + (used
+        ? ' Você já usa o MedHub no plantão — assine para manter protocolos, receituário e calculadoras.'
+        : ' Experimente Prescrições de PS e Receituário antes da cortesia acabar.') + ' Conta: ' + user.email + '.';
     } else {
       const planLabel = status.plan === 'annual' ? 'anual' : 'mensal';
       statusEl.textContent = 'Assinatura ativa (' + planLabel + ') para ' + user.email + '. Renovação automática no cartão.';

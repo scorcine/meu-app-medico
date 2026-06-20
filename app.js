@@ -71,13 +71,17 @@ function initAppCore (user) {
   medhubInitComplianceShell();
   medhubRequireTerms(() => {
     medhubEnsureCryptoUnlock(() => {
+    void (async () => {
       const nameEl = document.getElementById('user-name');
       if (nameEl) nameEl.textContent = user.name;
 
       const greetingEl = document.getElementById('user-greeting');
       if (greetingEl) greetingEl.textContent = `Olá, ${user.name}`;
       if (typeof medhubUpdateHomeWelcome === 'function') {
-        medhubUpdateHomeWelcome(user);
+        await medhubUpdateHomeWelcome(user);
+      }
+      if (typeof medhubInitRetention === 'function') {
+        await medhubInitRetention(user);
       }
 
       document.querySelectorAll('.sidebar-link').forEach(link => {
@@ -109,6 +113,7 @@ function initAppCore (user) {
 
       const hash = window.location.hash.replace('#', '');
       if (hash) showSection(hash);
+    })();
     });
   });
 }
@@ -134,6 +139,10 @@ function initApp () {
 }
 
 function showSection (sectionId) {
+  if (typeof medhubTrackAppSection === 'function') {
+    medhubTrackAppSection(sectionId);
+  }
+
   document.querySelectorAll('.sidebar-link').forEach(link => {
     link.classList.toggle('active', link.dataset.section === sectionId);
   });

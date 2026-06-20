@@ -1,6 +1,49 @@
 const { siteOrigin } = require('./_stripe');
 
 async function sendPasswordResetEmail (toEmail, resetUrl) {
+  return sendEmail({
+    to: toEmail,
+    subject: 'Redefinir senha — MedHub',
+    html: buildResetEmailHtml(resetUrl)
+  });
+}
+
+async function sendCourtesyExpiringEmail ({ toEmail, name, daysLeft, endsAt, hasUsedApp, subscribeUrl }) {
+  const dateStr = new Date(endsAt).toLocaleDateString('pt-BR', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric'
+  });
+  const greeting = name ? ('Olá, ' + escapeHtml(name) + '.') : 'Olá.';
+  const subject = daysLeft <= 1
+    ? 'Sua cortesia MedHub acaba amanhã'
+    : 'Faltam ' + daysLeft + ' dias da sua cortesia MedHub';
+
+  let body;
+  if (!hasUsedApp) {
+    body = '<p>Sua cortesia termina em <strong>' + dateStr + '</strong>, mas você ainda não explorou o app no plantão.</p>' +
+      '<p>Experimente <strong>Prescrições de PS</strong>, <strong>Receituário</strong> e <strong>Calculadoras</strong> antes de perder o acesso.</p>';
+  } else {
+    body = '<p>Sua cortesia termina em <strong>' + dateStr + '</strong>.</p>' +
+      '<p>Você já usa o MedHub no plantão — protocolos, prescrição interativa e calculadoras num só lugar.</p>' +
+      '<p>Assine para <strong>não perder acesso</strong> quando a cortesia acabar.</p>';
+  }
+
+  return sendEmail({
+    to: toEmail,
+    subject,
+    html: buildGenericEmailHtml({
+      title: 'Cortesia MedHub',
+      greeting,
+      bodyHtml: body,
+      ctaLabel: 'Assinar MedHub Pro',
+      ctaUrl: subscribeUrl,
+      footnote: 'Este e-mail é enviado automaticamente quando sua cortesia está perto do fim.'
+    })
+  });
+}
+
+async function sendEmail ({ to, subject, html }) {
   const apiKey = process.env.RESEND_API_KEY;
   const from = process.env.MEDHUB_EMAIL_FROM || 'MedHub <onboarding@resend.dev>';
 
@@ -18,9 +61,9 @@ async function sendPasswordResetEmail (toEmail, resetUrl) {
     },
     body: JSON.stringify({
       from,
-      to: [toEmail],
-      subject: 'Redefinir senha — MedHub',
-      html: buildResetEmailHtml(resetUrl)
+      to: [to],
+      subject,
+      html
     })
   });
 
@@ -38,6 +81,28 @@ async function sendPasswordResetEmail (toEmail, resetUrl) {
   }
 
   return res.json();
+}
+
+function escapeHtml (value) {
+  return String(value || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+function buildGenericEmailHtml ({ title, greeting, bodyHtml, ctaLabel, ctaUrl, footnote }) {
+  return (
+    '<div style="font-family:sans-serif;max-width:520px;margin:0 auto;line-height:1.55;color:#1a2b3c">' +
+    '<h2 style="color:#0d6efd;margin:0 0 12px">' + escapeHtml(title) + '</h2>' +
+    '<p style="margin:0 0 12px">' + greeting + '</p>' +
+    bodyHtml +
+    (ctaUrl
+      ? '<p style="margin:20px 0"><a href="' + ctaUrl + '" style="display:inline-block;background:#0d6efd;color:#fff;padding:12px 20px;border-radius:8px;text-decoration:none;font-weight:600">' + escapeHtml(ctaLabel) + '</a></p>'
+      : '') +
+    (footnote ? '<p style="font-size:13px;color:#64748b;margin:16px 0 0">' + escapeHtml(footnote) + '</p>' : '') +
+    '</div>'
+  );
 }
 
 function buildResetEmailHtml (resetUrl) {
@@ -65,6 +130,7 @@ function buildResetUrl (req, token) {
 
 module.exports = {
   sendPasswordResetEmail,
+  sendCourtesyExpiringEmail,
   passwordResetEmailConfigured,
   buildResetUrl
 };

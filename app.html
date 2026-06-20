@@ -10,7 +10,7 @@
   <link rel="icon" href="assets/medhub-logo.png?v=logo-v1" type="image/png">
   <link rel="apple-touch-icon" href="assets/medhub-logo.png?v=logo-v1">
   <script src="theme.js"></script>
-  <link rel="stylesheet" href="style.css?v=home-courtesy-v2">
+  <link rel="stylesheet" href="style.css?v=retention-v1">
   <link rel="stylesheet" href="app-mobile.css?v=mobile-v2">
   <script defer src="calculators-risco.js"></script>
   <script defer src="calculators-cardio.js"></script>
@@ -69,9 +69,9 @@
   <script defer src="ferramentas.js?v=ped-app-v1"></script>
   <script defer src="backup.js?v=backup-v2"></script>
   <script defer src="clinical-cloud.js?v=cloud-sync-v1"></script>
-  <script defer src="subscription.js?v=billing-v6"></script>
+  <script defer src="subscription.js?v=billing-v7"></script>
   <script defer src="auth-cloud.js?v=cloud-v13"></script>
-  <script defer src="app.js?v=mobile-v2"></script>
+  <script defer src="app.js?v=retention-v1"></script>
   <script defer src="auth.js?v=compliance-v1"></script>
 </head>
 <body class="app-page" onload="initApp()">
@@ -93,6 +93,19 @@
     </div>
   </header>
   <button type="button" class="app-mobile-nav-backdrop" id="app-mobile-nav-backdrop" hidden aria-label="Fechar menu"></button>
+
+  <div id="retention-banner" class="retention-banner" hidden role="alert">
+    <div class="retention-banner-inner">
+      <div class="retention-banner-copy">
+        <strong id="retention-banner-headline"></strong>
+        <span id="retention-banner-detail"></span>
+      </div>
+      <div class="retention-banner-actions">
+        <a id="retention-banner-cta" class="btn retention-banner-cta" href="index.html#planos">Assinar e manter acesso</a>
+        <button type="button" class="retention-banner-dismiss" id="retention-banner-dismiss" aria-label="Fechar aviso">×</button>
+      </div>
+    </div>
+  </div>
 
   <div class="app-shell">
     <aside class="sidebar" id="app-sidebar">

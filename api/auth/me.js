@@ -8,6 +8,8 @@ const {
 const { getUser, saveUser, publicUser } = require('../_users');
 const { getSubscriptionStatus } = require('../_subscription');
 const { getClinicalBundle, saveClinicalBundle } = require('../_clinical-kv');
+const { recordUserActivity, getUserActivity, publicActivity } = require('../_activity-kv');
+const { processRetentionPing } = require('../_retention');
 const { authenticateRequest } = require('../_request-auth');
 
 module.exports = async (req, res) => {
@@ -30,9 +32,14 @@ async function handleGet (req, res) {
 
   try {
     const sub = await getSubscriptionStatus(auth.user.email, { user: auth.user, loadUser: false });
+    const activity = publicActivity(
+      await getUserActivity(auth.user.email),
+      auth.user.createdAt
+    );
     const out = {
       user: publicUser(auth.user),
-      subscription: sub
+      subscription: sub,
+      activity
     };
 
     const wantClinical = String(req.query?.clinical || '') === '1';
@@ -72,6 +79,11 @@ async function handlePost (req, res) {
 
   if (body.action === 'syncClinical') {
     await handleSyncClinical(res, auth, body);
+    return;
+  }
+
+  if (body.action === 'ping') {
+    await handlePing(res, auth, body);
     return;
   }
 
@@ -148,5 +160,26 @@ async function handleSyncClinical (res, auth, body) {
       return;
     }
     json(res, 500, { error: err.message || 'Erro ao sincronizar' });
+  }
+}
+
+async function handlePing (res, auth, body) {
+  const section = String(body.section || 'app').trim().slice(0, 64) || 'app';
+  const email = normalizeEmail(auth.user.email);
+
+  try {
+    const activityRaw = await recordUserActivity(email, section);
+    const sub = await getSubscriptionStatus(email, { user: auth.user, loadUser: false });
+    const retention = await processRetentionPing(email, sub, activityRaw, auth.user);
+    const activity = publicActivity(activityRaw, auth.user.createdAt);
+
+    json(res, 200, {
+      ok: true,
+      activity,
+      retention: retention.banner,
+      emailSent: retention.email?.sent || []
+    });
+  } catch (err) {
+    json(res, 500, { error: err.message || 'Erro ao registrar atividade' });
   }
 }
