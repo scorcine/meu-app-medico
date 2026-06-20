@@ -68,6 +68,7 @@
 
     var target = document.querySelector('.landing-header-actions')
       || document.querySelector('.header-actions')
+      || document.querySelector('.links-theme-slot')
       || document.querySelector('header');
     if (!target) return;
 

@@ -196,6 +196,36 @@ main {
   padding: 2rem;
 }
 
+/* Página links.html — coluna única (evita hero + botões lado a lado) */
+body.links-page main.links-main {
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  width: min(420px, 100%);
+  max-width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 1.25rem 1rem 2rem;
+  padding-left: max(1rem, env(safe-area-inset-left));
+  padding-right: max(1rem, env(safe-area-inset-right));
+  padding-bottom: max(2rem, env(safe-area-inset-bottom));
+  box-sizing: border-box;
+}
+
+body.links-page .links-hero {
+  display: block;
+  width: 100%;
+  background: transparent;
+  box-shadow: none;
+  padding: 0;
+}
+
+body.links-page .links-actions,
+body.links-page .links-secondary {
+  width: 100%;
+  max-width: 100%;
+}
+
 .card,
 form.card {
   background: var(--bg-surface);
