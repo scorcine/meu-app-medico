@@ -66,6 +66,19 @@ async function customerExists (stripe, customerId) {
   }
 }
 
+/** Código promocional ativo no Stripe (Promotion Code, não só Coupon ID). */
+async function resolvePromotionCode (stripe, code) {
+  const normalized = String(code || '').trim();
+  if (!normalized || !stripe) return null;
+
+  const list = await stripe.promotionCodes.list({
+    code: normalized,
+    active: true,
+    limit: 1
+  });
+  return list.data[0] || null;
+}
+
 module.exports = {
   getStripe,
   billingEnabled,
@@ -73,5 +86,6 @@ module.exports = {
   json,
   findCustomerByEmail,
   getActiveSubscription,
-  customerExists
+  customerExists,
+  resolvePromotionCode
 };

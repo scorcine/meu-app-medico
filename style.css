@@ -5024,6 +5024,33 @@ body.pricing-page .pricing-v2 {
   margin-top: 0.35rem;
 }
 
+.pricing-v2-coupon {
+  max-width: 680px;
+  margin: 0 auto 1rem;
+  padding: 0.9rem 1.1rem;
+  border-radius: 10px;
+  border: 1px dashed var(--border);
+  box-shadow: 0 2px 12px var(--shadow-xs);
+  background: rgba(15, 23, 42, 0.02);
+}
+
+.pricing-v2-coupon label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.35rem;
+}
+
+.pricing-v2-coupon input {
+  width: 100%;
+  max-width: 100%;
+}
+
+.pricing-v2-coupon-note {
+  margin-top: 0.35rem;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
 .pricing-v2-plans {
   display: grid;
   grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.15fr);

@@ -67,6 +67,13 @@ async function medhubOpenCheckout (plan, email) {
       if (Object.keys(attribution).length) payload.attribution = attribution;
     }
 
+    // Cupom opcional digitado na seção de planos — não altera o fluxo se estiver vazio
+    const couponInput = document.getElementById('pricing-coupon-code');
+    if (couponInput) {
+      const coupon = couponInput.value.trim();
+      if (coupon) payload.coupon = coupon;
+    }
+
     if (typeof medhubMetaTrackCheckoutStart === 'function') {
       medhubMetaTrackCheckoutStart(plan);
     }
@@ -79,6 +86,10 @@ async function medhubOpenCheckout (plan, email) {
     const data = await res.json();
     if (data.url) {
       window.location.href = data.url;
+      return;
+    }
+    if (data.code === 'invalid_coupon') {
+      alert(data.error || 'Cupom inválido.');
       return;
     }
     alert(data.error || 'Não foi possível iniciar o pagamento.');

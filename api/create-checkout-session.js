@@ -2,7 +2,8 @@ const {
   getStripe,
   billingEnabled,
   siteOrigin,
-  json
+  json,
+  resolvePromotionCode
 } = require('./_stripe');
 
 module.exports = async (req, res) => {
@@ -35,6 +36,7 @@ module.exports = async (req, res) => {
   }
 
   const email = String(body.email || '').trim().toLowerCase();
+  const coupon = String(body.coupon || '').trim();
   const origin = siteOrigin(req);
 
   try {
@@ -45,7 +47,10 @@ module.exports = async (req, res) => {
       line_items: [{ price: priceId, quantity: 1 }],
       success_url: `${origin}/subscribe-success.html?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/index.html?canceled=1#planos`,
-      allow_promotion_codes: false,
+      // Campo "Cupom de desconto" abaixo do e-mail no Checkout Stripe
+      allow_promotion_codes: true,
+      // Sem cobrança imediata (cupom 100%) → não pede cartão
+      payment_method_collection: 'if_required',
       billing_address_collection: 'auto',
       metadata: { medhub_plan: plan }
     };
@@ -54,7 +59,11 @@ module.exports = async (req, res) => {
       sessionParams.customer_email = email;
       sessionParams.metadata.medhub_email = email;
       sessionParams.subscription_data = {
-        metadata: { medhub_email: email }
+        ...(sessionParams.subscription_data || {}),
+        metadata: {
+          ...(sessionParams.subscription_data?.metadata || {}),
+          medhub_email: email
+        }
       };
     }
 
@@ -63,6 +72,29 @@ module.exports = async (req, res) => {
       const value = String(attribution[key] || '').trim();
       if (value) sessionParams.metadata[key] = value.slice(0, 500);
     });
+
+    if (coupon) {
+      const promo = await resolvePromotionCode(stripe, coupon);
+      if (!promo) {
+        json(res, 400, {
+          error: 'Cupom inválido ou expirado. Confira o código ou peça um novo cupom ao MedHub.',
+          code: 'invalid_coupon'
+        });
+        return;
+      }
+
+      const safeCoupon = coupon.slice(0, 100);
+      sessionParams.allow_promotion_codes = false;
+      sessionParams.discounts = [{ promotion_code: promo.id }];
+      sessionParams.metadata.medhub_coupon = safeCoupon;
+      sessionParams.subscription_data = {
+        ...(sessionParams.subscription_data || {}),
+        metadata: {
+          ...(sessionParams.subscription_data?.metadata || {}),
+          medhub_coupon: safeCoupon
+        }
+      };
+    }
 
     const trialDays = Number(process.env.MEDHUB_TRIAL_DAYS || 0);
     if (trialDays > 0) {
