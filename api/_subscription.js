@@ -24,6 +24,8 @@ function statusFromSnapshot (snapshot, email) {
     plan: snapshot.plan,
     status: snapshot.status,
     currentPeriodEnd: snapshot.currentPeriodEnd || null,
+    courtesyEndsAt: snapshot.courtesyEndsAt || null,
+    isCourtesy: !!snapshot.isCourtesy,
     source: 'kv'
   };
 }
@@ -94,7 +96,8 @@ async function getSubscriptionStatus (email, options = {}) {
 
   const cached = await getCustomerBilling(customerId);
   const cachedStatus = statusFromSnapshot(cached, norm);
-  if (cachedStatus?.active) {
+  const cacheMissingCourtesy = cachedStatus?.active && cached && cached.courtesyEndsAt == null && cached.isCourtesy == null;
+  if (cachedStatus?.active && !cacheMissingCourtesy) {
     return cachedStatus;
   }
 
@@ -118,6 +121,8 @@ async function getSubscriptionStatus (email, options = {}) {
     plan: snapshot.plan,
     status: sub.status,
     currentPeriodEnd: snapshot.currentPeriodEnd,
+    courtesyEndsAt: snapshot.courtesyEndsAt || null,
+    isCourtesy: !!snapshot.isCourtesy,
     source: 'stripe'
   };
 }

@@ -18,6 +18,9 @@ function initDashboard () {
 
     const greetingEl = document.getElementById('user-greeting');
     if (greetingEl) greetingEl.textContent = `Olá, ${user.name}`;
+    if (typeof medhubUpdateHomeWelcome === 'function') {
+      medhubUpdateHomeWelcome(user);
+    }
   });
 }
 
@@ -73,6 +76,9 @@ function initAppCore (user) {
 
       const greetingEl = document.getElementById('user-greeting');
       if (greetingEl) greetingEl.textContent = `Olá, ${user.name}`;
+      if (typeof medhubUpdateHomeWelcome === 'function') {
+        medhubUpdateHomeWelcome(user);
+      }
 
       document.querySelectorAll('.sidebar-link').forEach(link => {
         link.addEventListener('click', () => showSection(link.dataset.section));

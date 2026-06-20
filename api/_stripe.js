@@ -40,7 +40,7 @@ async function getActiveSubscription (stripe, customerId) {
         customer: customerId,
         status,
         limit: 1,
-        expand: ['data.items.data.price']
+        expand: ['data.items.data.price', 'data.discount', 'data.discount.coupon']
       });
       if (subs.data.length) return subs.data[0];
     }

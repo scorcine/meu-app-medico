@@ -16,6 +16,53 @@ async function medhubFetchBillingConfig () {
   }
 }
 
+function medhubDaysUntilDate (iso) {
+  if (!iso) return null;
+  const end = new Date(iso);
+  if (Number.isNaN(end.getTime())) return null;
+  const now = new Date();
+  const startToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const endDay = new Date(end.getFullYear(), end.getMonth(), end.getDate());
+  return Math.max(0, Math.ceil((endDay - startToday) / (24 * 60 * 60 * 1000)));
+}
+
+function medhubFormatDatePt (iso) {
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return '';
+  return d.toLocaleDateString('pt-BR', { day: 'numeric', month: 'short', year: 'numeric' });
+}
+
+function medhubCourtesyCountdownText (subscription) {
+  if (!subscription?.isCourtesy || !subscription?.courtesyEndsAt) return '';
+  const days = medhubDaysUntilDate(subscription.courtesyEndsAt);
+  if (days == null) return '';
+  const dateStr = medhubFormatDatePt(subscription.courtesyEndsAt);
+  if (days === 0) return 'Sua cortesia expira hoje (' + dateStr + ').';
+  if (days === 1) return 'Falta 1 dia de cortesia — expira em ' + dateStr + '.';
+  return 'Faltam ' + days + ' dias de cortesia — expira em ' + dateStr + '.';
+}
+
+async function medhubUpdateHomeWelcome (user) {
+  const greetingEl = document.getElementById('user-greeting');
+  const countdownEl = document.getElementById('home-courtesy-countdown');
+  if (!greetingEl || !user?.name) return;
+
+  greetingEl.textContent = 'Olá, ' + user.name;
+
+  if (!countdownEl) return;
+  countdownEl.hidden = true;
+  countdownEl.textContent = '';
+
+  const sub = await medhubVerifySubscription(user.email);
+  if (!sub?.isCourtesy) return;
+
+  const text = medhubCourtesyCountdownText(sub);
+  if (!text) return;
+
+  countdownEl.textContent = text;
+  countdownEl.hidden = false;
+}
+
 async function medhubVerifySubscription (email) {
   const norm = String(email || '').trim().toLowerCase();
   if (!norm) return { active: false };
@@ -129,8 +176,13 @@ async function initBillingPanel (user) {
 
   const status = await medhubVerifySubscription(user.email);
   if (status.active && !status.devBypass && !status.localDev) {
-    const planLabel = status.plan === 'annual' ? 'anual' : 'mensal';
-    statusEl.textContent = 'Assinatura ativa (' + planLabel + ') para ' + user.email + '. Renovação automática no cartão.';
+    const courtesyText = medhubCourtesyCountdownText(status);
+    if (courtesyText) {
+      statusEl.textContent = courtesyText + ' Conta: ' + user.email + '.';
+    } else {
+      const planLabel = status.plan === 'annual' ? 'anual' : 'mensal';
+      statusEl.textContent = 'Assinatura ativa (' + planLabel + ') para ' + user.email + '. Renovação automática no cartão.';
+    }
     if (portalBtn) portalBtn.hidden = false;
     if (subscribeBtn) subscribeBtn.hidden = true;
   } else {

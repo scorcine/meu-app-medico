@@ -21,10 +21,37 @@ function planFromSubscription (sub) {
   return interval === 'year' ? 'annual' : 'monthly';
 }
 
+function courtesyInfoFromSubscription (sub) {
+  let courtesyEndsAt = null;
+  let isCourtesy = false;
+
+  const discount = sub?.discount;
+  const coupon = discount?.coupon && typeof discount.coupon === 'object' ? discount.coupon : null;
+
+  if (discount?.end) {
+    courtesyEndsAt = new Date(discount.end * 1000).toISOString();
+  }
+  if (coupon?.percent_off === 100) {
+    isCourtesy = true;
+  }
+  if (sub?.metadata?.medhub_coupon) {
+    isCourtesy = true;
+  }
+  if (sub?.status === 'trialing' && sub?.trial_end) {
+    isCourtesy = true;
+    if (!courtesyEndsAt) {
+      courtesyEndsAt = new Date(sub.trial_end * 1000).toISOString();
+    }
+  }
+
+  return { courtesyEndsAt, isCourtesy };
+}
+
 function snapshotFromSubscription (sub, email) {
   const active = sub && ['active', 'trialing'].includes(sub.status);
+  const courtesy = courtesyInfoFromSubscription(sub);
   return {
-    email: normalizeEmail(email || sub?.metadata?.email || ''),
+    email: normalizeEmail(email || sub?.metadata?.email || sub?.metadata?.medhub_email || ''),
     customerId: typeof sub.customer === 'string' ? sub.customer : sub.customer?.id,
     subscriptionId: sub.id,
     status: sub.status,
@@ -33,6 +60,8 @@ function snapshotFromSubscription (sub, email) {
     currentPeriodEnd: sub.current_period_end
       ? new Date(sub.current_period_end * 1000).toISOString()
       : null,
+    courtesyEndsAt: courtesy.courtesyEndsAt,
+    isCourtesy: courtesy.isCourtesy,
     updatedAt: new Date().toISOString()
   };
 }
