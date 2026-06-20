@@ -221,7 +221,6 @@ function medhubProfileDataComplete (profile) {
 }
 
 function medhubIsProfileSetupComplete (profile) {
-  if (medhubIsFreshLoginSession()) return false;
   const p = profile || medhubLoadUserProfile();
   if (medhubProfileDataComplete(p)) return true;
   const user = typeof getSession === 'function' ? getSession() : null;

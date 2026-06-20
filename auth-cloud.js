@@ -434,7 +434,12 @@ async function medhubEnsureProfileOnboarding () {
     return true;
   }
 
-  window.location.href = 'login.html';
+  if (!user?.email) {
+    window.location.href = 'login.html';
+    return false;
+  }
+
+  medhubGoProfileOnboarding();
   return false;
 }
 
@@ -457,7 +462,8 @@ async function medhubFinishCloudAuth (loginData, config, options = {}) {
 
 async function medhubAfterCloudAuth (loginData, password, options = {}) {
   medhubApplyCloudSession(loginData, password);
-  medhubMarkFreshLogin();
+  if (options.forceOnboarding) medhubMarkFreshLogin();
+  else medhubClearFreshLogin();
   await medhubUnlockSession(password, loginData.user.email);
 
   if (typeof medhubCloudSyncAfterUnlock === 'function') {

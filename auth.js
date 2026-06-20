@@ -269,7 +269,7 @@ async function handleLogin (e) {
   }
 
   medhubSetSession(upgraded);
-  if (typeof medhubMarkFreshLogin === 'function') medhubMarkFreshLogin();
+  if (typeof medhubClearFreshLogin === 'function') medhubClearFreshLogin();
   await medhubUnlockSession(pass, email);
 
   if (typeof medhubRequireSubscription === 'function') {

@@ -169,11 +169,6 @@ async function initOnboardingProfileGate () {
 
   if (!user) return;
 
-  if (typeof medhubHasFreshLogin === 'function' && !medhubHasFreshLogin()) {
-    window.location.replace('login.html');
-    return;
-  }
-
   if (typeof medhubCloudSyncAvailable === 'function' && await medhubCloudSyncAvailable()) {
     const cloud = await medhubCloudFetchProfile();
     if (cloud.ok && cloud.profile) {
@@ -181,8 +176,13 @@ async function initOnboardingProfileGate () {
     }
   }
 
+  if (user?.email && typeof medhubRestoreProfileFromSetupBackup === 'function') {
+    medhubRestoreProfileFromSetupBackup(user.email);
+  }
+
   const profile = typeof medhubLoadUserProfile === 'function' ? medhubLoadUserProfile() : null;
   if (typeof medhubIsProfileSetupComplete === 'function' && medhubIsProfileSetupComplete(profile)) {
+    if (typeof medhubClearFreshLogin === 'function') medhubClearFreshLogin();
     window.location.replace('app.html');
     return;
   }
