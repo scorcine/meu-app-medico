@@ -2382,4 +2382,7 @@ function showEmergenciaProtocol (protocolId) {
     </div>`;
   initEmergEcgLightbox(contentEl);
   initEmergCalcForms(contentEl);
+  if (protocolId === 'ventilacao-mecanica' && typeof medhubBindVmCalcForm === 'function') {
+    medhubBindVmCalcForm(contentEl);
+  }
 }
