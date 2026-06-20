@@ -1,6 +1,6 @@
 /* Guia rápido de emergência — tópicos e conteúdo — build 98041d1 */
 
-const MEDHUB_EMERG_BUILD = 'procedimentos-v1';
+const MEDHUB_EMERG_BUILD = 'vm-card-v2';
 
 const PARADA_PROTOCOLS = [
   {
@@ -2273,6 +2273,10 @@ function initEmergCalcForms (container) {
 }
 
 function initGuiaEmergencia () {
+  if (typeof medhubRegisterVentilacaoEmergProtocol === 'function') {
+    medhubRegisterVentilacaoEmergProtocol();
+  }
+
   const grid = document.getElementById('emerg-topic-grid');
   if (!grid) return;
 
@@ -2340,7 +2344,7 @@ function showEmergenciaTopic (topicId) {
     return;
   }
 
-  const expectedProtocols = { 'parada-cardio': 6, 'sca': 4, 'avc': 4, 'sepse': 3, 'trauma': 4, 'via-aerea': 3, 'reacoes-metabolicas': 4, 'obstetricia': 3, 'pediatrica': 3, 'toxicologia': 4, 'pressao-arritmias': 2, 'procedimentos': 3 };
+  const expectedProtocols = { 'parada-cardio': 6, 'sca': 4, 'avc': 4, 'sepse': 3, 'trauma': 4, 'via-aerea': 4, 'reacoes-metabolicas': 4, 'obstetricia': 3, 'pediatrica': 3, 'toxicologia': 4, 'pressao-arritmias': 2, 'procedimentos': 3 };
   if (expectedProtocols[topicId]) {
     contentEl.innerHTML = `
       <p class="coming-soon"><strong>Arquivo desatualizado no navegador.</strong> Os protocolos de <em>${topic.name}</em> já existem no projeto, mas o navegador carregou uma versão antiga de <code>emergency-guide.js</code>.</p>

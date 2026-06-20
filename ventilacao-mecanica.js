@@ -130,6 +130,28 @@ const VM_CONTENT = `
 
 const VM_PROTOCOL_HTML = VM_CONTENT;
 
+/** Garante o card no Guia → Via Aérea mesmo se emergency-guide.js estiver em cache antigo. */
+function medhubRegisterVentilacaoEmergProtocol () {
+  if (typeof VIA_AEREA_PROTOCOLS === 'undefined') return false;
+
+  const entry = {
+    id: 'ventilacao-mecanica',
+    icon: '🫁',
+    name: 'Ventilação Mecânica — parâmetros e ajustes',
+    html: VM_PROTOCOL_HTML
+  };
+
+  const idx = VIA_AEREA_PROTOCOLS.findIndex(p => p.id === 'ventilacao-mecanica');
+  if (idx >= 0) {
+    VIA_AEREA_PROTOCOLS[idx] = entry;
+    return true;
+  }
+
+  const rsiIdx = VIA_AEREA_PROTOCOLS.findIndex(p => p.id === 'rsi-7-passos');
+  VIA_AEREA_PROTOCOLS.splice(rsiIdx >= 0 ? rsiIdx + 1 : 0, 0, entry);
+  return true;
+}
+
 function initVentilacaoMecanica () {
   const el = document.getElementById('vm-content');
   if (!el || el.dataset.vmBound) return;
