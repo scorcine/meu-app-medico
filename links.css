@@ -46,8 +46,13 @@ body.links-page {
   color: var(--text-primary);
 }
 
-.links-hero .medhub-logo--auth {
+.links-hero .medhub-logo-link {
+  display: inline-flex;
   margin: 0 auto 0.85rem;
+}
+
+.links-hero .medhub-logo--auth {
+  margin: 0;
 }
 
 .links-tagline {
