@@ -3,8 +3,8 @@ const MEDHUB_SITE_URL = 'https://www.medhub.ia.br';
 
 /** Divulgação — edite com o @ e link reais do Instagram */
 const MEDHUB_MARKETING = {
-  instagramUrl: 'https://www.instagram.com/medhub.ia.br/',
-  instagramHandle: '@medhub.ia.br',
+  instagramUrl: 'https://www.instagram.com/medhub_app/',
+  instagramHandle: '@medhub_app',
   supportEmail: '',
   linksBio: 'https://www.medhub.ia.br/links.html',
   linksEstudantes: 'https://www.medhub.ia.br/links-estudantes.html',
