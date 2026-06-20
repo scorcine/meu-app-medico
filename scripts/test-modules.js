@@ -164,6 +164,7 @@ const SCRIPTS = [
   'calculators-hepato.js', 'calculators-endocrino.js', 'calculators-onco.js', 'calculators-obstetricia.js',
   'calculators-pediatria.js', 'calculators-urgencia.js', 'calculators-hemato.js', 'calculators-farma.js',
   'calculators-neuro.js', 'calculators-derma.js', 'calculators-orto.js', 'calculators-extras.js',
+  'ventilacao-mecanica.js',
   'emergency-guide.js',
   'tratamento-hospitalar-content-1.js', 'tratamento-hospitalar-content-2.js', 'tratamento-hospitalar.js',
   'ventilacao-mecanica.js',

@@ -1094,6 +1094,12 @@ const VIA_AEREA_PROTOCOLS = [
     `
   },
   {
+    id: 'ventilacao-mecanica',
+    icon: '🫁',
+    name: 'Ventilação Mecânica — parâmetros e ajustes',
+    html: typeof VM_PROTOCOL_HTML !== 'undefined' ? VM_PROTOCOL_HTML : '<p class="coming-soon">Recarregue a página com <strong>Ctrl+F5</strong>.</p>'
+  },
+  {
     id: 'dope-pos-iot',
     icon: '🚨',
     name: 'Hipoxemia pós-IOT — DOPE',

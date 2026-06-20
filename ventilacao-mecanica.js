@@ -124,9 +124,11 @@ const VM_CONTENT = `
     <p class="emerg-note">Tabela orientativa — usar protocolo institucional e resposta clínica (Pplat, driving pressure, hemodinâmica).</p>
   </div>
 
-  <p class="emerg-note">Ferramenta educacional. Não substitui protocolo de UTI, fisioterapeuta intensivista nem manual do ventilador. Desmame ventilatório (RSBI/TRE): Guia rápido de emergência → Via Aérea &amp; Ventilação.</p>
+  <p class="emerg-note">Ferramenta educacional. Não substitui protocolo de UTI, fisioterapeuta intensivista nem manual do ventilador.</p>
   <p class="muted vm-build">Build Ventilação mecânica: <strong>${MEDHUB_VM_BUILD}</strong></p>
 `;
+
+const VM_PROTOCOL_HTML = VM_CONTENT;
 
 function initVentilacaoMecanica () {
   const el = document.getElementById('vm-content');
