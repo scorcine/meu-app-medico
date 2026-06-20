@@ -36,6 +36,30 @@ function medhubDefaultProfile (sessionUser) {
   };
 }
 
+function medhubProfileHasIdentityFields (profile) {
+  if (!profile?.userType) return false;
+  if (!String(profile.rxDisplayName || '').trim()) return false;
+  if (profile.userType === 'student') return true;
+  if (profile.userType === 'doctor') {
+    return !!String(profile.crmNumber || '').replace(/\D/g, '');
+  }
+  return false;
+}
+
+function medhubSanitizeProfileForFreshOnboarding (sessionUser) {
+  if (!sessionUser?.email || typeof medhubSaveUserProfileLocal !== 'function') {
+    return typeof medhubLoadUserProfile === 'function' ? medhubLoadUserProfile() : null;
+  }
+  return medhubSaveUserProfileLocal({
+    rxDisplayName: String(sessionUser.name || '').trim(),
+    userType: '',
+    crmUf: 'SP',
+    crmNumber: '',
+    onboardingComplete: false,
+    identityLocked: false,
+    identityChangeCount: 0
+  });
+}
 function medhubMigrateLegacyCrm (profile) {
   if (profile.userType !== 'doctor') return profile;
   const legacy = localStorage.getItem(MEDHUB_RX_CRM_LEGACY_KEY);
@@ -112,6 +136,7 @@ function medhubRestoreProfileFromSetupBackup (email) {
 }
 
 function medhubMigrateWrongLocalProfileKey (email) {
+  if (typeof medhubIsLocalDev === 'function' && !medhubIsLocalDev()) return;
   const norm = medhubNormalizedProfileEmail(email);
   if (!norm) return;
   const wrongKey = MEDHUB_PROFILE_PREFIX + 'local';
@@ -140,8 +165,12 @@ function medhubLoadUserProfile () {
   if (!MEDHUB_CRM_UFS.includes(profile.crmUf)) profile.crmUf = 'SP';
   profile.crmNumber = String(profile.crmNumber || '').replace(/\D/g, '');
   if (user?.email && !medhubProfileDataComplete(profile)) {
-    const restored = medhubRestoreProfileFromSetupBackup(user.email);
-    if (restored) profile = restored;
+    let skipBackup = false;
+    try { skipBackup = sessionStorage.getItem('medhub-post-login') === '1'; } catch { /* ignore */ }
+    if (!skipBackup) {
+      const restored = medhubRestoreProfileFromSetupBackup(user.email);
+      if (restored) profile = restored;
+    }
   }
   return profile;
 }
@@ -180,14 +209,7 @@ function medhubNeedsProfileOnboarding (profile) {
 
 function medhubProfileDataComplete (profile) {
   if (!profile) return false;
-  if (profile.onboardingComplete) return true;
-  if (!profile.userType) return false;
-  if (!String(profile.rxDisplayName || '').trim()) return false;
-  if (profile.userType === 'student') return true;
-  if (profile.userType === 'doctor') {
-    return !!String(profile.crmNumber || '').replace(/\D/g, '');
-  }
-  return false;
+  return !!(profile.onboardingComplete && medhubProfileHasIdentityFields(profile));
 }
 
 function medhubIsProfileSetupComplete (profile) {
@@ -196,7 +218,7 @@ function medhubIsProfileSetupComplete (profile) {
   const user = typeof getSession === 'function' ? getSession() : null;
   if (user?.email) {
     const snap = medhubLoadProfileSetupBackup(user.email);
-    if (medhubSnapshotProfileSetupComplete(snap)) return true;
+    if (snap?.onboardingComplete && medhubSnapshotProfileSetupComplete(snap)) return true;
   }
   return false;
 }
