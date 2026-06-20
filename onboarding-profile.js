@@ -33,8 +33,16 @@ function initOnboardingProfilePage () {
 
   function updateCrmVisibility () {
     const isDoctor = selectedUserType() === 'doctor';
+    if (crmBlock) {
+      crmBlock.hidden = !isDoctor;
+      crmBlock.classList.toggle('onboarding-crm-fields--visible', isDoctor);
+    }
     if (crmNumEl) crmNumEl.required = isDoctor;
-    if (crmBlock) crmBlock.setAttribute('aria-hidden', isDoctor ? 'false' : 'true');
+    if (isDoctor && crmBlock) {
+      requestAnimationFrame(() => {
+        crmBlock.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      });
+    }
     updatePreview();
   }
 

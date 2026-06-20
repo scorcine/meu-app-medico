@@ -37,6 +37,7 @@ function medhubDefaultProfile (sessionUser) {
 }
 
 function medhubMigrateLegacyCrm (profile) {
+  if (profile.userType !== 'doctor') return profile;
   const legacy = localStorage.getItem(MEDHUB_RX_CRM_LEGACY_KEY);
   if (!legacy || profile.crmNumber) return profile;
   const prefixed = String(legacy).match(/CRM[-\s]*([A-Z]{2})\s*(\d+)/i);

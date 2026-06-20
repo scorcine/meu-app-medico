@@ -656,7 +656,7 @@ footer {
   text-align: left;
 }
 
-.onboarding-profile-card:has(input[name="userType"][value="doctor"]:checked) .onboarding-crm-fields {
+.onboarding-crm-fields.onboarding-crm-fields--visible:not([hidden]) {
   display: block;
 }
 
