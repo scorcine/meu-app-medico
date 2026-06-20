@@ -1140,6 +1140,48 @@ body.app-page {
   max-width: 960px;
 }
 
+.vm-wrap {
+  max-width: 960px;
+}
+
+.vm-section-card {
+  margin: 1.5rem 0;
+  padding: 1.25rem 1.35rem;
+  border: 1px solid var(--border-subtle, rgba(0, 0, 0, 0.08));
+  border-radius: 12px;
+  background: var(--surface-muted, rgba(0, 0, 0, 0.02));
+}
+
+.vm-section-card h3 {
+  margin: 0 0 0.75rem;
+  font-size: 1.15rem;
+}
+
+.vm-section-card h4 {
+  margin: 1.25rem 0 0.5rem;
+  font-size: 1rem;
+}
+
+.vm-peep-table {
+  font-size: 0.88rem;
+}
+
+.vm-peep-table th,
+.vm-peep-table td {
+  text-align: center;
+  padding: 0.4rem 0.35rem;
+}
+
+.vm-build {
+  margin-top: 1rem;
+  font-size: 0.82rem;
+}
+
+[data-theme="dark"] .vm-section-card {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
 .ps-search-label {
   display: block;
   margin: 0.75rem 0 0.35rem;

@@ -33,6 +33,7 @@
   <script defer src="tratamento-hospitalar-content-1.js?v=th-expand-v1"></script>
   <script defer src="tratamento-hospitalar-content-2.js?v=th-expand-v1"></script>
   <script defer src="tratamento-hospitalar.js?v=th-expand-v1"></script>
+  <script defer src="ventilacao-mecanica.js?v=vm-v1"></script>
   <script defer src="pronto-socorro-content-1.js?v=ps-etiology-v4"></script>
   <script defer src="pronto-socorro-content-2.js?v=ps-etiology-v4"></script>
   <script defer src="pronto-socorro-content-3.js?v=ps-etiology-v4"></script>
@@ -128,6 +129,7 @@
         <button type="button" class="sidebar-link" data-section="guia-emergencia">Guia rápido de emergência</button>
         <button type="button" class="sidebar-link" data-section="pronto-socorro">Prescrições de Pronto Socorro</button>
         <button type="button" class="sidebar-link" data-section="tratamento-hospitalar">Tratamento hospitalar</button>
+        <button type="button" class="sidebar-link" data-section="ventilacao-mecanica">Ventilação mecânica</button>
 
         <p class="sidebar-group">Calculadoras</p>
         <button type="button" class="sidebar-link" data-section="calc-essenciais">Calculadoras essenciais</button>
@@ -317,6 +319,16 @@
             <button type="button" class="btn-back" id="th-back">← Voltar à lista</button>
             <h2 id="th-condition-title"></h2>
             <div id="th-condition-content" class="emerg-content"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="section-ventilacao-mecanica" class="content-panel">
+        <div class="card dashboard-card vm-wrap">
+          <div id="vm-list-view">
+            <h2>Ventilação mecânica</h2>
+            <p class="muted">Parâmetros iniciais pós-intubação e titulação prática — oxigenação, ventilação e pressões.</p>
+            <div id="vm-content" class="emerg-content"></div>
           </div>
         </div>
       </section>

@@ -94,6 +94,7 @@ function initAppCore (user) {
       initCalcEssenciais();
       initGuiaEmergencia();
       initTratamentoHospitalar();
+      initVentilacaoMecanica();
       initProntoSocorro();
       initAnamnese();
       initReceituario();
@@ -159,6 +160,7 @@ function showSection (sectionId) {
   if (sectionId === 'medicacoes' && typeof medShowList === 'function') medShowList();
   if (sectionId === 'exames' && typeof examesOnSectionShow === 'function') examesOnSectionShow();
   if (sectionId === 'interpretacao-exame' && typeof interpOnSectionShow === 'function') interpOnSectionShow();
+  if (sectionId === 'ventilacao-mecanica' && typeof initVentilacaoMecanica === 'function') initVentilacaoMecanica();
   if (sectionId === 'pacientes' && typeof pacientesOnSectionShow === 'function') pacientesOnSectionShow();
   if (sectionId === 'consultas' && typeof consultasOnSectionShow === 'function') consultasOnSectionShow();
   if (sectionId === 'anamnese' && typeof anamneseOnSectionShow === 'function') anamneseOnSectionShow();

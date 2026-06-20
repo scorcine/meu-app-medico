@@ -166,6 +166,7 @@ const SCRIPTS = [
   'calculators-neuro.js', 'calculators-derma.js', 'calculators-orto.js', 'calculators-extras.js',
   'emergency-guide.js',
   'tratamento-hospitalar-content-1.js', 'tratamento-hospitalar-content-2.js', 'tratamento-hospitalar.js',
+  'ventilacao-mecanica.js',
   'pronto-socorro-content-1.js', 'pronto-socorro-content-2.js', 'pronto-socorro-content-3.js',
   'pronto-socorro-content-4.js', 'pronto-socorro-content-5.js', 'ps-drug-meta-gaps.js', 'med-promoted-meta.js',
   'pronto-socorro-interactive-drugs.js', 'pronto-socorro-interactive-data.js',
@@ -186,6 +187,7 @@ const UI = [
   ['Emergência', 'guia-emergencia', 'emerg-topic-grid', 12],
   ['Pronto-socorro', 'pronto-socorro', 'ps-condition-grid', 50],
   ['Trat. hospitalar', 'tratamento-hospitalar', 'th-condition-grid', 40],
+  ['Ventilação mecânica', 'ventilacao-mecanica', 'vm-content', 500],
   ['Calculadoras', 'calc-essenciais', 'calc-category-grid', 10],
   ['Anamnese', 'anamnese', 'anamnese-form', -1],
   ['Pacientes', 'pacientes', 'pac-form', -1],
@@ -216,8 +218,10 @@ try {
       pass('UI · ' + label, 'painel OK');
       return;
     }
-    const n = document.getElementById(elId)?.children?.length || 0;
-    if (n >= min) pass('UI · ' + label, n + ' itens');
+    const n = elId === 'vm-content'
+      ? (document.getElementById(elId)?.innerHTML?.length || 0)
+      : (document.getElementById(elId)?.children?.length || 0);
+    if (n >= min) pass('UI · ' + label, (elId === 'vm-content' ? n + ' chars' : n + ' itens'));
     else fail('UI · ' + label, n + ' (min ' + min + ')');
   });
 
