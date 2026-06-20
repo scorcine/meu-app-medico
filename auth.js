@@ -166,8 +166,13 @@ async function handleRegister (e) {
 
   if (config.cloudEnabled && typeof medhubCloudRegister === 'function') {
     const checkoutSessionId = document.getElementById('checkout-session-id')?.value?.trim() || '';
-    const result = await medhubCloudRegister(name, email, pass, termsOk, privacyOk, checkoutSessionId);
+    const coupon = document.getElementById('register-coupon-code')?.value?.trim() || '';
+    const result = await medhubCloudRegister(name, email, pass, termsOk, privacyOk, checkoutSessionId, coupon);
     if (!result.ok) {
+      if (result.code === 'invalid_coupon' || result.code === 'coupon_requires_checkout') {
+        alert(result.error);
+        return;
+      }
       if (result.code === 'subscription_required') {
         alert(result.error);
         window.location.href = 'index.html?email=' + encodeURIComponent(email) + '#planos';

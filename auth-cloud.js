@@ -98,7 +98,7 @@ async function medhubConfirmPasswordReset (token, newPassword) {
   return { ok: true, message: data.message, clinicalDataReset: data.clinicalDataReset };
 }
 
-async function medhubCloudRegister (name, email, password, acceptTerms, acceptPrivacy, checkoutSessionId) {
+async function medhubCloudRegister (name, email, password, acceptTerms, acceptPrivacy, checkoutSessionId, coupon) {
   const payload = {
     name,
     email: authNormalizedEmail(email),
@@ -107,6 +107,7 @@ async function medhubCloudRegister (name, email, password, acceptTerms, acceptPr
     acceptPrivacy
   };
   if (checkoutSessionId) payload.checkoutSessionId = checkoutSessionId;
+  if (coupon) payload.coupon = String(coupon).trim();
 
   const res = await fetch('/api/auth/register', {
     method: 'POST',

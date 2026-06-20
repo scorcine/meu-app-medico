@@ -67,13 +67,6 @@ async function medhubOpenCheckout (plan, email) {
       if (Object.keys(attribution).length) payload.attribution = attribution;
     }
 
-    // Cupom opcional digitado na seção de planos — não altera o fluxo se estiver vazio
-    const couponInput = document.getElementById('pricing-coupon-code');
-    if (couponInput) {
-      const coupon = couponInput.value.trim();
-      if (coupon) payload.coupon = coupon;
-    }
-
     if (typeof medhubMetaTrackCheckoutStart === 'function') {
       medhubMetaTrackCheckoutStart(plan);
     }

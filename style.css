@@ -5441,6 +5441,24 @@ body.pricing-page .pricing-v2 {
   line-height: 1.45;
 }
 
+form.card .auth-coupon-wrap {
+  margin: 0.85rem 0 0;
+  padding: 0.85rem 0.95rem;
+  border-radius: 10px;
+  border: 1px dashed var(--border);
+  background: rgba(15, 23, 42, 0.02);
+}
+
+form.card .auth-coupon-wrap label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.35rem;
+}
+
+form.card .auth-coupon-note a {
+  color: var(--text-accent);
+}
+
 .legal-page header,
 .legal-page footer {
   text-align: center;

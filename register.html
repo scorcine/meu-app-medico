@@ -6,7 +6,7 @@
   <title>Cadastro • MedHub</title>
   <link rel="icon" href="assets/medhub-logo.png?v=logo-v1" type="image/png">
   <script src="theme.js"></script>
-  <link rel="stylesheet" href="style.css?v=auth-register-v2">
+  <link rel="stylesheet" href="style.css?v=auth-register-v3">
   <link rel="stylesheet" href="auth-mobile.css?v=auth-mobile-v1">
   <script defer src="security-crypto.js?v=session-v1"></script>
   <script defer src="legal-content.js"></script>
@@ -14,8 +14,8 @@
   <script defer src="medhub-attribution.js?v=attr-v1"></script>
   <script defer src="subscription.js?v=billing-v3"></script>
   <script defer src="user-profile.js?v=profile-v8"></script>
-  <script defer src="auth-cloud.js?v=cloud-v10"></script>
-  <script defer src="auth.js?v=register-v4"></script>
+  <script defer src="auth-cloud.js?v=cloud-v11"></script>
+  <script defer src="auth.js?v=register-v5"></script>
   <script defer>
     document.addEventListener('DOMContentLoaded', async () => {
       medhubInitComplianceShell();
@@ -24,10 +24,14 @@
       const sessionId = params.get('session_id');
       const emailInput = document.getElementById('email');
       const notice = document.getElementById('register-checkout-notice');
+      const couponWrap = document.getElementById('register-coupon-wrap');
 
       if (emailParam && emailInput) emailInput.value = emailParam;
 
       if (sessionId) {
+        if (couponWrap) couponWrap.hidden = true;
+        const pricingNote = document.getElementById('register-pricing-note');
+        if (pricingNote) pricingNote.hidden = true;
         if (sessionId.startsWith('cs_test_')) {
           document.getElementById('checkout-session-id').value = '';
           if (notice) {
@@ -64,7 +68,7 @@
   <main class="auth-main">
   <form class="card auth-card" onsubmit="handleRegister(event)">
     <h1>Criar conta</h1>
-    <p class="auth-hint muted">Passo 1 de 2 — e-mail, senha e assinatura. Em seguida você configura se é estudante ou médico(a).</p>
+    <p class="auth-hint muted">Passo 1 de 2 — e-mail, senha e acesso. Em seguida você configura se é estudante ou médico(a).</p>
     <p id="register-checkout-notice" class="auth-notice" role="note" hidden></p>
 
     <input type="hidden" id="checkout-session-id" name="checkoutSessionId" value="">
@@ -79,6 +83,12 @@
     <input id="password" name="password" type="password" required minlength="8" autocomplete="new-password">
     <p class="auth-hint muted">Mínimo 8 caracteres. Usada para login e criptografia local das anamneses.</p>
 
+    <div id="register-coupon-wrap" class="auth-coupon-wrap">
+      <label for="register-coupon-code">Tem cupom de cortesia?</label>
+      <input type="text" id="register-coupon-code" name="coupon" placeholder="Ex.: MEDHUB3MESES" maxlength="64" autocomplete="off">
+      <p class="auth-hint muted auth-coupon-note">Cupons de 1, 3 ou 12 meses liberam o acesso aqui, sem ir ao pagamento. Quem já pagou no Stripe usa o link da confirmação; quem vai assinar, <a href="index.html#planos">veja os planos</a>.</p>
+    </div>
+
     <label class="auth-terms-check">
       <input id="acceptTerms" name="acceptTerms" type="checkbox" required>
       <span>Li e aceito o <a href="termos.html" target="_blank" rel="noopener">termo de uso</a> (ferramenta educacional; não substitui prontuário legal).</span>
@@ -89,7 +99,7 @@
       <span>Li e aceito a <a href="privacidade.html" target="_blank" rel="noopener">política de privacidade</a>.</span>
     </label>
 
-    <p class="auth-pricing-note muted">Após pagar no Stripe, use o link da página de confirmação para cadastrar com a assinatura já vinculada.</p>
+    <p class="auth-pricing-note muted" id="register-pricing-note">Sem cupom? Assine em <a href="index.html#planos">Planos</a> e volte pelo link da confirmação após pagar.</p>
 
     <button type="submit">Cadastrar</button>
 

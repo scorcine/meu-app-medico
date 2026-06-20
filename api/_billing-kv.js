@@ -1,6 +1,6 @@
 const { kv } = require('@vercel/kv');
 const { cloudAuthEnabled, normalizeEmail } = require('./_auth');
-const { getStripe, getActiveSubscription } = require('./_stripe');
+const { getStripe, getActiveSubscription, findCustomerByEmail, resolvePromotionCode } = require('./_stripe');
 
 const CHECKOUT_TTL_SEC = 60 * 60 * 24 * 7; // 7 dias para concluir cadastro
 
@@ -148,6 +148,112 @@ async function syncCheckoutSession (session) {
   return record;
 }
 
+function checkoutRecordFromSnapshot (snapshot, source) {
+  return {
+    email: snapshot.email,
+    customerId: snapshot.customerId,
+    subscriptionId: snapshot.subscriptionId,
+    subscriptionActive: !!snapshot.active,
+    subscriptionStatus: snapshot.status,
+    plan: snapshot.plan,
+    currentPeriodEnd: snapshot.currentPeriodEnd || null,
+    source
+  };
+}
+
+/** Cupom de cortesia (100% off): cria cliente + assinatura sem checkout Stripe. */
+async function redeemCouponForRegister (email, couponCode) {
+  const stripe = getStripe();
+  const normEmail = normalizeEmail(email);
+  const code = String(couponCode || '').trim();
+
+  if (!stripe || !normEmail || !code) {
+    return { ok: false, code: 'invalid_coupon', error: 'Cupom inválido ou expirado.' };
+  }
+
+  const promo = await resolvePromotionCode(stripe, code);
+  if (!promo) {
+    return {
+      ok: false,
+      code: 'invalid_coupon',
+      error: 'Cupom inválido ou expirado. Confira o código ou peça um novo cupom ao MedHub.'
+    };
+  }
+
+  let coupon = promo.coupon;
+  if (typeof coupon === 'string') {
+    coupon = await stripe.coupons.retrieve(coupon);
+  }
+  if (coupon.percent_off !== 100) {
+    return {
+      ok: false,
+      code: 'coupon_requires_checkout',
+      error: 'Este cupom exige pagamento. Assine em Planos ou use um cupom de cortesia (100%).'
+    };
+  }
+
+  const priceId = process.env.STRIPE_PRICE_MONTHLY;
+  if (!priceId) {
+    return { ok: false, code: 'misconfigured', error: 'Plano mensal não configurado no servidor.' };
+  }
+
+  let customerId = await getCustomerIdByEmail(normEmail);
+  let customer = null;
+
+  if (customerId) {
+    try {
+      customer = await stripe.customers.retrieve(customerId);
+      if (customer.deleted) customer = null;
+    } catch {
+      customer = null;
+    }
+  }
+
+  if (!customer) {
+    customer = await findCustomerByEmail(stripe, normEmail);
+  }
+
+  if (customer && !customer.deleted) {
+    customerId = customer.id;
+    const existingSub = await getActiveSubscription(stripe, customerId);
+    if (existingSub) {
+      const snapshot = snapshotFromSubscription(existingSub, normEmail);
+      await saveCustomerBilling(snapshot);
+      return { ok: true, checkout: checkoutRecordFromSnapshot(snapshot, 'existing_subscription') };
+    }
+  } else {
+    customer = await stripe.customers.create({
+      email: normEmail,
+      metadata: { medhub_email: normEmail }
+    });
+    customerId = customer.id;
+  }
+
+  const subscription = await stripe.subscriptions.create({
+    customer: customerId,
+    items: [{ price: priceId }],
+    promotion_code: promo.id,
+    metadata: {
+      medhub_email: normEmail,
+      medhub_plan: 'monthly',
+      medhub_coupon: code.slice(0, 100)
+    }
+  });
+
+  if (!['active', 'trialing'].includes(subscription.status)) {
+    return {
+      ok: false,
+      code: 'subscription_failed',
+      error: 'Não foi possível ativar o acesso com este cupom. Tente novamente ou contate o suporte.'
+    };
+  }
+
+  const snapshot = snapshotFromSubscription(subscription, normEmail);
+  await saveCustomerBilling(snapshot);
+
+  return { ok: true, checkout: checkoutRecordFromSnapshot(snapshot, 'coupon') };
+}
+
 async function verifyCheckoutForRegister (sessionId) {
   const stripe = getStripe();
   if (!stripe || !sessionId) {
@@ -274,6 +380,7 @@ module.exports = {
   getCustomerIdByEmail,
   syncCheckoutSession,
   verifyCheckoutForRegister,
+  redeemCouponForRegister,
   syncSubscriptionEvent,
   markSubscriptionCanceled,
   planFromSubscription,
