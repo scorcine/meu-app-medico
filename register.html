@@ -5,8 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Cadastro • MedHub</title>
   <link rel="icon" href="assets/medhub-logo.png?v=logo-v1" type="image/png">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <meta name="theme-color" content="#0d6efd">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="MedHub">
+  <link rel="apple-touch-icon" href="/assets/icons/icon-192.png">
   <script src="theme.js"></script>
-  <link rel="stylesheet" href="style.css?v=auth-register-v3">
+  <link rel="stylesheet" href="style.css?v=pwa-v1">
   <link rel="stylesheet" href="auth-mobile.css?v=auth-mobile-v1">
   <script defer src="security-crypto.js?v=session-v1"></script>
   <script defer src="legal-content.js"></script>
@@ -16,6 +23,7 @@
   <script defer src="user-profile.js?v=profile-v11"></script>
   <script defer src="auth-cloud.js?v=cloud-v13"></script>
   <script defer src="auth.js?v=register-v7"></script>
+  <script defer src="pwa-install.js?v=pwa-v1"></script>
   <script defer>
     document.addEventListener('DOMContentLoaded', async () => {
       medhubInitComplianceShell();

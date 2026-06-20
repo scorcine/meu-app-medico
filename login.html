@@ -5,8 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Login • MedHub</title>
   <link rel="icon" href="assets/medhub-logo.png?v=logo-v1" type="image/png">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <meta name="theme-color" content="#0d6efd">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="MedHub">
+  <link rel="apple-touch-icon" href="/assets/icons/icon-192.png">
   <script src="theme.js"></script>
-  <link rel="stylesheet" href="style.css?v=compliance-v1">
+  <link rel="stylesheet" href="style.css?v=pwa-v1">
   <link rel="stylesheet" href="auth-mobile.css?v=auth-mobile-v1">
 
   <script defer src="security-crypto.js?v=session-v1"></script>
@@ -17,6 +24,7 @@
   <script defer src="user-profile.js?v=profile-v12"></script>
   <script defer src="auth-cloud.js?v=cloud-v14"></script>
   <script defer src="auth.js?v=auth-v7"></script>
+  <script defer src="pwa-install.js?v=pwa-v1"></script>
   <script defer>
     document.addEventListener('DOMContentLoaded', () => {
       const emailParam = new URLSearchParams(window.location.search).get('email');
