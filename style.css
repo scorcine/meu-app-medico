@@ -997,7 +997,8 @@ body.app-page {
   opacity: 0.98;
 }
 
-.home-courtesy-countdown {
+.home-hero .home-courtesy-countdown,
+.home-card .card p.home-courtesy-countdown {
   display: inline-block;
   margin: 0.35rem auto 0.65rem;
   padding: 0.45rem 0.85rem;
@@ -1005,10 +1006,19 @@ body.app-page {
   font-size: 0.92rem;
   font-weight: 600;
   line-height: 1.45;
-  color: var(--text-on-accent);
-  background: rgba(255, 255, 255, 0.16);
-  border: 1px solid rgba(255, 255, 255, 0.22);
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  box-shadow: 0 1px 10px rgba(0, 0, 0, 0.12);
   max-width: 36rem;
+}
+
+[data-theme="dark"] .home-hero .home-courtesy-countdown,
+[data-theme="dark"] .home-card .card p.home-courtesy-countdown {
+  color: #ffffff;
+  background: rgba(0, 0, 0, 0.32);
+  border-color: rgba(255, 255, 255, 0.38);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
 .home-courtesy-countdown[hidden] {
