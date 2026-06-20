@@ -430,17 +430,20 @@ footer {
 
 .medhub-logo--header {
   max-height: 44px;
-  max-width: min(210px, 48vw);
+  max-width: 44px;
+  border-radius: 10px;
 }
 
 .medhub-logo--auth {
   max-height: 48px;
-  max-width: min(220px, 72vw);
+  max-width: 48px;
+  border-radius: 10px;
 }
 
 .medhub-logo--landing {
   max-height: 56px;
-  max-width: min(240px, 58vw);
+  max-width: 56px;
+  border-radius: 12px;
 }
 
 .auth-page-header {

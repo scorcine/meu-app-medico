@@ -61,7 +61,7 @@
     banner.setAttribute('aria-label', 'Instalar MedHub');
     banner.innerHTML = ''
       + '<div class="pwa-install-banner-inner">'
-      + '  <img src="/assets/icons/icon-192.png" alt="" class="pwa-install-banner-icon" width="48" height="48">'
+      + '  <img src="/assets/icons/icon-192.png?v=icon-v2" alt="" class="pwa-install-banner-icon" width="48" height="48">'
       + '  <div class="pwa-install-banner-copy">'
       + '    <strong id="pwa-install-banner-title">Instalar MedHub</strong>'
       + '    <span id="pwa-install-banner-detail">Abra em tela cheia, como um app no plantão.</span>'
@@ -93,7 +93,7 @@
     modal.innerHTML = ''
       + '<div class="pwa-signup-modal-backdrop" id="pwa-signup-modal-backdrop"></div>'
       + '<div class="pwa-signup-modal-card card">'
-      + '  <img src="/assets/icons/icon-192.png" alt="" class="pwa-signup-modal-icon" width="72" height="72">'
+      + '  <img src="/assets/icons/icon-192.png?v=icon-v2" alt="" class="pwa-signup-modal-icon" width="72" height="72">'
       + '  <p class="pwa-signup-modal-badge">Conta criada</p>'
       + '  <h2 id="pwa-signup-modal-title">Instale o MedHub no celular</h2>'
       + '  <p id="pwa-signup-modal-detail" class="pwa-signup-modal-detail">'

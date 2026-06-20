@@ -71,8 +71,9 @@
   }
 
   .medhub-logo--header {
-    max-height: 34px;
-    max-width: min(118px, 30vw);
+    max-height: 36px;
+    max-width: 36px;
+    border-radius: 8px;
   }
 
   .medhub-home-label {
