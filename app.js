@@ -111,6 +111,7 @@ function initAppCore (user) {
       if (typeof initUserProfileHeader === 'function') initUserProfileHeader();
       initAccountPanel();
       patchEmergenciaCacheGuard();
+      if (typeof medhubInitAppSearch === 'function') medhubInitAppSearch();
 
       const hash = window.location.hash.replace('#', '');
       if (hash) showSection(hash);
