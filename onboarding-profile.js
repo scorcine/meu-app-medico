@@ -130,16 +130,24 @@ function initOnboardingProfilePage () {
       medhubPersistProfileSetupBackup(sessionUser.email, payload);
     }
 
-    let cloudWarning = '';
     if (typeof medhubCloudSyncAvailable === 'function' && await medhubCloudSyncAvailable()) {
       const saved = await medhubCloudSaveProfile(payload);
       if (saved.ok) {
         if (typeof medhubApplyCloudProfileLocal === 'function') {
-          medhubApplyCloudProfileLocal(saved.profile || payload);
+          medhubApplyCloudProfileLocal(saved.profile || payload, { force: true });
         }
       } else {
-        cloudWarning = saved.error || 'Perfil salvo neste aparelho; sync na nuvem falhou.';
+        if (btn) btn.disabled = false;
+        alert(
+          (saved.error || 'Não foi possível salvar nome e CRM na nuvem.') +
+          '\n\nVerifique sua conexão e tente novamente. Esses dados precisam ficar na nuvem para funcionar em outros dispositivos.'
+        );
+        return;
       }
+    } else if (typeof medhubIsLocalDev === 'function' && !medhubIsLocalDev()) {
+      if (btn) btn.disabled = false;
+      alert('Sincronização na nuvem indisponível. Tente novamente em instantes.');
+      return;
     }
 
     if (!savedOk) {
@@ -149,13 +157,6 @@ function initOnboardingProfilePage () {
     }
 
     if (typeof medhubClearFreshLogin === 'function') medhubClearFreshLogin();
-    if (cloudWarning && statusEl) {
-      statusEl.hidden = false;
-      statusEl.textContent = cloudWarning + ' Entrando no app…';
-      statusEl.className = 'anamnese-save-status anamnese-save-status--ok';
-      setTimeout(() => { window.location.replace('app.html'); }, 600);
-      return;
-    }
     window.location.replace('app.html');
   });
 }
@@ -172,7 +173,7 @@ async function initOnboardingProfileGate () {
   if (typeof medhubCloudSyncAvailable === 'function' && await medhubCloudSyncAvailable()) {
     const cloud = await medhubCloudFetchProfile();
     if (cloud.ok && cloud.profile) {
-      medhubApplyCloudProfileLocal(cloud.profile);
+      medhubApplyCloudProfileLocal(cloud.profile, { force: true });
     }
   }
 

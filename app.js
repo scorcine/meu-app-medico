@@ -124,6 +124,10 @@ function initApp () {
   requireAuthAsync().then(async user => {
     if (!user) return;
 
+    if (typeof medhubSyncProfileAfterLogin === 'function') {
+      await medhubSyncProfileAfterLogin();
+    }
+
     if (typeof medhubEnsureProfileOnboarding === 'function') {
       const onboardingOk = await medhubEnsureProfileOnboarding();
       if (!onboardingOk) return;

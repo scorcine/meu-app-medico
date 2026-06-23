@@ -9,6 +9,7 @@ const {
 const { getUser, publicUser, saveUser } = require('../_users');
 const { getSubscriptionStatus } = require('../_subscription');
 const { platformUnavailableMessage } = require('../_platform');
+const { getProfessionalProfile, publicProfile } = require('../_profile');
 
 module.exports = async (req, res) => {
   if (req.method !== 'POST') {
@@ -67,11 +68,13 @@ module.exports = async (req, res) => {
     await saveUser(user);
 
     const token = createSessionToken(user, user.sessionVersion);
+    const profile = publicProfile(await getProfessionalProfile(email, user.name));
 
     json(res, 200, {
       token,
       user: publicUser(user),
-      subscription: sub
+      subscription: sub,
+      profile
     });
   } catch (err) {
     json(res, 500, { error: err.message || 'Erro ao entrar' });

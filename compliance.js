@@ -229,10 +229,22 @@ function medhubEnsureCryptoUnlock (next) {
       : null;
 
     let passwordOk = false;
-    if (account) {
-      passwordOk = await medhubVerifyPassword(password, account);
-    } else if (typeof medhubCloudVerifyPassword === 'function') {
+    const cloudToken = typeof medhubGetAuthToken === 'function' ? medhubGetAuthToken() : '';
+    if (cloudToken && typeof medhubCloudVerifyPassword === 'function') {
       passwordOk = await medhubCloudVerifyPassword(user.email, password);
+      if (passwordOk && typeof medhubHashPassword === 'function' && typeof medhubCacheLocalUser === 'function') {
+        const hashed = await medhubHashPassword(password);
+        medhubCacheLocalUser(user, hashed.passHash, hashed.passSalt);
+      }
+    }
+    if (!passwordOk && account) {
+      passwordOk = await medhubVerifyPassword(password, account);
+    } else if (!passwordOk && typeof medhubCloudVerifyPassword === 'function') {
+      passwordOk = await medhubCloudVerifyPassword(user.email, password);
+      if (passwordOk && typeof medhubHashPassword === 'function' && typeof medhubCacheLocalUser === 'function') {
+        const hashed = await medhubHashPassword(password);
+        medhubCacheLocalUser(user, hashed.passHash, hashed.passSalt);
+      }
     }
 
     if (!passwordOk) {

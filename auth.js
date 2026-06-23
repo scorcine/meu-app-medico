@@ -246,9 +246,15 @@ async function handleLogin (e) {
     : { cloudEnabled: false };
 
   if (config.cloudEnabled && typeof medhubCloudLogin === 'function') {
+    if (typeof medhubRemoveStaleLocalUser === 'function') {
+      medhubRemoveStaleLocalUser(email);
+    }
     const result = await medhubCloudLogin(email, pass);
     if (!result.ok) {
-      alert(result.error || 'Credenciais inválidas.');
+      alert(
+        (result.error || 'Credenciais inválidas.') +
+        '\n\nUse a mesma senha do cadastro na nuvem. Se redefiniu por e-mail, use a nova senha.'
+      );
       return;
     }
     await medhubAfterCloudAuth(result.data, pass);
@@ -412,7 +418,19 @@ async function handleConfirmPasswordReset (e) {
     return;
   }
 
-  alert(result.message || 'Senha redefinida. Faça login.');
+  if (result.email) {
+    if (typeof medhubRemoveStaleLocalUser === 'function') {
+      medhubRemoveStaleLocalUser(result.email);
+    }
+    localStorage.removeItem('session');
+    if (typeof medhubClearCloudSession === 'function') medhubClearCloudSession();
+    if (typeof medhubClearSessionCrypto === 'function') medhubClearSessionCrypto();
+  }
+
+  alert(
+    (result.message || 'Senha redefinida. Faça login.') +
+    '\n\nSeu nome e CRM na nuvem foram mantidos — não será necessário cadastrá-los de novo.'
+  );
   window.location.href = 'login.html';
 }
 

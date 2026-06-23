@@ -95,7 +95,7 @@ async function medhubConfirmPasswordReset (token, newPassword) {
   if (!res.ok) {
     return { ok: false, error: data.error || 'Erro ao redefinir senha.', code: data.code };
   }
-  return { ok: true, message: data.message, clinicalDataReset: data.clinicalDataReset };
+  return { ok: true, message: data.message, clinicalDataReset: data.clinicalDataReset, email: data.email };
 }
 
 async function medhubCloudRegister (name, email, password, acceptTerms, acceptPrivacy, checkoutSessionId, coupon) {
@@ -192,14 +192,25 @@ async function medhubCloudSaveProfile (profile, currentPassword) {
   return { ok: true, profile: data.profile || null };
 }
 
-function medhubApplyCloudProfileLocal (profile) {
+function medhubCloudProfileComplete (profile) {
+  if (!profile) return false;
+  if (profile.onboardingComplete) return true;
+  if (typeof medhubProfileHasIdentityFields === 'function') {
+    return medhubProfileHasIdentityFields(profile);
+  }
+  return !!(profile.userType && profile.rxDisplayName);
+}
+
+function medhubApplyCloudProfileLocal (profile, options) {
   if (!profile || typeof medhubSaveUserProfileLocal !== 'function') return;
-  if (medhubHasFreshLogin()) return;
+  const force = !!(options && options.force);
+  if (!force && medhubHasFreshLogin()) return;
   const local = medhubLoadUserProfile();
   if (
+    !force &&
     typeof medhubIsProfileSetupComplete === 'function' &&
     medhubIsProfileSetupComplete(local) &&
-    !medhubIsProfileSetupComplete({ ...local, ...profile })
+    !medhubCloudProfileComplete(profile)
   ) {
     return;
   }
@@ -226,11 +237,15 @@ function medhubApplyCloudProfileLocal (profile) {
       Number(profile.identityChangeCount) || 0
     );
   }
-  if (profile.onboardingComplete || medhubIsProfileSetupComplete({ ...merged, ...profile })) {
+  if (medhubCloudProfileComplete(profile) || medhubCloudProfileComplete(merged)) {
     merged.onboardingComplete = true;
   }
 
   medhubSaveUserProfileLocal(merged);
+  const user = typeof getSession === 'function' ? getSession() : null;
+  if (user?.email && typeof medhubPersistProfileSetupBackup === 'function') {
+    medhubPersistProfileSetupBackup(user.email, merged);
+  }
 }
 
 async function medhubSyncProfileAfterLogin () {
@@ -242,24 +257,20 @@ async function medhubSyncProfileAfterLogin () {
   if (!cloud.ok) return;
 
   const remote = cloud.profile || {};
-  const hasRemote = !!(remote.onboardingComplete || remote.userType || remote.crmNumber);
+  const remoteComplete = medhubCloudProfileComplete(remote);
   const localProfile = typeof medhubLoadUserProfile === 'function' ? medhubLoadUserProfile() : null;
-  const hasLocalData = !!(localProfile?.onboardingComplete || localProfile?.userType || localProfile?.crmNumber);
+  const localComplete = typeof medhubIsProfileSetupComplete === 'function'
+    ? medhubIsProfileSetupComplete(localProfile)
+    : medhubCloudProfileComplete(localProfile);
 
-  if (hasRemote) {
-    if (
-      !localProfile ||
-      !medhubIsProfileSetupComplete(localProfile) ||
-      medhubIsProfileSetupComplete(remote)
-    ) {
-      medhubApplyCloudProfileLocal(remote);
-    }
+  if (remoteComplete) {
+    medhubApplyCloudProfileLocal(remote, { force: true });
     return;
   }
 
-  if (fresh) return;
+  if (fresh || !localComplete) return;
 
-  if (hasLocalData && typeof medhubCloudSaveProfile === 'function') {
+  if (typeof medhubCloudSaveProfile === 'function') {
     const saved = await medhubCloudSaveProfile({
       rxDisplayName: localProfile.rxDisplayName,
       userType: localProfile.userType,
@@ -269,9 +280,9 @@ async function medhubSyncProfileAfterLogin () {
       addressCity: localProfile.addressCity,
       addressState: localProfile.addressState,
       addressZip: localProfile.addressZip,
-      onboardingComplete: !!localProfile.onboardingComplete || medhubIsProfileSetupComplete(localProfile)
+      onboardingComplete: true
     });
-    if (saved.ok) medhubApplyCloudProfileLocal(saved.profile);
+    if (saved.ok) medhubApplyCloudProfileLocal(saved.profile, { force: true });
   }
 }
 
@@ -315,14 +326,24 @@ async function medhubCloudVerifyPassword (email, password) {
   return !!data.ok;
 }
 
-function medhubApplyCloudSession (loginData, password) {
+function medhubRemoveStaleLocalUser (email) {
+  if (typeof getUsers !== 'function' || typeof saveUsers !== 'function') return;
+  const norm = authNormalizedEmail(email);
+  saveUsers(getUsers().filter(u => authNormalizedEmail(u.email) !== norm));
+}
+
+async function medhubApplyCloudSession (loginData, password) {
   medhubSetAuthToken(loginData.token);
   medhubSetSession(loginData.user);
   if (password && typeof medhubHashPassword === 'function') {
-    medhubHashPassword(password).then(hashed => {
-      medhubCacheLocalUser(loginData.user, hashed.passHash, hashed.passSalt);
-    });
+    const hashed = await medhubHashPassword(password);
+    medhubCacheLocalUser(loginData.user, hashed.passHash, hashed.passSalt);
   }
+}
+
+function medhubApplyLoginProfile (loginData) {
+  if (!loginData?.profile || !medhubCloudProfileComplete(loginData.profile)) return;
+  medhubApplyCloudProfileLocal(loginData.profile, { force: true });
 }
 
 function medhubClearCloudSession () {
@@ -376,6 +397,19 @@ async function medhubEnsureProfileOnboarding () {
   if (typeof medhubIsProfileSetupComplete !== 'function') return true;
 
   const user = typeof getSession === 'function' ? getSession() : null;
+
+  if (typeof medhubCloudSyncAvailable === 'function' && await medhubCloudSyncAvailable()) {
+    const cloud = await medhubCloudFetchProfile();
+    if (cloud.ok && medhubCloudProfileComplete(cloud.profile)) {
+      medhubApplyCloudProfileLocal(cloud.profile, { force: true });
+      medhubClearFreshLogin();
+      return true;
+    }
+    if (cloud.ok && cloud.profile) {
+      medhubApplyCloudProfileLocal(cloud.profile, { force: true });
+    }
+  }
+
   const fresh = medhubHasFreshLogin();
 
   if (fresh) {
@@ -393,11 +427,8 @@ async function medhubEnsureProfileOnboarding () {
     medhubRestoreProfileFromSetupBackup(user.email);
   }
 
-  if (typeof medhubCloudSyncAvailable === 'function' && await medhubCloudSyncAvailable()) {
-    const cloud = await medhubCloudFetchProfile();
-    if (cloud.ok && cloud.profile) {
-      medhubApplyCloudProfileLocal(cloud.profile);
-    }
+  if (typeof medhubSyncProfileAfterLogin === 'function') {
+    await medhubSyncProfileAfterLogin();
   }
 
   let profile = typeof medhubLoadUserProfile === 'function' ? medhubLoadUserProfile() : null;
@@ -474,7 +505,9 @@ async function medhubFinishCloudAuth (loginData, config, options = {}) {
 }
 
 async function medhubAfterCloudAuth (loginData, password, options = {}) {
-  medhubApplyCloudSession(loginData, password);
+  if (loginData?.user?.email) medhubRemoveStaleLocalUser(loginData.user.email);
+  await medhubApplyCloudSession(loginData, password);
+  medhubApplyLoginProfile(loginData);
   if (options.forceOnboarding) medhubMarkFreshLogin();
   else medhubClearFreshLogin();
   await medhubUnlockSession(password, loginData.user.email);

@@ -149,7 +149,8 @@ async function handleConfirmReset (res, body) {
     json(res, 200, {
       ok: true,
       message: 'Senha redefinida. Faça login com a nova senha.',
-      clinicalDataReset: true
+      clinicalDataReset: true,
+      email: data.email
     });
   } catch (err) {
     json(res, 500, { error: err.message || 'Erro ao redefinir senha' });
