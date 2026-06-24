@@ -28,7 +28,7 @@ function patchEmergenciaCacheGuard () {
   if (typeof showEmergenciaTopic !== 'function' || showEmergenciaTopic._cacheGuard) return;
 
   const orig = showEmergenciaTopic;
-  const expected = { 'parada-cardio': 6, 'sca': 4, 'avc': 4, 'sepse': 3, 'trauma': 4, 'via-aerea': 4, 'reacoes-metabolicas': 4, 'obstetricia': 3, 'pediatrica': 3, 'toxicologia': 4, 'pressao-arritmias': 2, 'procedimentos': 3 };
+  const expected = { 'parada-cardio': 6, 'sca': 4, 'avc': 4, 'sepse': 3, 'trauma': 5, 'via-aerea': 4, 'reacoes-metabolicas': 4, 'obstetricia': 3, 'pediatrica': 3, 'toxicologia': 4, 'pressao-arritmias': 2, 'procedimentos': 3 };
 
   showEmergenciaTopic = function (topicId) {
     orig(topicId);

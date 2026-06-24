@@ -1,6 +1,6 @@
 /* Guia rápido de emergência — tópicos e conteúdo — build 98041d1 */
 
-const MEDHUB_EMERG_BUILD = 'vm-card-v2';
+const MEDHUB_EMERG_BUILD = 'queda-tce-v1';
 
 const PARADA_PROTOCOLS = [
   {
@@ -999,6 +999,114 @@ const TRAUMA_PROTOCOLS = [
         <li>GCS 14–15 no momento da avaliação — se GCS &lt; 14, não aplicar PECARN</li>
       </ul>
       <p class="emerg-note">Kuppermann et al., Lancet 2009 (PECARN). Não substitui julgamento clínico em mecanismo grave ou coagulopatia.</p>
+    `
+  },
+  {
+    id: 'queda-propria-altura-tc',
+    icon: '🪜',
+    name: 'Queda da própria altura — TC de crânio',
+    html: `
+      <p>Algoritmo para decidir <strong>TC de crânio</strong> após queda de nível (própria altura, cama, cadeira, escorregão) — integra regras para <strong>adulto</strong>, <strong>idoso</strong> e <strong>criança</strong>. Mecanismos de <strong>alto impacto</strong> tratam-se como trauma significativo.</p>
+
+      <div class="emerg-flow-v">
+        <span class="emerg-flow-step emerg-flow-shock"><strong>1. ABCDE + GCS</strong></span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">Glicemia capilar · controle cervical se suspeita de lesão · buscar sangramento scalp/fratura</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step emerg-flow-decision">GCS &lt; 15, déficit focal, convulsão pós-trauma ou sinais de fratura/base?</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step emerg-flow-shock"><strong>Sim → TC de crânio</strong> (urgente) + neurocirurgia se indicado</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">Não → classificar <strong>faixa etária</strong> e <strong>mecanismo</strong></span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">Aplicar regra correspondente (CCHR / Falls Decision Rule / PECARN)</span>
+      </div>
+
+      <h4>TC de crânio — indicações imediatas (qualquer idade)</h4>
+      <ul>
+        <li><strong>GCS &lt; 15</strong> na avaliação ou rebaixamento progressivo</li>
+        <li><strong>Déficit neurológico focal</strong> ou convulsão pós-trauma</li>
+        <li><strong>Fratura de crânio</strong> palpável, aberta ou deprimida</li>
+        <li><strong>Sinais de fratura de base</strong> — otorragia/otorréia, equimose retroauricular (Battle), equimose periorbitária (olhos de guaxinim), afastamento de sutura</li>
+        <li><strong>Penetração</strong> ou ferimento corto-contuso profundo no couro cabeludo</li>
+        <li><strong>Coagulopatia / anticoagulação</strong> + trauma craniano confirmado ou impacto craniano incerto (ver abaixo)</li>
+        <li><strong>Intoxicação</strong> ou trauma associado que impede exame neurológico confiável</li>
+      </ul>
+
+      <h4>Mecanismo de alto impacto — TC indicada (adulto e criança)</h4>
+      <p>Mesmo “queda da própria altura” pode ser de alta energia. Considerar TC se:</p>
+      <ul>
+        <li>Queda de <strong>&gt; 1 m</strong> (≈ 3 pés) ou <strong>&gt; 5 degraus</strong> de escada</li>
+        <li><strong>Ejetado</strong> de veículo ou atropelamento (pedestre/ciclista)</li>
+        <li>Queda de <strong>bicicleta/moto</strong> sem capacete ou com velocidade significativa</li>
+        <li><strong>Colisão de alta energia</strong> (automóvel, esportes de contato violento)</li>
+        <li>Trauma associado com <strong>instabilidade hemodinâmica</strong> ou suspeita de politrauma</li>
+        <li>Criança: mecanismo <strong>“severo”</strong> no PECARN (queda &gt; 90 cm em &lt;2 anos ou &gt; 1,5 m em ≥2 anos; atropelamento; queda de escada sem corrimão; ejetado; veículo motorizado)</li>
+      </ul>
+
+      <h4>Adulto (&lt; 65 anos) — Canadian CT Head Rule (CCHR)</h4>
+      <p>TCE leve com GCS 13–15, perda de consciência/amnésia/desorientação ou vômito. Se <strong>não</strong> preenche critérios de inclusão, usar julgamento clínico.</p>
+      <table class="emerg-table">
+        <tr><th>Risco</th><th>Critério</th><th>Conduta</th></tr>
+        <tr><td><strong>Alto</strong></td><td>GCS &lt; 15 em 2 h · fratura aberta/suspeita · sinais de base · vômitos ≥ 2 · idade ≥ 65 anos</td><td><strong>TC de crânio</strong></td></tr>
+        <tr><td><strong>Intermediário</strong></td><td>Amnésia antes do impacto &gt; 30 min · mecanismo perigoso*</td><td><strong>TC de crânio</strong> (98% lesão clinicamente importante)</td></tr>
+        <tr><td><strong>Baixo</strong></td><td>Nenhum critério acima</td><td>TC <strong>não indicada</strong> pela regra — observação + orientação</td></tr>
+      </table>
+      <p class="emerg-note">*Mecanismo perigoso (CCHR): pedestre atropelado, ejetado de veículo, queda &gt; 1 m ou &gt; 5 degraus.</p>
+
+      <h4>Idoso (≥ 65 anos) — queda da própria altura (Falls Decision Rule)</h4>
+      <p>Queda de nível, da cama/cadeira/vaso — apresentação em até <strong>48 h</strong>. A CCHR exige LOC/amnésia; esta regra cobre idosos <strong>sem</strong> esses sintomas clássicos.</p>
+      <table class="emerg-table">
+        <tr><th>Situação</th><th>Conduta</th></tr>
+        <tr><td><strong>TC pode ser adiada/evitada</strong> se <em>todos</em>: sem trauma craniano definido · sem amnésia da queda (paciente confirma) · exame neurológico normal · Escala de Fragilidade Clínica (CFS) &lt; 5</td><td>Observação + orientação; reavaliar se piora</td></tr>
+        <tr><td>Trauma craniano confirmado (hematoma, laceração, dor local)</td><td><strong>TC de crânio</strong></td></tr>
+        <tr><td>Impacto craniano <strong>incerto</strong> (não sabe se bateu a cabeça)</td><td><strong>TC de crânio</strong></td></tr>
+        <tr><td>Amnésia da queda ou exame neurológico anormal</td><td><strong>TC de crânio</strong></td></tr>
+        <tr><td>CFS ≥ 5 (prejuízo de AIVDs — dependência parcial/total)</td><td><strong>TC de crânio</strong></td></tr>
+        <tr><td>Anticoagulante / antiplaquetário</td><td><strong>Não exclui</strong> a regra — se baixo risco pelos 4 critérios, pode observar; se impacto craniano, preferir TC</td></tr>
+      </table>
+      <p class="emerg-note">Falls Decision Rule — de Wit et al., CMAJ 2023 (derivada; validação externa em curso). Sensibilidade ~98–99% para sangramento intracraniano clinicamente importante.</p>
+
+      <h4>Criança (&lt; 18 anos) — PECARN (resumo)</h4>
+      <p>GCS 14–15 no momento da avaliação. Use a calculadora integrada neste tópico (<strong>PECARN — TCE pediátrico</strong>) ou em Calculadoras essenciais → Urgência.</p>
+      <table class="emerg-table">
+        <tr><th>Faixa</th><th>Alto risco → TC</th><th>Intermediário → observar vs TC</th></tr>
+        <tr><td><strong>&lt; 2 anos</strong></td><td>GCS &lt;15 · alteração consciência · fratura palpável/base</td><td>Hematoma occipital/parietal/temporal · LOC &gt;5 s · mecanismo grave · comportamento anormal (pais)</td></tr>
+        <tr><td><strong>≥ 2 anos</strong></td><td>GCS &lt;15 · alteração consciência · sinais de base</td><td>História de LOC · vômitos · cefaleia intensa · mecanismo grave</td></tr>
+      </table>
+      <p><strong>Outros sinais pediátricos que favorecem TC</strong> (CATCH/CHALICE): GCS &lt;15 às 2 h · cefaleia progressiva · irritabilidade · hematoma scalp grande/boggy · vômitos ≥4 · fontanela tensa · déficit focal · distúrbio de coagulação.</p>
+
+      <h4>Anticoagulação e antiagregantes</h4>
+      <ul>
+        <li><strong>Varfarina, DOAC, antiagregantes</strong> + impacto craniano (mesmo queda baixa): baixo limiar para TC — risco de hematoma tardio</li>
+        <li>Sem impacto craniano e idoso com FDR negativa: pode observar com orientação reforçada</li>
+        <li>Considerar observação hospitalar <strong>≥ 6–24 h</strong> se TC inicial normal e alto risco hemorrágico (protocolo institucional)</li>
+      </ul>
+
+      <h4>Queda sem trauma craniano — quando ainda investigar</h4>
+      <ul>
+        <li>Idoso com <strong>fragilidade</strong> (CFS ≥ 5), anticoagulação ou queda recorrente inexplicada</li>
+        <li><strong>Síncope</strong> como causa da queda → ECG, glicemia, PA orthostática; TC se trauma associado ou déficit</li>
+        <li><strong>Fratura de quadril/pelve</strong> ou dor importante — Rx/TC conforme exame; rebaixamento tardio exige nova avaliação neurológica</li>
+        <li>Criança &lt; 2 anos com queda &gt; 90 cm → avaliar abuso + TC se sinais neurológicos ou fratura</li>
+      </ul>
+
+      <h4>Observação segura e alta (TC não realizada)</h4>
+      <ul>
+        <li>Responsável/paciente capaz de vigilar <strong>24–48 h</strong></li>
+        <li>Orientar retorno imediato se: vômitos repetidos, sonolência, confusão, convulsão, cefaleia progressiva, fraqueza/visão alterada, líquido claro pela orelha ou nariz (otorragia/otorréia)</li>
+        <li>Documentar decisão compartilhada e critérios da regra aplicada</li>
+      </ul>
+
+      <h4>Fluxo resumido por perfil</h4>
+      <table class="emerg-table">
+        <tr><th>Perfil</th><th>Regra principal</th></tr>
+        <tr><td>Adulto jovem, TCE leve com LOC/amnésia</td><td><strong>CCHR</strong></td></tr>
+        <tr><td>Idoso após queda de nível (com ou sem bater a cabeça)</td><td><strong>Falls Decision Rule</strong></td></tr>
+        <tr><td>Criança GCS 14–15</td><td><strong>PECARN</strong> (+ calculadora no app)</td></tr>
+        <tr><td>Alto impacto / politrauma / GCS &lt;15</td><td><strong>TC imediata</strong> — não aplicar regras de exclusão</td></tr>
+      </table>
+      <p class="emerg-note">Stiell CCHR (Lancet 2001) · de Wit Falls Decision Rule (CMAJ 2023) · Kuppermann PECARN (Lancet 2009) · CPS/ATLS 10ª ed. Ferramenta educacional — adaptar ao protocolo local e disponibilidade de neurocirurgia.</p>
     `
   }
 ];
