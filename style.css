@@ -4138,6 +4138,24 @@ textarea {
   border-color: var(--flow-step-border);
 }
 
+[data-theme="dark"] .emerg-flow-step.emerg-flow-decision {
+  background: #422006;
+  border-color: #ca8a04;
+  color: #fef3c7;
+}
+
+[data-theme="dark"] .emerg-flow-step.emerg-flow-shock {
+  background: #431407;
+  border-color: #ea580c;
+  color: #ffedd5;
+}
+
+[data-theme="dark"] .emerg-flow-step.emerg-flow-noshock {
+  background: #1e293b;
+  border-color: #64748b;
+  color: #e2e8f0;
+}
+
 .emerg-table th {
   background: var(--table-head-bg);
 }
