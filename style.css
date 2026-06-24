@@ -58,6 +58,15 @@
   --result-err-text: #b91c1c;
   --flow-step-bg: #e8f2ff;
   --flow-step-border: #c8ddf5;
+  --flow-shock-bg: #fff3e0;
+  --flow-shock-border: #ffc966;
+  --flow-shock-text: #7a4a00;
+  --flow-decision-bg: #fff8e6;
+  --flow-decision-border: #f0c060;
+  --flow-decision-text: #5c4500;
+  --flow-noshock-bg: #eef1f5;
+  --flow-noshock-border: #b8c4d0;
+  --flow-noshock-text: #334155;
   --table-head-bg: #e8f2ff;
   --theme-toggle-bg: rgba(255, 255, 255, 0.14);
   --theme-toggle-bg-hover: rgba(255, 255, 255, 0.24);
@@ -136,6 +145,15 @@
   --result-err-text: #fca5a5;
   --flow-step-bg: #1e3a5f;
   --flow-step-border: #2563eb;
+  --flow-shock-bg: #431407;
+  --flow-shock-border: #ea580c;
+  --flow-shock-text: #ffedd5;
+  --flow-decision-bg: #422006;
+  --flow-decision-border: #ca8a04;
+  --flow-decision-text: #fef3c7;
+  --flow-noshock-bg: #1e293b;
+  --flow-noshock-border: #64748b;
+  --flow-noshock-text: #e2e8f0;
   --table-head-bg: #1e3a5f;
   --theme-toggle-bg: rgba(255, 255, 255, 0.1);
   --theme-toggle-bg-hover: rgba(255, 255, 255, 0.18);
@@ -2770,9 +2788,9 @@ body.app-page {
 }
 
 .emerg-flow-step.emerg-flow-shock {
-  background: #fff3e0;
-  border-color: #ffc966;
-  color: #7a4a00;
+  background: var(--flow-shock-bg);
+  border-color: var(--flow-shock-border);
+  color: var(--flow-shock-text);
   font-weight: 600;
 }
 
@@ -3010,13 +3028,16 @@ body.emerg-ecg-lightbox-open {
 }
 
 .emerg-flow-step.emerg-flow-decision {
-  background: #fff8e6;
-  border-color: #f0c060;
+  background: var(--flow-decision-bg);
+  border-color: var(--flow-decision-border);
+  color: var(--flow-decision-text);
+  font-weight: 600;
 }
 
 .emerg-flow-step.emerg-flow-noshock {
-  background: #eef1f5;
-  border-color: #b8c4d0;
+  background: var(--flow-noshock-bg);
+  border-color: var(--flow-noshock-border);
+  color: var(--flow-noshock-text);
   font-weight: 600;
 }
 
@@ -4136,24 +4157,6 @@ textarea {
 .emerg-flow-step {
   background: var(--flow-step-bg);
   border-color: var(--flow-step-border);
-}
-
-[data-theme="dark"] .emerg-flow-step.emerg-flow-decision {
-  background: #422006;
-  border-color: #ca8a04;
-  color: #fef3c7;
-}
-
-[data-theme="dark"] .emerg-flow-step.emerg-flow-shock {
-  background: #431407;
-  border-color: #ea580c;
-  color: #ffedd5;
-}
-
-[data-theme="dark"] .emerg-flow-step.emerg-flow-noshock {
-  background: #1e293b;
-  border-color: #64748b;
-  color: #e2e8f0;
 }
 
 .emerg-table th {

@@ -1,5 +1,5 @@
 /* MedHub PWA — cache leve só do shell (CSS, logo, tema). Conteúdo clínico sempre via rede. */
-var SHELL_CACHE = 'medhub-shell-v2';
+var SHELL_CACHE = 'medhub-shell-v3';
 var SHELL_URLS = [
   '/manifest.webmanifest',
   '/theme.js',
@@ -51,17 +51,16 @@ self.addEventListener('fetch', function (event) {
   if (!isShellRequest(url)) return;
 
   event.respondWith(
-    caches.match(event.request).then(function (cached) {
-      var network = fetch(event.request).then(function (response) {
-        if (response && response.ok) {
-          var copy = response.clone();
-          caches.open(SHELL_CACHE).then(function (cache) {
-            cache.put(event.request, copy);
-          });
-        }
-        return response;
-      });
-      return cached || network;
+    fetch(event.request).then(function (response) {
+      if (response && response.ok) {
+        var copy = response.clone();
+        caches.open(SHELL_CACHE).then(function (cache) {
+          cache.put(event.request, copy);
+        });
+      }
+      return response;
+    }).catch(function () {
+      return caches.match(event.request);
     })
   );
 });
