@@ -197,14 +197,28 @@
     banner.hidden = false;
   }
 
-  function showSignupModal () {
+  function showInstallModal (options) {
     if (isStandalone()) return;
 
+    var opts = options || {};
     ensureSignupModal();
     updateInstallUi();
 
+    var badge = document.querySelector('.pwa-signup-modal-badge');
+    var title = document.getElementById('pwa-signup-modal-title');
+    if (badge) badge.hidden = !opts.signup;
+    if (title) {
+      title.textContent = opts.signup
+        ? 'Instale o MedHub no celular'
+        : 'Salvar MedHub no celular';
+    }
+
     var modal = document.getElementById('pwa-signup-modal');
     if (modal) modal.hidden = false;
+  }
+
+  function showSignupModal () {
+    showInstallModal({ signup: true });
   }
 
   function takeSignupPrompt () {
@@ -233,8 +247,34 @@
       showSignupModal();
       return;
     }
+    if (options && options.header) {
+      showInstallModal({ signup: false });
+      return;
+    }
     showBanner(getInstallMode() === 'ios' ? 'ios' : 'android');
   };
+
+  function updateHeaderInstallBtn () {
+    var btn = document.getElementById('pwa-header-install-btn');
+    if (!btn) return;
+    btn.hidden = isStandalone() || !isAppPage();
+  }
+
+  function initHeaderInstallBtn () {
+    if (!isAppPage()) return;
+
+    var btn = document.getElementById('pwa-header-install-btn');
+    if (!btn || btn.dataset.bound) return;
+    btn.dataset.bound = '1';
+
+    btn.addEventListener('click', function (event) {
+      event.preventDefault();
+      event.stopPropagation();
+      window.medhubPromptPwaInstall({ header: true });
+    });
+
+    updateHeaderInstallBtn();
+  }
 
   function registerServiceWorker () {
     if (!('serviceWorker' in navigator)) return;
@@ -244,12 +284,15 @@
   }
 
   function initPwaInstall () {
+    initHeaderInstallBtn();
+
     if (isStandalone()) return;
 
     window.addEventListener('beforeinstallprompt', function (event) {
       event.preventDefault();
       deferredPrompt = event;
       updateInstallUi();
+      updateHeaderInstallBtn();
       var signupModal = document.getElementById('pwa-signup-modal');
       if (signupModal && !signupModal.hidden) return;
       if (!wasDismissed()) showBanner('android');

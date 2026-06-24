@@ -16,8 +16,8 @@
   <meta name="apple-mobile-web-app-title" content="MedHub">
   <link rel="apple-touch-icon" href="/assets/icons/icon-192.png?v=icon-v2">
   <script src="theme.js"></script>
-  <link rel="stylesheet" href="style.css?v=search-v2">
-  <link rel="stylesheet" href="app-mobile.css?v=search-v2">
+  <link rel="stylesheet" href="style.css?v=pwa-header-v1">
+  <link rel="stylesheet" href="app-mobile.css?v=pwa-header-v1">
   <script defer src="calculators-risco.js"></script>
   <script defer src="calculators-cardio.js"></script>
   <script defer src="calculators-pneumo.js?v=rsi-patient"></script>
@@ -81,7 +81,7 @@
   <script defer src="app-search.js?v=search-v2"></script>
   <script defer src="app.js?v=search-v2"></script>
   <script defer src="auth.js?v=compliance-v1"></script>
-  <script defer src="pwa-install.js?v=pwa-v2"></script>
+  <script defer src="pwa-install.js?v=pwa-v3"></script>
 </head>
 <body class="app-page" onload="initApp()">
   <header class="app-header">
@@ -102,9 +102,19 @@
       </div>
     </div>
     <div class="header-actions">
-      <button type="button" class="user-menu-btn" id="user-menu-btn" title="Minha conta e configurações">
-        <span id="user-name"></span>
-      </button>
+      <div class="header-user-group">
+        <button type="button" class="pwa-header-install-btn" id="pwa-header-install-btn" title="Instalar MedHub no celular" aria-label="Instalar MedHub no celular" hidden>
+          <svg class="pwa-header-install-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="5" y="2" width="14" height="20" rx="2"/>
+            <path d="M12 18h.01"/>
+            <path d="M12 7v5"/>
+            <path d="m9 10 3 3 3-3"/>
+          </svg>
+        </button>
+        <button type="button" class="user-menu-btn" id="user-menu-btn" title="Minha conta e configurações">
+          <span id="user-name"></span>
+        </button>
+      </div>
       <button type="button" class="btn-outline" onclick="logout()">Sair</button>
     </div>
   </header>

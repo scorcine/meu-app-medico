@@ -111,6 +111,20 @@
     flex-shrink: 0;
   }
 
+  .header-user-group {
+    gap: 0.25rem;
+  }
+
+  .pwa-header-install-btn {
+    width: 2rem;
+    height: 2rem;
+  }
+
+  .pwa-header-install-icon {
+    width: 18px;
+    height: 18px;
+  }
+
   .header-actions .user-menu-btn {
     max-width: 5.25rem;
     font-size: 0.8rem;
