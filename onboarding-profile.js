@@ -144,7 +144,25 @@ function initOnboardingProfilePage () {
         );
         return;
       }
-    } else if (typeof medhubIsLocalDev === 'function' && !medhubIsLocalDev()) {
+
+      const verify = typeof medhubFetchCloudProfileWithRetry === 'function'
+        ? await medhubFetchCloudProfileWithRetry(3)
+        : await medhubCloudFetchProfile();
+      if (
+        !verify.ok ||
+        !(typeof medhubCloudProfileComplete === 'function' && medhubCloudProfileComplete(verify.profile))
+      ) {
+        if (btn) btn.disabled = false;
+        alert(
+          'Seu perfil ainda não foi confirmado na nuvem.\n\n' +
+          'Aguarde alguns segundos e toque em Continuar novamente.'
+        );
+        return;
+      }
+      if (typeof medhubApplyCloudProfileLocal === 'function') {
+        medhubApplyCloudProfileLocal(verify.profile, { force: true });
+      }
+    } else if (typeof medhubIsProductionSite === 'function' && medhubIsProductionSite()) {
       if (btn) btn.disabled = false;
       alert('Sincronização na nuvem indisponível. Tente novamente em instantes.');
       return;
@@ -171,7 +189,15 @@ async function initOnboardingProfileGate () {
   if (!user) return;
 
   if (typeof medhubCloudSyncAvailable === 'function' && await medhubCloudSyncAvailable()) {
-    const cloud = await medhubCloudFetchProfile();
+    const cloud = typeof medhubFetchCloudProfileWithRetry === 'function'
+      ? await medhubFetchCloudProfileWithRetry(3)
+      : await medhubCloudFetchProfile();
+    if (cloud.ok && typeof medhubCloudProfileComplete === 'function' && medhubCloudProfileComplete(cloud.profile)) {
+      medhubApplyCloudProfileLocal(cloud.profile, { force: true });
+      if (typeof medhubClearFreshLogin === 'function') medhubClearFreshLogin();
+      window.location.replace('app.html');
+      return;
+    }
     if (cloud.ok && cloud.profile) {
       medhubApplyCloudProfileLocal(cloud.profile, { force: true });
     }

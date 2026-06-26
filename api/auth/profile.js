@@ -3,7 +3,8 @@ const { authenticateRequest } = require('../_request-auth');
 const {
   getProfessionalProfile,
   saveProfessionalProfile,
-  publicProfile
+  publicProfile,
+  profileOnboardingComplete
 } = require('../_profile');
 
 module.exports = async (req, res) => {
@@ -25,8 +26,12 @@ async function handleGet (req, res) {
   if (!auth) return;
 
   try {
-    const profile = await getProfessionalProfile(auth.user.email, auth.user.name);
-    json(res, 200, { profile: publicProfile(profile) });
+    const raw = await getProfessionalProfile(auth.user.email, auth.user.name);
+    const profile = publicProfile(raw);
+    json(res, 200, {
+      profile,
+      onboardingComplete: !!(profile?.complete || profileOnboardingComplete(raw))
+    });
   } catch (err) {
     json(res, 500, { error: err.message || 'Erro ao carregar perfil' });
   }

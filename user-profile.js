@@ -160,6 +160,40 @@ function medhubMigrateWrongLocalProfileKey (email) {
   } catch { /* ignore */ }
 }
 
+function medhubGetEffectiveProfileSnapshot () {
+  if (typeof medhubLoadUserProfile !== 'function') return null;
+  let profile = medhubLoadUserProfile();
+  const user = typeof getSession === 'function' ? getSession() : null;
+  if (
+    user?.email &&
+    typeof medhubProfileDataComplete === 'function' &&
+    !medhubProfileDataComplete(profile) &&
+    typeof medhubRestoreProfileFromSetupBackup === 'function'
+  ) {
+    const restored = medhubRestoreProfileFromSetupBackup(user.email);
+    if (restored) profile = restored;
+  }
+  if (typeof medhubIsProfileSetupComplete === 'function' && medhubIsProfileSetupComplete(profile)) {
+    return profile;
+  }
+  return null;
+}
+
+function medhubBuildCloudProfilePayload (profile) {
+  if (!profile) return null;
+  return {
+    rxDisplayName: profile.rxDisplayName,
+    userType: profile.userType,
+    crmUf: profile.crmUf,
+    crmNumber: profile.crmNumber,
+    address: profile.address,
+    addressCity: profile.addressCity,
+    addressState: profile.addressState,
+    addressZip: profile.addressZip,
+    onboardingComplete: true
+  };
+}
+
 function medhubLoadUserProfile () {
   const user = typeof getSession === 'function' ? getSession() : null;
   if (user?.email) medhubMigrateWrongLocalProfileKey(user.email);

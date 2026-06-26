@@ -175,6 +175,7 @@ async function saveProfessionalProfile (email, updates, options = {}) {
 
 function publicProfile (profile) {
   if (!profile) return null;
+  const complete = profileOnboardingComplete(profile);
   return {
     rxDisplayName: profile.rxDisplayName,
     userType: profile.userType || '',
@@ -186,7 +187,8 @@ function publicProfile (profile) {
     addressZip: profile.addressZip,
     identityLocked: profile.identityLocked,
     identityChangeCount: profile.identityChangeCount || 0,
-    onboardingComplete: !!profile.onboardingComplete,
+    onboardingComplete: !!profile.onboardingComplete || complete,
+    complete,
     identityChangesRemaining: identityChangesRemaining(profile),
     maxIdentityChanges: MAX_IDENTITY_CHANGES,
     identityLimitNotice: IDENTITY_LIMIT_NOTICE,
