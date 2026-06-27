@@ -597,11 +597,12 @@ footer {
   z-index: 10040;
   max-height: min(60vh, 420px);
   overflow: auto;
-  background: var(--bg-card, #fff);
+  background: var(--bg-surface, #fff);
   border: 1px solid var(--border, #dee2e6);
   border-radius: 12px;
   box-shadow: 0 16px 40px rgba(15, 23, 42, 0.16);
   padding: 0.45rem;
+  color: var(--text-primary, #1a2b3c);
 }
 
 .app-search-results[hidden] {
@@ -634,7 +635,7 @@ footer {
   border: none;
   border-radius: 8px;
   background: transparent;
-  color: inherit;
+  color: var(--text-primary, #1a2b3c);
   text-align: left;
   cursor: pointer;
 }
@@ -672,11 +673,17 @@ footer {
   margin: 0;
   padding: 0.65rem 0.45rem;
   font-size: 0.88rem;
+  color: var(--text-muted, #6c757d);
 }
 
 [data-theme="dark"] .app-search-results {
-  background: var(--bg-card, #141e2e);
+  background: var(--bg-surface, #1e293b);
+  color: var(--text-primary, #e8eef4);
   box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
+}
+
+[data-theme="dark"] .app-search-result {
+  color: var(--text-primary, #e8eef4);
 }
 
 .user-menu-btn {
