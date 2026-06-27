@@ -49,7 +49,7 @@ async function adminFetch (path, options) {
 }
 
 async function adminCheckAccess () {
-  const { res, data } = await adminFetch('/api/admin/me');
+  const { res, data } = await adminFetch('/api/admin?action=me');
   if (res.status === 403) return { ok: false, forbidden: true };
   if (res.status === 503 && data.code === 'admin_not_configured') {
     return { ok: false, misconfigured: true, error: data.error };
@@ -67,7 +67,7 @@ async function adminLoadUsers () {
   adminSetStatus(loadStatus, 'Carregando…', 'muted');
   if (tableWrap) tableWrap.hidden = true;
 
-  const { res, data } = await adminFetch('/api/admin/users');
+  const { res, data } = await adminFetch('/api/admin?action=users');
   if (!res.ok) {
     adminSetStatus(loadStatus, data.error || 'Erro ao carregar usuários.', 'error');
     return;
@@ -136,7 +136,7 @@ async function adminRevokeUser (email) {
     'Cancelar = só bloquear assinatura'
   );
 
-  const { res, data } = await adminFetch('/api/admin/revoke', {
+  const { res, data } = await adminFetch('/api/admin?action=revoke', {
     method: 'POST',
     body: JSON.stringify({ email, deleteUser: alsoDelete })
   });
@@ -166,7 +166,7 @@ async function adminGrantAccess (e) {
   if (btn) btn.disabled = true;
   adminSetStatus(statusEl, 'Salvando…', 'muted');
 
-  const { res, data } = await adminFetch('/api/admin/grant', {
+  const { res, data } = await adminFetch('/api/admin?action=grant', {
     method: 'POST',
     body: JSON.stringify({ email, name, lifetime, password })
   });

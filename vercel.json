@@ -3,6 +3,12 @@
   "name": "meu-app-medico",
   "buildCommand": null,
   "outputDirectory": ".",
+  "rewrites": [
+    {
+      "source": "/api/checkout-session",
+      "destination": "/api/create-checkout-session"
+    }
+  ],
   "redirects": [
     {
       "source": "/",
