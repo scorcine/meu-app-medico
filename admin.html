@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Admin • MedHub</title>
+  <link rel="icon" href="assets/medhub-logo.png?v=logo-v2" type="image/png">
+  <script src="theme.js"></script>
+  <link rel="stylesheet" href="style.css?v=admin-v1">
+  <link rel="stylesheet" href="auth-mobile.css?v=auth-mobile-v1">
+  <script defer src="security-crypto.js?v=session-v1"></script>
+  <script defer src="auth-cloud.js?v=cloud-v18"></script>
+  <script defer src="admin.js?v=1"></script>
+</head>
+<body class="auth-body admin-page" onload="initAdminPage()">
+  <header class="auth-page-header admin-page-header">
+    <a class="medhub-logo-link" href="index.html" aria-label="MedHub — página inicial">
+      <img src="assets/medhub-logo.png?v=logo-v2" alt="MedHub" class="medhub-logo medhub-logo--auth" width="48" height="48">
+    </a>
+    <span class="admin-badge">Admin</span>
+  </header>
+
+  <main class="admin-main">
+    <section id="admin-login-panel" class="card auth-card admin-card" hidden>
+      <h1>Painel administrativo</h1>
+      <p class="auth-hint muted">Entre com o e-mail configurado em <code>MEDHUB_OWNER_EMAIL</code> na Vercel.</p>
+      <form id="admin-login-form">
+        <label for="admin-email">E-mail</label>
+        <input id="admin-email" name="email" type="email" required autocomplete="username">
+
+        <label for="admin-password">Senha</label>
+        <input id="admin-password" name="password" type="password" required autocomplete="current-password">
+
+        <button type="submit" class="btn" id="admin-login-btn">Entrar</button>
+      </form>
+      <p id="admin-login-error" class="admin-status admin-status--error" hidden></p>
+    </section>
+
+    <section id="admin-forbidden-panel" class="card auth-card admin-card" hidden>
+      <h1>Sem permissão</h1>
+      <p class="auth-hint muted">Esta conta não está autorizada como administrador.</p>
+      <button type="button" class="btn-outline" onclick="adminLogout()">Sair</button>
+    </section>
+
+    <section id="admin-panel" class="admin-panel" hidden>
+      <div class="admin-toolbar card admin-card">
+        <div>
+          <h1>Usuários MedHub</h1>
+          <p class="auth-hint muted" id="admin-signed-as"></p>
+        </div>
+        <div class="admin-toolbar-actions">
+          <button type="button" class="btn-outline" id="admin-refresh-btn">Atualizar lista</button>
+          <button type="button" class="btn-outline" onclick="adminLogout()">Sair</button>
+        </div>
+      </div>
+
+      <div class="card admin-card admin-grant-card">
+        <h2>Liberar acesso</h2>
+        <form id="admin-grant-form" class="admin-grant-form">
+          <div class="admin-grant-row">
+            <label for="grant-email">E-mail</label>
+            <input id="grant-email" type="email" required placeholder="usuario@email.com">
+          </div>
+          <div class="admin-grant-row">
+            <label for="grant-name">Nome (opcional)</label>
+            <input id="grant-name" type="text" placeholder="Nome para nova conta">
+          </div>
+          <div class="admin-grant-row admin-grant-row--inline">
+            <label class="admin-check">
+              <input id="grant-lifetime" type="checkbox" checked>
+              Acesso vitalício
+            </label>
+          </div>
+          <details class="admin-details">
+            <summary>Senha opcional (criar conta ou redefinir)</summary>
+            <label for="grant-password">Nova senha (mín. 8 caracteres)</label>
+            <input id="grant-password" type="password" autocomplete="new-password" placeholder="Deixe vazio para só liberar assinatura">
+          </details>
+          <button type="submit" class="btn" id="admin-grant-btn">Liberar acesso</button>
+        </form>
+        <p id="admin-grant-status" class="admin-status" hidden></p>
+      </div>
+
+      <div class="card admin-card admin-table-card">
+        <div class="admin-table-head">
+          <h2>Contas e assinaturas</h2>
+          <p class="auth-hint muted" id="admin-user-count"></p>
+        </div>
+        <p id="admin-load-status" class="admin-status muted">Carregando…</p>
+        <div class="admin-table-wrap" id="admin-table-wrap" hidden>
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>E-mail</th>
+                <th>Nome</th>
+                <th>Conta</th>
+                <th>Plano</th>
+                <th>Status</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="admin-users-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

@@ -146,4 +146,9 @@ async function getSubscriptionStatus (email, options = {}) {
   };
 }
 
-module.exports = { getSubscriptionStatus, resolveCustomerId, billingGrantStillValid };
+module.exports = {
+  getSubscriptionStatus,
+  resolveCustomerId,
+  billingGrantStillValid,
+  isOwnerEmail
+};
