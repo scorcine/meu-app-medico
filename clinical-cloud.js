@@ -22,12 +22,6 @@ function medhubSetCloudSyncEnabled (enabled) {
   localStorage.setItem(medhubCloudSyncPrefKey(), enabled ? '1' : '0');
 }
 
-async function medhubCloudSyncAvailable () {
-  if (typeof medhubFetchAuthConfig !== 'function') return false;
-  const config = await medhubFetchAuthConfig();
-  return !!(config.cloudEnabled && medhubGetAuthToken && medhubGetAuthToken());
-}
-
 function medhubCollectClinicalEntries () {
   if (typeof backupStorageKeys === 'function' && typeof backupUserEmail === 'function') {
     const email = backupUserEmail();

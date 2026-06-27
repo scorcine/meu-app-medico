@@ -25,6 +25,11 @@ async function medhubFetchAuthConfig (force) {
   }
 }
 
+async function medhubCloudSyncAvailable () {
+  const config = await medhubFetchAuthConfig();
+  return !!(config.cloudEnabled && medhubGetAuthToken());
+}
+
 function medhubGetAuthToken () {
   return localStorage.getItem(MEDHUB_TOKEN_KEY) || '';
 }
@@ -377,6 +382,24 @@ async function medhubProfileNeedsOnboarding () {
   return !medhubIsProfileSetupComplete(profile);
 }
 
+async function medhubTryPushLocalProfileToCloud () {
+  if (typeof medhubPushEffectiveProfileToCloud !== 'function') return false;
+  const pushed = await medhubPushEffectiveProfileToCloud();
+  return !!(pushed.ok && medhubCloudProfileComplete(pushed.profile));
+}
+
+async function medhubAdmitIfLocalProfileComplete () {
+  if (typeof medhubIsProfileSetupComplete !== 'function') return false;
+  const profile = typeof medhubLoadUserProfile === 'function' ? medhubLoadUserProfile() : null;
+  if (!medhubIsProfileSetupComplete(profile)) return false;
+
+  if (typeof medhubCloudSyncAvailable === 'function' && await medhubCloudSyncAvailable()) {
+    await medhubTryPushLocalProfileToCloud();
+  }
+  medhubClearFreshLogin();
+  return true;
+}
+
 async function medhubEnsureProfileOnboarding () {
   if (typeof medhubIsProfileSetupComplete !== 'function') return true;
 
@@ -385,6 +408,8 @@ async function medhubEnsureProfileOnboarding () {
     window.location.href = 'login.html';
     return false;
   }
+
+  if (await medhubAdmitIfLocalProfileComplete()) return true;
 
   const signupOnly = medhubHasFreshLogin();
 
@@ -412,6 +437,8 @@ async function medhubEnsureProfileOnboarding () {
       medhubClearFreshLogin();
       return true;
     }
+
+    if (await medhubAdmitIfLocalProfileComplete()) return true;
 
     const cloud = await medhubFetchCloudProfileWithRetry(3);
     if (!cloud.ok) {

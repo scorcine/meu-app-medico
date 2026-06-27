@@ -120,23 +120,19 @@ function initOnboardingProfilePage () {
     const btn = document.getElementById('onboarding-submit-btn');
     if (btn) btn.disabled = true;
 
-    let savedOk = false;
+    const cloudAvailable = typeof medhubCloudSyncAvailable === 'function' &&
+      await medhubCloudSyncAvailable();
+    const productionSite = typeof medhubIsProductionSite === 'function' && medhubIsProductionSite();
 
-    if (typeof medhubSaveUserProfileLocal === 'function') {
-      medhubSaveUserProfileLocal(payload);
-      savedOk = true;
-    }
-    if (typeof medhubPersistProfileSetupBackup === 'function') {
-      medhubPersistProfileSetupBackup(sessionUser.email, payload);
+    if (productionSite && !cloudAvailable) {
+      if (btn) btn.disabled = false;
+      alert('Sincronização na nuvem indisponível. Tente novamente em instantes.');
+      return;
     }
 
-    if (typeof medhubCloudSyncAvailable === 'function' && await medhubCloudSyncAvailable()) {
+    if (cloudAvailable) {
       const saved = await medhubCloudSaveProfile(payload);
-      if (saved.ok) {
-        if (typeof medhubApplyCloudProfileLocal === 'function') {
-          medhubApplyCloudProfileLocal(saved.profile || payload, { force: true });
-        }
-      } else {
+      if (!saved.ok) {
         if (btn) btn.disabled = false;
         alert(
           (saved.error || 'Não foi possível salvar nome e CRM na nuvem.') +
@@ -162,16 +158,13 @@ function initOnboardingProfilePage () {
       if (typeof medhubApplyCloudProfileLocal === 'function') {
         medhubApplyCloudProfileLocal(verify.profile, { force: true });
       }
-    } else if (typeof medhubIsProductionSite === 'function' && medhubIsProductionSite()) {
-      if (btn) btn.disabled = false;
-      alert('Sincronização na nuvem indisponível. Tente novamente em instantes.');
-      return;
     }
 
-    if (!savedOk) {
-      if (btn) btn.disabled = false;
-      alert('Não foi possível salvar o perfil.');
-      return;
+    if (typeof medhubSaveUserProfileLocal === 'function') {
+      medhubSaveUserProfileLocal(payload);
+    }
+    if (typeof medhubPersistProfileSetupBackup === 'function') {
+      medhubPersistProfileSetupBackup(sessionUser.email, payload);
     }
 
     if (typeof medhubClearFreshLogin === 'function') medhubClearFreshLogin();
@@ -209,6 +202,13 @@ async function initOnboardingProfileGate () {
 
   const profile = typeof medhubLoadUserProfile === 'function' ? medhubLoadUserProfile() : null;
   if (typeof medhubIsProfileSetupComplete === 'function' && medhubIsProfileSetupComplete(profile)) {
+    if (typeof medhubCloudSyncAvailable === 'function' && await medhubCloudSyncAvailable()) {
+      if (typeof medhubTryPushLocalProfileToCloud === 'function') {
+        await medhubTryPushLocalProfileToCloud();
+      } else if (typeof medhubPushEffectiveProfileToCloud === 'function') {
+        await medhubPushEffectiveProfileToCloud();
+      }
+    }
     if (typeof medhubClearFreshLogin === 'function') medhubClearFreshLogin();
     window.location.replace('app.html');
     return;
