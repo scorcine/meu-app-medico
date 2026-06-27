@@ -60,12 +60,14 @@ async function adminCheckAccess () {
 
 async function adminLoadUsers () {
   const loadStatus = document.getElementById('admin-load-status');
-  const tableWrap = document.getElementById('admin-table-wrap');
-  const tbody = document.getElementById('admin-users-body');
+  const listEl = document.getElementById('admin-users-list');
   const countEl = document.getElementById('admin-user-count');
 
   adminSetStatus(loadStatus, 'Carregando…', 'muted');
-  if (tableWrap) tableWrap.hidden = true;
+  if (listEl) {
+    listEl.hidden = true;
+    listEl.innerHTML = '';
+  }
 
   const { res, data } = await adminFetch('/api/admin?action=users');
   if (!res.ok) {
@@ -76,34 +78,38 @@ async function adminLoadUsers () {
   const users = data.users || [];
   if (countEl) countEl.textContent = users.length + ' registro(s)';
 
-  if (!tbody) return;
-  tbody.innerHTML = '';
+  if (!listEl) return;
 
   users.forEach(user => {
-    const tr = document.createElement('tr');
+    const card = document.createElement('article');
+    card.className = 'admin-user-card';
     const activeBadge = user.active
       ? '<span class="admin-pill admin-pill--ok">Ativo</span>'
       : '<span class="admin-pill admin-pill--off">Inativo</span>';
 
-    tr.innerHTML =
-      '<td><span class="admin-email">' + escapeHtml(user.email) + '</span></td>' +
-      '<td>' + escapeHtml(user.name || '—') + '</td>' +
-      '<td>' + (user.hasAccount ? 'Sim' : 'Só billing') + '</td>' +
-      '<td>' + escapeHtml(user.planLabel || user.plan || '—') + '</td>' +
-      '<td>' + activeBadge + '</td>' +
-      '<td class="admin-actions">' +
-        '<button type="button" class="btn-outline btn-sm admin-revoke-btn" data-email="' + escapeAttr(user.email) + '">Revogar</button>' +
-      '</td>';
-    tbody.appendChild(tr);
+    card.innerHTML =
+      '<div class="admin-user-card-head">' +
+        '<div class="admin-user-email">' + escapeHtml(user.email) + '</div>' +
+        activeBadge +
+      '</div>' +
+      '<dl class="admin-user-grid">' +
+        '<div><dt>Nome</dt><dd>' + escapeHtml(user.name || '—') + '</dd></div>' +
+        '<div><dt>Conta</dt><dd>' + (user.hasAccount ? 'Sim' : 'Só billing') + '</dd></div>' +
+        '<div><dt>Plano</dt><dd>' + escapeHtml(user.planLabel || user.plan || '—') + '</dd></div>' +
+        '<div><dt>Origem</dt><dd>' + escapeHtml(user.source || '—') + '</dd></div>' +
+      '</dl>' +
+      '<button type="button" class="btn-outline btn-sm admin-revoke-btn" data-email="' + escapeAttr(user.email) + '">Revogar acesso</button>';
+
+    listEl.appendChild(card);
   });
 
-  tbody.querySelectorAll('.admin-revoke-btn').forEach(btn => {
+  listEl.querySelectorAll('.admin-revoke-btn').forEach(btn => {
     btn.addEventListener('click', () => adminRevokeUser(btn.dataset.email));
   });
 
   adminSetStatus(loadStatus, '', '');
   loadStatus.hidden = true;
-  if (tableWrap) tableWrap.hidden = users.length === 0;
+  listEl.hidden = users.length === 0;
   if (users.length === 0) {
     adminSetStatus(loadStatus, 'Nenhum usuário encontrado no KV.', 'muted');
   }

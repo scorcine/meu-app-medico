@@ -7,11 +7,10 @@
   <title>Admin • MedHub</title>
   <link rel="icon" href="assets/medhub-logo.png?v=logo-v2" type="image/png">
   <script src="theme.js"></script>
-  <link rel="stylesheet" href="style.css?v=admin-v2">
-  <link rel="stylesheet" href="auth-mobile.css?v=auth-mobile-v1">
+  <link rel="stylesheet" href="style.css?v=admin-v3">
   <script defer src="security-crypto.js?v=session-v1"></script>
   <script defer src="auth-cloud.js?v=cloud-v18"></script>
-  <script defer src="admin.js?v=3"></script>
+  <script defer src="admin.js?v=4"></script>
 </head>
 <body class="auth-body admin-page" onload="initAdminPage()">
   <header class="auth-page-header admin-page-header">
@@ -82,35 +81,13 @@
         <p id="admin-grant-status" class="admin-status" hidden></p>
       </div>
 
-      <div class="card admin-card admin-table-card">
-        <div class="admin-table-head">
+      <div class="card admin-card admin-users-card">
+        <div class="admin-users-head">
           <h2>Contas e assinaturas</h2>
           <p class="auth-hint muted" id="admin-user-count"></p>
         </div>
         <p id="admin-load-status" class="admin-status muted">Carregando…</p>
-        <div class="admin-table-wrap" id="admin-table-wrap" hidden>
-          <table class="admin-table">
-            <colgroup>
-              <col class="admin-col-email">
-              <col class="admin-col-name">
-              <col class="admin-col-account">
-              <col class="admin-col-plan">
-              <col class="admin-col-status">
-              <col class="admin-col-actions">
-            </colgroup>
-            <thead>
-              <tr>
-                <th>E-mail</th>
-                <th>Nome</th>
-                <th>Conta</th>
-                <th>Plano</th>
-                <th>Status</th>
-                <th>Ações</th>
-              </tr>
-            </thead>
-            <tbody id="admin-users-body"></tbody>
-          </table>
-        </div>
+        <div id="admin-users-list" class="admin-users-list" hidden></div>
       </div>
     </section>
   </main>

@@ -6716,6 +6716,21 @@ form.card .auth-coupon-note a {
 
 body.auth-body.admin-page {
   align-items: stretch;
+  overflow-x: auto;
+}
+
+.admin-page main .card,
+.admin-page .admin-card {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+}
+
+.admin-page #admin-login-panel,
+.admin-page #admin-forbidden-panel {
+  width: min(420px, calc(100% - 2rem));
+  margin: 0 auto;
+  align-self: center;
 }
 
 .admin-page .admin-main {
@@ -6736,6 +6751,13 @@ body.auth-body.admin-page {
   flex-direction: column;
   gap: 1rem;
   width: 100%;
+}
+
+.admin-page .admin-card {
+  padding: 1.25rem 1.1rem;
+  text-align: left;
+  box-sizing: border-box;
+  overflow: visible;
 }
 
 .admin-page-header {
@@ -6765,6 +6787,7 @@ body.auth-body.admin-page {
 .admin-card h2 {
   margin-bottom: 0.35rem;
   color: var(--text-heading, #0d6efd);
+  text-align: left;
 }
 
 .admin-toolbar {
@@ -6841,7 +6864,7 @@ body.auth-body.admin-page {
   color: var(--text-muted, #6c757d);
 }
 
-.admin-table-head {
+.admin-users-head {
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
@@ -6850,61 +6873,65 @@ body.auth-body.admin-page {
   margin-bottom: 0.75rem;
 }
 
-.admin-table-wrap {
-  overflow-x: auto;
-  width: 100%;
-  -webkit-overflow-scrolling: touch;
+.admin-users-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
 }
 
-.admin-table {
-  width: 100%;
-  min-width: 720px;
-  table-layout: fixed;
-  border-collapse: collapse;
-  font-size: 0.88rem;
-}
-
-.admin-col-email { width: 30%; }
-.admin-col-name { width: 22%; }
-.admin-col-account { width: 11%; }
-.admin-col-plan { width: 13%; }
-.admin-col-status { width: 11%; }
-.admin-col-actions { width: 13%; }
-
-.admin-table th,
-.admin-table td {
-  padding: 0.65rem 0.55rem;
-  border-bottom: 1px solid var(--border, #dce4ec);
+.admin-user-card {
+  border: 1px solid var(--border, #dce4ec);
+  border-radius: 10px;
+  padding: 0.9rem 1rem;
+  background: var(--bg-surface-muted, #f8fafc);
   text-align: left;
-  vertical-align: middle;
-  overflow-wrap: break-word;
-  word-break: normal;
 }
 
-.admin-table td.admin-actions {
-  overflow-wrap: normal;
+.admin-user-card-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.65rem;
 }
 
-.admin-email {
-  display: inline-block;
-  max-width: 100%;
-  font-size: 0.88rem;
-  line-height: 1.35;
+.admin-user-email {
+  flex: 1 1 12rem;
+  min-width: 0;
+  font-weight: 600;
+  font-size: 0.92rem;
+  line-height: 1.4;
   color: var(--text-primary);
-  word-break: normal;
   overflow-wrap: anywhere;
+  word-break: normal;
 }
 
-.admin-actions {
-  white-space: nowrap;
+.admin-user-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 0.55rem 1rem;
+  margin: 0 0 0.75rem;
 }
 
-.admin-table th {
-  font-size: 0.78rem;
-  text-transform: uppercase;
+.admin-user-grid > div {
+  min-width: 0;
+}
+
+.admin-user-grid dt {
+  margin: 0;
+  font-size: 0.72rem;
+  font-weight: 700;
   letter-spacing: 0.04em;
+  text-transform: uppercase;
   color: var(--text-muted, #6c757d);
-  white-space: nowrap;
+}
+
+.admin-user-grid dd {
+  margin: 0.15rem 0 0;
+  font-size: 0.9rem;
+  color: var(--text-primary);
+  overflow-wrap: anywhere;
 }
 
 .btn-sm {
@@ -6935,8 +6962,7 @@ body.auth-body.admin-page {
     flex-direction: column;
   }
 
-  .admin-table th:nth-child(2),
-  .admin-table td:nth-child(2) {
-    display: none;
+  .admin-page .admin-main {
+    padding-inline: 0.75rem;
   }
 }
