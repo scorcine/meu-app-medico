@@ -86,7 +86,7 @@ async function adminLoadUsers () {
       : '<span class="admin-pill admin-pill--off">Inativo</span>';
 
     tr.innerHTML =
-      '<td><code>' + escapeHtml(user.email) + '</code></td>' +
+      '<td><span class="admin-email">' + escapeHtml(user.email) + '</span></td>' +
       '<td>' + escapeHtml(user.name || '—') + '</td>' +
       '<td>' + (user.hasAccount ? 'Sim' : 'Só billing') + '</td>' +
       '<td>' + escapeHtml(user.planLabel || user.plan || '—') + '</td>' +

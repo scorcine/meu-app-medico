@@ -7,11 +7,11 @@
   <title>Admin • MedHub</title>
   <link rel="icon" href="assets/medhub-logo.png?v=logo-v2" type="image/png">
   <script src="theme.js"></script>
-  <link rel="stylesheet" href="style.css?v=admin-v1">
+  <link rel="stylesheet" href="style.css?v=admin-v2">
   <link rel="stylesheet" href="auth-mobile.css?v=auth-mobile-v1">
   <script defer src="security-crypto.js?v=session-v1"></script>
   <script defer src="auth-cloud.js?v=cloud-v18"></script>
-  <script defer src="admin.js?v=2"></script>
+  <script defer src="admin.js?v=3"></script>
 </head>
 <body class="auth-body admin-page" onload="initAdminPage()">
   <header class="auth-page-header admin-page-header">
@@ -90,6 +90,14 @@
         <p id="admin-load-status" class="admin-status muted">Carregando…</p>
         <div class="admin-table-wrap" id="admin-table-wrap" hidden>
           <table class="admin-table">
+            <colgroup>
+              <col class="admin-col-email">
+              <col class="admin-col-name">
+              <col class="admin-col-account">
+              <col class="admin-col-plan">
+              <col class="admin-col-status">
+              <col class="admin-col-actions">
+            </colgroup>
             <thead>
               <tr>
                 <th>E-mail</th>
