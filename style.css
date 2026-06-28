@@ -6820,7 +6820,9 @@ body.auth-body.admin-page {
 
 .admin-grant-row input[type="email"],
 .admin-grant-row input[type="text"],
-.admin-grant-row input[type="password"] {
+.admin-grant-row input[type="password"],
+.admin-grant-row select,
+.admin-filters select {
   width: 100%;
 }
 
@@ -6957,6 +6959,242 @@ body.auth-body.admin-page {
   color: var(--result-err-text, #b91c1c);
 }
 
+.admin-pill--warn {
+  background: #fff7ed;
+  color: #c2410c;
+}
+
+.admin-pill--muted {
+  background: var(--bg-surface-muted, #f1f5f9);
+  color: var(--text-muted, #64748b);
+}
+
+.admin-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 0.65rem;
+}
+
+.admin-stat-card {
+  border: 1px solid var(--border, #dce4ec);
+  border-radius: 10px;
+  padding: 0.75rem 0.85rem;
+  background: var(--bg-surface-muted, #f8fafc);
+  text-align: center;
+}
+
+.admin-stat-card--ok {
+  border-color: #a7f3d0;
+}
+
+.admin-stat-card--warn {
+  border-color: #fed7aa;
+  background: #fff7ed;
+}
+
+.admin-stat-value {
+  display: block;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.admin-stat-label {
+  display: block;
+  margin-top: 0.2rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-muted, #6c757d);
+}
+
+.admin-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.85rem;
+}
+
+.admin-search {
+  flex: 1 1 180px;
+  min-width: 0;
+}
+
+.admin-filters select {
+  flex: 0 1 auto;
+}
+
+.admin-coupon-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+}
+
+.admin-user-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  justify-content: flex-end;
+}
+
+.admin-user-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.admin-user-card {
+  cursor: pointer;
+  transition: border-color 0.15s ease;
+}
+
+.admin-user-card:hover {
+  border-color: var(--text-accent, #0d6efd);
+}
+
+.admin-log-card summary {
+  cursor: pointer;
+  list-style: none;
+}
+
+.admin-log-card summary::-webkit-details-marker {
+  display: none;
+}
+
+.admin-log-card summary h2 {
+  display: inline;
+  margin: 0;
+}
+
+.admin-log-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  margin-top: 0.75rem;
+  max-height: 280px;
+  overflow-y: auto;
+}
+
+.admin-log-entry {
+  display: grid;
+  grid-template-columns: minmax(120px, 1fr) auto 1fr auto;
+  gap: 0.5rem;
+  font-size: 0.82rem;
+  padding: 0.45rem 0.55rem;
+  border-radius: 6px;
+  background: var(--bg-surface-muted, #f8fafc);
+  align-items: center;
+}
+
+.admin-log-action {
+  font-weight: 700;
+  color: var(--text-accent, #0d6efd);
+}
+
+.admin-log-target {
+  overflow-wrap: anywhere;
+}
+
+.admin-log-actor {
+  color: var(--text-muted, #6c757d);
+  font-size: 0.78rem;
+}
+
+.admin-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.admin-modal[hidden] {
+  display: none;
+}
+
+.admin-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.45);
+}
+
+.admin-modal-panel {
+  position: relative;
+  z-index: 1;
+  width: min(560px, 100%);
+  max-height: min(90vh, 720px);
+  overflow-y: auto;
+  margin: 0;
+}
+
+.admin-modal-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.admin-modal-close {
+  border: none;
+  background: transparent;
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  color: var(--text-muted, #6c757d);
+  padding: 0 0.25rem;
+}
+
+.admin-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.55rem 1rem;
+  margin: 0 0 1rem;
+}
+
+.admin-detail-grid dt {
+  margin: 0;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-muted, #6c757d);
+}
+
+.admin-detail-grid dd {
+  margin: 0.15rem 0 0;
+  font-size: 0.9rem;
+  overflow-wrap: anywhere;
+}
+
+.admin-modal-notes {
+  margin-bottom: 1rem;
+}
+
+.admin-modal-notes label {
+  display: block;
+  margin-bottom: 0.35rem;
+  font-weight: 600;
+  font-size: 0.88rem;
+}
+
+.admin-modal-notes textarea {
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 0.5rem;
+  resize: vertical;
+}
+
+.admin-modal-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
 @media (max-width: 720px) {
   .admin-toolbar {
     flex-direction: column;
@@ -6964,5 +7202,10 @@ body.auth-body.admin-page {
 
   .admin-page .admin-main {
     padding-inline: 0.75rem;
+  }
+
+  .admin-log-entry {
+    grid-template-columns: 1fr;
+    gap: 0.2rem;
   }
 }

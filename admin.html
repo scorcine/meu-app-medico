@@ -7,10 +7,10 @@
   <title>Admin • MedHub</title>
   <link rel="icon" href="assets/medhub-logo.png?v=logo-v2" type="image/png">
   <script src="theme.js"></script>
-  <link rel="stylesheet" href="style.css?v=admin-v3">
+  <link rel="stylesheet" href="style.css?v=admin-v4">
   <script defer src="security-crypto.js?v=session-v1"></script>
   <script defer src="auth-cloud.js?v=cloud-v18"></script>
-  <script defer src="admin.js?v=5"></script>
+  <script defer src="admin.js?v=6"></script>
 </head>
 <body class="auth-body admin-page" onload="initAdminPage()">
   <header class="auth-page-header admin-page-header">
@@ -23,13 +23,18 @@
   <main class="admin-main">
     <section id="admin-login-panel" class="card auth-card admin-card" hidden>
       <h1>Painel administrativo</h1>
-      <p class="auth-hint muted">Entre com o e-mail configurado em <code>MEDHUB_OWNER_EMAIL</code> na Vercel.</p>
+      <p class="auth-hint muted">Entre com o e-mail em <code>MEDHUB_OWNER_EMAIL</code> na Vercel.</p>
       <form id="admin-login-form">
         <label for="admin-email">E-mail</label>
         <input id="admin-email" name="email" type="email" required autocomplete="username">
 
         <label for="admin-password">Senha</label>
         <input id="admin-password" name="password" type="password" required autocomplete="current-password">
+
+        <div id="admin-pin-row" hidden>
+          <label for="admin-pin">PIN admin</label>
+          <input id="admin-pin" name="pin" type="password" inputmode="numeric" autocomplete="off" placeholder="Definido em MEDHUB_ADMIN_PIN">
+        </div>
 
         <button type="submit" class="btn" id="admin-login-btn">Entrar</button>
       </form>
@@ -45,14 +50,17 @@
     <section id="admin-panel" class="admin-panel" hidden>
       <div class="admin-toolbar card admin-card">
         <div>
-          <h1>Usuários MedHub</h1>
+          <h1>Painel MedHub</h1>
           <p class="auth-hint muted" id="admin-signed-as"></p>
         </div>
         <div class="admin-toolbar-actions">
-          <button type="button" class="btn-outline" id="admin-refresh-btn">Atualizar lista</button>
+          <button type="button" class="btn-outline" id="admin-refresh-btn">Atualizar</button>
+          <button type="button" class="btn-outline" id="admin-export-btn">Exportar CSV</button>
           <button type="button" class="btn-outline" onclick="adminLogout()">Sair</button>
         </div>
       </div>
+
+      <div id="admin-stats-grid" class="admin-stats-grid" hidden></div>
 
       <div class="card admin-card admin-grant-card">
         <h2>Liberar acesso</h2>
@@ -65,11 +73,14 @@
             <label for="grant-name">Nome (opcional)</label>
             <input id="grant-name" type="text" placeholder="Nome para nova conta">
           </div>
-          <div class="admin-grant-row admin-grant-row--inline">
-            <label class="admin-check">
-              <input id="grant-lifetime" type="checkbox" checked>
-              Acesso vitalício
-            </label>
+          <div class="admin-grant-row">
+            <label for="grant-type">Tipo de acesso</label>
+            <select id="grant-type">
+              <option value="lifetime">Vitalício</option>
+              <option value="1">Cortesia — 1 mês</option>
+              <option value="3">Cortesia — 3 meses</option>
+              <option value="year">Anual (12 meses)</option>
+            </select>
           </div>
           <details class="admin-details">
             <summary>Senha opcional (criar conta ou redefinir)</summary>
@@ -81,15 +92,75 @@
         <p id="admin-grant-status" class="admin-status" hidden></p>
       </div>
 
+      <div class="card admin-card admin-coupon-card">
+        <h2>Criar cupom cortesia</h2>
+        <form id="admin-coupon-form" class="admin-coupon-form">
+          <div class="admin-grant-row">
+            <label for="coupon-months">Meses grátis</label>
+            <select id="coupon-months">
+              <option value="1">1 mês</option>
+              <option value="3" selected>3 meses</option>
+              <option value="6">6 meses</option>
+              <option value="12">12 meses</option>
+            </select>
+          </div>
+          <div class="admin-grant-row">
+            <label for="coupon-code">Código (opcional)</label>
+            <input id="coupon-code" type="text" maxlength="40" placeholder="Ex.: MEDHUBJOAO3 — vazio gera automático">
+          </div>
+          <button type="submit" class="btn" id="admin-coupon-btn">Criar cupom no Stripe</button>
+        </form>
+        <p id="admin-coupon-status" class="admin-status" hidden></p>
+      </div>
+
       <div class="card admin-card admin-users-card">
         <div class="admin-users-head">
           <h2>Contas e assinaturas</h2>
           <p class="auth-hint muted" id="admin-user-count"></p>
         </div>
+
+        <div class="admin-filters">
+          <input id="admin-search" type="search" class="admin-search" placeholder="Buscar e-mail ou nome…" autocomplete="off">
+          <select id="admin-filter-status">
+            <option value="all">Todos os status</option>
+            <option value="active">Ativos</option>
+            <option value="inactive">Inativos</option>
+          </select>
+          <select id="admin-filter-plan">
+            <option value="all">Todos os planos</option>
+            <option value="lifetime">Vitalício</option>
+            <option value="courtesy">Cortesia</option>
+            <option value="paying">Pagantes Stripe</option>
+            <option value="expiring">Expirando (7 dias)</option>
+            <option value="never">Cadastrou e nunca voltou</option>
+          </select>
+        </div>
+
         <p id="admin-load-status" class="admin-status muted">Carregando…</p>
         <div id="admin-users-list" class="admin-users-list" hidden></div>
       </div>
+
+      <details class="card admin-card admin-log-card">
+        <summary>
+          <h2>Log de ações admin</h2>
+        </summary>
+        <p id="admin-log-status" class="admin-status muted">Carregando…</p>
+        <div id="admin-log-list" class="admin-log-list" hidden></div>
+      </details>
     </section>
   </main>
+
+  <div id="admin-modal" class="admin-modal" hidden>
+    <div class="admin-modal-backdrop" data-admin-modal-close></div>
+    <div class="admin-modal-panel card admin-card" role="dialog" aria-modal="true" aria-labelledby="admin-modal-title">
+      <div class="admin-modal-head">
+        <h2 id="admin-modal-title">Detalhe do usuário</h2>
+        <button type="button" class="admin-modal-close" data-admin-modal-close aria-label="Fechar">&times;</button>
+      </div>
+      <div id="admin-modal-body" class="admin-modal-body">
+        <p class="admin-status muted">Carregando…</p>
+      </div>
+    </div>
+  </div>
 </body>
 </html>
