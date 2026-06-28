@@ -3,6 +3,10 @@
 const MEDHUB_TOKEN_KEY = 'medhub_auth_token';
 let _authConfigCache = null;
 
+function authNormalizedEmail (email) {
+  return String(email || '').trim().toLowerCase();
+}
+
 async function medhubFetchAuthConfig (force) {
   if (_authConfigCache && !force) return _authConfigCache;
 
@@ -132,19 +136,23 @@ async function medhubCloudRegister (name, email, password, acceptTerms, acceptPr
 }
 
 async function medhubCloudLogin (email, password) {
-  const res = await fetch('/api/auth/login', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      email: authNormalizedEmail(email),
-      password
-    })
-  });
-  const data = await res.json();
-  if (!res.ok) {
-    return { ok: false, error: data.error || 'Credenciais inválidas.' };
+  try {
+    const res = await fetch('/api/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email: authNormalizedEmail(email),
+        password
+      })
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      return { ok: false, error: data.error || 'Credenciais inválidas.' };
+    }
+    return { ok: true, data };
+  } catch (err) {
+    return { ok: false, error: 'Falha de rede ao contactar o servidor.' };
   }
-  return { ok: true, data };
 }
 
 async function medhubCloudMe () {

@@ -645,7 +645,7 @@ async function adminHandleLogin (e) {
     result = await medhubCloudLogin(email, password);
   } catch {
     if (btn) btn.disabled = false;
-    adminSetStatus(errEl, 'Erro de rede ao fazer login.', 'error');
+    adminSetStatus(errEl, 'Erro inesperado ao fazer login.', 'error');
     return;
   }
 
