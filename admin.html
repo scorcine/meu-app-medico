@@ -4,13 +4,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="robots" content="noindex, nofollow">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <title>Admin • MedHub</title>
   <link rel="icon" href="assets/medhub-logo.png?v=logo-v2" type="image/png">
   <script src="theme.js"></script>
-  <link rel="stylesheet" href="style.css?v=admin-v4">
+  <link rel="stylesheet" href="style.css?v=admin-v5">
   <script defer src="security-crypto.js?v=session-v1"></script>
-  <script defer src="auth-cloud.js?v=cloud-v19"></script>
-  <script defer src="admin.js?v=8"></script>
+  <script defer src="auth.js?v=auth-v7"></script>
+  <script defer src="auth-cloud.js?v=cloud-v20"></script>
+  <script defer src="admin.js?v=9"></script>
 </head>
 <body class="auth-body admin-page" onload="initAdminPage()">
   <header class="auth-page-header admin-page-header">
@@ -24,7 +26,7 @@
     <section id="admin-login-panel" class="card auth-card admin-card" hidden>
       <h1>Painel administrativo</h1>
       <p class="auth-hint muted">Entre com o e-mail em <code>MEDHUB_OWNER_EMAIL</code> na Vercel.</p>
-      <form id="admin-login-form">
+      <form id="admin-login-form" class="admin-login-form">
         <label for="admin-email">E-mail</label>
         <input id="admin-email" name="email" type="email" required autocomplete="username">
 

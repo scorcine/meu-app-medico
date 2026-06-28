@@ -8,6 +8,45 @@ let adminAllUsers = [];
 let adminPinRequired = false;
 let adminServerEnabled = true;
 
+function adminNormalizeEmail (email) {
+  return String(email || '').trim().toLowerCase();
+}
+
+async function adminCloudLogin (email, password) {
+  try {
+    const res = await fetch('/api/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email: adminNormalizeEmail(email),
+        password: String(password || '')
+      })
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      return { ok: false, error: data.error || 'Credenciais inválidas.' };
+    }
+    return { ok: true, data };
+  } catch {
+    return { ok: false, error: 'Não foi possível contactar o servidor. Verifique sua conexão.' };
+  }
+}
+
+async function adminApplyLoginSession (loginData, password) {
+  if (typeof medhubSetAuthToken === 'function') {
+    medhubSetAuthToken(loginData.token);
+  } else {
+    localStorage.setItem('medhub_auth_token', loginData.token);
+  }
+  if (typeof medhubSetSession === 'function') {
+    medhubSetSession(loginData.user);
+  }
+  if (password && typeof medhubHashPassword === 'function' && typeof medhubCacheLocalUser === 'function') {
+    const hashed = await medhubHashPassword(password);
+    medhubCacheLocalUser(loginData.user, hashed.passHash, hashed.passSalt);
+  }
+}
+
 function adminShow (id) {
   ['admin-login-panel', 'admin-forbidden-panel', 'admin-panel'].forEach(panelId => {
     const el = document.getElementById(panelId);
@@ -640,14 +679,7 @@ async function adminHandleLogin (e) {
 
   adminSetPin(pin);
 
-  let result;
-  try {
-    result = await medhubCloudLogin(email, password);
-  } catch {
-    if (btn) btn.disabled = false;
-    adminSetStatus(errEl, 'Erro inesperado ao fazer login.', 'error');
-    return;
-  }
+  let result = await adminCloudLogin(email, password);
 
   if (!result.ok) {
     if (btn) btn.disabled = false;
@@ -656,14 +688,12 @@ async function adminHandleLogin (e) {
   }
 
   try {
-    await medhubApplyCloudSession(result.data, password);
+    await adminApplyLoginSession(result.data, password);
   } catch {
     if (btn) btn.disabled = false;
     adminSetStatus(errEl, 'Login ok, mas falha ao salvar sessão local.', 'error');
     return;
   }
-
-  if (typeof medhubSetSession === 'function') medhubSetSession(result.data.user);
 
   adminTouchSession();
 

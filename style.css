@@ -6733,6 +6733,37 @@ body.auth-body.admin-page {
   align-self: center;
 }
 
+.admin-login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  margin-top: 0.75rem;
+  text-align: left;
+}
+
+.admin-login-form label {
+  display: block;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.admin-login-form input:not([type="checkbox"]) {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.65rem 0.85rem;
+  border: 1px solid var(--border-strong, #dce4ec);
+  border-radius: 8px;
+  font-size: 1rem;
+  background: var(--bg-input, #fff);
+  color: var(--text-primary);
+}
+
+.admin-login-form button[type="submit"] {
+  margin-top: 0.35rem;
+  width: 100%;
+}
+
 .admin-page .admin-main {
   flex: 1;
   display: flex;
