@@ -16,7 +16,11 @@ async function authenticateAdminRequest (req, res) {
   if (!auth) return null;
 
   if (!isOwnerEmail(auth.user.email)) {
-    json(res, 403, { error: 'Acesso restrito ao administrador.', code: 'not_admin' });
+    json(res, 403, {
+      error: 'Acesso restrito ao administrador.',
+      code: 'not_admin',
+      email: auth.user.email
+    });
     return null;
   }
 
@@ -29,8 +33,8 @@ async function authenticateAdminRequest (req, res) {
 }
 
 function adminEnabled () {
-  const raw = process.env.MEDHUB_OWNER_EMAIL || process.env.MEDHUB_OWNER_EMAILS || '';
-  return raw.split(/[,;\s]+/).map(e => e.trim()).filter(Boolean).length > 0;
+  const { parseOwnerEmails } = require('./_subscription');
+  return parseOwnerEmails().length > 0;
 }
 
 module.exports = {

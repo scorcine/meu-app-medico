@@ -6858,8 +6858,15 @@ body.auth-body.admin-page {
   color: var(--result-ok-text, #047857);
 }
 
-.admin-status--error {
-  color: var(--result-err-text, #b91c1c);
+.admin-pin-hint {
+  margin-top: 0.35rem;
+  font-size: 0.82rem;
+}
+
+.admin-login-error-visible {
+  padding: 0.55rem 0.65rem;
+  border-radius: 8px;
+  background: var(--result-err-bg, #fef2f2);
 }
 
 .admin-status--muted {

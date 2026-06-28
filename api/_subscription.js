@@ -45,12 +45,18 @@ function normalizeEmail (email) {
   return String(email || '').trim().toLowerCase();
 }
 
+function parseOwnerEmails () {
+  const raw = process.env.MEDHUB_OWNER_EMAIL || process.env.MEDHUB_OWNER_EMAILS || '';
+  return raw
+    .split(/[,;]+/)
+    .map(entry => normalizeEmail(String(entry || '').replace(/^["'\s]+|["'\s]+$/g, '')))
+    .filter(Boolean);
+}
+
 function isOwnerEmail (email) {
   const norm = normalizeEmail(email);
   if (!norm) return false;
-  const raw = process.env.MEDHUB_OWNER_EMAIL || process.env.MEDHUB_OWNER_EMAILS || '';
-  const owners = raw.split(/[,;\s]+/).map(normalizeEmail).filter(Boolean);
-  return owners.includes(norm);
+  return parseOwnerEmails().includes(norm);
 }
 
 async function resolveCustomerId (email, options = {}) {
@@ -150,5 +156,6 @@ module.exports = {
   getSubscriptionStatus,
   resolveCustomerId,
   billingGrantStillValid,
-  isOwnerEmail
+  isOwnerEmail,
+  parseOwnerEmails
 };

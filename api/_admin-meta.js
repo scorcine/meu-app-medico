@@ -8,14 +8,18 @@ function notesKey (email) {
   return 'medhub:admin-notes:' + normalizeEmail(email);
 }
 
+function normalizeAdminPin (value) {
+  return String(value || '').trim().replace(/^["']|["']$/g, '');
+}
+
 function adminPinConfigured () {
-  return !!String(process.env.MEDHUB_ADMIN_PIN || '').trim();
+  return !!normalizeAdminPin(process.env.MEDHUB_ADMIN_PIN);
 }
 
 function verifyAdminPin (pin) {
-  const expected = String(process.env.MEDHUB_ADMIN_PIN || '').trim();
+  const expected = normalizeAdminPin(process.env.MEDHUB_ADMIN_PIN);
   if (!expected) return true;
-  return String(pin || '').trim() === expected;
+  return normalizeAdminPin(pin) === expected;
 }
 
 async function appendAdminLog (actorEmail, action, targetEmail, details) {

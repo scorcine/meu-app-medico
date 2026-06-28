@@ -6,6 +6,7 @@ const ADMIN_SESSION_MS = 60 * 60 * 1000;
 
 let adminAllUsers = [];
 let adminPinRequired = false;
+let adminServerEnabled = true;
 
 function adminShow (id) {
   ['admin-login-panel', 'admin-forbidden-panel', 'admin-panel'].forEach(panelId => {
@@ -24,7 +25,7 @@ function adminSetStatus (el, message, type) {
   }
   el.hidden = false;
   el.textContent = message;
-  el.className = 'admin-status' + (type ? ' admin-status--' + type : '');
+  el.className = 'admin-status' + (type ? ' admin-status--' + type : '') + (type === 'error' ? ' admin-login-error-visible' : '');
 }
 
 function adminFormatDate (iso) {
@@ -84,15 +85,21 @@ function adminLogout () {
   adminShow('admin-login-panel');
 }
 
-async function adminFetch (path, options) {
-  if (!adminSessionValid()) {
+async function adminFetch (path, options, fetchOptions) {
+  return adminApiRequest(path, options, fetchOptions);
+}
+
+async function adminApiRequest (path, options, fetchOptions) {
+  const skipSessionCheck = !!(fetchOptions && fetchOptions.skipSessionCheck);
+
+  if (!skipSessionCheck && !adminSessionValid()) {
     adminClearAdminSession();
     adminShow('admin-login-panel');
     adminSetStatus(document.getElementById('admin-login-error'), 'Sessão admin expirada (1 h). Entre novamente.', 'error');
     return { res: { ok: false, status: 401 }, data: { error: 'Sessão admin expirada (1 h).' } };
   }
 
-  adminTouchSession();
+  if (!skipSessionCheck) adminTouchSession();
 
   const pin = adminGetPin();
   const headers = {
@@ -101,9 +108,34 @@ async function adminFetch (path, options) {
   };
   if (pin) headers['X-Medhub-Admin-Pin'] = pin;
 
-  const res = await fetch(path, { ...options, headers });
+  let res;
+  try {
+    res = await fetch(path, { ...options, headers });
+  } catch {
+    return { res: { ok: false, status: 0 }, data: { error: 'Falha de rede ao contactar o servidor.' } };
+  }
+
   const data = await res.json().catch(() => ({}));
   return { res, data };
+}
+
+async function adminLoadConfig () {
+  try {
+    const res = await fetch('/api/admin?action=config');
+    const data = await res.json().catch(() => ({}));
+    adminServerEnabled = !!data.adminEnabled;
+    adminPinRequired = !!data.pinRequired;
+    adminUpdatePinRow(adminPinRequired);
+    if (!adminServerEnabled) {
+      adminSetStatus(
+        document.getElementById('admin-login-error'),
+        'Painel admin não configurado. Defina MEDHUB_OWNER_EMAIL na Vercel.',
+        'error'
+      );
+    }
+  } catch {
+    adminServerEnabled = true;
+  }
 }
 
 function escapeHtml (str) {
@@ -561,9 +593,9 @@ async function adminCreateCoupon (e) {
   await adminLoadLog();
 }
 
-async function adminCheckAccess () {
-  const { res, data } = await adminFetch('/api/admin?action=me');
-  if (res.status === 403 && data.code === 'not_admin') return { ok: false, forbidden: true };
+async function adminCheckAccess (fetchOptions) {
+  const { res, data } = await adminApiRequest('/api/admin?action=me', null, fetchOptions);
+  if (res.status === 403 && data.code === 'not_admin') return { ok: false, forbidden: true, email: data.email || '' };
   if (res.status === 403 && data.code === 'invalid_pin') return { ok: false, invalidPin: true };
   if (res.status === 503 && data.code === 'admin_not_configured') {
     return { ok: false, misconfigured: true, error: data.error };
@@ -571,6 +603,12 @@ async function adminCheckAccess () {
   if (!res.ok) return { ok: false, error: data.error || 'Sessão inválida.' };
   adminPinRequired = !!data.pinRequired;
   return { ok: true, email: data.email, name: data.name, pinRequired: adminPinRequired };
+}
+
+function adminShowForbidden (email) {
+  const el = document.getElementById('admin-forbidden-email');
+  if (el) el.textContent = email || '(e-mail desconhecido)';
+  adminShow('admin-forbidden-panel');
 }
 
 function adminUpdatePinRow (pinRequired) {
@@ -591,24 +629,45 @@ async function adminHandleLogin (e) {
 
   if (!email || !password) return;
 
+  if (adminPinRequired && !pin) {
+    adminSetStatus(errEl, 'Informe o PIN administrativo.', 'error');
+    adminUpdatePinRow(true);
+    return;
+  }
+
   adminSetStatus(errEl, '', '');
   if (btn) btn.disabled = true;
 
   adminSetPin(pin);
 
-  const result = await medhubCloudLogin(email, password);
+  let result;
+  try {
+    result = await medhubCloudLogin(email, password);
+  } catch {
+    if (btn) btn.disabled = false;
+    adminSetStatus(errEl, 'Erro de rede ao fazer login.', 'error');
+    return;
+  }
+
   if (!result.ok) {
     if (btn) btn.disabled = false;
     adminSetStatus(errEl, result.error || 'Credenciais inválidas.', 'error');
     return;
   }
 
-  await medhubApplyCloudSession(result.data, password);
+  try {
+    await medhubApplyCloudSession(result.data, password);
+  } catch {
+    if (btn) btn.disabled = false;
+    adminSetStatus(errEl, 'Login ok, mas falha ao salvar sessão local.', 'error');
+    return;
+  }
+
   if (typeof medhubSetSession === 'function') medhubSetSession(result.data.user);
 
   adminTouchSession();
 
-  const access = await adminCheckAccess();
+  const access = await adminCheckAccess({ skipSessionCheck: true });
   if (btn) btn.disabled = false;
 
   if (access.misconfigured) {
@@ -617,7 +676,7 @@ async function adminHandleLogin (e) {
     return;
   }
   if (access.forbidden) {
-    adminShow('admin-forbidden-panel');
+    adminShowForbidden(email);
     return;
   }
   if (access.invalidPin) {
@@ -628,7 +687,6 @@ async function adminHandleLogin (e) {
   }
   if (!access.ok) {
     adminSetStatus(errEl, access.error || 'Não foi possível validar admin.', 'error');
-    adminLogout();
     return;
   }
 
@@ -647,6 +705,8 @@ async function adminEnterPanel (access) {
 }
 
 async function initAdminPage () {
+  await adminLoadConfig();
+
   document.getElementById('admin-login-form')?.addEventListener('submit', adminHandleLogin);
   document.getElementById('admin-grant-form')?.addEventListener('submit', adminGrantAccess);
   document.getElementById('admin-coupon-form')?.addEventListener('submit', adminCreateCoupon);
@@ -699,7 +759,7 @@ async function initAdminPage () {
     return;
   }
   if (access.forbidden) {
-    adminShow('admin-forbidden-panel');
+    adminShowForbidden(access.email || '');
     return;
   }
   if (!access.ok) {

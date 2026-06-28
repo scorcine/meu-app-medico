@@ -19,6 +19,13 @@ function adminMisconfigured (res) {
   });
 }
 
+async function handleConfig (req, res) {
+  json(res, 200, {
+    adminEnabled: adminEnabled(),
+    pinRequired: adminPinConfigured()
+  });
+}
+
 async function handleMe (req, res) {
   const auth = await authenticateAdminRequest(req, res);
   if (!auth) return;
@@ -282,6 +289,11 @@ module.exports = async (req, res) => {
   }
 
   const action = String(req.query?.action || '').trim().toLowerCase();
+
+  if (action === 'config' && req.method === 'GET') {
+    await handleConfig(req, res);
+    return;
+  }
 
   if (action === 'me' && req.method === 'GET') {
     await handleMe(req, res);
