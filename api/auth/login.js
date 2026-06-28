@@ -10,6 +10,7 @@ const { getUser, publicUser, saveUser } = require('../_users');
 const { getSubscriptionStatus } = require('../_subscription');
 const { platformUnavailableMessage } = require('../_platform');
 const { getProfessionalProfile, publicProfile } = require('../_profile');
+const { recordUserActivity } = require('../_activity-kv');
 
 module.exports = async (req, res) => {
   if (req.method !== 'POST') {
@@ -66,6 +67,7 @@ module.exports = async (req, res) => {
     user.sessionVersion = (user.sessionVersion || 0) + 1;
     user.lastLoginAt = new Date().toISOString();
     await saveUser(user);
+    await recordUserActivity(email, 'login');
 
     const token = createSessionToken(user, user.sessionVersion);
     const profile = publicProfile(await getProfessionalProfile(email, user.name));

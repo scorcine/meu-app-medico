@@ -10,6 +10,7 @@ function emptyActivity () {
     firstActiveAt: null,
     lastActiveAt: null,
     sessionCount: 0,
+    loginCount: 0,
     totalPings: 0,
     sections: {}
   };
@@ -45,6 +46,9 @@ async function recordUserActivity (email, section) {
     sessionCount: sec === 'session_start'
       ? (Number(current.sessionCount) || 0) + 1
       : (Number(current.sessionCount) || 0),
+    loginCount: sec === 'login'
+      ? (Number(current.loginCount) || 0) + 1
+      : (Number(current.loginCount) || 0),
     totalPings: (Number(current.totalPings) || 0) + 1,
     sections
   };
@@ -74,6 +78,7 @@ function publicActivity (activity, registeredAt) {
     lastActiveAt: a.lastActiveAt,
     firstActiveAt: a.firstActiveAt,
     sessionCount: Number(a.sessionCount) || 0,
+    loginCount: Number(a.loginCount) || 0,
     totalPings: Number(a.totalPings) || 0,
     sectionsUsed: sectionNames,
     hasUsedApp: activityHasRealUsage(a, registeredAt)

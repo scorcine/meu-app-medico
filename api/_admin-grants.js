@@ -4,6 +4,7 @@ const { saveCustomerBilling, getCustomerIdByEmail, getCustomerBilling } = requir
 const { getStripe, findCustomerByEmail, getActiveSubscription } = require('./_stripe');
 const { getSubscriptionStatus } = require('./_subscription');
 const { getUser, saveUser } = require('./_users');
+const { getUserActivity } = require('./_activity-kv');
 
 function subscriptionLabel (sub) {
   if (!sub) return '—';
@@ -27,6 +28,9 @@ async function listAdminUsers () {
       user: user || undefined,
       loadUser: !user
     });
+    const activity = await getUserActivity(norm);
+    const loginCount = Number(activity.loginCount) || 0;
+    const sessionCount = Number(activity.sessionCount) || 0;
 
     rows.push({
       email: norm,
@@ -38,7 +42,14 @@ async function listAdminUsers () {
       status: sub.status || sub.reason || '',
       source: sub.source || '',
       currentPeriodEnd: sub.currentPeriodEnd || null,
-      createdAt: user?.createdAt || null
+      createdAt: user?.createdAt || null,
+      loginCount,
+      sessionCount,
+      accessCount: loginCount > 0 ? loginCount : sessionCount,
+      totalPings: Number(activity.totalPings) || 0,
+      lastActiveAt: activity.lastActiveAt || user?.lastLoginAt || null,
+      firstActiveAt: activity.firstActiveAt || null,
+      lastLoginAt: user?.lastLoginAt || null
     });
   }
 
@@ -185,6 +196,7 @@ async function revokeAdminAccess ({ email, deleteUser }) {
     await kv.del(userKey(norm));
     await kv.del('medhub:profile:' + norm);
     await kv.del('medhub:clinical:' + norm);
+    await kv.del('medhub:activity:' + norm);
     accountDeleted = true;
   }
 

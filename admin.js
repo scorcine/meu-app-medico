@@ -23,10 +23,27 @@ function adminSetStatus (el, message, type) {
 function adminFormatDate (iso) {
   if (!iso) return '—';
   try {
-    return new Date(iso).toLocaleDateString('pt-BR');
+    return new Date(iso).toLocaleString('pt-BR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
   } catch {
     return '—';
   }
+}
+
+function adminAccessLabel (user) {
+  const logins = Number(user.loginCount) || 0;
+  const sessions = Number(user.sessionCount) || 0;
+  if (logins > 0 && sessions > 0 && logins !== sessions) {
+    return logins + ' login(s) · ' + sessions + ' app';
+  }
+  if (logins > 0) return String(logins) + ' login(s)';
+  if (sessions > 0) return String(sessions) + ' app';
+  return '0';
 }
 
 function adminLogout () {
@@ -96,6 +113,8 @@ async function adminLoadUsers () {
         '<div><dt>Nome</dt><dd>' + escapeHtml(user.name || '—') + '</dd></div>' +
         '<div><dt>Conta</dt><dd>' + (user.hasAccount ? 'Sim' : 'Só billing') + '</dd></div>' +
         '<div><dt>Plano</dt><dd>' + escapeHtml(user.planLabel || user.plan || '—') + '</dd></div>' +
+        '<div><dt>Acessos</dt><dd>' + escapeHtml(adminAccessLabel(user)) + '</dd></div>' +
+        '<div><dt>Último acesso</dt><dd>' + escapeHtml(adminFormatDate(user.lastActiveAt || user.lastLoginAt)) + '</dd></div>' +
         '<div><dt>Origem</dt><dd>' + escapeHtml(user.source || '—') + '</dd></div>' +
       '</dl>' +
       '<button type="button" class="btn-outline btn-sm admin-revoke-btn" data-email="' + escapeAttr(user.email) + '">Revogar acesso</button>';
