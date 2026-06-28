@@ -8,11 +8,11 @@
   <title>Admin • MedHub</title>
   <link rel="icon" href="assets/medhub-logo.png?v=logo-v2" type="image/png">
   <script src="theme.js"></script>
-  <link rel="stylesheet" href="style.css?v=admin-v5">
+  <link rel="stylesheet" href="style.css?v=admin-v6">
   <script defer src="security-crypto.js?v=session-v1"></script>
   <script defer src="auth.js?v=auth-v7"></script>
   <script defer src="auth-cloud.js?v=cloud-v20"></script>
-  <script defer src="admin.js?v=9"></script>
+  <script defer src="admin.js?v=10"></script>
 </head>
 <body class="auth-body admin-page" onload="initAdminPage()">
   <header class="auth-page-header admin-page-header">
@@ -52,105 +52,180 @@
     </section>
 
     <section id="admin-panel" class="admin-panel" hidden>
-      <div class="admin-toolbar card admin-card">
-        <div>
-          <h1>Painel MedHub</h1>
-          <p class="auth-hint muted" id="admin-signed-as"></p>
-        </div>
-        <div class="admin-toolbar-actions">
-          <button type="button" class="btn-outline" id="admin-refresh-btn">Atualizar</button>
-          <button type="button" class="btn-outline" id="admin-export-btn">Exportar CSV</button>
-          <button type="button" class="btn-outline" onclick="adminLogout()">Sair</button>
+      <div class="admin-shell">
+        <aside class="admin-sidebar card admin-card" aria-label="Menu administrativo">
+          <p class="admin-sidebar-title">MedHub Admin</p>
+          <nav class="admin-nav" id="admin-nav">
+            <button type="button" class="admin-nav-btn is-active" data-admin-section="overview">Visão geral</button>
+            <button type="button" class="admin-nav-btn" data-admin-section="users">Usuários</button>
+            <button type="button" class="admin-nav-btn" data-admin-section="access">Liberar acesso</button>
+            <button type="button" class="admin-nav-btn" data-admin-section="coupons">Cupons</button>
+            <button type="button" class="admin-nav-btn" data-admin-section="log">Auditoria</button>
+            <button type="button" class="admin-nav-btn" data-admin-section="pages">Páginas do site</button>
+          </nav>
+          <div class="admin-sidebar-foot">
+            <p class="auth-hint muted" id="admin-signed-as"></p>
+            <button type="button" class="btn-outline btn-sm admin-sidebar-logout" onclick="adminLogout()">Sair</button>
+          </div>
+        </aside>
+
+        <div class="admin-content">
+          <header class="admin-content-head card admin-card">
+            <div>
+              <h1 id="admin-section-title">Visão geral</h1>
+              <p class="auth-hint muted" id="admin-section-desc">Resumo de usuários, planos e receita estimada.</p>
+            </div>
+            <div class="admin-toolbar-actions" id="admin-section-actions">
+              <button type="button" class="btn-outline" id="admin-refresh-btn">Atualizar</button>
+              <button type="button" class="btn-outline" id="admin-export-btn">Exportar CSV</button>
+            </div>
+          </header>
+
+          <div class="admin-section" id="admin-section-overview" data-admin-section="overview">
+            <div id="admin-stats-grid" class="admin-stats-grid" hidden></div>
+            <div class="admin-quick-grid">
+              <button type="button" class="admin-quick-card card admin-card" data-admin-goto="users">
+                <strong>Usuários</strong>
+                <span class="muted">Listar, filtrar e revogar acessos</span>
+              </button>
+              <button type="button" class="admin-quick-card card admin-card" data-admin-goto="access">
+                <strong>Liberar acesso</strong>
+                <span class="muted">Vitalício, cortesia ou anual</span>
+              </button>
+              <button type="button" class="admin-quick-card card admin-card" data-admin-goto="coupons">
+                <strong>Cupons</strong>
+                <span class="muted">Criar código cortesia no Stripe</span>
+              </button>
+              <button type="button" class="admin-quick-card card admin-card" data-admin-goto="pages">
+                <strong>Páginas</strong>
+                <span class="muted">Atalhos para editar o site</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="admin-section" id="admin-section-users" data-admin-section="users" hidden>
+            <div class="card admin-card admin-users-card">
+              <div class="admin-users-head">
+                <h2>Contas e assinaturas</h2>
+                <p class="auth-hint muted" id="admin-user-count"></p>
+              </div>
+
+              <div class="admin-filters">
+                <input id="admin-search" type="search" class="admin-search" placeholder="Buscar e-mail ou nome…" autocomplete="off">
+                <select id="admin-filter-status">
+                  <option value="all">Todos os status</option>
+                  <option value="active">Ativos</option>
+                  <option value="inactive">Inativos</option>
+                </select>
+                <select id="admin-filter-plan">
+                  <option value="all">Todos os planos</option>
+                  <option value="lifetime">Vitalício</option>
+                  <option value="courtesy">Cortesia</option>
+                  <option value="paying">Pagantes Stripe</option>
+                  <option value="expiring">Expirando (7 dias)</option>
+                  <option value="never">Cadastrou e nunca voltou</option>
+                </select>
+              </div>
+
+              <p id="admin-load-status" class="admin-status muted">Carregando…</p>
+              <div id="admin-users-list" class="admin-users-list" hidden></div>
+            </div>
+          </div>
+
+          <div class="admin-section" id="admin-section-access" data-admin-section="access" hidden>
+            <div class="card admin-card admin-grant-card">
+              <h2>Liberar acesso</h2>
+              <form id="admin-grant-form" class="admin-grant-form">
+                <div class="admin-grant-row">
+                  <label for="grant-email">E-mail</label>
+                  <input id="grant-email" type="email" required placeholder="usuario@email.com">
+                </div>
+                <div class="admin-grant-row">
+                  <label for="grant-name">Nome (opcional)</label>
+                  <input id="grant-name" type="text" placeholder="Nome para nova conta">
+                </div>
+                <div class="admin-grant-row">
+                  <label for="grant-type">Tipo de acesso</label>
+                  <select id="grant-type">
+                    <option value="lifetime">Vitalício</option>
+                    <option value="1">Cortesia — 1 mês</option>
+                    <option value="3">Cortesia — 3 meses</option>
+                    <option value="year">Anual (12 meses)</option>
+                  </select>
+                </div>
+                <details class="admin-details">
+                  <summary>Senha opcional (criar conta ou redefinir)</summary>
+                  <label for="grant-password">Nova senha (mín. 8 caracteres)</label>
+                  <input id="grant-password" type="password" autocomplete="new-password" placeholder="Deixe vazio para só liberar assinatura">
+                </details>
+                <button type="submit" class="btn" id="admin-grant-btn">Liberar acesso</button>
+              </form>
+              <p id="admin-grant-status" class="admin-status" hidden></p>
+            </div>
+          </div>
+
+          <div class="admin-section" id="admin-section-coupons" data-admin-section="coupons" hidden>
+            <div class="card admin-card admin-coupon-card">
+              <h2>Criar cupom cortesia</h2>
+              <form id="admin-coupon-form" class="admin-coupon-form">
+                <div class="admin-grant-row">
+                  <label for="coupon-months">Meses grátis</label>
+                  <select id="coupon-months">
+                    <option value="1">1 mês</option>
+                    <option value="3" selected>3 meses</option>
+                    <option value="6">6 meses</option>
+                    <option value="12">12 meses</option>
+                  </select>
+                </div>
+                <div class="admin-grant-row">
+                  <label for="coupon-code">Código (opcional)</label>
+                  <input id="coupon-code" type="text" maxlength="40" placeholder="Ex.: MEDHUBJOAO3 — vazio gera automático">
+                </div>
+                <button type="submit" class="btn" id="admin-coupon-btn">Criar cupom no Stripe</button>
+              </form>
+              <p id="admin-coupon-status" class="admin-status" hidden></p>
+            </div>
+          </div>
+
+          <div class="admin-section" id="admin-section-log" data-admin-section="log" hidden>
+            <div class="card admin-card admin-log-card">
+              <h2>Log de ações admin</h2>
+              <p id="admin-log-status" class="admin-status muted">Carregando…</p>
+              <div id="admin-log-list" class="admin-log-list" hidden></div>
+            </div>
+          </div>
+
+          <div class="admin-section" id="admin-section-pages" data-admin-section="pages" hidden>
+            <div class="admin-pages-grid">
+              <a class="admin-page-link card admin-card" href="index.html" target="_blank" rel="noopener">
+                <strong>Landing principal</strong>
+                <span class="muted">index.html — página inicial pública</span>
+              </a>
+              <a class="admin-page-link card admin-card" href="estudantes.html" target="_blank" rel="noopener">
+                <strong>Landing estudantes</strong>
+                <span class="muted">estudantes.html — oferta para estudantes</span>
+              </a>
+              <a class="admin-page-link card admin-card" href="links.html" target="_blank" rel="noopener">
+                <strong>Links / bio</strong>
+                <span class="muted">links.html — página de links</span>
+              </a>
+              <a class="admin-page-link card admin-card" href="app.html" target="_blank" rel="noopener">
+                <strong>App clínico</strong>
+                <span class="muted">app.html — área logada do médico</span>
+              </a>
+              <a class="admin-page-link card admin-card" href="https://dashboard.stripe.com" target="_blank" rel="noopener">
+                <strong>Stripe Dashboard</strong>
+                <span class="muted">Assinaturas, pagamentos e cupons</span>
+              </a>
+              <a class="admin-page-link card admin-card" href="https://vercel.com/dashboard" target="_blank" rel="noopener">
+                <strong>Vercel</strong>
+                <span class="muted">Deploy, variáveis de ambiente e logs</span>
+              </a>
+            </div>
+            <p class="auth-hint muted admin-pages-note">Novas seções do admin podem ser adicionadas em <code>admin.html</code> (menu) e <code>admin.js</code> (lógica), sem criar rotas novas na Vercel.</p>
+          </div>
         </div>
       </div>
-
-      <div id="admin-stats-grid" class="admin-stats-grid" hidden></div>
-
-      <div class="card admin-card admin-grant-card">
-        <h2>Liberar acesso</h2>
-        <form id="admin-grant-form" class="admin-grant-form">
-          <div class="admin-grant-row">
-            <label for="grant-email">E-mail</label>
-            <input id="grant-email" type="email" required placeholder="usuario@email.com">
-          </div>
-          <div class="admin-grant-row">
-            <label for="grant-name">Nome (opcional)</label>
-            <input id="grant-name" type="text" placeholder="Nome para nova conta">
-          </div>
-          <div class="admin-grant-row">
-            <label for="grant-type">Tipo de acesso</label>
-            <select id="grant-type">
-              <option value="lifetime">Vitalício</option>
-              <option value="1">Cortesia — 1 mês</option>
-              <option value="3">Cortesia — 3 meses</option>
-              <option value="year">Anual (12 meses)</option>
-            </select>
-          </div>
-          <details class="admin-details">
-            <summary>Senha opcional (criar conta ou redefinir)</summary>
-            <label for="grant-password">Nova senha (mín. 8 caracteres)</label>
-            <input id="grant-password" type="password" autocomplete="new-password" placeholder="Deixe vazio para só liberar assinatura">
-          </details>
-          <button type="submit" class="btn" id="admin-grant-btn">Liberar acesso</button>
-        </form>
-        <p id="admin-grant-status" class="admin-status" hidden></p>
-      </div>
-
-      <div class="card admin-card admin-coupon-card">
-        <h2>Criar cupom cortesia</h2>
-        <form id="admin-coupon-form" class="admin-coupon-form">
-          <div class="admin-grant-row">
-            <label for="coupon-months">Meses grátis</label>
-            <select id="coupon-months">
-              <option value="1">1 mês</option>
-              <option value="3" selected>3 meses</option>
-              <option value="6">6 meses</option>
-              <option value="12">12 meses</option>
-            </select>
-          </div>
-          <div class="admin-grant-row">
-            <label for="coupon-code">Código (opcional)</label>
-            <input id="coupon-code" type="text" maxlength="40" placeholder="Ex.: MEDHUBJOAO3 — vazio gera automático">
-          </div>
-          <button type="submit" class="btn" id="admin-coupon-btn">Criar cupom no Stripe</button>
-        </form>
-        <p id="admin-coupon-status" class="admin-status" hidden></p>
-      </div>
-
-      <div class="card admin-card admin-users-card">
-        <div class="admin-users-head">
-          <h2>Contas e assinaturas</h2>
-          <p class="auth-hint muted" id="admin-user-count"></p>
-        </div>
-
-        <div class="admin-filters">
-          <input id="admin-search" type="search" class="admin-search" placeholder="Buscar e-mail ou nome…" autocomplete="off">
-          <select id="admin-filter-status">
-            <option value="all">Todos os status</option>
-            <option value="active">Ativos</option>
-            <option value="inactive">Inativos</option>
-          </select>
-          <select id="admin-filter-plan">
-            <option value="all">Todos os planos</option>
-            <option value="lifetime">Vitalício</option>
-            <option value="courtesy">Cortesia</option>
-            <option value="paying">Pagantes Stripe</option>
-            <option value="expiring">Expirando (7 dias)</option>
-            <option value="never">Cadastrou e nunca voltou</option>
-          </select>
-        </div>
-
-        <p id="admin-load-status" class="admin-status muted">Carregando…</p>
-        <div id="admin-users-list" class="admin-users-list" hidden></div>
-      </div>
-
-      <details class="card admin-card admin-log-card">
-        <summary>
-          <h2>Log de ações admin</h2>
-        </summary>
-        <p id="admin-log-status" class="admin-status muted">Carregando…</p>
-        <div id="admin-log-list" class="admin-log-list" hidden></div>
-      </details>
     </section>
   </main>
 

@@ -7,6 +7,40 @@ const ADMIN_SESSION_MS = 60 * 60 * 1000;
 let adminAllUsers = [];
 let adminPinRequired = false;
 let adminServerEnabled = true;
+let adminCurrentSection = 'overview';
+
+const ADMIN_SECTIONS = {
+  overview: {
+    title: 'Visão geral',
+    desc: 'Resumo de usuários, planos e receita estimada.',
+    showExport: true
+  },
+  users: {
+    title: 'Usuários',
+    desc: 'Contas, assinaturas, filtros e revogação.',
+    showExport: true
+  },
+  access: {
+    title: 'Liberar acesso',
+    desc: 'Vitalício, cortesia com prazo ou anual.',
+    showExport: false
+  },
+  coupons: {
+    title: 'Cupons',
+    desc: 'Códigos de cortesia no Stripe.',
+    showExport: false
+  },
+  log: {
+    title: 'Auditoria',
+    desc: 'Histórico de ações no painel admin.',
+    showExport: false
+  },
+  pages: {
+    title: 'Páginas do site',
+    desc: 'Atalhos para editar e publicar conteúdo.',
+    showExport: false
+  }
+};
 
 function adminNormalizeEmail (email) {
   return String(email || '').trim().toLowerCase();
@@ -45,6 +79,60 @@ async function adminApplyLoginSession (loginData, password) {
     const hashed = await medhubHashPassword(password);
     medhubCacheLocalUser(loginData.user, hashed.passHash, hashed.passSalt);
   }
+}
+
+function adminSwitchSection (sectionId, updateHash) {
+  const meta = ADMIN_SECTIONS[sectionId] || ADMIN_SECTIONS.overview;
+  adminCurrentSection = sectionId in ADMIN_SECTIONS ? sectionId : 'overview';
+
+  document.querySelectorAll('.admin-section').forEach(el => {
+    el.hidden = el.dataset.adminSection !== adminCurrentSection;
+  });
+
+  document.querySelectorAll('.admin-nav-btn').forEach(btn => {
+    btn.classList.toggle('is-active', btn.dataset.adminSection === adminCurrentSection);
+  });
+
+  const titleEl = document.getElementById('admin-section-title');
+  const descEl = document.getElementById('admin-section-desc');
+  if (titleEl) titleEl.textContent = meta.title;
+  if (descEl) descEl.textContent = meta.desc;
+
+  const exportBtn = document.getElementById('admin-export-btn');
+  if (exportBtn) exportBtn.hidden = !meta.showExport;
+
+  if (adminCurrentSection === 'log') adminLoadLog();
+  if (adminCurrentSection === 'users' && !adminAllUsers.length) adminLoadUsers();
+  if (adminCurrentSection === 'overview' && !adminAllUsers.length) adminLoadUsers();
+
+  if (updateHash !== false) {
+    const hash = adminCurrentSection === 'overview' ? '' : adminCurrentSection;
+    const next = hash ? '#/' + hash : window.location.pathname + window.location.search;
+    if (window.location.hash.replace(/^#\/?/, '') !== hash) {
+      history.replaceState(null, '', hash ? '#/' + hash : next);
+    }
+  }
+}
+
+function adminReadSectionFromHash () {
+  const raw = (window.location.hash || '').replace(/^#\/?/, '').trim().toLowerCase();
+  return raw && ADMIN_SECTIONS[raw] ? raw : 'overview';
+}
+
+function adminInitNavigation () {
+  document.querySelectorAll('[data-admin-section]').forEach(btn => {
+    if (btn.classList.contains('admin-nav-btn')) {
+      btn.addEventListener('click', () => adminSwitchSection(btn.dataset.adminSection));
+    }
+  });
+
+  document.querySelectorAll('[data-admin-goto]').forEach(btn => {
+    btn.addEventListener('click', () => adminSwitchSection(btn.dataset.adminGoto));
+  });
+
+  window.addEventListener('hashchange', () => {
+    adminSwitchSection(adminReadSectionFromHash(), false);
+  });
 }
 
 function adminShow (id) {
@@ -723,27 +811,34 @@ async function adminHandleLogin (e) {
   await adminEnterPanel(access);
 }
 
+async function adminRefreshCurrentSection () {
+  if (adminCurrentSection === 'log') {
+    await adminLoadLog();
+    return;
+  }
+  await adminLoadUsers();
+  if (adminCurrentSection === 'log') await adminLoadLog();
+}
+
 async function adminEnterPanel (access) {
   const signedAs = document.getElementById('admin-signed-as');
   if (signedAs) {
-    signedAs.textContent = 'Conectado como ' + (access.email || '') + ' · sessão expira em 1 h';
+    signedAs.textContent = access.email || '';
   }
   adminUpdatePinRow(access.pinRequired);
   adminShow('admin-panel');
+  adminSwitchSection(adminReadSectionFromHash(), false);
   await adminLoadUsers();
-  await adminLoadLog();
 }
 
 async function initAdminPage () {
   await adminLoadConfig();
+  adminInitNavigation();
 
   document.getElementById('admin-login-form')?.addEventListener('submit', adminHandleLogin);
   document.getElementById('admin-grant-form')?.addEventListener('submit', adminGrantAccess);
   document.getElementById('admin-coupon-form')?.addEventListener('submit', adminCreateCoupon);
-  document.getElementById('admin-refresh-btn')?.addEventListener('click', async () => {
-    await adminLoadUsers();
-    await adminLoadLog();
-  });
+  document.getElementById('admin-refresh-btn')?.addEventListener('click', adminRefreshCurrentSection);
   document.getElementById('admin-export-btn')?.addEventListener('click', adminExportCsv);
 
   ['admin-search', 'admin-filter-status', 'admin-filter-plan'].forEach(id => {
@@ -757,11 +852,6 @@ async function initAdminPage () {
 
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape') adminCloseModal();
-  });
-
-  const logCard = document.querySelector('.admin-log-card');
-  logCard?.addEventListener('toggle', () => {
-    if (logCard.open) adminLoadLog();
   });
 
   const token = typeof medhubGetAuthToken === 'function' ? medhubGetAuthToken() : '';
