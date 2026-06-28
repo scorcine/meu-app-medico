@@ -69,3 +69,23 @@ function medhubApplySiteUrlLabels () {
 document.addEventListener('DOMContentLoaded', () => {
   medhubApplySiteUrlLabels();
 });
+
+async function medhubApplyRemoteMarketing () {
+  if (window.location.protocol === 'file:') return;
+  try {
+    const res = await fetch('/api/billing-config');
+    if (!res.ok) return;
+    const data = await res.json();
+    const m = data.marketing;
+    if (!m) return;
+    if (m.instagramUrl) MEDHUB_MARKETING.instagramUrl = m.instagramUrl;
+    if (m.instagramHandle) MEDHUB_MARKETING.instagramHandle = m.instagramHandle;
+    if (m.supportEmail != null) MEDHUB_MARKETING.supportEmail = m.supportEmail;
+    if (m.linksBio) MEDHUB_MARKETING.linksBio = m.linksBio;
+    if (m.linksEstudantes) MEDHUB_MARKETING.linksEstudantes = m.linksEstudantes;
+    if (m.landingEstudantes) MEDHUB_MARKETING.landingEstudantes = m.landingEstudantes;
+    if (m.metaPixelId != null) MEDHUB_META.pixelId = m.metaPixelId;
+  } catch {
+    /* offline / API indisponível */
+  }
+}

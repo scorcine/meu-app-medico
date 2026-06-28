@@ -30,6 +30,16 @@ const ADMIN_SECTIONS = {
     desc: 'Códigos de cortesia no Stripe.',
     showExport: false
   },
+  reports: {
+    title: 'Relatórios',
+    desc: 'Retenção, adoção do app e cortesias expirando.',
+    showExport: true
+  },
+  marketing: {
+    title: 'Marketing',
+    desc: 'Instagram, links públicos e Meta Pixel.',
+    showExport: false
+  },
   log: {
     title: 'Auditoria',
     desc: 'Histórico de ações no painel admin.',
@@ -102,6 +112,8 @@ function adminSwitchSection (sectionId, updateHash) {
   if (exportBtn) exportBtn.hidden = !meta.showExport;
 
   if (adminCurrentSection === 'log') adminLoadLog();
+  if (adminCurrentSection === 'marketing') adminLoadMarketing();
+  if (adminCurrentSection === 'reports') adminLoadReports();
   if (adminCurrentSection === 'users' && !adminAllUsers.length) adminLoadUsers();
   if (adminCurrentSection === 'overview' && !adminAllUsers.length) adminLoadUsers();
 
@@ -816,8 +828,159 @@ async function adminRefreshCurrentSection () {
     await adminLoadLog();
     return;
   }
+  if (adminCurrentSection === 'marketing') {
+    await adminLoadMarketing();
+    return;
+  }
+  if (adminCurrentSection === 'reports') {
+    await adminLoadReports();
+    return;
+  }
   await adminLoadUsers();
-  if (adminCurrentSection === 'log') await adminLoadLog();
+}
+
+async function adminLoadMarketing () {
+  const statusEl = document.getElementById('admin-marketing-status');
+  const metaEl = document.getElementById('admin-marketing-meta');
+  adminSetStatus(statusEl, 'Carregando…', 'muted');
+
+  const { res, data } = await adminFetch('/api/admin?action=marketing');
+  if (!res.ok) {
+    adminSetStatus(statusEl, data.error || 'Erro ao carregar marketing.', 'error');
+    return;
+  }
+
+  const m = data.marketing || {};
+  const set = (id, val) => {
+    const el = document.getElementById(id);
+    if (el) el.value = val || '';
+  };
+  set('mkt-instagram-url', m.instagramUrl);
+  set('mkt-instagram-handle', m.instagramHandle);
+  set('mkt-support-email', m.supportEmail);
+  set('mkt-links-bio', m.linksBio);
+  set('mkt-links-estudantes', m.linksEstudantes);
+  set('mkt-landing-estudantes', m.landingEstudantes);
+  set('mkt-meta-pixel', m.metaPixelId);
+
+  adminSetStatus(statusEl, '', '');
+  statusEl.hidden = true;
+  if (metaEl) {
+    metaEl.textContent = m.updatedAt
+      ? 'Última alteração: ' + adminFormatDate(m.updatedAt) + (m.updatedBy ? ' por ' + m.updatedBy : '') + (m.source === 'kv' ? ' · publicado na nuvem' : ' · padrão do código')
+      : 'Usando valores padrão do código até salvar.';
+  }
+}
+
+async function adminSaveMarketing (e) {
+  e.preventDefault();
+  const statusEl = document.getElementById('admin-marketing-status');
+  const btn = document.getElementById('admin-marketing-btn');
+  const payload = {
+    instagramUrl: document.getElementById('mkt-instagram-url')?.value?.trim(),
+    instagramHandle: document.getElementById('mkt-instagram-handle')?.value?.trim(),
+    supportEmail: document.getElementById('mkt-support-email')?.value?.trim(),
+    linksBio: document.getElementById('mkt-links-bio')?.value?.trim(),
+    linksEstudantes: document.getElementById('mkt-links-estudantes')?.value?.trim(),
+    landingEstudantes: document.getElementById('mkt-landing-estudantes')?.value?.trim(),
+    metaPixelId: document.getElementById('mkt-meta-pixel')?.value?.trim()
+  };
+
+  if (btn) btn.disabled = true;
+  adminSetStatus(statusEl, 'Salvando…', 'muted');
+
+  const { res, data } = await adminFetch('/api/admin?action=marketing', {
+    method: 'POST',
+    body: JSON.stringify(payload)
+  });
+
+  if (btn) btn.disabled = false;
+
+  if (!res.ok) {
+    adminSetStatus(statusEl, data.error || 'Erro ao salvar.', 'error');
+    return;
+  }
+
+  adminSetStatus(statusEl, 'Marketing salvo. Links públicos atualizam em instantes.', 'ok');
+  await adminLoadMarketing();
+  await adminLoadLog();
+}
+
+function adminRenderReportTable (containerId, statusId, rows, emptyMsg) {
+  const wrap = document.getElementById(containerId);
+  const statusEl = document.getElementById(statusId);
+  if (!wrap || !statusEl) return;
+
+  if (!rows || !rows.length) {
+    adminSetStatus(statusEl, emptyMsg, 'muted');
+    wrap.hidden = true;
+    wrap.innerHTML = '';
+    return;
+  }
+
+  wrap.innerHTML =
+    '<table class="admin-report-table"><thead><tr>' +
+    '<th>E-mail</th><th>Plano</th><th>Detalhe</th><th>Último acesso</th>' +
+    '</tr></thead><tbody>' +
+    rows.map(row => {
+      let detail = '—';
+      if (row.daysUntilEnd != null) detail = row.daysUntilEnd + ' dia(s)';
+      else if ((row.loginCount || 0) + (row.sessionCount || 0) > 0) {
+        detail = adminAccessLabel(row);
+      }
+      return '<tr>' +
+        '<td>' + escapeHtml(row.email) + '</td>' +
+        '<td>' + escapeHtml(row.planLabel || '—') + '</td>' +
+        '<td>' + escapeHtml(detail) + '</td>' +
+        '<td>' + escapeHtml(adminFormatDate(row.lastActiveAt)) + '</td>' +
+      '</tr>';
+    }).join('') +
+    '</tbody></table>';
+
+  adminSetStatus(statusEl, '', '');
+  statusEl.hidden = true;
+  wrap.hidden = false;
+}
+
+async function adminLoadReports () {
+  const summaryEl = document.getElementById('admin-reports-summary');
+  if (summaryEl) {
+    summaryEl.hidden = false;
+    summaryEl.innerHTML = '<p class="admin-status muted">Carregando relatório…</p>';
+  }
+
+  const { res, data } = await adminFetch('/api/admin?action=reports');
+  if (!res.ok) {
+    if (summaryEl) summaryEl.innerHTML = '<p class="admin-status admin-status--error">' + escapeHtml(data.error || 'Erro') + '</p>';
+    return;
+  }
+
+  const s = data.report?.summary || {};
+  const items = [
+    { label: 'Com conta', value: s.withAccount },
+    { label: 'Usou o app', value: s.usedApp },
+    { label: 'Taxa adoção', value: (s.adoptionRate || 0) + '%', ok: s.adoptionRate >= 50 },
+    { label: 'Só cadastro', value: s.onlyRegistered },
+    { label: 'Nunca voltou', value: s.neverReturned, warn: s.neverReturned > 0 },
+    { label: 'Expirando', value: s.expiringSoon, warn: s.expiringSoon > 0 },
+    { label: 'Pagantes ativos', value: s.payingActive, ok: true },
+    { label: 'Cortesias ativas', value: s.courtesyActive }
+  ];
+
+  if (summaryEl) {
+    summaryEl.innerHTML = items.map(item =>
+      '<div class="admin-stat-card' + (item.ok ? ' admin-stat-card--ok' : '') +
+      (item.warn ? ' admin-stat-card--warn' : '') + '">' +
+      '<span class="admin-stat-value">' + escapeHtml(String(item.value)) + '</span>' +
+      '<span class="admin-stat-label">' + escapeHtml(item.label) + '</span></div>'
+    ).join('');
+    summaryEl.hidden = false;
+  }
+
+  adminRenderReportTable('admin-report-expiring', 'admin-report-expiring-status', data.report?.expiringSoon, 'Nenhuma cortesia expirando nos próximos 7 dias.');
+  adminRenderReportTable('admin-report-never', 'admin-report-never-status', data.report?.neverReturned, 'Nenhum usuário nesta categoria.');
+  adminRenderReportTable('admin-report-registered', 'admin-report-registered-status', data.report?.onlyRegistered, 'Todos com conta já usaram o app.');
+  adminRenderReportTable('admin-report-active', 'admin-report-active-status', data.report?.topActive, 'Nenhum uso registrado ainda.');
 }
 
 async function adminEnterPanel (access) {
@@ -838,6 +1001,7 @@ async function initAdminPage () {
   document.getElementById('admin-login-form')?.addEventListener('submit', adminHandleLogin);
   document.getElementById('admin-grant-form')?.addEventListener('submit', adminGrantAccess);
   document.getElementById('admin-coupon-form')?.addEventListener('submit', adminCreateCoupon);
+  document.getElementById('admin-marketing-form')?.addEventListener('submit', adminSaveMarketing);
   document.getElementById('admin-refresh-btn')?.addEventListener('click', adminRefreshCurrentSection);
   document.getElementById('admin-export-btn')?.addEventListener('click', adminExportCsv);
 

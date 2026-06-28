@@ -1,6 +1,10 @@
 /* Página /links.html — botões para bio do Instagram */
 
 function initLinksPage () {
+  (async function () {
+    if (typeof medhubApplyRemoteMarketing === 'function') {
+      await medhubApplyRemoteMarketing();
+    }
   if (typeof medhubCaptureAttributionFromUrl === 'function') {
     medhubCaptureAttributionFromUrl();
   }
@@ -64,4 +68,5 @@ function initLinksPage () {
   if (wrap && ig && !ig.hidden && support && !support.hidden) {
     wrap.hidden = false;
   }
+  })();
 }

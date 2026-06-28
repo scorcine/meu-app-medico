@@ -1,5 +1,6 @@
 const { billingEnabled, json } = require('./_stripe');
 const { getPlatformStatus } = require('./_platform');
+const { getSiteMarketing } = require('./_admin-meta');
 
 module.exports = async (req, res) => {
   if (req.method !== 'GET') {
@@ -17,6 +18,12 @@ module.exports = async (req, res) => {
     : 15;
 
   const platform = getPlatformStatus();
+  let marketing = null;
+  try {
+    marketing = await getSiteMarketing();
+  } catch {
+    marketing = null;
+  }
 
   json(res, 200, {
     enabled: billingEnabled(),
@@ -39,7 +46,16 @@ module.exports = async (req, res) => {
     annualDiscountPercent: discountPercent,
     annualSavingsDisplay: formatBrl(Math.max(0, fullYear - annual)),
     trialDays: Number(process.env.MEDHUB_TRIAL_DAYS || 0),
-    guaranteeDays: Number(process.env.MEDHUB_GUARANTEE_DAYS || 7)
+    guaranteeDays: Number(process.env.MEDHUB_GUARANTEE_DAYS || 7),
+    marketing: marketing ? {
+      instagramUrl: marketing.instagramUrl,
+      instagramHandle: marketing.instagramHandle,
+      supportEmail: marketing.supportEmail,
+      linksBio: marketing.linksBio,
+      linksEstudantes: marketing.linksEstudantes,
+      landingEstudantes: marketing.landingEstudantes,
+      metaPixelId: marketing.metaPixelId
+    } : undefined
   });
 };
 

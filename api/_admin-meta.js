@@ -2,7 +2,18 @@ const { kv } = require('@vercel/kv');
 const { normalizeEmail } = require('./_auth');
 
 const ADMIN_LOG_KEY = 'medhub:admin-log';
+const SITE_MARKETING_KEY = 'medhub:site-marketing';
 const MAX_LOG = 200;
+
+const MARKETING_FIELDS = [
+  'instagramUrl',
+  'instagramHandle',
+  'supportEmail',
+  'linksBio',
+  'linksEstudantes',
+  'landingEstudantes',
+  'metaPixelId'
+];
 
 function notesKey (email) {
   return 'medhub:admin-notes:' + normalizeEmail(email);
@@ -71,11 +82,61 @@ async function saveAdminNotes (email, note, actorEmail) {
   return { email: norm, ...payload };
 }
 
+function defaultSiteMarketing () {
+  const site = (process.env.MEDHUB_SITE_URL || 'https://www.medhub.ia.br').replace(/\/$/, '');
+  return {
+    instagramUrl: 'https://www.instagram.com/medhub_app/',
+    instagramHandle: '@medhub_app',
+    supportEmail: '',
+    linksBio: site + '/links.html',
+    linksEstudantes: site + '/links-estudantes.html',
+    landingEstudantes: site + '/estudantes.html',
+    metaPixelId: ''
+  };
+}
+
+function pickMarketingFields (data) {
+  const out = {};
+  MARKETING_FIELDS.forEach(key => {
+    if (data?.[key] != null) out[key] = String(data[key]).trim().slice(0, 500);
+  });
+  return out;
+}
+
+async function getSiteMarketing () {
+  const defaults = defaultSiteMarketing();
+  const stored = await kv.get(SITE_MARKETING_KEY);
+  if (!stored || typeof stored !== 'object') {
+    return { ...defaults, updatedAt: null, updatedBy: null, source: 'defaults' };
+  }
+  return {
+    ...defaults,
+    ...pickMarketingFields(stored),
+    updatedAt: stored.updatedAt || null,
+    updatedBy: stored.updatedBy || null,
+    source: 'kv'
+  };
+}
+
+async function saveSiteMarketing (data, actorEmail) {
+  const payload = {
+    ...pickMarketingFields(data),
+    updatedAt: new Date().toISOString(),
+    updatedBy: normalizeEmail(actorEmail || '')
+  };
+  await kv.set(SITE_MARKETING_KEY, payload);
+  await appendAdminLog(actorEmail, 'save_marketing', '', { fields: Object.keys(payload).filter(k => MARKETING_FIELDS.includes(k)) });
+  return getSiteMarketing();
+}
+
 module.exports = {
   adminPinConfigured,
   verifyAdminPin,
   appendAdminLog,
   getAdminLog,
   getAdminNotes,
-  saveAdminNotes
+  saveAdminNotes,
+  getSiteMarketing,
+  saveSiteMarketing,
+  defaultSiteMarketing
 };

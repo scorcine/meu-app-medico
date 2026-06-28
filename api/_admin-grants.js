@@ -151,6 +151,60 @@ function computeAdminStats (users) {
   return stats;
 }
 
+function computeRetentionReport (users) {
+  const withAccount = users.filter(u => u.hasAccount);
+  const usedApp = withAccount.filter(u => u.hasUsedApp);
+  const onlyRegistered = withAccount.filter(u => !u.hasUsedApp);
+  const neverReturned = users.filter(u => u.neverReturned);
+  const expiringSoon = users
+    .filter(u => u.expiringSoon)
+    .sort((a, b) => (Number(a.daysUntilEnd) || 999) - (Number(b.daysUntilEnd) || 999));
+  const inactiveAccounts = withAccount.filter(u => !u.active);
+  const payingActive = users.filter(u => u.active && u.source === 'stripe');
+  const courtesyActive = users.filter(u => u.active && u.isCourtesy);
+
+  function row (u) {
+    return {
+      email: u.email,
+      name: u.name || '',
+      planLabel: u.planLabel || u.plan || '—',
+      daysUntilEnd: u.daysUntilEnd,
+      loginCount: u.loginCount || 0,
+      sessionCount: u.sessionCount || 0,
+      lastActiveAt: u.lastActiveAt || u.lastLoginAt || null
+    };
+  }
+
+  const topActive = users
+    .filter(u => u.hasUsedApp)
+    .sort((a, b) => {
+      const scoreA = (Number(a.loginCount) || 0) + (Number(a.sessionCount) || 0);
+      const scoreB = (Number(b.loginCount) || 0) + (Number(b.sessionCount) || 0);
+      return scoreB - scoreA;
+    })
+    .slice(0, 12)
+    .map(row);
+
+  return {
+    summary: {
+      totalUsers: users.length,
+      withAccount: withAccount.length,
+      usedApp: usedApp.length,
+      onlyRegistered: onlyRegistered.length,
+      neverReturned: neverReturned.length,
+      expiringSoon: expiringSoon.length,
+      inactiveAccounts: inactiveAccounts.length,
+      payingActive: payingActive.length,
+      courtesyActive: courtesyActive.length,
+      adoptionRate: withAccount.length ? Math.round((100 * usedApp.length) / withAccount.length) : 0
+    },
+    expiringSoon: expiringSoon.slice(0, 40).map(row),
+    neverReturned: neverReturned.slice(0, 40).map(row),
+    onlyRegistered: onlyRegistered.slice(0, 40).map(row),
+    topActive
+  };
+}
+
 async function getAdminUserDetail (email) {
   const norm = normalizeEmail(email);
   if (!norm) {
@@ -447,5 +501,6 @@ module.exports = {
   createAdminCoupon,
   createAdminPortalUrl,
   saveUserAdminNotes,
-  subscriptionLabel
+  subscriptionLabel,
+  computeRetentionReport
 };

@@ -1,9 +1,10 @@
 const { json, parseBody } = require('./_auth');
 const { authenticateAdminRequest, adminEnabled, adminPinConfigured } = require('./_admin');
-const { getAdminLog } = require('./_admin-meta');
+const { getAdminLog, getSiteMarketing, saveSiteMarketing } = require('./_admin-meta');
 const {
   listAdminUsers,
   computeAdminStats,
+  computeRetentionReport,
   getAdminUserDetail,
   grantAdminAccess,
   revokeAdminAccess,
@@ -282,6 +283,56 @@ async function handleLog (req, res) {
   }
 }
 
+async function handleMarketing (req, res) {
+  const auth = await authenticateAdminRequest(req, res);
+  if (!auth) return;
+
+  if (req.method === 'GET') {
+    try {
+      const marketing = await getSiteMarketing();
+      json(res, 200, { marketing });
+    } catch (err) {
+      json(res, 500, { error: err.message || 'Erro ao carregar marketing.' });
+    }
+    return;
+  }
+
+  if (req.method === 'POST') {
+    let body;
+    try {
+      body = parseBody(req);
+    } catch {
+      json(res, 400, { error: 'JSON inválido' });
+      return;
+    }
+
+    try {
+      const marketing = await saveSiteMarketing(body, auth.user.email);
+      json(res, 200, { ok: true, marketing });
+    } catch (err) {
+      json(res, 500, { error: err.message || 'Erro ao salvar marketing.' });
+    }
+    return;
+  }
+
+  json(res, 405, { error: 'Method not allowed' });
+}
+
+async function handleReports (req, res) {
+  const auth = await authenticateAdminRequest(req, res);
+  if (!auth) return;
+
+  try {
+    const users = await listAdminUsers();
+    json(res, 200, {
+      report: computeRetentionReport(users),
+      stats: computeAdminStats(users)
+    });
+  } catch (err) {
+    json(res, 500, { error: err.message || 'Erro ao gerar relatório.' });
+  }
+}
+
 module.exports = async (req, res) => {
   if (!adminEnabled()) {
     adminMisconfigured(res);
@@ -342,6 +393,16 @@ module.exports = async (req, res) => {
 
   if (action === 'log' && req.method === 'GET') {
     await handleLog(req, res);
+    return;
+  }
+
+  if (action === 'marketing' && (req.method === 'GET' || req.method === 'POST')) {
+    await handleMarketing(req, res);
+    return;
+  }
+
+  if (action === 'reports' && req.method === 'GET') {
+    await handleReports(req, res);
     return;
   }
 

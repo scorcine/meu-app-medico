@@ -6908,6 +6908,41 @@ body.auth-body.admin-page {
   margin-top: 0.25rem;
 }
 
+.admin-reports-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+}
+
+.admin-report-table-wrap {
+  overflow-x: auto;
+}
+
+.admin-report-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.84rem;
+}
+
+.admin-report-table th,
+.admin-report-table td {
+  padding: 0.45rem 0.5rem;
+  border-bottom: 1px solid var(--border, #dce4ec);
+  text-align: left;
+  vertical-align: top;
+}
+
+.admin-report-table th {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-muted, #6c757d);
+}
+
+.admin-report-table td {
+  overflow-wrap: anywhere;
+}
+
 .admin-panel {
   display: flex;
   flex-direction: column;

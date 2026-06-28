@@ -8,11 +8,11 @@
   <title>Admin • MedHub</title>
   <link rel="icon" href="assets/medhub-logo.png?v=logo-v2" type="image/png">
   <script src="theme.js"></script>
-  <link rel="stylesheet" href="style.css?v=admin-v6">
+  <link rel="stylesheet" href="style.css?v=admin-v7">
   <script defer src="security-crypto.js?v=session-v1"></script>
   <script defer src="auth.js?v=auth-v7"></script>
   <script defer src="auth-cloud.js?v=cloud-v20"></script>
-  <script defer src="admin.js?v=10"></script>
+  <script defer src="admin.js?v=11"></script>
 </head>
 <body class="auth-body admin-page" onload="initAdminPage()">
   <header class="auth-page-header admin-page-header">
@@ -60,6 +60,8 @@
             <button type="button" class="admin-nav-btn" data-admin-section="users">Usuários</button>
             <button type="button" class="admin-nav-btn" data-admin-section="access">Liberar acesso</button>
             <button type="button" class="admin-nav-btn" data-admin-section="coupons">Cupons</button>
+            <button type="button" class="admin-nav-btn" data-admin-section="reports">Relatórios</button>
+            <button type="button" class="admin-nav-btn" data-admin-section="marketing">Marketing</button>
             <button type="button" class="admin-nav-btn" data-admin-section="log">Auditoria</button>
             <button type="button" class="admin-nav-btn" data-admin-section="pages">Páginas do site</button>
           </nav>
@@ -95,6 +97,14 @@
               <button type="button" class="admin-quick-card card admin-card" data-admin-goto="coupons">
                 <strong>Cupons</strong>
                 <span class="muted">Criar código cortesia no Stripe</span>
+              </button>
+              <button type="button" class="admin-quick-card card admin-card" data-admin-goto="reports">
+                <strong>Relatórios</strong>
+                <span class="muted">Retenção, adoção e cortesias expirando</span>
+              </button>
+              <button type="button" class="admin-quick-card card admin-card" data-admin-goto="marketing">
+                <strong>Marketing</strong>
+                <span class="muted">Instagram, links e pixel Meta</span>
               </button>
               <button type="button" class="admin-quick-card card admin-card" data-admin-goto="pages">
                 <strong>Páginas</strong>
@@ -184,6 +194,72 @@
                 <button type="submit" class="btn" id="admin-coupon-btn">Criar cupom no Stripe</button>
               </form>
               <p id="admin-coupon-status" class="admin-status" hidden></p>
+            </div>
+          </div>
+
+          <div class="admin-section" id="admin-section-reports" data-admin-section="reports" hidden>
+            <div id="admin-reports-summary" class="admin-stats-grid" hidden></div>
+            <div class="admin-reports-grid">
+              <div class="card admin-card">
+                <h2>Cortesia expirando (7 dias)</h2>
+                <p id="admin-report-expiring-status" class="admin-status muted">Carregando…</p>
+                <div id="admin-report-expiring" class="admin-report-table-wrap" hidden></div>
+              </div>
+              <div class="card admin-card">
+                <h2>Cadastrou e nunca voltou</h2>
+                <p id="admin-report-never-status" class="admin-status muted">Carregando…</p>
+                <div id="admin-report-never" class="admin-report-table-wrap" hidden></div>
+              </div>
+              <div class="card admin-card">
+                <h2>Só cadastro (não usou o app)</h2>
+                <p id="admin-report-registered-status" class="admin-status muted">Carregando…</p>
+                <div id="admin-report-registered" class="admin-report-table-wrap" hidden></div>
+              </div>
+              <div class="card admin-card">
+                <h2>Mais ativos</h2>
+                <p id="admin-report-active-status" class="admin-status muted">Carregando…</p>
+                <div id="admin-report-active" class="admin-report-table-wrap" hidden></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="admin-section" id="admin-section-marketing" data-admin-section="marketing" hidden>
+            <div class="card admin-card">
+              <h2>Links e divulgação</h2>
+              <p class="auth-hint muted">Salvo na nuvem (KV) e aplicado em <code>links.html</code> e páginas que leem <code>/api/billing-config</code>.</p>
+              <form id="admin-marketing-form" class="admin-grant-form">
+                <div class="admin-grant-row">
+                  <label for="mkt-instagram-url">Instagram — URL</label>
+                  <input id="mkt-instagram-url" type="url" placeholder="https://www.instagram.com/medhub_app/">
+                </div>
+                <div class="admin-grant-row">
+                  <label for="mkt-instagram-handle">Instagram — @</label>
+                  <input id="mkt-instagram-handle" type="text" placeholder="@medhub_app">
+                </div>
+                <div class="admin-grant-row">
+                  <label for="mkt-support-email">E-mail de suporte</label>
+                  <input id="mkt-support-email" type="email" placeholder="suporte@medhub.ia.br">
+                </div>
+                <div class="admin-grant-row">
+                  <label for="mkt-links-bio">Página links (bio)</label>
+                  <input id="mkt-links-bio" type="url" placeholder="https://www.medhub.ia.br/links.html">
+                </div>
+                <div class="admin-grant-row">
+                  <label for="mkt-links-estudantes">Links estudantes</label>
+                  <input id="mkt-links-estudantes" type="url" placeholder="https://www.medhub.ia.br/links-estudantes.html">
+                </div>
+                <div class="admin-grant-row">
+                  <label for="mkt-landing-estudantes">Landing estudantes</label>
+                  <input id="mkt-landing-estudantes" type="url" placeholder="https://www.medhub.ia.br/estudantes.html">
+                </div>
+                <div class="admin-grant-row">
+                  <label for="mkt-meta-pixel">Meta Pixel ID</label>
+                  <input id="mkt-meta-pixel" type="text" inputmode="numeric" placeholder="Só números — Facebook/Instagram Ads">
+                </div>
+                <button type="submit" class="btn" id="admin-marketing-btn">Salvar marketing</button>
+              </form>
+              <p id="admin-marketing-status" class="admin-status" hidden></p>
+              <p class="auth-hint muted" id="admin-marketing-meta"></p>
             </div>
           </div>
 
