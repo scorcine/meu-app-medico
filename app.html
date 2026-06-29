@@ -85,7 +85,7 @@
   <script defer src="flashcards/deck-via-aerea.js?v=fc-v3"></script>
   <script defer src="flashcards/deck-gasometria.js?v=fc-v3"></script>
   <script defer src="flashcards-data.js?v=fc-v3"></script>
-  <script defer src="flashcards.js?v=fc-v2"></script>
+  <script defer src="flashcards.js?v=fc-v4"></script>
   <script defer src="backup.js?v=backup-v2"></script>
   <script defer src="clinical-cloud.js?v=cloud-sync-v1"></script>
   <script defer src="subscription.js?v=billing-v7"></script>
@@ -466,6 +466,7 @@
             <h2>Flashcards</h2>
             <p class="muted">Revisão rápida para plantão e provas — baralhos fixos a partir do guia de emergência, PS e interpretação de exames.</p>
             <p class="fc-disclaimer muted" role="note">Conteúdo educacional. Não substitui protocolo institucional nem julgamento clínico.</p>
+            <div id="fc-review-banner" class="fc-review-banner" hidden></div>
             <label class="ps-search-label" for="fc-search">Buscar tema</label>
             <input id="fc-search" class="ps-search" type="search" placeholder="Ex.: sepse, IAM, dengue, gasometria…" autocomplete="off">
             <p id="fc-deck-count" class="ps-count muted"></p>
@@ -487,6 +488,7 @@
               <div class="fc-study-progress-track" aria-hidden="true">
                 <span id="fc-study-progress-bar" class="fc-study-progress-fill"></span>
               </div>
+              <p id="fc-study-next-hint" class="fc-study-next-hint muted" hidden></p>
             </div>
 
             <button type="button" class="fc-card" id="fc-card" aria-live="polite">
@@ -502,9 +504,9 @@
             <p id="fc-flip-hint" class="fc-flip-hint muted">Toque no card para ver a resposta</p>
 
             <div id="fc-answer-actions" class="fc-answer-actions" hidden>
-              <button type="button" class="btn-outline fc-btn-wrong" id="fc-btn-wrong">Errei</button>
-              <button type="button" class="btn-outline" id="fc-btn-flip">Virar</button>
-              <button type="button" class="btn fc-btn-right" id="fc-btn-right">Acertei</button>
+              <button type="button" class="btn fc-btn-easy" id="fc-btn-easy" title="Revisar em 15 dias">Fácil<span class="fc-rating-hint">15 dias</span></button>
+              <button type="button" class="btn-outline fc-btn-medium" id="fc-btn-medium" title="Revisar em 10 dias">Médio<span class="fc-rating-hint">10 dias</span></button>
+              <button type="button" class="btn-outline fc-btn-wrong" id="fc-btn-wrong" title="Revisar em 7 dias">Errei<span class="fc-rating-hint">7 dias</span></button>
               <button type="button" class="btn-text muted" id="fc-btn-skip">Pular</button>
             </div>
           </div>
