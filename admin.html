@@ -8,11 +8,11 @@
   <title>Admin • MedHub</title>
   <link rel="icon" href="assets/medhub-logo.png?v=logo-v2" type="image/png">
   <script src="theme.js"></script>
-  <link rel="stylesheet" href="style.css?v=admin-v8">
+  <link rel="stylesheet" href="style.css?v=admin-v9">
   <script defer src="security-crypto.js?v=session-v1"></script>
   <script defer src="auth.js?v=auth-v7"></script>
   <script defer src="auth-cloud.js?v=cloud-v20"></script>
-  <script defer src="admin.js?v=12"></script>
+  <script defer src="admin.js?v=14"></script>
 </head>
 <body class="auth-body admin-page" onload="initAdminPage()">
   <header class="auth-page-header admin-page-header">
@@ -269,46 +269,85 @@
           </div>
 
           <div class="admin-section" id="admin-section-appearance" data-admin-section="appearance" hidden>
-            <div class="card admin-card admin-appearance-card">
-              <h2>Cores e identidade</h2>
-              <p class="auth-hint muted">Aplicado no app (<code>app.html</code>) para todos os usuários após salvar.</p>
-              <div class="admin-theme-preview" id="admin-theme-preview">
-                <span class="admin-theme-swatch" id="admin-theme-swatch-accent"></span>
-                <span class="admin-theme-swatch" id="admin-theme-swatch-header"></span>
-                <a class="btn-outline btn-sm" href="app.html" target="_blank" rel="noopener">Abrir app ↗</a>
+            <div class="admin-appearance-studio">
+              <div class="admin-appearance-toolbar card admin-card">
+                <div>
+                  <h2>Estúdio de aparência</h2>
+                  <p class="auth-hint muted">Personalize cores, menu e cards do app. Módulos <strong>em breve</strong> só aparecem quando você publicar.</p>
+                </div>
+                <a class="btn-outline btn-sm" href="app.html" target="_blank" rel="noopener">Pré-visualizar app ↗</a>
               </div>
-              <form id="admin-appearance-form" class="admin-grant-form">
-                <div class="admin-theme-grid">
-                  <div class="admin-grant-row">
-                    <label for="site-accent">Cor principal</label>
-                    <input id="site-accent" type="color" value="#0d6efd">
-                  </div>
-                  <div class="admin-grant-row">
-                    <label for="site-accent-hover">Cor hover</label>
-                    <input id="site-accent-hover" type="color" value="#0b5ed7">
-                  </div>
-                  <div class="admin-grant-row">
-                    <label for="site-bg-header">Header / barra superior</label>
-                    <input id="site-bg-header" type="color" value="#0d6efd">
+
+              <nav class="admin-appearance-tabs" id="admin-appearance-tabs" aria-label="Abas de aparência">
+                <button type="button" class="admin-appearance-tab is-active" data-appear-tab="brand">Marca</button>
+                <button type="button" class="admin-appearance-tab" data-appear-tab="menu">Menu lateral</button>
+                <button type="button" class="admin-appearance-tab" data-appear-tab="cards">Cards ativos</button>
+                <button type="button" class="admin-appearance-tab" data-appear-tab="soon">Em breve</button>
+              </nav>
+
+              <form id="admin-appearance-form">
+                <div class="admin-appear-panel is-active" data-appear-panel="brand">
+                  <div class="admin-appear-layout">
+                    <div class="card admin-card admin-appear-brand">
+                      <h3>Identidade visual</h3>
+                      <p class="auth-hint muted">Paleta global do app (header, botões, links).</p>
+                      <div class="admin-preset-row" id="admin-theme-presets"></div>
+                      <div class="admin-theme-grid">
+                        <div class="admin-color-field">
+                          <label for="site-accent">Cor principal</label>
+                          <input id="site-accent" type="color" value="#0d6efd">
+                        </div>
+                        <div class="admin-color-field">
+                          <label for="site-accent-hover">Hover</label>
+                          <input id="site-accent-hover" type="color" value="#0b5ed7">
+                        </div>
+                        <div class="admin-color-field">
+                          <label for="site-bg-header">Barra superior</label>
+                          <input id="site-bg-header" type="color" value="#0d6efd">
+                        </div>
+                      </div>
+                      <div class="admin-grant-row">
+                        <label for="site-logo-url">URL do logo</label>
+                        <input id="site-logo-url" type="text" placeholder="/assets/medhub-logo.png">
+                      </div>
+                    </div>
+                    <div class="card admin-card admin-appear-preview" aria-hidden="true">
+                      <h3>Prévia</h3>
+                      <div class="admin-mock-app" id="admin-mock-app">
+                        <div class="admin-mock-header" id="admin-mock-header"></div>
+                        <div class="admin-mock-body">
+                          <div class="admin-mock-sidebar" id="admin-mock-sidebar"></div>
+                          <div class="admin-mock-card" id="admin-mock-card"></div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
-                <div class="admin-grant-row">
-                  <label for="site-logo-url">URL do logo</label>
-                  <input id="site-logo-url" type="text" placeholder="/assets/medhub-logo.png">
+
+                <div class="admin-appear-panel" data-appear-panel="menu" hidden>
+                  <p class="auth-hint muted admin-appear-hint">Cada item pode ter cor e ícone próprios. Itens desligados somem do menu.</p>
+                  <div id="admin-sidebar-editor" class="admin-tile-grid"></div>
                 </div>
 
-                <h3 class="admin-subtitle">Menu lateral do app</h3>
-                <p class="auth-hint muted">Marque o que aparece e edite os rótulos.</p>
-                <div id="admin-sidebar-editor" class="admin-config-editor"></div>
+                <div class="admin-appear-panel" data-appear-panel="cards" hidden>
+                  <p class="auth-hint muted admin-appear-hint">Cards visíveis na home do app. Escolha cor de destaque e fundo por card.</p>
+                  <div id="admin-homecards-editor" class="admin-tile-grid"></div>
+                </div>
 
-                <h3 class="admin-subtitle">Cards da home (Ferramentas rápidas)</h3>
-                <p class="auth-hint muted">Atalhos na tela inicial do app.</p>
-                <div id="admin-homecards-editor" class="admin-config-editor"></div>
+                <div class="admin-appear-panel" data-appear-panel="soon" hidden>
+                  <p class="auth-hint muted admin-appear-hint">Módulos futuros (ex.: videoaulas). Ficam <strong>inativos</strong> até você ligar <em>Publicar no app</em>.</p>
+                  <h3 class="admin-appear-subhead">Cards na home</h3>
+                  <div id="admin-futurecards-editor" class="admin-tile-grid"></div>
+                  <h3 class="admin-appear-subhead">Itens no menu lateral</h3>
+                  <div id="admin-futuresidebar-editor" class="admin-tile-grid"></div>
+                </div>
 
-                <button type="submit" class="btn" id="admin-appearance-btn">Salvar aparência &amp; menu</button>
+                <div class="admin-appearance-footer card admin-card">
+                  <p id="admin-appearance-status" class="admin-status" hidden></p>
+                  <p class="auth-hint muted" id="admin-appearance-meta"></p>
+                  <button type="submit" class="btn" id="admin-appearance-btn">Salvar e publicar no app</button>
+                </div>
               </form>
-              <p id="admin-appearance-status" class="admin-status" hidden></p>
-              <p class="auth-hint muted" id="admin-appearance-meta"></p>
             </div>
           </div>
 

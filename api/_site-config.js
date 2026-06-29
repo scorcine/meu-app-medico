@@ -2,7 +2,6 @@ const { kv } = require('@vercel/kv');
 const { appendAdminLog } = require('./_admin-meta');
 
 const SITE_CONFIG_KEY = 'medhub:site-config';
-
 const HEX_COLOR = /^#[0-9a-fA-F]{6}$/;
 
 const ALLOWED_SECTIONS = new Set([
@@ -12,47 +11,68 @@ const ALLOWED_SECTIONS = new Set([
   'calc-pediatrica', 'perfil'
 ]);
 
+const FUTURE_SECTIONS = new Set([
+  'videoaulas', 'flashcards', 'casos-clinicos', 'biblioteca'
+]);
+
+const CARD_SECTIONS = new Set([...ALLOWED_SECTIONS, ...FUTURE_SECTIONS]);
+
 function defaultSidebar () {
   return [
-    { type: 'item', id: 'inicio', label: 'Início', visible: true },
+    { type: 'item', id: 'inicio', label: 'Início', visible: true, enabled: true, icon: '🏠', color: '' },
     { type: 'group', label: 'Roteiro local (opcional)' },
-    { type: 'item', id: 'pacientes', label: 'Cadastro do paciente', visible: true },
-    { type: 'item', id: 'anamnese', label: 'Anamnese', visible: true },
-    { type: 'item', id: 'consultas', label: 'Histórico de atendimentos', visible: true },
+    { type: 'item', id: 'pacientes', label: 'Cadastro do paciente', visible: true, enabled: true, icon: '👤', color: '#6366f1' },
+    { type: 'item', id: 'anamnese', label: 'Anamnese', visible: true, enabled: true, icon: '📝', color: '#8b5cf6' },
+    { type: 'item', id: 'consultas', label: 'Histórico de atendimentos', visible: true, enabled: true, icon: '📅', color: '#a855f7' },
     { type: 'group', label: 'Prescrição & exames' },
-    { type: 'item', id: 'receituario', label: 'Receituário', visible: true },
-    { type: 'item', id: 'medicacoes', label: 'Medicações', visible: true },
-    { type: 'item', id: 'exames', label: 'Exames', visible: true },
-    { type: 'item', id: 'interpretacao-exame', label: 'Interpretação do exame', visible: true },
+    { type: 'item', id: 'receituario', label: 'Receituário', visible: true, enabled: true, icon: '📋', color: '#0d6efd' },
+    { type: 'item', id: 'medicacoes', label: 'Medicações', visible: true, enabled: true, icon: '💊', color: '#2563eb' },
+    { type: 'item', id: 'exames', label: 'Exames', visible: true, enabled: true, icon: '🔬', color: '#0891b2' },
+    { type: 'item', id: 'interpretacao-exame', label: 'Interpretação do exame', visible: true, enabled: true, icon: '📊', color: '#0e7490' },
     { type: 'group', label: 'Emergência & internação' },
-    { type: 'item', id: 'guia-emergencia', label: 'Guia rápido de emergência', visible: true },
-    { type: 'item', id: 'pronto-socorro', label: 'Prescrições de Pronto Socorro', visible: true },
-    { type: 'item', id: 'tratamento-hospitalar', label: 'Tratamento hospitalar', visible: true },
-    { type: 'item', id: 'ventilacao-mecanica', label: 'Ventilação mecânica', visible: true },
+    { type: 'item', id: 'guia-emergencia', label: 'Guia rápido de emergência', visible: true, enabled: true, icon: '⚡', color: '#dc2626' },
+    { type: 'item', id: 'pronto-socorro', label: 'Prescrições de Pronto Socorro', visible: true, enabled: true, icon: '🏥', color: '#ea580c' },
+    { type: 'item', id: 'tratamento-hospitalar', label: 'Tratamento hospitalar', visible: true, enabled: true, icon: '💉', color: '#d97706' },
+    { type: 'item', id: 'ventilacao-mecanica', label: 'Ventilação mecânica', visible: true, enabled: true, icon: '🫁', color: '#059669' },
     { type: 'group', label: 'Calculadoras' },
-    { type: 'item', id: 'calc-essenciais', label: 'Calculadoras essenciais', visible: true },
-    { type: 'item', id: 'calc-pediatrica', label: 'Calculadora pediátrica', visible: true },
+    { type: 'item', id: 'calc-essenciais', label: 'Calculadoras essenciais', visible: true, enabled: true, icon: '🧮', color: '#0d9488' },
+    { type: 'item', id: 'calc-pediatrica', label: 'Calculadora pediátrica', visible: true, enabled: true, icon: '👶', color: '#14b8a6' },
+    { type: 'group', label: 'Conteúdo (em breve)' },
+    { type: 'item', id: 'videoaulas', label: 'Videoaulas', visible: false, enabled: false, comingSoon: true, icon: '🎬', color: '#7c3aed' },
     { type: 'group', label: 'Sistema' },
-    { type: 'item', id: 'perfil', label: 'Minha conta', visible: true }
+    { type: 'item', id: 'perfil', label: 'Minha conta', visible: true, enabled: true, icon: '⚙️', color: '#64748b' }
+  ];
+}
+
+function defaultActiveHomeCards () {
+  return [
+    { section: 'calc-essenciais', icon: '🧮', name: 'Calculadoras essenciais', desc: 'Escalas, scores e doses por especialidade.', visible: true, enabled: true, comingSoon: false, pediatricAux: false, color: '#0d9488', colorBg: '#f0fdfa' },
+    { section: 'guia-emergencia', icon: '⚡', name: 'Guia rápido de emergência', desc: 'ACLS, AVC, sepse, trauma e fluxogramas.', visible: true, enabled: true, comingSoon: false, pediatricAux: false, color: '#dc2626', colorBg: '#fef2f2' },
+    { section: 'pronto-socorro', icon: '🏥', name: 'Prescrições PS', desc: '106 condições com prescrição interativa.', visible: true, enabled: true, comingSoon: false, pediatricAux: false, color: '#ea580c', colorBg: '#fff7ed' },
+    { section: 'tratamento-hospitalar', icon: '💉', name: 'Tratamento hospitalar', desc: 'Posologias IM/EV e internação.', visible: true, enabled: true, comingSoon: false, pediatricAux: false, color: '#d97706', colorBg: '#fffbeb' },
+    { section: 'ventilacao-mecanica', icon: '🫁', name: 'Ventilação mecânica', desc: 'Calculadora: PBW, Vt, PEEP e ajustes automáticos.', visible: true, enabled: true, comingSoon: false, pediatricAux: false, color: '#059669', colorBg: '#ecfdf5' },
+    { section: 'receituario', icon: '📋', name: 'Receituário', desc: 'Sugestões VO · modelo educacional · CRM na Minha conta.', visible: true, enabled: true, comingSoon: false, pediatricAux: false, color: '#0d6efd', colorBg: '#eff6ff' },
+    { section: 'medicacoes', icon: '💊', name: 'Medicações', desc: '266+ fichas MedHub e referência RENAME.', visible: true, enabled: true, comingSoon: false, pediatricAux: false, color: '#2563eb', colorBg: '#eff6ff' },
+    { section: 'exames', icon: '🔬', name: 'Exames', desc: 'Painéis sugeridos por cenário clínico.', visible: true, enabled: true, comingSoon: false, pediatricAux: false, color: '#0891b2', colorBg: '#ecfeff' },
+    { section: 'interpretacao-exame', icon: '📊', name: 'Interpretação do exame', desc: 'Guia rápido de labs e imagem.', visible: true, enabled: true, comingSoon: false, pediatricAux: false, color: '#0e7490', colorBg: '#ecfeff' },
+    { section: 'pacientes', icon: '👤', name: 'Cadastro do paciente', desc: 'Cadastro local opcional para anamnese e histórico.', visible: true, enabled: true, comingSoon: false, pediatricAux: false, color: '#6366f1', colorBg: '#eef2ff' },
+    { section: 'anamnese', icon: '📝', name: 'Anamnese', desc: 'Guia clínico: queixa → protocolo → prescrição.', visible: true, enabled: true, comingSoon: false, pediatricAux: false, color: '#8b5cf6', colorBg: '#f5f3ff' },
+    { section: 'consultas', icon: '📅', name: 'Histórico de atendimentos', desc: 'Registro local e PDF educacional.', visible: true, enabled: true, comingSoon: false, pediatricAux: false, color: '#a855f7', colorBg: '#faf5ff' },
+    { section: 'calc-pediatrica', icon: '👶', name: 'Calculadora pediátrica', desc: 'Complemento por peso/idade — adulto é o foco.', visible: true, enabled: true, comingSoon: false, pediatricAux: true, color: '#14b8a6', colorBg: '#f0fdfa' }
+  ];
+}
+
+function defaultFutureHomeCards () {
+  return [
+    { section: 'videoaulas', icon: '🎬', name: 'Videoaulas', desc: 'Aulas em vídeo por módulo clínico.', visible: true, enabled: false, comingSoon: true, pediatricAux: false, color: '#7c3aed', colorBg: '#f5f3ff' },
+    { section: 'flashcards', icon: '🃏', name: 'Flashcards', desc: 'Revisão rápida para plantão e provas.', visible: true, enabled: false, comingSoon: true, pediatricAux: false, color: '#db2777', colorBg: '#fdf2f8' },
+    { section: 'casos-clinicos', icon: '🩺', name: 'Casos clínicos', desc: 'Casos interativos passo a passo.', visible: true, enabled: false, comingSoon: true, pediatricAux: false, color: '#059669', colorBg: '#ecfdf5' },
+    { section: 'biblioteca', icon: '📚', name: 'Biblioteca', desc: 'PDFs e referências curadas.', visible: true, enabled: false, comingSoon: true, pediatricAux: false, color: '#ca8a04', colorBg: '#fefce8' }
   ];
 }
 
 function defaultHomeCards () {
-  return [
-    { section: 'calc-essenciais', icon: '🧮', name: 'Calculadoras essenciais', desc: 'Escalas, scores e doses por especialidade.', visible: true, pediatricAux: false },
-    { section: 'guia-emergencia', icon: '⚡', name: 'Guia rápido de emergência', desc: 'ACLS, AVC, sepse, trauma e fluxogramas.', visible: true, pediatricAux: false },
-    { section: 'pronto-socorro', icon: '🏥', name: 'Prescrições PS', desc: '106 condições com prescrição interativa.', visible: true, pediatricAux: false },
-    { section: 'tratamento-hospitalar', icon: '💉', name: 'Tratamento hospitalar', desc: 'Posologias IM/EV e internação.', visible: true, pediatricAux: false },
-    { section: 'ventilacao-mecanica', icon: '🫁', name: 'Ventilação mecânica', desc: 'Calculadora: PBW, Vt, PEEP e ajustes automáticos.', visible: true, pediatricAux: false },
-    { section: 'receituario', icon: '📋', name: 'Receituário', desc: 'Sugestões VO · modelo educacional · CRM na Minha conta.', visible: true, pediatricAux: false },
-    { section: 'medicacoes', icon: '💊', name: 'Medicações', desc: '266+ fichas MedHub e referência RENAME.', visible: true, pediatricAux: false },
-    { section: 'exames', icon: '🔬', name: 'Exames', desc: 'Painéis sugeridos por cenário clínico.', visible: true, pediatricAux: false },
-    { section: 'interpretacao-exame', icon: '📊', name: 'Interpretação do exame', desc: 'Guia rápido de labs e imagem.', visible: true, pediatricAux: false },
-    { section: 'pacientes', icon: '👤', name: 'Cadastro do paciente', desc: 'Cadastro local opcional (alergias, medicações) para anamnese e histórico.', visible: true, pediatricAux: false },
-    { section: 'anamnese', icon: '📝', name: 'Anamnese', desc: 'Guia clínico local para queixa → protocolo → prescrição.', visible: true, pediatricAux: false },
-    { section: 'consultas', icon: '📅', name: 'Histórico de atendimentos', desc: 'Registro local e PDF educacional.', visible: true, pediatricAux: false },
-    { section: 'calc-pediatrica', icon: '👶', name: 'Calculadora pediátrica', desc: 'Complemento rápido por peso/idade — o MedHub principal é voltado ao adulto.', visible: true, pediatricAux: true }
-  ];
+  return [...defaultActiveHomeCards(), ...defaultFutureHomeCards()];
 }
 
 function defaultSiteConfig () {
@@ -73,7 +93,14 @@ function defaultSiteConfig () {
 
 function normalizeHex (value, fallback) {
   const v = String(value || '').trim();
-  return HEX_COLOR.test(v) ? v.toLowerCase() : fallback;
+  if (!v) return fallback || '';
+  return HEX_COLOR.test(v) ? v.toLowerCase() : (fallback || '');
+}
+
+function normalizeOptionalHex (value) {
+  const v = String(value || '').trim();
+  if (!v) return '';
+  return HEX_COLOR.test(v) ? v.toLowerCase() : '';
 }
 
 function normalizeLogoUrl (value, fallback) {
@@ -83,6 +110,22 @@ function normalizeLogoUrl (value, fallback) {
     return v.slice(0, 500);
   }
   return fallback;
+}
+
+function normalizeSidebarItem (entry, def) {
+  const comingSoon = !!(entry.comingSoon ?? def?.comingSoon);
+  const enabled = comingSoon ? entry.enabled === true : entry.enabled !== false;
+
+  return {
+    type: 'item',
+    id: entry.id,
+    label: String(entry.label || def?.label || entry.id).trim().slice(0, 80),
+    visible: entry.visible !== false,
+    enabled,
+    comingSoon,
+    icon: String(entry.icon || def?.icon || '').trim().slice(0, 8),
+    color: normalizeOptionalHex(entry.color) || normalizeOptionalHex(def?.color) || ''
+  };
 }
 
 function mergeSidebar (saved) {
@@ -101,14 +144,10 @@ function mergeSidebar (saved) {
       if (label) merged.push({ type: 'group', label });
       return;
     }
-    if (entry?.type !== 'item' || !ALLOWED_SECTIONS.has(entry.id)) return;
-    const def = defaultById.get(entry.id);
-    merged.push({
-      type: 'item',
-      id: entry.id,
-      label: String(entry.label || def?.label || entry.id).trim().slice(0, 80),
-      visible: entry.visible !== false
-    });
+    const id = String(entry?.id || '').trim();
+    if (entry?.type !== 'item' || !CARD_SECTIONS.has(id)) return;
+    const def = defaultById.get(id);
+    merged.push(normalizeSidebarItem({ ...entry, id }, def));
   });
 
   defaults.forEach(def => {
@@ -121,6 +160,25 @@ function mergeSidebar (saved) {
   return merged.length ? merged : defaults;
 }
 
+function normalizeHomeCard (entry, def) {
+  const section = String(entry.section || '').trim();
+  const comingSoon = !!(entry.comingSoon ?? def?.comingSoon);
+  const enabled = comingSoon ? entry.enabled === true : entry.enabled !== false;
+
+  return {
+    section,
+    icon: String(entry.icon || def?.icon || '•').trim().slice(0, 8),
+    name: String(entry.name || def?.name || section).trim().slice(0, 80),
+    desc: String(entry.desc || def?.desc || '').trim().slice(0, 200),
+    visible: entry.visible !== false,
+    enabled,
+    comingSoon,
+    pediatricAux: !!(entry.pediatricAux ?? def?.pediatricAux),
+    color: normalizeOptionalHex(entry.color) || normalizeOptionalHex(def?.color) || '',
+    colorBg: normalizeOptionalHex(entry.colorBg) || normalizeOptionalHex(def?.colorBg) || ''
+  };
+}
+
 function mergeHomeCards (saved) {
   const defaults = defaultHomeCards();
   if (!Array.isArray(saved) || !saved.length) return defaults;
@@ -130,16 +188,8 @@ function mergeHomeCards (saved) {
 
   saved.forEach(entry => {
     const section = String(entry?.section || '').trim();
-    if (!ALLOWED_SECTIONS.has(section) || section === 'inicio' || section === 'perfil') return;
-    const def = defaultBySection.get(section);
-    merged.push({
-      section,
-      icon: String(entry.icon || def?.icon || '•').trim().slice(0, 8),
-      name: String(entry.name || def?.name || section).trim().slice(0, 80),
-      desc: String(entry.desc || def?.desc || '').trim().slice(0, 200),
-      visible: entry.visible !== false,
-      pediatricAux: !!(entry.pediatricAux ?? def?.pediatricAux)
-    });
+    if (!CARD_SECTIONS.has(section) || section === 'inicio' || section === 'perfil') return;
+    merged.push(normalizeHomeCard(entry, defaultBySection.get(section)));
   });
 
   defaults.forEach(def => {
@@ -199,8 +249,9 @@ async function saveSiteConfig (data, actorEmail) {
   await kv.set(SITE_CONFIG_KEY, payload);
   await appendAdminLog(actorEmail, 'save_site_config', '', {
     accent: payload.theme.accent,
-    sidebarVisible: payload.sidebar.filter(e => e.type === 'item' && e.visible).length,
-    homeCardsVisible: payload.homeCards.filter(c => c.visible).length
+    sidebarLive: payload.sidebar.filter(e => e.type === 'item' && e.visible && e.enabled).length,
+    cardsLive: payload.homeCards.filter(c => c.visible && c.enabled).length,
+    cardsSoon: payload.homeCards.filter(c => c.comingSoon && !c.enabled).length
   });
 
   return mergeSiteConfig(payload);
@@ -210,5 +261,7 @@ module.exports = {
   getSiteConfig,
   saveSiteConfig,
   defaultSiteConfig,
-  ALLOWED_SECTIONS
+  ALLOWED_SECTIONS,
+  FUTURE_SECTIONS,
+  CARD_SECTIONS
 };

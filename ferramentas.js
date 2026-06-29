@@ -30,18 +30,26 @@ function initFerramentas () {
     ? medhubGetHomeCards()
     : FERRAMENTAS_ITEMS;
 
-  grid.innerHTML = items.map(item => `
-    <button type="button" class="calc-category-btn ferramentas-card home-tool-card${item.pediatricAux ? ' home-tool-card--pediatric-aux' : ''}" data-section="${item.section}">
+  grid.innerHTML = items.map(item => {
+    const style = typeof medhubHomeCardStyle === 'function' ? medhubHomeCardStyle(item) : '';
+  return `
+    <button type="button" class="calc-category-btn ferramentas-card home-tool-card${item.pediatricAux ? ' home-tool-card--pediatric-aux' : ''}${item.color ? ' home-tool-card--themed' : ''}" data-section="${item.section}"${style}>
       <span class="calc-category-icon">${item.icon}</span>
       <span class="calc-category-name">${item.name}</span>
       ${item.pediatricAux ? '<span class="home-tool-card-badge">Complemento · adulto</span>' : ''}
       <span class="ferramentas-card-desc muted">${item.desc}</span>
     </button>
-  `).join('');
+  `;
+  }).join('');
 
   grid.querySelectorAll('[data-section]').forEach(btn => {
     btn.addEventListener('click', () => {
-      if (typeof showSection === 'function') showSection(btn.dataset.section);
+      const section = btn.dataset.section;
+      if (!document.getElementById('section-' + section)) {
+        alert('Este módulo ainda está em preparação.');
+        return;
+      }
+      if (typeof showSection === 'function') showSection(section);
     });
   });
 }

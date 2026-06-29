@@ -71,6 +71,26 @@ function medhubApplySiteTheme (theme) {
   }
 }
 
+function medhubIsSidebarItemLive (entry) {
+  if (entry.type !== 'item') return false;
+  if (entry.visible === false) return false;
+  if (entry.comingSoon && entry.enabled !== true) return false;
+  if (entry.enabled === false) return false;
+  return true;
+}
+
+function medhubIsHomeCardLive (card) {
+  if (card.visible === false) return false;
+  if (card.comingSoon && card.enabled !== true) return false;
+  if (card.enabled === false) return false;
+  return true;
+}
+
+function medhubSidebarItemStyle (entry) {
+  if (!entry.color) return '';
+  return ' style="--sidebar-item-accent:' + entry.color + '"';
+}
+
 function medhubSidebarHtml (sidebar, activeSection) {
   if (!Array.isArray(sidebar) || !sidebar.length) return '';
 
@@ -83,7 +103,7 @@ function medhubSidebarHtml (sidebar, activeSection) {
       let hasVisible = false;
       for (let j = i + 1; j < sidebar.length; j++) {
         if (sidebar[j].type === 'group') break;
-        if (sidebar[j].type === 'item' && sidebar[j].visible !== false) {
+        if (medhubIsSidebarItemLive(sidebar[j])) {
           hasVisible = true;
           break;
         }
@@ -94,11 +114,13 @@ function medhubSidebarHtml (sidebar, activeSection) {
       continue;
     }
 
-    if (entry.type !== 'item' || entry.visible === false) continue;
+    if (!medhubIsSidebarItemLive(entry)) continue;
 
     const active = entry.id === activeSection ? ' active' : '';
-    html += '<button type="button" class="sidebar-link' + active + '" data-section="' + escapeSiteAttr(entry.id) + '">' +
-      escapeSiteHtml(entry.label) + '</button>';
+    const icon = entry.icon ? '<span class="sidebar-link-icon" aria-hidden="true">' + escapeSiteHtml(entry.icon) + '</span>' : '';
+    html += '<button type="button" class="sidebar-link' + active + '" data-section="' + escapeSiteAttr(entry.id) + '"' +
+      medhubSidebarItemStyle(entry) + '>' + icon +
+      '<span class="sidebar-link-text">' + escapeSiteHtml(entry.label) + '</span></button>';
   }
 
   return html;
@@ -121,7 +143,12 @@ function medhubBindSidebarLinks () {
     if (link.dataset.siteBound) return;
     link.dataset.siteBound = '1';
     link.addEventListener('click', () => {
-      if (typeof showSection === 'function') showSection(link.dataset.section);
+      const section = link.dataset.section;
+      if (!document.getElementById('section-' + section)) {
+        alert('Este módulo ainda está em preparação.');
+        return;
+      }
+      if (typeof showSection === 'function') showSection(section);
     });
   });
 }
@@ -141,9 +168,16 @@ function medhubRenderAppSidebar (sidebar, activeSection) {
 function medhubGetHomeCards () {
   const cards = _medhubSiteConfig?.homeCards;
   if (Array.isArray(cards) && cards.length) {
-    return cards.filter(c => c.visible !== false);
+    return cards.filter(medhubIsHomeCardLive);
   }
   return typeof FERRAMENTAS_ITEMS !== 'undefined' ? FERRAMENTAS_ITEMS : [];
+}
+
+function medhubHomeCardStyle (card) {
+  const parts = [];
+  if (card.color) parts.push('--home-card-accent:' + card.color);
+  if (card.colorBg) parts.push('--home-card-bg:' + card.colorBg);
+  return parts.length ? ' style="' + parts.join(';') + '"' : '';
 }
 
 function medhubGetSiteTheme () {
@@ -168,6 +202,6 @@ async function medhubInitSiteConfig (activeSection) {
 
 async function medhubRefreshSiteSidebar (activeSection) {
   const config = await medhubFetchSiteConfig(true);
-  medhubRenderAppSidebar(config.sidebar, activeSection);
+  if (config?.sidebar) medhubRenderAppSidebar(config.sidebar, activeSection);
   return config;
 }

@@ -921,75 +921,218 @@ async function adminSaveMarketing (e) {
   await adminLoadLog();
 }
 
-function adminUpdateThemePreview () {
-  const accent = document.getElementById('site-accent')?.value || '#0d6efd';
-  const header = document.getElementById('site-bg-header')?.value || accent;
-  const swatchAccent = document.getElementById('admin-theme-swatch-accent');
-  const swatchHeader = document.getElementById('admin-theme-swatch-header');
-  if (swatchAccent) swatchAccent.style.background = accent;
-  if (swatchHeader) swatchHeader.style.background = header;
+const ADMIN_THEME_PRESETS = [
+  { name: 'MedHub azul', accent: '#0d6efd', hover: '#0b5ed7', header: '#0d6efd' },
+  { name: 'Teal clínico', accent: '#0d9488', hover: '#0f766e', header: '#0f766e' },
+  { name: 'Índigo', accent: '#4f46e5', hover: '#4338ca', header: '#4338ca' },
+  { name: 'Violeta', accent: '#7c3aed', hover: '#6d28d9', header: '#6d28d9' },
+  { name: 'Grafite', accent: '#334155', hover: '#1e293b', header: '#1e293b' }
+];
+
+const ADMIN_ITEM_COLORS = [
+  '#0d6efd', '#2563eb', '#0891b2', '#0d9488', '#059669',
+  '#ca8a04', '#ea580c', '#dc2626', '#db2777', '#7c3aed',
+  '#6366f1', '#64748b'
+];
+
+function adminInitAppearanceTabs () {
+  document.querySelectorAll('.admin-appearance-tab').forEach(tab => {
+    tab.addEventListener('click', () => adminSwitchAppearanceTab(tab.dataset.appearTab));
+  });
 }
 
-function adminRenderSidebarEditor (sidebar) {
-  const el = document.getElementById('admin-sidebar-editor');
-  if (!el) return;
-
-  el.innerHTML = (sidebar || []).map((entry, idx) => {
-    if (entry.type === 'group') {
-      return '<div class="admin-config-group">' + escapeHtml(entry.label) + '</div>';
-    }
-    if (entry.type !== 'item') return '';
-    return '<div class="admin-config-row" data-sidebar-idx="' + idx + '">' +
-      '<label class="admin-check admin-config-check">' +
-        '<input type="checkbox" data-field="visible" ' + (entry.visible !== false ? 'checked' : '') + '>' +
-        '<span class="admin-config-id">' + escapeHtml(entry.id) + '</span>' +
-      '</label>' +
-      '<input type="text" data-field="label" value="' + escapeAttr(entry.label || entry.id) + '" maxlength="80">' +
-    '</div>';
-  }).join('');
+function adminSwitchAppearanceTab (tabId) {
+  document.querySelectorAll('.admin-appearance-tab').forEach(t => {
+    t.classList.toggle('is-active', t.dataset.appearTab === tabId);
+  });
+  document.querySelectorAll('.admin-appear-panel').forEach(p => {
+    p.hidden = p.dataset.appearPanel !== tabId;
+    p.classList.toggle('is-active', p.dataset.appearPanel === tabId);
+  });
 }
 
-function adminRenderHomeCardsEditor (cards) {
-  const el = document.getElementById('admin-homecards-editor');
+function adminRenderThemePresets () {
+  const el = document.getElementById('admin-theme-presets');
   if (!el) return;
-
-  el.innerHTML = (cards || []).map((card, idx) =>
-    '<div class="admin-config-row admin-config-row--card" data-card-idx="' + idx + '">' +
-      '<label class="admin-check admin-config-check">' +
-        '<input type="checkbox" data-field="visible" ' + (card.visible !== false ? 'checked' : '') + '>' +
-        '<input type="text" class="admin-config-icon" data-field="icon" value="' + escapeAttr(card.icon || '•') + '" maxlength="8">' +
-      '</label>' +
-      '<div class="admin-config-card-fields">' +
-        '<input type="text" data-field="name" value="' + escapeAttr(card.name || card.section) + '" maxlength="80" placeholder="Nome">' +
-        '<input type="text" data-field="desc" value="' + escapeAttr(card.desc || '') + '" maxlength="200" placeholder="Descrição">' +
-        '<span class="admin-config-id">' + escapeHtml(card.section) + '</span>' +
-      '</div>' +
-    '</div>'
+  el.innerHTML = ADMIN_THEME_PRESETS.map(p =>
+    '<button type="button" class="admin-preset-chip" data-accent="' + escapeAttr(p.accent) +
+    '" data-hover="' + escapeAttr(p.hover) + '" data-header="' + escapeAttr(p.header) + '">' +
+    '<span class="admin-preset-swatch" style="background:' + escapeAttr(p.accent) + '"></span>' +
+    escapeHtml(p.name) + '</button>'
   ).join('');
+  el.querySelectorAll('.admin-preset-chip').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const a = document.getElementById('site-accent');
+      const h = document.getElementById('site-accent-hover');
+      const bh = document.getElementById('site-bg-header');
+      if (a) a.value = btn.dataset.accent;
+      if (h) h.value = btn.dataset.hover;
+      if (bh) bh.value = btn.dataset.header;
+      adminUpdateThemePreview();
+    });
+  });
+}
+
+function adminColorPaletteHtml (field, value) {
+  return '<div class="admin-item-palette" data-palette-for="' + escapeAttr(field) + '">' +
+    ADMIN_ITEM_COLORS.map(c =>
+      '<button type="button" class="admin-color-dot' + (c === value ? ' is-active' : '') +
+      '" data-color="' + c + '" style="background:' + c + '" title="' + c + '"></button>'
+    ).join('') +
+    '<input type="color" class="admin-color-custom" data-field="' + escapeAttr(field) + '" value="' + escapeAttr(value || '#0d6efd') + '">' +
+  '</div>';
+}
+
+function adminToggleHtml (checked, field) {
+  return '<label class="admin-toggle">' +
+    '<input type="checkbox" data-field="' + field + '"' + (checked ? ' checked' : '') + '>' +
+    '<span class="admin-toggle-track"></span>' +
+  '</label>';
+}
+
+function adminRenderSidebarEditor (sidebar, containerId, onlySoon) {
+  const el = document.getElementById(containerId || 'admin-sidebar-editor');
+  if (!el) return;
+
+  const items = (sidebar || []).filter(e => {
+    if (e.type !== 'item' || e.id === 'inicio') return false;
+    return onlySoon ? e.comingSoon : !e.comingSoon;
+  });
+  el.innerHTML = items.map(entry => {
+    const soon = entry.comingSoon;
+    return '<article class="admin-config-tile' + (soon ? ' admin-config-tile--soon' : '') + '" data-sidebar-id="' + escapeAttr(entry.id) + '">' +
+      '<header class="admin-config-tile-head">' +
+        '<span class="admin-config-tile-icon">' + escapeHtml(entry.icon || '•') + '</span>' +
+        '<div class="admin-config-tile-titles">' +
+          '<input type="text" class="admin-config-tile-name" data-field="label" value="' + escapeAttr(entry.label || entry.id) + '" maxlength="80">' +
+          '<span class="admin-config-id">' + escapeHtml(entry.id) + (soon ? ' · em breve' : '') + '</span>' +
+        '</div>' +
+        (soon
+          ? '<span class="admin-pill admin-pill--muted">Em breve</span>'
+          : adminToggleHtml(entry.visible !== false, 'visible')) +
+      '</header>' +
+      '<div class="admin-config-tile-row">' +
+        '<label>Ícone</label><input type="text" class="admin-config-icon-input" data-field="icon" value="' + escapeAttr(entry.icon || '') + '" maxlength="8">' +
+      '</div>' +
+      '<div class="admin-config-tile-row">' +
+        '<label>Cor do item</label>' + adminColorPaletteHtml('color', entry.color || '#0d6efd') +
+      '</div>' +
+      (soon ? '<div class="admin-config-tile-row admin-config-tile-row--publish">' +
+        '<span>Publicar no menu</span>' + adminToggleHtml(entry.enabled === true, 'enabled') +
+      '</div>' : '') +
+    '</article>';
+  }).join('');
+
+  adminBindPaletteClicks(el);
+}
+
+function adminRenderHomeCardsEditor (cards, containerId, onlySoon) {
+  const el = document.getElementById(containerId);
+  if (!el) return;
+
+  const filtered = (cards || []).filter(c => onlySoon ? c.comingSoon : !c.comingSoon);
+  el.innerHTML = filtered.map(card =>
+    '<article class="admin-config-tile' + (card.comingSoon ? ' admin-config-tile--soon' : '') +
+      '" data-card-section="' + escapeAttr(card.section) + '" style="--tile-accent:' + escapeAttr(card.color || '#0d6efd') + '">' +
+      '<header class="admin-config-tile-head">' +
+        '<span class="admin-config-tile-icon">' + escapeHtml(card.icon || '•') + '</span>' +
+        '<div class="admin-config-tile-titles">' +
+          '<input type="text" class="admin-config-tile-name" data-field="name" value="' + escapeAttr(card.name || card.section) + '" maxlength="80">' +
+          '<span class="admin-config-id">' + escapeHtml(card.section) + '</span>' +
+        '</div>' +
+        (card.comingSoon
+          ? '<span class="admin-pill admin-pill--muted">Em breve</span>'
+          : adminToggleHtml(card.visible !== false, 'visible')) +
+      '</header>' +
+      '<textarea class="admin-config-desc" data-field="desc" rows="2" maxlength="200" placeholder="Descrição">' + escapeHtml(card.desc || '') + '</textarea>' +
+      '<div class="admin-config-tile-row">' +
+        '<label>Ícone</label><input type="text" class="admin-config-icon-input" data-field="icon" value="' + escapeAttr(card.icon || '') + '" maxlength="8">' +
+      '</div>' +
+      '<div class="admin-config-tile-row">' +
+        '<label>Cor destaque</label>' + adminColorPaletteHtml('color', card.color || '#0d6efd') +
+      '</div>' +
+      '<div class="admin-config-tile-row">' +
+        '<label>Fundo do card</label>' + adminColorPaletteHtml('colorBg', card.colorBg || '#f8fafc') +
+      '</div>' +
+      (card.comingSoon
+        ? '<div class="admin-config-tile-row admin-config-tile-row--publish">' +
+          '<span><strong>Publicar no app</strong> — só aparece quando o conteúdo estiver pronto</span>' +
+          adminToggleHtml(card.enabled === true, 'enabled') +
+        '</div>'
+        : '') +
+    '</article>'
+  ).join('');
+
+  adminBindPaletteClicks(el);
+}
+
+function adminBindPaletteClicks (root) {
+  root.querySelectorAll('.admin-item-palette').forEach(palette => {
+    const field = palette.dataset.paletteFor;
+    const custom = palette.querySelector('.admin-color-custom');
+    palette.querySelectorAll('.admin-color-dot').forEach(dot => {
+      dot.addEventListener('click', () => {
+        palette.querySelectorAll('.admin-color-dot').forEach(d => d.classList.remove('is-active'));
+        dot.classList.add('is-active');
+        if (custom) custom.value = dot.dataset.color;
+        adminUpdateMockFromTiles();
+      });
+    });
+    custom?.addEventListener('input', () => {
+      palette.querySelectorAll('.admin-color-dot').forEach(d => d.classList.remove('is-active'));
+      adminUpdateMockFromTiles();
+    });
+  });
+}
+
+function adminReadPaletteColor (tile, field) {
+  const palette = tile.querySelector('[data-palette-for="' + field + '"]');
+  if (!palette) return '';
+  const custom = palette.querySelector('.admin-color-custom');
+  return custom?.value || '';
 }
 
 function adminCollectSiteConfigFromForm () {
-  const sidebar = (adminSiteConfigDraft?.sidebar || []).map((entry, idx) => {
+  const sidebar = (adminSiteConfigDraft?.sidebar || []).map(entry => {
     if (entry.type === 'group') return { type: 'group', label: entry.label };
-    const row = document.querySelector('[data-sidebar-idx="' + idx + '"]');
-    if (!row) return entry;
+    if (entry.type !== 'item') return entry;
+    const tile = document.querySelector(
+      '#admin-sidebar-editor [data-sidebar-id="' + entry.id + '"],' +
+      '#admin-futuresidebar-editor [data-sidebar-id="' + entry.id + '"]'
+    );
+    if (!tile) return entry;
     return {
       type: 'item',
       id: entry.id,
-      label: row.querySelector('[data-field="label"]')?.value?.trim() || entry.label,
-      visible: !!row.querySelector('[data-field="visible"]')?.checked
+      label: tile.querySelector('[data-field="label"]')?.value?.trim() || entry.label,
+      icon: tile.querySelector('[data-field="icon"]')?.value?.trim() || entry.icon,
+      color: adminReadPaletteColor(tile, 'color'),
+      visible: !!tile.querySelector('[data-field="visible"]')?.checked,
+      enabled: entry.comingSoon
+        ? !!tile.querySelector('[data-field="enabled"]')?.checked
+        : tile.querySelector('[data-field="visible"]')?.checked !== false,
+      comingSoon: !!entry.comingSoon
     };
   });
 
-  const homeCards = (adminSiteConfigDraft?.homeCards || []).map((card, idx) => {
-    const row = document.querySelector('[data-card-idx="' + idx + '"]');
-    if (!row) return card;
+  const homeCards = (adminSiteConfigDraft?.homeCards || []).map(card => {
+    const tile = document.querySelector(
+      '#admin-homecards-editor [data-card-section="' + card.section + '"],' +
+      '#admin-futurecards-editor [data-card-section="' + card.section + '"]'
+    );
+    if (!tile) return card;
     return {
       section: card.section,
-      icon: row.querySelector('[data-field="icon"]')?.value?.trim() || card.icon,
-      name: row.querySelector('[data-field="name"]')?.value?.trim() || card.name,
-      desc: row.querySelector('[data-field="desc"]')?.value?.trim() || card.desc,
-      visible: !!row.querySelector('[data-field="visible"]')?.checked,
+      icon: tile.querySelector('[data-field="icon"]')?.value?.trim() || card.icon,
+      name: tile.querySelector('[data-field="name"]')?.value?.trim() || card.name,
+      desc: tile.querySelector('[data-field="desc"]')?.value?.trim() || card.desc,
+      color: adminReadPaletteColor(tile, 'color'),
+      colorBg: adminReadPaletteColor(tile, 'colorBg'),
+      visible: card.comingSoon ? true : !!tile.querySelector('[data-field="visible"]')?.checked,
+      enabled: card.comingSoon
+        ? !!tile.querySelector('[data-field="enabled"]')?.checked
+        : !!tile.querySelector('[data-field="visible"]')?.checked,
+      comingSoon: !!card.comingSoon,
       pediatricAux: !!card.pediatricAux
     };
   });
@@ -1004,6 +1147,31 @@ function adminCollectSiteConfigFromForm () {
     sidebar,
     homeCards
   };
+}
+
+function adminUpdateThemePreview () {
+  const accent = document.getElementById('site-accent')?.value || '#0d6efd';
+  const header = document.getElementById('site-bg-header')?.value || accent;
+  const mockHeader = document.getElementById('admin-mock-header');
+  const mockCard = document.getElementById('admin-mock-card');
+  if (mockHeader) mockHeader.style.background = header;
+  if (mockCard) {
+    mockCard.style.borderColor = accent;
+    mockCard.style.background = 'color-mix(in srgb, ' + accent + ' 12%, white)';
+  }
+}
+
+function adminUpdateMockFromTiles () {
+  adminUpdateThemePreview();
+}
+
+function adminRenderAppearanceEditors (site) {
+  adminRenderThemePresets();
+  adminRenderSidebarEditor(site.sidebar, 'admin-sidebar-editor', false);
+  adminRenderSidebarEditor(site.sidebar, 'admin-futuresidebar-editor', true);
+  adminRenderHomeCardsEditor(site.homeCards, 'admin-homecards-editor', false);
+  adminRenderHomeCardsEditor(site.homeCards, 'admin-futurecards-editor', true);
+  adminUpdateThemePreview();
 }
 
 async function adminLoadAppearance () {
@@ -1030,18 +1198,19 @@ async function adminLoadAppearance () {
   const logoEl = document.getElementById('site-logo-url');
   if (logoEl) logoEl.value = theme.logoUrl || '';
 
-  adminRenderSidebarEditor(site.sidebar);
-  adminRenderHomeCardsEditor(site.homeCards);
-  adminUpdateThemePreview();
+  adminRenderAppearanceEditors(site);
 
   adminSetStatus(statusEl, '', '');
   statusEl.hidden = true;
 
   const metaEl = document.getElementById('admin-appearance-meta');
   if (metaEl) {
-    metaEl.textContent = site.updatedAt
-      ? 'Última alteração: ' + adminFormatDate(site.updatedAt) + (site.updatedBy ? ' por ' + site.updatedBy : '')
-      : 'Usando padrões do app. Salve para publicar na nuvem.';
+    const liveCards = (site.homeCards || []).filter(c => c.enabled && !c.comingSoon).length;
+    const soonCards = (site.homeCards || []).filter(c => c.comingSoon && !c.enabled).length;
+    metaEl.textContent = (site.updatedAt
+      ? 'Última publicação: ' + adminFormatDate(site.updatedAt) + (site.updatedBy ? ' por ' + site.updatedBy : '') + '. '
+      : 'Padrões do app — salve para publicar. ') +
+      liveCards + ' card(s) ativo(s), ' + soonCards + ' em breve (oculto no app).';
   }
 }
 
@@ -1067,7 +1236,8 @@ async function adminSaveAppearance (e) {
   }
 
   adminSiteConfigDraft = data.site;
-  adminSetStatus(statusEl, 'Salvo! Usuários veem as mudanças ao abrir ou recarregar o app.', 'ok');
+  adminSetStatus(statusEl, 'Publicado! Usuários veem as mudanças ao recarregar o app.', 'ok');
+  adminRenderAppearanceEditors(data.site);
   await adminLoadLog();
 
   const metaEl = document.getElementById('admin-appearance-meta');
@@ -1174,6 +1344,7 @@ async function initAdminPage () {
   document.getElementById('admin-coupon-form')?.addEventListener('submit', adminCreateCoupon);
   document.getElementById('admin-marketing-form')?.addEventListener('submit', adminSaveMarketing);
   document.getElementById('admin-appearance-form')?.addEventListener('submit', adminSaveAppearance);
+  adminInitAppearanceTabs();
   ['site-accent', 'site-accent-hover', 'site-bg-header'].forEach(id => {
     document.getElementById(id)?.addEventListener('input', adminUpdateThemePreview);
   });
