@@ -935,6 +935,191 @@ const ADMIN_ITEM_COLORS = [
   '#6366f1', '#64748b'
 ];
 
+function adminHexToRgb (hex) {
+  const m = /^#?([0-9a-f]{6})$/i.exec(String(hex || '').trim());
+  if (!m) return null;
+  return {
+    r: parseInt(m[1].slice(0, 2), 16),
+    g: parseInt(m[1].slice(2, 4), 16),
+    b: parseInt(m[1].slice(4, 6), 16)
+  };
+}
+
+function adminHexToHsl (hex) {
+  const rgb = adminHexToRgb(hex);
+  if (!rgb) return { h: 217, s: 72, l: 47 };
+  const r = rgb.r / 255;
+  const g = rgb.g / 255;
+  const b = rgb.b / 255;
+  const max = Math.max(r, g, b);
+  const min = Math.min(r, g, b);
+  const d = max - min;
+  let h = 0;
+  const l = (max + min) / 2;
+  let s = 0;
+  if (d !== 0) {
+    s = d / (1 - Math.abs(2 * l - 1));
+    switch (max) {
+      case r: h = ((g - b) / d + (g < b ? 6 : 0)) * 60; break;
+      case g: h = ((b - r) / d + 2) * 60; break;
+      default: h = ((r - g) / d + 4) * 60; break;
+    }
+  }
+  return { h, s: s * 100, l: l * 100 };
+}
+
+function adminHslToHex (h, s, l) {
+  const hh = ((Number(h) % 360) + 360) % 360;
+  const ss = Math.max(0, Math.min(100, Number(s))) / 100;
+  const ll = Math.max(0, Math.min(100, Number(l))) / 100;
+  const c = (1 - Math.abs(2 * ll - 1)) * ss;
+  const x = c * (1 - Math.abs((hh / 60) % 2 - 1));
+  const m = ll - c / 2;
+  let r = 0; let g = 0; let b = 0;
+  if (hh < 60) { r = c; g = x; }
+  else if (hh < 120) { r = x; g = c; }
+  else if (hh < 180) { g = c; b = x; }
+  else if (hh < 240) { g = x; b = c; }
+  else if (hh < 300) { r = x; b = c; }
+  else { r = c; b = x; }
+  const toHex = n => Math.round((n + m) * 255).toString(16).padStart(2, '0');
+  return '#' + toHex(r) + toHex(g) + toHex(b);
+}
+
+function adminColorModeParams (mode) {
+  if (mode === 'accentDark') return { s: 72, l: 38, lightSlider: false };
+  if (mode === 'light') return { s: 48, l: 94, lightSlider: true, lightMin: 88, lightMax: 98 };
+  return { s: 72, l: 47, lightSlider: false };
+}
+
+function adminComputeColorFromControl (control) {
+  const mode = control.dataset.colorMode || 'accent';
+  const params = adminColorModeParams(mode);
+  const h = Number(control.querySelector('.admin-color-hue')?.value || 0);
+  let s = params.s;
+  let l = params.l;
+  if (mode === 'accentDark') {
+    s = Number(control.dataset.baseS || params.s);
+    l = Number(control.dataset.baseL || params.l);
+  }
+  const lightEl = control.querySelector('.admin-color-light');
+  if (lightEl) l = Number(lightEl.value);
+  return adminHslToHex(h, s, l);
+}
+
+function adminStoreColorControlBase (control, hex) {
+  const hsl = adminHexToHsl(hex);
+  control.dataset.baseS = String(Math.round(hsl.s));
+  control.dataset.baseL = String(Math.round(hsl.l));
+}
+
+function adminUpdateColorControlUi (control, hex) {
+  const hidden = control.querySelector('.admin-color-custom');
+  if (hidden) hidden.value = hex;
+  const preview = control.querySelector('.admin-color-preview');
+  if (preview) preview.style.background = hex;
+  const hexEl = control.querySelector('.admin-color-hex');
+  if (hexEl) hexEl.textContent = hex;
+  control.querySelectorAll('.admin-color-dot').forEach(dot => {
+    dot.classList.toggle('is-active', dot.dataset.color === hex);
+  });
+  const tile = control.closest('.admin-config-tile');
+  if (tile && control.dataset.paletteFor === 'color') {
+    tile.style.setProperty('--tile-accent', hex);
+  }
+  const hiddenId = hidden?.id || '';
+  if (hiddenId.startsWith('site-')) adminUpdateThemePreview();
+}
+
+function adminSetColorControlValue (control, hex) {
+  if (!control || !hex) return;
+  const hsl = adminHexToHsl(hex);
+  const hue = control.querySelector('.admin-color-hue');
+  if (hue) hue.value = String(Math.round(hsl.h));
+  const light = control.querySelector('.admin-color-light');
+  if (light) light.value = String(Math.round(Math.max(Number(light.min), Math.min(Number(light.max), hsl.l))));
+  adminStoreColorControlBase(control, hex);
+  adminUpdateColorControlUi(control, hex);
+}
+
+function adminColorControlHtml (field, value, opts) {
+  opts = opts || {};
+  const mode = opts.mode || (field === 'colorBg' ? 'light' : 'accent');
+  const hex = value || '#0d6efd';
+  const hsl = adminHexToHsl(hex);
+  const params = adminColorModeParams(mode);
+  const hueVal = Math.round(hsl.h);
+  const lightVal = params.lightSlider
+    ? Math.round(Math.max(params.lightMin, Math.min(params.lightMax, hsl.l)))
+    : params.l;
+
+  let html = '<div class="admin-color-control" data-palette-for="' + escapeAttr(field) +
+    '" data-color-mode="' + mode + '">';
+  if (opts.label) {
+    html += '<span class="admin-color-label">' + escapeHtml(opts.label) + '</span>';
+  }
+  html += '<div class="admin-color-slider-row">' +
+    '<span class="admin-color-preview" style="background:' + escapeAttr(hex) + '"></span>' +
+    '<input type="range" class="admin-color-hue" min="0" max="360" step="1" value="' + hueVal +
+    '" aria-label="Arraste para mudar a cor">' +
+    '<code class="admin-color-hex">' + escapeHtml(hex) + '</code></div>';
+  if (params.lightSlider) {
+    html += '<div class="admin-color-slider-row admin-color-slider-row--light">' +
+      '<span class="admin-color-slider-label">Claridade</span>' +
+      '<input type="range" class="admin-color-light" min="' + params.lightMin + '" max="' + params.lightMax +
+      '" step="1" value="' + lightVal + '" aria-label="Arraste para clarear ou escurecer">' +
+    '</div>';
+  }
+  if (!opts.inputId) {
+    html += '<div class="admin-color-dots">' +
+      ADMIN_ITEM_COLORS.map(c =>
+        '<button type="button" class="admin-color-dot' + (c === hex ? ' is-active' : '') +
+        '" data-color="' + c + '" style="background:' + c + '" title="' + c + '"></button>'
+      ).join('') +
+    '</div>';
+  }
+  html += '<input type="hidden"' + (opts.inputId ? ' id="' + escapeAttr(opts.inputId) + '"' : '') +
+    ' class="admin-color-custom" data-field="' + escapeAttr(field) + '" value="' + escapeAttr(hex) + '">';
+  html += '</div>';
+  return html;
+}
+
+function adminColorPaletteHtml (field, value) {
+  const mode = field === 'colorBg' ? 'light' : 'accent';
+  return adminColorControlHtml(field, value, { mode });
+}
+
+function adminRenderThemeSliders (theme) {
+  const el = document.getElementById('admin-theme-sliders');
+  if (!el) return;
+  const t = theme || {};
+  const fields = [
+    { id: 'site-accent', label: 'Cor principal', mode: 'accent', value: t.accent || '#0d6efd' },
+    { id: 'site-accent-hover', label: 'Hover', mode: 'accentDark', value: t.accentHover || '#0b5ed7' },
+    { id: 'site-bg-header', label: 'Barra superior', mode: 'accent', value: t.bgHeader || '#0d6efd' }
+  ];
+  el.innerHTML = fields.map(f =>
+    '<div class="admin-color-field">' +
+      adminColorControlHtml(f.id, f.value, { mode: f.mode, label: f.label, inputId: f.id }) +
+    '</div>'
+  ).join('');
+  adminBindColorPickers(el);
+}
+
+function adminSetThemeColors (accent, hover, header) {
+  const map = {
+    'site-accent': accent,
+    'site-accent-hover': hover,
+    'site-bg-header': header
+  };
+  Object.keys(map).forEach(id => {
+    const hidden = document.getElementById(id);
+    const control = hidden?.closest('.admin-color-control');
+    if (control && map[id]) adminSetColorControlValue(control, map[id]);
+  });
+  adminUpdateThemePreview();
+}
+
 function adminInitAppearanceTabs () {
   document.querySelectorAll('.admin-appearance-tab').forEach(tab => {
     tab.addEventListener('click', () => adminSwitchAppearanceTab(tab.dataset.appearTab));
@@ -962,25 +1147,9 @@ function adminRenderThemePresets () {
   ).join('');
   el.querySelectorAll('.admin-preset-chip').forEach(btn => {
     btn.addEventListener('click', () => {
-      const a = document.getElementById('site-accent');
-      const h = document.getElementById('site-accent-hover');
-      const bh = document.getElementById('site-bg-header');
-      if (a) a.value = btn.dataset.accent;
-      if (h) h.value = btn.dataset.hover;
-      if (bh) bh.value = btn.dataset.header;
-      adminUpdateThemePreview();
+      adminSetThemeColors(btn.dataset.accent, btn.dataset.hover, btn.dataset.header);
     });
   });
-}
-
-function adminColorPaletteHtml (field, value) {
-  return '<div class="admin-item-palette" data-palette-for="' + escapeAttr(field) + '">' +
-    ADMIN_ITEM_COLORS.map(c =>
-      '<button type="button" class="admin-color-dot' + (c === value ? ' is-active' : '') +
-      '" data-color="' + c + '" style="background:' + c + '" title="' + c + '"></button>'
-    ).join('') +
-    '<input type="color" class="admin-color-custom" data-field="' + escapeAttr(field) + '" value="' + escapeAttr(value || '#0d6efd') + '">' +
-  '</div>';
 }
 
 function adminToggleHtml (checked, field) {
@@ -1023,7 +1192,7 @@ function adminRenderSidebarEditor (sidebar, containerId, onlySoon) {
     '</article>';
   }).join('');
 
-  adminBindPaletteClicks(el);
+  adminBindColorPickers(el);
 }
 
 function adminRenderHomeCardsEditor (cards, containerId, onlySoon) {
@@ -1063,24 +1232,26 @@ function adminRenderHomeCardsEditor (cards, containerId, onlySoon) {
     '</article>'
   ).join('');
 
-  adminBindPaletteClicks(el);
+  adminBindColorPickers(el);
 }
 
-function adminBindPaletteClicks (root) {
-  root.querySelectorAll('.admin-item-palette').forEach(palette => {
-    const field = palette.dataset.paletteFor;
-    const custom = palette.querySelector('.admin-color-custom');
-    palette.querySelectorAll('.admin-color-dot').forEach(dot => {
+function adminBindColorPickers (root) {
+  root.querySelectorAll('.admin-color-control').forEach(control => {
+    if (control.dataset.colorBound) return;
+    control.dataset.colorBound = '1';
+    adminStoreColorControlBase(control, control.querySelector('.admin-color-custom')?.value || '#0d6efd');
+
+    const onSlide = () => {
+      adminUpdateColorControlUi(control, adminComputeColorFromControl(control));
+    };
+
+    control.querySelector('.admin-color-hue')?.addEventListener('input', onSlide);
+    control.querySelector('.admin-color-light')?.addEventListener('input', onSlide);
+
+    control.querySelectorAll('.admin-color-dot').forEach(dot => {
       dot.addEventListener('click', () => {
-        palette.querySelectorAll('.admin-color-dot').forEach(d => d.classList.remove('is-active'));
-        dot.classList.add('is-active');
-        if (custom) custom.value = dot.dataset.color;
-        adminUpdateMockFromTiles();
+        adminSetColorControlValue(control, dot.dataset.color);
       });
-    });
-    custom?.addEventListener('input', () => {
-      palette.querySelectorAll('.admin-color-dot').forEach(d => d.classList.remove('is-active'));
-      adminUpdateMockFromTiles();
     });
   });
 }
@@ -1167,6 +1338,7 @@ function adminUpdateMockFromTiles () {
 
 function adminRenderAppearanceEditors (site) {
   adminRenderThemePresets();
+  adminRenderThemeSliders(site?.theme);
   adminRenderSidebarEditor(site.sidebar, 'admin-sidebar-editor', false);
   adminRenderSidebarEditor(site.sidebar, 'admin-futuresidebar-editor', true);
   adminRenderHomeCardsEditor(site.homeCards, 'admin-homecards-editor', false);
@@ -1188,13 +1360,6 @@ async function adminLoadAppearance () {
   adminSiteConfigDraft = site;
   const theme = site.theme || {};
 
-  const setColor = (id, val) => {
-    const el = document.getElementById(id);
-    if (el && val) el.value = val;
-  };
-  setColor('site-accent', theme.accent);
-  setColor('site-accent-hover', theme.accentHover);
-  setColor('site-bg-header', theme.bgHeader);
   const logoEl = document.getElementById('site-logo-url');
   if (logoEl) logoEl.value = theme.logoUrl || '';
 
@@ -1345,9 +1510,6 @@ async function initAdminPage () {
   document.getElementById('admin-marketing-form')?.addEventListener('submit', adminSaveMarketing);
   document.getElementById('admin-appearance-form')?.addEventListener('submit', adminSaveAppearance);
   adminInitAppearanceTabs();
-  ['site-accent', 'site-accent-hover', 'site-bg-header'].forEach(id => {
-    document.getElementById(id)?.addEventListener('input', adminUpdateThemePreview);
-  });
   document.getElementById('admin-refresh-btn')?.addEventListener('click', adminRefreshCurrentSection);
   document.getElementById('admin-export-btn')?.addEventListener('click', adminExportCsv);
 

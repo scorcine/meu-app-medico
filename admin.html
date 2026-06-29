@@ -12,7 +12,7 @@
   <script defer src="security-crypto.js?v=session-v1"></script>
   <script defer src="auth.js?v=auth-v7"></script>
   <script defer src="auth-cloud.js?v=cloud-v20"></script>
-  <script defer src="admin.js?v=14"></script>
+  <script defer src="admin.js?v=15"></script>
 </head>
 <body class="auth-body admin-page" onload="initAdminPage()">
   <header class="auth-page-header admin-page-header">
@@ -290,22 +290,9 @@
                   <div class="admin-appear-layout">
                     <div class="card admin-card admin-appear-brand">
                       <h3>Identidade visual</h3>
-                      <p class="auth-hint muted">Paleta global do app (header, botões, links).</p>
+                      <p class="auth-hint muted">Arraste as barras coloridas para ajustar cada cor em tempo real.</p>
                       <div class="admin-preset-row" id="admin-theme-presets"></div>
-                      <div class="admin-theme-grid">
-                        <div class="admin-color-field">
-                          <label for="site-accent">Cor principal</label>
-                          <input id="site-accent" type="color" value="#0d6efd">
-                        </div>
-                        <div class="admin-color-field">
-                          <label for="site-accent-hover">Hover</label>
-                          <input id="site-accent-hover" type="color" value="#0b5ed7">
-                        </div>
-                        <div class="admin-color-field">
-                          <label for="site-bg-header">Barra superior</label>
-                          <input id="site-bg-header" type="color" value="#0d6efd">
-                        </div>
-                      </div>
+                      <div class="admin-theme-grid" id="admin-theme-sliders"></div>
                       <div class="admin-grant-row">
                         <label for="site-logo-url">URL do logo</label>
                         <input id="site-logo-url" type="text" placeholder="/assets/medhub-logo.png">
