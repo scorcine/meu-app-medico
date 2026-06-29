@@ -24,10 +24,13 @@ const FERRAMENTAS_ITEMS = [
 
 function initFerramentas () {
   const grid = document.getElementById('home-ferramentas-grid');
-  if (!grid || grid.dataset.ferBound) return;
-  grid.dataset.ferBound = '1';
+  if (!grid) return;
 
-  grid.innerHTML = FERRAMENTAS_ITEMS.map(item => `
+  const items = typeof medhubGetHomeCards === 'function'
+    ? medhubGetHomeCards()
+    : FERRAMENTAS_ITEMS;
+
+  grid.innerHTML = items.map(item => `
     <button type="button" class="calc-category-btn ferramentas-card home-tool-card${item.pediatricAux ? ' home-tool-card--pediatric-aux' : ''}" data-section="${item.section}">
       <span class="calc-category-icon">${item.icon}</span>
       <span class="calc-category-name">${item.name}</span>

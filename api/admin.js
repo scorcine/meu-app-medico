@@ -1,6 +1,7 @@
 const { json, parseBody } = require('./_auth');
 const { authenticateAdminRequest, adminEnabled, adminPinConfigured } = require('./_admin');
 const { getAdminLog, getSiteMarketing, saveSiteMarketing } = require('./_admin-meta');
+const { getSiteConfig, saveSiteConfig } = require('./_site-config');
 const {
   listAdminUsers,
   computeAdminStats,
@@ -333,6 +334,41 @@ async function handleReports (req, res) {
   }
 }
 
+async function handleSiteConfig (req, res) {
+  const auth = await authenticateAdminRequest(req, res);
+  if (!auth) return;
+
+  if (req.method === 'GET') {
+    try {
+      const site = await getSiteConfig();
+      json(res, 200, { site });
+    } catch (err) {
+      json(res, 500, { error: err.message || 'Erro ao carregar aparência.' });
+    }
+    return;
+  }
+
+  if (req.method === 'POST') {
+    let body;
+    try {
+      body = parseBody(req);
+    } catch {
+      json(res, 400, { error: 'JSON inválido' });
+      return;
+    }
+
+    try {
+      const site = await saveSiteConfig(body, auth.user.email);
+      json(res, 200, { ok: true, site });
+    } catch (err) {
+      json(res, 500, { error: err.message || 'Erro ao salvar aparência.' });
+    }
+    return;
+  }
+
+  json(res, 405, { error: 'Method not allowed' });
+}
+
 module.exports = async (req, res) => {
   if (!adminEnabled()) {
     adminMisconfigured(res);
@@ -403,6 +439,11 @@ module.exports = async (req, res) => {
 
   if (action === 'reports' && req.method === 'GET') {
     await handleReports(req, res);
+    return;
+  }
+
+  if (action === 'site-config' && (req.method === 'GET' || req.method === 'POST')) {
+    await handleSiteConfig(req, res);
     return;
   }
 

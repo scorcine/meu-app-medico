@@ -79,7 +79,8 @@
   <script defer src="subscription.js?v=billing-v7"></script>
   <script defer src="auth-cloud.js?v=cloud-v18"></script>
   <script defer src="app-search.js?v=search-v2"></script>
-  <script defer src="app.js?v=search-v2"></script>
+  <script defer src="medhub-site-config.js?v=site-ui-v1"></script>
+  <script defer src="app.js?v=site-ui-v1"></script>
   <script defer src="auth.js?v=compliance-v1"></script>
   <script defer src="pwa-install.js?v=pwa-v3"></script>
 </head>
@@ -136,30 +137,25 @@
   <div class="app-shell">
     <aside class="sidebar" id="app-sidebar">
       <p class="sidebar-title">Menu</p>
-      <nav class="sidebar-nav">
+      <nav class="sidebar-nav" id="app-sidebar-nav" aria-label="Menu principal">
         <button type="button" class="sidebar-link active" data-section="inicio">Início</button>
-
         <p class="sidebar-group">Roteiro local (opcional)</p>
         <button type="button" class="sidebar-link" data-section="pacientes">Cadastro do paciente</button>
         <button type="button" class="sidebar-link" data-section="anamnese">Anamnese</button>
         <button type="button" class="sidebar-link" data-section="consultas">Histórico de atendimentos</button>
-
         <p class="sidebar-group">Prescrição &amp; exames</p>
         <button type="button" class="sidebar-link" data-section="receituario">Receituário</button>
         <button type="button" class="sidebar-link" data-section="medicacoes">Medicações</button>
         <button type="button" class="sidebar-link" data-section="exames">Exames</button>
         <button type="button" class="sidebar-link" data-section="interpretacao-exame">Interpretação do exame</button>
-
         <p class="sidebar-group">Emergência &amp; internação</p>
         <button type="button" class="sidebar-link" data-section="guia-emergencia">Guia rápido de emergência</button>
         <button type="button" class="sidebar-link" data-section="pronto-socorro">Prescrições de Pronto Socorro</button>
         <button type="button" class="sidebar-link" data-section="tratamento-hospitalar">Tratamento hospitalar</button>
         <button type="button" class="sidebar-link" data-section="ventilacao-mecanica">Ventilação mecânica</button>
-
         <p class="sidebar-group">Calculadoras</p>
         <button type="button" class="sidebar-link" data-section="calc-essenciais">Calculadoras essenciais</button>
         <button type="button" class="sidebar-link" data-section="calc-pediatrica">Calculadora pediátrica</button>
-
         <p class="sidebar-group">Sistema</p>
         <button type="button" class="sidebar-link" data-section="perfil">Minha conta</button>
       </nav>

@@ -8,11 +8,11 @@
   <title>Admin • MedHub</title>
   <link rel="icon" href="assets/medhub-logo.png?v=logo-v2" type="image/png">
   <script src="theme.js"></script>
-  <link rel="stylesheet" href="style.css?v=admin-v7">
+  <link rel="stylesheet" href="style.css?v=admin-v8">
   <script defer src="security-crypto.js?v=session-v1"></script>
   <script defer src="auth.js?v=auth-v7"></script>
   <script defer src="auth-cloud.js?v=cloud-v20"></script>
-  <script defer src="admin.js?v=11"></script>
+  <script defer src="admin.js?v=12"></script>
 </head>
 <body class="auth-body admin-page" onload="initAdminPage()">
   <header class="auth-page-header admin-page-header">
@@ -62,6 +62,7 @@
             <button type="button" class="admin-nav-btn" data-admin-section="coupons">Cupons</button>
             <button type="button" class="admin-nav-btn" data-admin-section="reports">Relatórios</button>
             <button type="button" class="admin-nav-btn" data-admin-section="marketing">Marketing</button>
+            <button type="button" class="admin-nav-btn" data-admin-section="appearance">Aparência &amp; menu</button>
             <button type="button" class="admin-nav-btn" data-admin-section="log">Auditoria</button>
             <button type="button" class="admin-nav-btn" data-admin-section="pages">Páginas do site</button>
           </nav>
@@ -105,6 +106,10 @@
               <button type="button" class="admin-quick-card card admin-card" data-admin-goto="marketing">
                 <strong>Marketing</strong>
                 <span class="muted">Instagram, links e pixel Meta</span>
+              </button>
+              <button type="button" class="admin-quick-card card admin-card" data-admin-goto="appearance">
+                <strong>Aparência &amp; menu</strong>
+                <span class="muted">Cores, lateral e cards da home</span>
               </button>
               <button type="button" class="admin-quick-card card admin-card" data-admin-goto="pages">
                 <strong>Páginas</strong>
@@ -260,6 +265,50 @@
               </form>
               <p id="admin-marketing-status" class="admin-status" hidden></p>
               <p class="auth-hint muted" id="admin-marketing-meta"></p>
+            </div>
+          </div>
+
+          <div class="admin-section" id="admin-section-appearance" data-admin-section="appearance" hidden>
+            <div class="card admin-card admin-appearance-card">
+              <h2>Cores e identidade</h2>
+              <p class="auth-hint muted">Aplicado no app (<code>app.html</code>) para todos os usuários após salvar.</p>
+              <div class="admin-theme-preview" id="admin-theme-preview">
+                <span class="admin-theme-swatch" id="admin-theme-swatch-accent"></span>
+                <span class="admin-theme-swatch" id="admin-theme-swatch-header"></span>
+                <a class="btn-outline btn-sm" href="app.html" target="_blank" rel="noopener">Abrir app ↗</a>
+              </div>
+              <form id="admin-appearance-form" class="admin-grant-form">
+                <div class="admin-theme-grid">
+                  <div class="admin-grant-row">
+                    <label for="site-accent">Cor principal</label>
+                    <input id="site-accent" type="color" value="#0d6efd">
+                  </div>
+                  <div class="admin-grant-row">
+                    <label for="site-accent-hover">Cor hover</label>
+                    <input id="site-accent-hover" type="color" value="#0b5ed7">
+                  </div>
+                  <div class="admin-grant-row">
+                    <label for="site-bg-header">Header / barra superior</label>
+                    <input id="site-bg-header" type="color" value="#0d6efd">
+                  </div>
+                </div>
+                <div class="admin-grant-row">
+                  <label for="site-logo-url">URL do logo</label>
+                  <input id="site-logo-url" type="text" placeholder="/assets/medhub-logo.png">
+                </div>
+
+                <h3 class="admin-subtitle">Menu lateral do app</h3>
+                <p class="auth-hint muted">Marque o que aparece e edite os rótulos.</p>
+                <div id="admin-sidebar-editor" class="admin-config-editor"></div>
+
+                <h3 class="admin-subtitle">Cards da home (Ferramentas rápidas)</h3>
+                <p class="auth-hint muted">Atalhos na tela inicial do app.</p>
+                <div id="admin-homecards-editor" class="admin-config-editor"></div>
+
+                <button type="submit" class="btn" id="admin-appearance-btn">Salvar aparência &amp; menu</button>
+              </form>
+              <p id="admin-appearance-status" class="admin-status" hidden></p>
+              <p class="auth-hint muted" id="admin-appearance-meta"></p>
             </div>
           </div>
 

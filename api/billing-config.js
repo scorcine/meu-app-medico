@@ -1,6 +1,7 @@
 const { billingEnabled, json } = require('./_stripe');
 const { getPlatformStatus } = require('./_platform');
 const { getSiteMarketing } = require('./_admin-meta');
+const { getSiteConfig } = require('./_site-config');
 
 module.exports = async (req, res) => {
   if (req.method !== 'GET') {
@@ -19,10 +20,13 @@ module.exports = async (req, res) => {
 
   const platform = getPlatformStatus();
   let marketing = null;
+  let site = null;
   try {
     marketing = await getSiteMarketing();
+    site = await getSiteConfig();
   } catch {
     marketing = null;
+    site = null;
   }
 
   json(res, 200, {
@@ -55,6 +59,11 @@ module.exports = async (req, res) => {
       linksEstudantes: marketing.linksEstudantes,
       landingEstudantes: marketing.landingEstudantes,
       metaPixelId: marketing.metaPixelId
+    } : undefined,
+    site: site ? {
+      theme: site.theme,
+      sidebar: site.sidebar,
+      homeCards: site.homeCards
     } : undefined
   });
 };

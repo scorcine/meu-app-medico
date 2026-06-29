@@ -8,6 +8,7 @@ let adminAllUsers = [];
 let adminPinRequired = false;
 let adminServerEnabled = true;
 let adminCurrentSection = 'overview';
+let adminSiteConfigDraft = null;
 
 const ADMIN_SECTIONS = {
   overview: {
@@ -38,6 +39,11 @@ const ADMIN_SECTIONS = {
   marketing: {
     title: 'Marketing',
     desc: 'Instagram, links públicos e Meta Pixel.',
+    showExport: false
+  },
+  appearance: {
+    title: 'Aparência & menu',
+    desc: 'Cores, menu lateral e cards da home do app.',
     showExport: false
   },
   log: {
@@ -113,6 +119,7 @@ function adminSwitchSection (sectionId, updateHash) {
 
   if (adminCurrentSection === 'log') adminLoadLog();
   if (adminCurrentSection === 'marketing') adminLoadMarketing();
+  if (adminCurrentSection === 'appearance') adminLoadAppearance();
   if (adminCurrentSection === 'reports') adminLoadReports();
   if (adminCurrentSection === 'users' && !adminAllUsers.length) adminLoadUsers();
   if (adminCurrentSection === 'overview' && !adminAllUsers.length) adminLoadUsers();
@@ -832,6 +839,14 @@ async function adminRefreshCurrentSection () {
     await adminLoadMarketing();
     return;
   }
+  if (adminCurrentSection === 'marketing') {
+    await adminLoadMarketing();
+    return;
+  }
+  if (adminCurrentSection === 'appearance') {
+    await adminLoadAppearance();
+    return;
+  }
   if (adminCurrentSection === 'reports') {
     await adminLoadReports();
     return;
@@ -904,6 +919,162 @@ async function adminSaveMarketing (e) {
   adminSetStatus(statusEl, 'Marketing salvo. Links públicos atualizam em instantes.', 'ok');
   await adminLoadMarketing();
   await adminLoadLog();
+}
+
+function adminUpdateThemePreview () {
+  const accent = document.getElementById('site-accent')?.value || '#0d6efd';
+  const header = document.getElementById('site-bg-header')?.value || accent;
+  const swatchAccent = document.getElementById('admin-theme-swatch-accent');
+  const swatchHeader = document.getElementById('admin-theme-swatch-header');
+  if (swatchAccent) swatchAccent.style.background = accent;
+  if (swatchHeader) swatchHeader.style.background = header;
+}
+
+function adminRenderSidebarEditor (sidebar) {
+  const el = document.getElementById('admin-sidebar-editor');
+  if (!el) return;
+
+  el.innerHTML = (sidebar || []).map((entry, idx) => {
+    if (entry.type === 'group') {
+      return '<div class="admin-config-group">' + escapeHtml(entry.label) + '</div>';
+    }
+    if (entry.type !== 'item') return '';
+    return '<div class="admin-config-row" data-sidebar-idx="' + idx + '">' +
+      '<label class="admin-check admin-config-check">' +
+        '<input type="checkbox" data-field="visible" ' + (entry.visible !== false ? 'checked' : '') + '>' +
+        '<span class="admin-config-id">' + escapeHtml(entry.id) + '</span>' +
+      '</label>' +
+      '<input type="text" data-field="label" value="' + escapeAttr(entry.label || entry.id) + '" maxlength="80">' +
+    '</div>';
+  }).join('');
+}
+
+function adminRenderHomeCardsEditor (cards) {
+  const el = document.getElementById('admin-homecards-editor');
+  if (!el) return;
+
+  el.innerHTML = (cards || []).map((card, idx) =>
+    '<div class="admin-config-row admin-config-row--card" data-card-idx="' + idx + '">' +
+      '<label class="admin-check admin-config-check">' +
+        '<input type="checkbox" data-field="visible" ' + (card.visible !== false ? 'checked' : '') + '>' +
+        '<input type="text" class="admin-config-icon" data-field="icon" value="' + escapeAttr(card.icon || '•') + '" maxlength="8">' +
+      '</label>' +
+      '<div class="admin-config-card-fields">' +
+        '<input type="text" data-field="name" value="' + escapeAttr(card.name || card.section) + '" maxlength="80" placeholder="Nome">' +
+        '<input type="text" data-field="desc" value="' + escapeAttr(card.desc || '') + '" maxlength="200" placeholder="Descrição">' +
+        '<span class="admin-config-id">' + escapeHtml(card.section) + '</span>' +
+      '</div>' +
+    '</div>'
+  ).join('');
+}
+
+function adminCollectSiteConfigFromForm () {
+  const sidebar = (adminSiteConfigDraft?.sidebar || []).map((entry, idx) => {
+    if (entry.type === 'group') return { type: 'group', label: entry.label };
+    const row = document.querySelector('[data-sidebar-idx="' + idx + '"]');
+    if (!row) return entry;
+    return {
+      type: 'item',
+      id: entry.id,
+      label: row.querySelector('[data-field="label"]')?.value?.trim() || entry.label,
+      visible: !!row.querySelector('[data-field="visible"]')?.checked
+    };
+  });
+
+  const homeCards = (adminSiteConfigDraft?.homeCards || []).map((card, idx) => {
+    const row = document.querySelector('[data-card-idx="' + idx + '"]');
+    if (!row) return card;
+    return {
+      section: card.section,
+      icon: row.querySelector('[data-field="icon"]')?.value?.trim() || card.icon,
+      name: row.querySelector('[data-field="name"]')?.value?.trim() || card.name,
+      desc: row.querySelector('[data-field="desc"]')?.value?.trim() || card.desc,
+      visible: !!row.querySelector('[data-field="visible"]')?.checked,
+      pediatricAux: !!card.pediatricAux
+    };
+  });
+
+  return {
+    theme: {
+      accent: document.getElementById('site-accent')?.value,
+      accentHover: document.getElementById('site-accent-hover')?.value,
+      bgHeader: document.getElementById('site-bg-header')?.value,
+      logoUrl: document.getElementById('site-logo-url')?.value?.trim()
+    },
+    sidebar,
+    homeCards
+  };
+}
+
+async function adminLoadAppearance () {
+  const statusEl = document.getElementById('admin-appearance-status');
+  adminSetStatus(statusEl, 'Carregando…', 'muted');
+
+  const { res, data } = await adminFetch('/api/admin?action=site-config');
+  if (!res.ok) {
+    adminSetStatus(statusEl, data.error || 'Erro ao carregar aparência.', 'error');
+    return;
+  }
+
+  const site = data.site || {};
+  adminSiteConfigDraft = site;
+  const theme = site.theme || {};
+
+  const setColor = (id, val) => {
+    const el = document.getElementById(id);
+    if (el && val) el.value = val;
+  };
+  setColor('site-accent', theme.accent);
+  setColor('site-accent-hover', theme.accentHover);
+  setColor('site-bg-header', theme.bgHeader);
+  const logoEl = document.getElementById('site-logo-url');
+  if (logoEl) logoEl.value = theme.logoUrl || '';
+
+  adminRenderSidebarEditor(site.sidebar);
+  adminRenderHomeCardsEditor(site.homeCards);
+  adminUpdateThemePreview();
+
+  adminSetStatus(statusEl, '', '');
+  statusEl.hidden = true;
+
+  const metaEl = document.getElementById('admin-appearance-meta');
+  if (metaEl) {
+    metaEl.textContent = site.updatedAt
+      ? 'Última alteração: ' + adminFormatDate(site.updatedAt) + (site.updatedBy ? ' por ' + site.updatedBy : '')
+      : 'Usando padrões do app. Salve para publicar na nuvem.';
+  }
+}
+
+async function adminSaveAppearance (e) {
+  e.preventDefault();
+  const statusEl = document.getElementById('admin-appearance-status');
+  const btn = document.getElementById('admin-appearance-btn');
+  const payload = adminCollectSiteConfigFromForm();
+
+  if (btn) btn.disabled = true;
+  adminSetStatus(statusEl, 'Salvando…', 'muted');
+
+  const { res, data } = await adminFetch('/api/admin?action=site-config', {
+    method: 'POST',
+    body: JSON.stringify(payload)
+  });
+
+  if (btn) btn.disabled = false;
+
+  if (!res.ok) {
+    adminSetStatus(statusEl, data.error || 'Erro ao salvar.', 'error');
+    return;
+  }
+
+  adminSiteConfigDraft = data.site;
+  adminSetStatus(statusEl, 'Salvo! Usuários veem as mudanças ao abrir ou recarregar o app.', 'ok');
+  await adminLoadLog();
+
+  const metaEl = document.getElementById('admin-appearance-meta');
+  if (metaEl && data.site?.updatedAt) {
+    metaEl.textContent = 'Última alteração: ' + adminFormatDate(data.site.updatedAt) +
+      (data.site.updatedBy ? ' por ' + data.site.updatedBy : '');
+  }
 }
 
 function adminRenderReportTable (containerId, statusId, rows, emptyMsg) {
@@ -1002,6 +1173,10 @@ async function initAdminPage () {
   document.getElementById('admin-grant-form')?.addEventListener('submit', adminGrantAccess);
   document.getElementById('admin-coupon-form')?.addEventListener('submit', adminCreateCoupon);
   document.getElementById('admin-marketing-form')?.addEventListener('submit', adminSaveMarketing);
+  document.getElementById('admin-appearance-form')?.addEventListener('submit', adminSaveAppearance);
+  ['site-accent', 'site-accent-hover', 'site-bg-header'].forEach(id => {
+    document.getElementById(id)?.addEventListener('input', adminUpdateThemePreview);
+  });
   document.getElementById('admin-refresh-btn')?.addEventListener('click', adminRefreshCurrentSection);
   document.getElementById('admin-export-btn')?.addEventListener('click', adminExportCsv);
 

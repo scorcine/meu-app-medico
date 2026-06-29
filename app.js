@@ -84,9 +84,14 @@ function initAppCore (user) {
         await medhubInitRetention(user);
       }
 
-      document.querySelectorAll('.sidebar-link').forEach(link => {
-        link.addEventListener('click', () => showSection(link.dataset.section));
-      });
+      const hashSection = window.location.hash.replace('#', '') || 'inicio';
+      if (typeof medhubInitSiteConfig === 'function') {
+        await medhubInitSiteConfig(hashSection);
+      } else {
+        document.querySelectorAll('.sidebar-link').forEach(link => {
+          link.addEventListener('click', () => showSection(link.dataset.section));
+        });
+      }
 
       bindAppLogoHome();
       initAppMobileNav();
