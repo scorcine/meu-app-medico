@@ -37,6 +37,8 @@ function defaultSidebar () {
     { type: 'group', label: 'Calculadoras' },
     { type: 'item', id: 'calc-essenciais', label: 'Calculadoras essenciais', visible: true, enabled: true, icon: '🧮', color: '#0d9488' },
     { type: 'item', id: 'calc-pediatrica', label: 'Calculadora pediátrica', visible: true, enabled: true, icon: '👶', color: '#14b8a6' },
+    { type: 'group', label: 'Estudo' },
+    { type: 'item', id: 'flashcards', label: 'Flashcards', visible: true, enabled: true, comingSoon: false, icon: '🃏', color: '#db2777' },
     { type: 'group', label: 'Conteúdo (em breve)' },
     { type: 'item', id: 'videoaulas', label: 'Videoaulas', visible: false, enabled: false, comingSoon: true, icon: '🎬', color: '#7c3aed' },
     { type: 'group', label: 'Sistema' },
@@ -58,14 +60,14 @@ function defaultActiveHomeCards () {
     { section: 'pacientes', icon: '👤', name: 'Cadastro do paciente', desc: 'Cadastro local opcional para anamnese e histórico.', visible: true, enabled: true, comingSoon: false, pediatricAux: false, color: '#6366f1', colorBg: '#eef2ff' },
     { section: 'anamnese', icon: '📝', name: 'Anamnese', desc: 'Guia clínico: queixa → protocolo → prescrição.', visible: true, enabled: true, comingSoon: false, pediatricAux: false, color: '#8b5cf6', colorBg: '#f5f3ff' },
     { section: 'consultas', icon: '📅', name: 'Histórico de atendimentos', desc: 'Registro local e PDF educacional.', visible: true, enabled: true, comingSoon: false, pediatricAux: false, color: '#a855f7', colorBg: '#faf5ff' },
-    { section: 'calc-pediatrica', icon: '👶', name: 'Calculadora pediátrica', desc: 'Complemento por peso/idade — adulto é o foco.', visible: true, enabled: true, comingSoon: false, pediatricAux: true, color: '#14b8a6', colorBg: '#f0fdfa' }
+    { section: 'calc-pediatrica', icon: '👶', name: 'Calculadora pediátrica', desc: 'Complemento por peso/idade — adulto é o foco.', visible: true, enabled: true, comingSoon: false, pediatricAux: true, color: '#14b8a6', colorBg: '#f0fdfa' },
+    { section: 'flashcards', icon: '🃏', name: 'Flashcards', desc: 'Revisão rápida para plantão e provas — 10 temas, 80+ cards.', visible: true, enabled: true, comingSoon: false, pediatricAux: false, color: '#db2777', colorBg: '#fdf2f8' }
   ];
 }
 
 function defaultFutureHomeCards () {
   return [
     { section: 'videoaulas', icon: '🎬', name: 'Videoaulas', desc: 'Aulas em vídeo por módulo clínico.', visible: true, enabled: false, comingSoon: true, pediatricAux: false, color: '#7c3aed', colorBg: '#f5f3ff' },
-    { section: 'flashcards', icon: '🃏', name: 'Flashcards', desc: 'Revisão rápida para plantão e provas.', visible: true, enabled: false, comingSoon: true, pediatricAux: false, color: '#db2777', colorBg: '#fdf2f8' },
     { section: 'casos-clinicos', icon: '🩺', name: 'Casos clínicos', desc: 'Casos interativos passo a passo.', visible: true, enabled: false, comingSoon: true, pediatricAux: false, color: '#059669', colorBg: '#ecfdf5' },
     { section: 'biblioteca', icon: '📚', name: 'Biblioteca', desc: 'PDFs e referências curadas.', visible: true, enabled: false, comingSoon: true, pediatricAux: false, color: '#ca8a04', colorBg: '#fefce8' }
   ];
@@ -157,7 +159,7 @@ function mergeSidebar (saved) {
     }
   });
 
-  return merged.length ? merged : defaults;
+  return promoteFlashcardsSidebar(merged.length ? merged : defaults);
 }
 
 function normalizeHomeCard (entry, def) {
@@ -196,7 +198,37 @@ function mergeHomeCards (saved) {
     if (!merged.some(c => c.section === def.section)) merged.push({ ...def });
   });
 
-  return merged.length ? merged : defaults;
+  return promoteFlashcardsHomeCards(merged.length ? merged : defaults);
+}
+
+function promoteFlashcardsHomeCards (cards) {
+  const def = defaultActiveHomeCards().find(c => c.section === 'flashcards');
+  if (!def) return cards;
+  return cards.map(c => {
+    if (c.section !== 'flashcards') return c;
+    return normalizeHomeCard({ ...c, comingSoon: false, enabled: true, visible: c.visible !== false }, def);
+  });
+}
+
+function promoteFlashcardsSidebar (sidebar) {
+  const def = defaultSidebar().find(e => e.type === 'item' && e.id === 'flashcards');
+  if (!def) return sidebar;
+  const hasFlash = sidebar.some(e => e.type === 'item' && e.id === 'flashcards');
+  let out = sidebar.map(e => {
+    if (e.type !== 'item' || e.id !== 'flashcards') return e;
+    return normalizeSidebarItem({ ...e, comingSoon: false, enabled: true, visible: e.visible !== false }, def);
+  });
+  if (!hasFlash) {
+    const pedIdx = out.findIndex(e => e.type === 'item' && e.id === 'calc-pediatrica');
+    const insertAt = pedIdx >= 0 ? pedIdx + 1 : out.length;
+    const estudoLabel = 'Estudo';
+    if (!out.some(e => e.type === 'group' && e.label === estudoLabel)) {
+      out.splice(insertAt, 0, { type: 'group', label: estudoLabel });
+    }
+    const groupIdx = out.findIndex(e => e.type === 'group' && e.label === estudoLabel);
+    out.splice(groupIdx + 1, 0, { ...def });
+  }
+  return out;
 }
 
 function mergeSiteConfig (stored) {

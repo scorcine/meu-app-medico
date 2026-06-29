@@ -69,6 +69,25 @@ function medhubSearchBuildIndex () {
     });
   }
 
+  if (typeof FLASHCARD_DECKS !== 'undefined') {
+    FLASHCARD_DECKS.forEach(function (d) {
+      medhubSearchAdd(items, {
+        module: 'Flashcards',
+        moduleOrder: 2.5,
+        icon: d.icon || '🃏',
+        title: d.name,
+        subtitle: 'Baralho de revisão',
+        keywords: medhubSearchNorm(d.name + ' ' + d.desc + ' flashcard revisao'),
+        go: (function (deckId) {
+          return function () {
+            if (typeof fcOpenDeck === 'function') fcOpenDeck(deckId);
+            else showSection('flashcards');
+          };
+        })(d.id)
+      });
+    });
+  }
+
   if (typeof PS_CONDITIONS !== 'undefined') {
     PS_CONDITIONS.forEach(function (c) {
       medhubSearchAdd(items, {

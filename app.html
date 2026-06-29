@@ -74,13 +74,15 @@
   <script defer src="consultas.js?v=atendimento-v4"></script>
   <script defer src="medhub-config.js?v=site-v1"></script>
   <script defer src="ferramentas.js?v=vm-v1"></script>
+  <script defer src="flashcards-data.js?v=fc-v1"></script>
+  <script defer src="flashcards.js?v=fc-v1"></script>
   <script defer src="backup.js?v=backup-v2"></script>
   <script defer src="clinical-cloud.js?v=cloud-sync-v1"></script>
   <script defer src="subscription.js?v=billing-v7"></script>
   <script defer src="auth-cloud.js?v=cloud-v18"></script>
-  <script defer src="app-search.js?v=search-v2"></script>
+  <script defer src="app-search.js?v=search-v3"></script>
   <script defer src="medhub-site-config.js?v=site-ui-v3"></script>
-  <script defer src="app.js?v=site-ui-v1"></script>
+  <script defer src="app.js?v=site-ui-v2"></script>
   <script defer src="auth.js?v=compliance-v1"></script>
   <script defer src="pwa-install.js?v=pwa-v3"></script>
 </head>
@@ -156,6 +158,8 @@
         <p class="sidebar-group">Calculadoras</p>
         <button type="button" class="sidebar-link" data-section="calc-essenciais">Calculadoras essenciais</button>
         <button type="button" class="sidebar-link" data-section="calc-pediatrica">Calculadora pediátrica</button>
+        <p class="sidebar-group">Estudo</p>
+        <button type="button" class="sidebar-link" data-section="flashcards">Flashcards</button>
         <p class="sidebar-group">Sistema</p>
         <button type="button" class="sidebar-link" data-section="perfil">Minha conta</button>
       </nav>
@@ -442,6 +446,67 @@
             <button type="button" class="btn-back" id="exames-back">← Voltar à lista</button>
             <h2 id="exames-topic-title"></h2>
             <div id="exames-topic-content" class="emerg-content"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="section-flashcards" class="content-panel">
+        <div class="card dashboard-card clinical-wrap fc-wrap">
+          <div id="fc-deck-list-view">
+            <h2>Flashcards</h2>
+            <p class="muted">Revisão rápida para plantão e provas — baralhos fixos a partir do guia de emergência, PS e interpretação de exames.</p>
+            <p class="fc-disclaimer muted" role="note">Conteúdo educacional. Não substitui protocolo institucional nem julgamento clínico.</p>
+            <label class="ps-search-label" for="fc-search">Buscar tema</label>
+            <input id="fc-search" class="ps-search" type="search" placeholder="Ex.: sepse, IAM, dengue, gasometria…" autocomplete="off">
+            <p id="fc-deck-count" class="ps-count muted"></p>
+            <div id="fc-deck-grid" class="calc-category-grid ferramentas-grid"></div>
+            <p id="fc-empty" class="ps-placeholder" hidden>Nenhum baralho encontrado.</p>
+          </div>
+
+          <div id="fc-study-view" hidden>
+            <button type="button" class="btn-back" id="fc-study-back">← Voltar aos baralhos</button>
+            <div class="fc-study-head">
+              <h2 id="fc-study-deck-title"></h2>
+              <p id="fc-study-source" class="muted fc-study-source"></p>
+              <div class="fc-study-meta">
+                <span id="fc-study-progress" class="fc-study-progress-text">1 / 10</span>
+                <label class="fc-shuffle-label">
+                  <input type="checkbox" id="fc-shuffle-toggle"> Embaralhar
+                </label>
+              </div>
+              <div class="fc-study-progress-track" aria-hidden="true">
+                <span id="fc-study-progress-bar" class="fc-study-progress-fill"></span>
+              </div>
+            </div>
+
+            <button type="button" class="fc-card" id="fc-card" aria-live="polite">
+              <span class="fc-card-face fc-card-front-wrap">
+                <span class="fc-card-label">Pergunta</span>
+                <span id="fc-card-front" class="fc-card-text"></span>
+              </span>
+              <span class="fc-card-face fc-card-back-wrap">
+                <span class="fc-card-label">Resposta</span>
+                <span id="fc-card-back" class="fc-card-text"></span>
+              </span>
+            </button>
+            <p id="fc-flip-hint" class="fc-flip-hint muted">Toque no card para ver a resposta</p>
+
+            <div id="fc-answer-actions" class="fc-answer-actions" hidden>
+              <button type="button" class="btn-outline fc-btn-wrong" id="fc-btn-wrong">Errei</button>
+              <button type="button" class="btn-outline" id="fc-btn-flip">Virar</button>
+              <button type="button" class="btn fc-btn-right" id="fc-btn-right">Acertei</button>
+              <button type="button" class="btn-text muted" id="fc-btn-skip">Pular</button>
+            </div>
+          </div>
+
+          <div id="fc-summary-view" hidden>
+            <h2 id="fc-summary-title">Sessão concluída</h2>
+            <div id="fc-summary-stats" class="fc-summary-stats"></div>
+            <div id="fc-summary-review" class="fc-summary-review" hidden></div>
+            <div class="fc-summary-actions">
+              <button type="button" class="btn" id="fc-summary-restart">Estudar de novo</button>
+              <button type="button" class="btn-outline" id="fc-summary-back">Outros baralhos</button>
+            </div>
           </div>
         </div>
       </section>
