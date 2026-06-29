@@ -37,6 +37,7 @@
     } catch (e) { /* ignore */ }
     applyTheme(next);
     updateToggleButtons(next);
+    if (typeof initFerramentas === 'function') initFerramentas();
   }
 
   function toggleTheme () {

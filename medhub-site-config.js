@@ -175,8 +175,9 @@ function medhubGetHomeCards () {
 
 function medhubHomeCardStyle (card) {
   const parts = [];
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
   if (card.color) parts.push('--home-card-accent:' + card.color);
-  if (card.colorBg) parts.push('--home-card-bg:' + card.colorBg);
+  if (card.colorBg && !isDark) parts.push('--home-card-bg:' + card.colorBg);
   return parts.length ? ' style="' + parts.join(';') + '"' : '';
 }
 

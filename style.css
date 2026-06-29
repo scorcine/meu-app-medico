@@ -4626,6 +4626,30 @@ textarea {
   border: 1px solid color-mix(in srgb, var(--home-card-accent, var(--accent)) 40%, var(--border, #dce4ec));
 }
 
+[data-theme="dark"] .home-tool-card--themed {
+  background: var(--bg-surface-raised);
+  border: 1px solid var(--border);
+  border-top: 3px solid var(--home-card-accent, var(--accent));
+  box-shadow: none;
+}
+
+[data-theme="dark"] .home-tool-card--themed:hover {
+  background: var(--bg-surface-active);
+  border-color: var(--border);
+  border-top-color: var(--home-card-accent, var(--text-accent));
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.32);
+}
+
+[data-theme="dark"] .home-tool-card--themed .calc-category-name {
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .home-tool-card--pediatric-aux {
+  background: var(--bg-surface-muted);
+  border-style: dashed;
+  border-color: color-mix(in srgb, var(--home-card-accent, var(--accent-soft)) 45%, var(--border));
+}
+
 .home-tool-card--themed .calc-category-icon {
   filter: none;
 }
