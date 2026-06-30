@@ -6,7 +6,7 @@ var FLASHCARD_DECK_CARDIO_ARRITMIAS = {
   icon: '💓',
   source: 'guia-emergencia',
   sourceLabel: 'Guia de emergência',
-  desc: '60 cards — TSVP, FA, TV, BAV, PCR e emergências cardíacas.',
+  desc: '90 cards — TSVP, FA, TV, BAV, PCR e emergências cardíacas.',
   cards: [
     {
       front: 'Mulher 55 a, palpitações súbitas, FC 190 (QRS estreito), PA 110×70. ECG com pseudo-S em D2 e pseudo-R\' em V1. Qual droga usar para reverter?',
@@ -247,6 +247,126 @@ var FLASHCARD_DECK_CARDIO_ARRITMIAS = {
     {
       front: 'Homem 40 a, ECG: PR 240 ms, ritmo sinusal. Como denominar esse distúrbio de condução?',
       back: 'Bloqueio AV de 1º grau · PR > 200 ms'
+    },
+    {
+      front: 'Homem 38 a, palpitações; ECG mostra onda P negativa em D2, QRS estreito, FC 140. Arritmia mais provável?',
+      back: 'Taquicardia atrial'
+    },
+    {
+      front: 'Mulher 68 a, taquicardia FC 180, PA 78×48, sudorese e confusão. Qual conduta imediata no PS?',
+      back: 'Cardioversão elétrica sincronizada'
+    },
+    {
+      front: 'Jovem 25 a leva bolada forte no tórax e cai em FV segundos depois. Qual fenômeno explica a PCR?',
+      back: 'Commotio cordis · fibrilação ventricular por R-sobre-T'
+    },
+    {
+      front: 'Homem 72 a com FA não valvar quer saber risco de AVC. Que escore deve ser aplicado?',
+      back: 'CHA2DS2-VASC'
+    },
+    {
+      front: 'Paciente com FA + cardiomiopatia hipertrófica, sem outros fatores. Precisa anticoagular?',
+      back: 'Sim · HCM é indicação independente de anticoagulação permanente'
+    },
+    {
+      front: 'Homem 60 a, taquicardia irregular QRS largo. Quais dois diagnósticos devem ser considerados primeiro?',
+      back: 'Fibrilação atrial com Wolff-Parkinson-White · FA com aberrância (bloqueio de ramo)'
+    },
+    {
+      front: 'Mulher 70 a com FA; onde se formam a maioria dos trombos responsáveis por AVC?',
+      back: 'Apêndice atrial esquerdo'
+    },
+    {
+      front: 'Idoso DPOC exacerbado, FC 130 irregular, ≥3 morfologias de onda P no ECG. Qual arritmia?',
+      back: 'Taquicardia atrial multifocal'
+    },
+    {
+      front: 'Parada cardíaca em FV; usado desfibrilador bifásico sem marca visível. Qual carga aplicar?',
+      back: '200 J (intervalo recomendado 120–200 J bifásico; se desconhecido, usar 200 J)'
+    },
+    {
+      front: 'Homem 58 a pós-IAM, QRS 140 ms, FC 80, ritmo ventricular independente do átrio. Diagnóstico típico?',
+      back: 'Ritmo Idioventricular Acelerado (RIVA)'
+    },
+    {
+      front: 'Paciente em flutter típico recebe quinidina isolada. Qual complicação temível dessa conduta?',
+      back: 'Conversão para condução 1:1 com frequência muito alta'
+    },
+    {
+      front: 'Jovem 29 a, palpitações rápidas de início e fim súbito. Qual arritmia responde em 90 % a adenosina?',
+      back: 'Taquicardia por reentrada nodal (TSVP-AVNRT)'
+    },
+    {
+      front: 'Paciente em FA + pré-excitação sintomática. Quais drogas devem ser evitadas de imediato?',
+      back: 'Verapamil · diltiazem · beta-bloqueadores · digoxina'
+    },
+    {
+      front: 'Idosa 82 a, taquiarritmia com confusão, estertores e PA 86×54. Qual critério confirma instabilidade clínica?',
+      back: 'Hipotensão associada a sinais de choque e congestão pulmonar'
+    },
+    {
+      front: 'ECG mostra PR 100 ms + onda delta difusa em ritmo sinusal. Qual síndrome está presente?',
+      back: 'Wolff-Parkinson-White'
+    },
+    {
+      front: 'Homem 65 a, flutter atrial típico. Qual mecanismo eletrofisiológico sustenta o ritmo?',
+      back: 'Macrorreentrada no átrio direito (geralmente sentido anti-horário)'
+    },
+    {
+      front: 'Mulher 40 a, taquicardia sinusal persistente sem causa orgânica. Nome da condição?',
+      back: 'Taquicardia sinusal inapropriada'
+    },
+    {
+      front: 'Taquiarritmia rápida: quais três condições são requisitos para circuito de reentrada?',
+      back: 'Áreas com períodos refratários diferentes · zona de condução lenta · extrassístole gatilho'
+    },
+    {
+      front: 'Paciente com taquiarritmia estável; distância R-R no papel é 1,2 cm (25 mm/s). FC aproximada?',
+      back: '> 100 bpm (critério para taquicardia)'
+    },
+    {
+      front: 'Homem 70 a, abuso de digoxina; FC 100, QRS estreito, ritmo regular de junção AV. Arritmia clássica?',
+      back: 'Taquicardia juncional não paroxística (intoxicação digitálica)'
+    },
+    {
+      front: 'Mulher 58 a, DPOC, ECG em ritmo sinusal, ondas P com 4 morfologias diferentes, FC 90. Diagnóstico?',
+      back: 'Arritmia sinusal multifocal (pré-taquicardia); exige ≥3 morfologias de P em ritmo < 100 bpm'
+    },
+    {
+      front: 'Homem 66 a chega ao PS com dor torácica + taquicardia QRS estreito 190 bpm, PA 92×60. Ação inicial?',
+      back: 'Cardioversão elétrica sincronizada (instabilidade hemodinâmica)'
+    },
+    {
+      front: 'Paciente 52 a apresenta extrassístole prematura que cai sobre o platô da onda T, desencadeando TV. Nome desse fenômeno?',
+      back: 'R-sobre-T'
+    },
+    {
+      front: 'Mulher 70 a com FA crônica, FC 130 em repouso. Meta de frequência pelo controle brando?',
+      back: '< 110 bpm'
+    },
+    {
+      front: 'Homem 48 a com FA há 3 dias e sem anticoagulação prévia. Próximo passo antes de cardioverter?',
+      back: 'Ecocardiograma transesofágico para excluir trombo ou anticoagular 3–4 semanas'
+    },
+    {
+      front: 'Por que pacientes anticoagulados ainda precisam de 4 semanas de terapia após cardioversão de FA longa?',
+      back: 'Atordoamento atrial (stunning) mantém estase e risco de trombo mesmo após ritmo sinusal'
+    },
+    {
+      front: 'ECG mostra taquicardia irregular com QRS estreito; quais arritmias você considera primeiro?',
+      back: 'Fibrilação atrial · flutter atrial com bloqueio variável'
+    },
+    {
+      front: 'Paciente > 30 anos com morte súbita recuperada; qual causa coronariana responde pela maioria dos casos?',
+      back: 'Doença aterosclerótica de coronárias'
+    },
+    {
+      front: 'Equipe inicia RCP em PCR e investiga causas reversíveis. Cite três dos 5 H\'s obrigatórios.',
+      back: 'Hipóxia · hipovolemia · acidose (H+) · (também hipo/hipercalemia, hipotermia)'
+    },
+    {
+      front: 'Lista os DOACs disponíveis para FA não valvar que dispensam controle de INR.',
+      back: 'Dabigatrana · rivaroxabana · apixabana · edoxabana'
     }
   ]
 };

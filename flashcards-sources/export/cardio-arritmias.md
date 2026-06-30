@@ -5,8 +5,8 @@
 ## Metadados
 - deckId: `cardio-arritmias`
 - Baralho: Cardiologia — Arritmias e PCR
-- Cards atuais no app: 60
-- Meta: 60 cards por baralho
+- Cards atuais no app: 90
+- Meta: 90 cards neste baralho
 - Fonte principal: Guia de emergência
 
 ## Cards existentes (não repetir)
@@ -71,6 +71,36 @@
 58. Mulher 28 a, QTc 520 ms congênito, sofre síncope com TV polimórfica. Qual mecanismo arrítmico típico do QT longo?
 59. Paciente com flutter atrial recebe quinidina sem bloqueio nodal AV. Qual complicação pode ocorrer?
 60. Homem 40 a, ECG: PR 240 ms, ritmo sinusal. Como denominar esse distúrbio de condução?
+61. Homem 38 a, palpitações; ECG mostra onda P negativa em D2, QRS estreito, FC 140. Arritmia mais provável?
+62. Mulher 68 a, taquicardia FC 180, PA 78×48, sudorese e confusão. Qual conduta imediata no PS?
+63. Jovem 25 a leva bolada forte no tórax e cai em FV segundos depois. Qual fenômeno explica a PCR?
+64. Homem 72 a com FA não valvar quer saber risco de AVC. Que escore deve ser aplicado?
+65. Paciente com FA + cardiomiopatia hipertrófica, sem outros fatores. Precisa anticoagular?
+66. Homem 60 a, taquicardia irregular QRS largo. Quais dois diagnósticos devem ser considerados primeiro?
+67. Mulher 70 a com FA; onde se formam a maioria dos trombos responsáveis por AVC?
+68. Idoso DPOC exacerbado, FC 130 irregular, ≥3 morfologias de onda P no ECG. Qual arritmia?
+69. Parada cardíaca em FV; usado desfibrilador bifásico sem marca visível. Qual carga aplicar?
+70. Homem 58 a pós-IAM, QRS 140 ms, FC 80, ritmo ventricular independente do átrio. Diagnóstico típico?
+71. Paciente em flutter típico recebe quinidina isolada. Qual complicação temível dessa conduta?
+72. Jovem 29 a, palpitações rápidas de início e fim súbito. Qual arritmia responde em 90 % a adenosina?
+73. Paciente em FA + pré-excitação sintomática. Quais drogas devem ser evitadas de imediato?
+74. Idosa 82 a, taquiarritmia com confusão, estertores e PA 86×54. Qual critério confirma instabilidade clínica?
+75. ECG mostra PR 100 ms + onda delta difusa em ritmo sinusal. Qual síndrome está presente?
+76. Homem 65 a, flutter atrial típico. Qual mecanismo eletrofisiológico sustenta o ritmo?
+77. Mulher 40 a, taquicardia sinusal persistente sem causa orgânica. Nome da condição?
+78. Taquiarritmia rápida: quais três condições são requisitos para circuito de reentrada?
+79. Paciente com taquiarritmia estável; distância R-R no papel é 1,2 cm (25 mm/s). FC aproximada?
+80. Homem 70 a, abuso de digoxina; FC 100, QRS estreito, ritmo regular de junção AV. Arritmia clássica?
+81. Mulher 58 a, DPOC, ECG em ritmo sinusal, ondas P com 4 morfologias diferentes, FC 90. Diagnóstico?
+82. Homem 66 a chega ao PS com dor torácica + taquicardia QRS estreito 190 bpm, PA 92×60. Ação inicial?
+83. Paciente 52 a apresenta extrassístole prematura que cai sobre o platô da onda T, desencadeando TV. Nome desse fenômeno?
+84. Mulher 70 a com FA crônica, FC 130 em repouso. Meta de frequência pelo controle brando?
+85. Homem 48 a com FA há 3 dias e sem anticoagulação prévia. Próximo passo antes de cardioverter?
+86. Por que pacientes anticoagulados ainda precisam de 4 semanas de terapia após cardioversão de FA longa?
+87. ECG mostra taquicardia irregular com QRS estreito; quais arritmias você considera primeiro?
+88. Paciente > 30 anos com morte súbita recuperada; qual causa coronariana responde pela maioria dos casos?
+89. Equipe inicia RCP em PCR e investiga causas reversíveis. Cite três dos 5 H's obrigatórios.
+90. Lista os DOACs disponíveis para FA não valvar que dispensam controle de INR.
 
 ## Conteúdo clínico de referência (MedHub)
 
