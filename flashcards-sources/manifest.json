@@ -1,10 +1,10 @@
 {
-  "generatedAt": "2026-06-30T01:01:09.365Z",
+  "generatedAt": "2026-06-30T01:05:25.627Z",
   "exports": [
     {
       "deckId": "cardio-arritmias",
       "name": "Cardiologia — Arritmias e PCR",
-      "cards": 90,
+      "cards": 120,
       "file": "export/cardio-arritmias.md"
     }
   ]

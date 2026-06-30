@@ -5,8 +5,8 @@
 ## Metadados
 - deckId: `cardio-arritmias`
 - Baralho: Cardiologia — Arritmias e PCR
-- Cards atuais no app: 90
-- Meta: 90 cards neste baralho
+- Cards atuais no app: 120
+- Meta: 120 cards neste baralho
 - Fonte principal: Guia de emergência
 
 ## Cards existentes (não repetir)
@@ -101,6 +101,36 @@
 88. Paciente > 30 anos com morte súbita recuperada; qual causa coronariana responde pela maioria dos casos?
 89. Equipe inicia RCP em PCR e investiga causas reversíveis. Cite três dos 5 H's obrigatórios.
 90. Lista os DOACs disponíveis para FA não valvar que dispensam controle de INR.
+91. Homem 67 a com FA recém-diagnosticada. Qual mnemônico ABC guia o manejo inicial?
+92. Mulher 74 a em FA não valvar pede avaliação do risco tromboembólico. Quais componentes do CHA2DS2-VASC?
+93. Mesmo caso: para estimar risco de sangramento, quais itens formam o HAS-BLED?
+94. Homem 63 a com BAV total sintomático persistente. Qual a indicação definitiva?
+95. Paciente 70 a, FA permanente + BAV total. Qual modo de MP preferido?
+96. Mulher 59 a, doença do nó sinusal sintomática. Dispositivo definitivo indicado?
+97. Homem 68 a, BAV 2º grau Mobitz II intermitente e sintomático. Qual conduta definitiva?
+98. Paciente 64 a, bradicardia supra-hissiana sem resposta à atropina. Próximo passo imediato?
+99. Idoso 77 a, IAM inferior evolui com BAVT sintomático. Suporte inicial recomendado?
+100. MP modo VVI: o que significam suas três letras?
+101. MP modo VDD: que câmaras ele sente e estimula?
+102. No código DDDR, o que representa o "R" final?
+103. Paciente em FV recebe choque bifásico 200 J. Qual passo imediato pós-choque?
+104. Equipe de RCP discute o conceito "no hands-off". O que ele determina?
+105. Durante PCR, qual vasopressor continua recomendado pelo manual?
+106. Mulher 50 a, taquicardia estável QRS estreito. Qual mecanismo eletrofisiológico mais comum das taquiarritmias?
+107. Classe antiarrítmica IA: cite um exemplo e seu principal efeito eletrofisiológico.
+108. Classe IB: cite um fármaco e uso típico no pronto-socorro.
+109. Classe IC: qual precaução essencial antes de usar em coronariopata?
+110. Classe II (beta-bloqueadores): como ajudam no controle da FA?
+111. Classe III (ex.: amiodarona): qual o efeito sobre a repolarização?
+112. Classe IV: quais drogas e arritmias controlam no PS?
+113. Amiodarona crônica: complicação pulmonar que limita o uso?
+114. Cite dois efeitos extra-cardíacos frequentes da amiodarona prolongada.
+115. PCR sem causa aparente: liste os 5 T's reversíveis a investigar.
+116. Homem 52 a com FA: CHA2DS2-VASC = 1 e HAS-BLED = 4. Qual cautela antes de anticoagular?
+117. Qual profundidade ideal das compressões torácicas na RCP de adulto?
+118. Taxa alvo de compressões por minuto para RCP de alta qualidade?
+119. Equipe nota que o esterno não retorna completamente entre compressões. Por que isso reduz a eficácia da RCP?
+120. Homem 62 a, TV monomórfica sustentada estável (PA 120×75). Qual antiarrítmico EV indicado?
 
 ## Conteúdo clínico de referência (MedHub)
 

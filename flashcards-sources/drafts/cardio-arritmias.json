@@ -4,7 +4,7 @@
   "icon": "💓",
   "source": "guia-emergencia",
   "sourceLabel": "Guia de emergência",
-  "desc": "90 cards — TSVP, FA, TV, BAV, PCR e emergências cardíacas.",
+  "desc": "120 cards — TSVP, FA, TV, BAV, PCR e emergências cardíacas.",
   "cards": [
     {
       "front": "Mulher 55 a, palpitações súbitas, FC 190 (QRS estreito), PA 110×70. ECG com pseudo-S em D2 e pseudo-R' em V1. Qual droga usar para reverter?",
@@ -365,6 +365,126 @@
     {
       "front": "Lista os DOACs disponíveis para FA não valvar que dispensam controle de INR.",
       "back": "Dabigatrana · rivaroxabana · apixabana · edoxabana"
+    },
+    {
+      "front": "Homem 67 a com FA recém-diagnosticada. Qual mnemônico ABC guia o manejo inicial?",
+      "back": "A = Anticoagulação adequada · B = melhor controle de sintomas · C = controle de fatores/condições de risco"
+    },
+    {
+      "front": "Mulher 74 a em FA não valvar pede avaliação do risco tromboembólico. Quais componentes do CHA2DS2-VASC?",
+      "back": "ICC/ICF · hipertensão · idade ≥ 75 (2) · diabetes · AVC/AIT prévio (2) · doença vascular · idade 65-74 · sexo feminino"
+    },
+    {
+      "front": "Mesmo caso: para estimar risco de sangramento, quais itens formam o HAS-BLED?",
+      "back": "Hipertensão · Alteração renal/hepática (1 cada) · AVC prévio · Sangramento prévio · INR lábil · Idade > 65 · Drogas ou álcool (1 cada)"
+    },
+    {
+      "front": "Homem 63 a com BAV total sintomático persistente. Qual a indicação definitiva?",
+      "back": "Implante de marca-passo definitivo · corrige BAVT crônico sintomático"
+    },
+    {
+      "front": "Paciente 70 a, FA permanente + BAV total. Qual modo de MP preferido?",
+      "back": "VVI(R) · estimula e sente ventrículo · inibe com QRS próprio"
+    },
+    {
+      "front": "Mulher 59 a, doença do nó sinusal sintomática. Dispositivo definitivo indicado?",
+      "back": "Marca-passo bicameral DDD(R) · mantém sincronia A-V"
+    },
+    {
+      "front": "Homem 68 a, BAV 2º grau Mobitz II intermitente e sintomático. Qual conduta definitiva?",
+      "back": "Implante de marca-passo definitivo · bloqueio infra-hissiano maligno"
+    },
+    {
+      "front": "Paciente 64 a, bradicardia supra-hissiana sem resposta à atropina. Próximo passo imediato?",
+      "back": "Inserir marca-passo provisório transvenoso"
+    },
+    {
+      "front": "Idoso 77 a, IAM inferior evolui com BAVT sintomático. Suporte inicial recomendado?",
+      "back": "Marca-passo provisório até reavaliação para implante definitivo"
+    },
+    {
+      "front": "MP modo VVI: o que significam suas três letras?",
+      "back": "V: estimula ventrículo · V: detecta ventrículo · I: inibe diante de QRS próprio"
+    },
+    {
+      "front": "MP modo VDD: que câmaras ele sente e estimula?",
+      "back": "Sente átrio e ventrículo · estimula apenas ventrículo"
+    },
+    {
+      "front": "No código DDDR, o que representa o \"R\" final?",
+      "back": "Sensor de resposta de frequência · ajusta a FC conforme demanda"
+    },
+    {
+      "front": "Paciente em FV recebe choque bifásico 200 J. Qual passo imediato pós-choque?",
+      "back": "Retomar RCP por 2 min sem checar ritmo ou pulso"
+    },
+    {
+      "front": "Equipe de RCP discute o conceito \"no hands-off\". O que ele determina?",
+      "back": "Interrupções mínimas nas compressões · pausas só para desfibrilar ou via aérea avançada"
+    },
+    {
+      "front": "Durante PCR, qual vasopressor continua recomendado pelo manual?",
+      "back": "Somente Adrenalina 1 mg IV a cada 3–5 min · vasopressina/atropina não indicadas"
+    },
+    {
+      "front": "Mulher 50 a, taquicardia estável QRS estreito. Qual mecanismo eletrofisiológico mais comum das taquiarritmias?",
+      "back": "Reentrada · exige vias com refratariedade diferente, condução lenta e extrassístole gatilho"
+    },
+    {
+      "front": "Classe antiarrítmica IA: cite um exemplo e seu principal efeito eletrofisiológico.",
+      "back": "Procainamida · bloqueio moderado de Na+ · prolonga potencial de ação"
+    },
+    {
+      "front": "Classe IB: cite um fármaco e uso típico no pronto-socorro.",
+      "back": "Lidocaína · tratamento de TV/FV associada a IAM ou isquemia"
+    },
+    {
+      "front": "Classe IC: qual precaução essencial antes de usar em coronariopata?",
+      "back": "Evitar em doença estrutural ou pós-IAM · alto risco de pró-arritmia"
+    },
+    {
+      "front": "Classe II (beta-bloqueadores): como ajudam no controle da FA?",
+      "back": "Reduzem automatismo nodal e condução AV · freiam resposta ventricular"
+    },
+    {
+      "front": "Classe III (ex.: amiodarona): qual o efeito sobre a repolarização?",
+      "back": "Bloqueio de K+ · prolonga repolarização e intervalo QT"
+    },
+    {
+      "front": "Classe IV: quais drogas e arritmias controlam no PS?",
+      "back": "Verapamil/Diltiazem · controle de frequência na FA ou flutter"
+    },
+    {
+      "front": "Amiodarona crônica: complicação pulmonar que limita o uso?",
+      "back": "Pneumonite/fibrose pulmonar"
+    },
+    {
+      "front": "Cite dois efeitos extra-cardíacos frequentes da amiodarona prolongada.",
+      "back": "Distúrbio tireoidiano (hipo ou hiper) · fotossensibilidade ou deposição corneana"
+    },
+    {
+      "front": "PCR sem causa aparente: liste os 5 T's reversíveis a investigar.",
+      "back": "Tamponamento cardíaco · TEP · Tóxicos · Trombose coronária · Tórax (pneumotórax hipertensivo)"
+    },
+    {
+      "front": "Homem 52 a com FA: CHA2DS2-VASC = 1 e HAS-BLED = 4. Qual cautela antes de anticoagular?",
+      "back": "Corrigir fatores modificáveis de sangramento · HAS-BLED ≥ 3 sinaliza alto risco"
+    },
+    {
+      "front": "Qual profundidade ideal das compressões torácicas na RCP de adulto?",
+      "back": "Entre 5 e 6 cm"
+    },
+    {
+      "front": "Taxa alvo de compressões por minuto para RCP de alta qualidade?",
+      "back": "100–120 compressões/min"
+    },
+    {
+      "front": "Equipe nota que o esterno não retorna completamente entre compressões. Por que isso reduz a eficácia da RCP?",
+      "back": "Impede enchimento cardíaco adequado · diminui débito e perfusão coronária/cerebral"
+    },
+    {
+      "front": "Homem 62 a, TV monomórfica sustentada estável (PA 120×75). Qual antiarrítmico EV indicado?",
+      "back": "Amiodarona EV · classe III prolonga repolarização e pode reverter TV estável"
     }
   ]
 }

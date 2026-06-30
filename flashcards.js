@@ -5,7 +5,7 @@ const FC_STORAGE_KEY_V1 = 'medhub-flashcards-progress-v1';
 
 const FC_REVIEW_DAYS = { easy: 15, medium: 10, wrong: 7 };
 const FC_RATING_LABELS = { easy: 'Fácil', medium: 'Médio', wrong: 'Errei' };
-const FC_NEW_DECK_IDS = ['cardio-arritmias'];
+const FC_NEW_DECK_IDS = [];
 
 let fcActiveDeck = null;
 let fcStudyQueue = [];
