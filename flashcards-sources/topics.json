@@ -71,7 +71,7 @@
     },
     {
       "id": "cardiologia",
-      "cardsPerDeck": 120,
+      "cardsPerDeck": 150,
       "group": true,
       "sources": [
         { "kind": "ps", "conditionId": "arritmias" },

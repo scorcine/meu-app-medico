@@ -5,133 +5,163 @@
 ## Metadados
 - deckId: `cardiologia`
 - Baralho: Cardiologia
-- Cards atuais no app: 120
-- Meta: 120 cards neste baralho
+- Cards atuais no app: 150
+- Meta: 150 cards neste baralho
 - Fonte principal: Guia de emergência
-- Subtemas: Taquiarritmias e TSVP (42) · FA e anticoagulação (12) · TV, FV e QT longo (12) · BAV e marca-passo (20) · PCR e RCP (23) · Fármacos antiarrítmicos (11)
+- Subtemas: BAV e marca-passo (20) · FA e anticoagulação (12) · Fármacos antiarrítmicos (11) · Insuficiência cardíaca (30) · PCR e RCP (23) · Taquiarritmias e TSVP (42) · TV, FV e QT longo (12)
 
 ## Cards existentes (não repetir)
 
-1. Mulher 55 a, palpitações súbitas, FC 190 (QRS estreito), PA 110×70. ECG com pseudo-S em D2 e pseudo-R' em V1. Qual droga usar para reverter?
-2. Homem 72 a, pós-IAM, FC 160 com QRS 160 ms, dissociação A-V, PA 78×48 e sudorese fria. Conduta imediata?
-3. Paciente 40 a, palpitações progressivas (fenômeno warm-up), FC 150, PR visível normal. Mecanismo provável da taquiarritmia?
-4. Idoso 80 a, dispneia, FC 110 irregular, ondas F anárquicas 400–600 bpm. Objetivo de controle da frequência em repouso?
-5. Mulher 68 a, FA há 60 h, assintomática, solicita cardioversão elétrica agendada. Qual exame deve preceder o procedimento?
-6. Homem 25 a, crise asmática, ECG mostra ritmo irregular, FC 140, ≥3 morfologias de P. Diagnóstico?
-7. Paciente 50 a, QRS estreito 300 bpm, padrão serrilhado contínuo. Qual arritmia provável?
-8. Homem 40 a, síncope durante exercício, ECG mostra pré-excitação (PR < 120 ms + onda delta). Qual é o achado clássico do WPW?
-9. Homem 60 a, taquicardia FC 180, PA 78×50, estertores bilaterais. Quais achados definem instabilidade hemodinâmica que exigem cardioversão imediata?
-10. Mulher 45 a, TSVP nodal refratária a manobras vagais, FC 190, consciente. Qual fármaco EV deve ser administrado de pronto?
-11. Idoso 78 a, ECG sem ondas P e intervalos R-R totalmente desiguais. Como se descreve esse padrão rítmico?
-12. Paciente 70 a com FA permanente, FC 135 em repouso, assintomático. Qual meta de frequência aceitável segundo controle leniente?
-13. Paciente 50 a, ECG mostra ondas serrilhadas regulares a cada 0,20 s. Qual frequência atrial esperada no flutter típico?
-14. Em circuitos de reentrada, cite os três requisitos eletrofisiológicos indispensáveis.
-15. Taquicardia inicia gradualmente com aumento progressivo da FC (warm-up). Qual o mecanismo provável?
-16. Idoso 78 a, DPOC agudizado, FC 120 irregular, ≥3 morfologias de onda P. Qual arritmia mais provável?
-17. Quais critérios eletrocardiográficos confirmam Taquicardia Atrial Multifocal?
-18. Paciente hipotenso em TSVP; cardioversão elétrica será feita. Que medida realizar se houver tempo antes do choque?
-19. No papel de ECG a 25 mm/s, qual distância máxima entre ondas R corresponde a FC > 100 bpm?
-20. Por que um choque sincronizado raramente converte taquicardia atrial automática?
-21. Paciente 56 a em taquiarritmia desenvolve estertores difusos. Qual intervenção prioritária na presença desse critério de instabilidade?
-22. Paciente com flutter atrial recebe quinidina sem bloqueio nodal AV. Qual complicação pode ocorrer?
-23. Homem 38 a, palpitações; ECG mostra onda P negativa em D2, QRS estreito, FC 140. Arritmia mais provável?
-24. Mulher 68 a, taquicardia FC 180, PA 78×48, sudorese e confusão. Qual conduta imediata no PS?
-25. Paciente com FA + cardiomiopatia hipertrófica, sem outros fatores. Precisa anticoagular?
-26. Idoso DPOC exacerbado, FC 130 irregular, ≥3 morfologias de onda P no ECG. Qual arritmia?
-27. Paciente em flutter típico recebe quinidina isolada. Qual complicação temível dessa conduta?
-28. Jovem 29 a, palpitações rápidas de início e fim súbito. Qual arritmia responde em 90 % a adenosina?
-29. Paciente em FA + pré-excitação sintomática. Quais drogas devem ser evitadas de imediato?
-30. Idosa 82 a, taquiarritmia com confusão, estertores e PA 86×54. Qual critério confirma instabilidade clínica?
-31. ECG mostra PR 100 ms + onda delta difusa em ritmo sinusal. Qual síndrome está presente?
-32. Homem 65 a, flutter atrial típico. Qual mecanismo eletrofisiológico sustenta o ritmo?
-33. Mulher 40 a, taquicardia sinusal persistente sem causa orgânica. Nome da condição?
-34. Taquiarritmia rápida: quais três condições são requisitos para circuito de reentrada?
-35. Paciente com taquiarritmia estável; distância R-R no papel é 1,2 cm (25 mm/s). FC aproximada?
-36. Homem 70 a, abuso de digoxina; FC 100, QRS estreito, ritmo regular de junção AV. Arritmia clássica?
-37. Mulher 58 a, DPOC, ECG em ritmo sinusal, ondas P com 4 morfologias diferentes, FC 90. Diagnóstico?
-38. Homem 66 a chega ao PS com dor torácica + taquicardia QRS estreito 190 bpm, PA 92×60. Ação inicial?
-39. Mulher 70 a com FA crônica, FC 130 em repouso. Meta de frequência pelo controle brando?
-40. Homem 48 a com FA há 3 dias e sem anticoagulação prévia. Próximo passo antes de cardioverter?
-41. ECG mostra taquicardia irregular com QRS estreito; quais arritmias você considera primeiro?
-42. Mulher 50 a, taquicardia estável QRS estreito. Qual mecanismo eletrofisiológico mais comum das taquiarritmias?
-43. Mulher 60 a, FA crônica não valvar, CHA2DS2-VASc = 3. Precisa anticoagulação permanente?
-44. Mulher 62 a, FA há 60 h, agendada para cardioversão elétrica. Que exame deve anteceder o procedimento?
-45. Homem 55 a, FA > 48 h cardiovertido hoje. Por quanto tempo manter anticoagulação plena pós-choque?
-46. Homem 65 a, FA não valvar, CHA2DS2-VASc = 1. Anticoagulação oral é obrigatória?
-47. Homem 72 a com FA não valvar quer saber risco de AVC. Que escore deve ser aplicado?
-48. Mulher 70 a com FA; onde se formam a maioria dos trombos responsáveis por AVC?
-49. Por que pacientes anticoagulados ainda precisam de 4 semanas de terapia após cardioversão de FA longa?
-50. Lista os DOACs disponíveis para FA não valvar que dispensam controle de INR.
-51. Homem 67 a com FA recém-diagnosticada. Qual mnemônico ABC guia o manejo inicial?
-52. Mulher 74 a em FA não valvar pede avaliação do risco tromboembólico. Quais componentes do CHA2DS2-VASC?
-53. Mesmo caso: para estimar risco de sangramento, quais itens formam o HAS-BLED?
-54. Homem 52 a com FA: CHA2DS2-VASC = 1 e HAS-BLED = 4. Qual cautela antes de anticoagular?
-55. Paciente 58 a, taquicardia QRS largo irregular. Diagnóstico a considerar primeiro?
-56. Homem 67 a, FC 220 QRS largo e regular pós-IAM, sem pulso. Qual antiarrítmico após 1º choque sem sucesso?
-57. Mulher 45 a, uso de haloperidol, apresenta TV polimórfica com rotação do eixo (torsades). Tratamento de escolha?
-58. Idoso 75 a, digoxina crônica, TV com alternância de QRS direita/esquerda e R-R regular. Arritmia típica?
-59. Paciente 30 a, QT longo congênito, episódio de síncope em torsades revertida. Mecanismo associado ao QT longo?
-60. TV com duração de 20 s, sem queda de pressão. Como classificar esse episódio?
-61. Extrassístole ventricular cai sobre o final da onda T. Qual fenômeno é esse e qual o perigo?
-62. Mulher 38 a em torsades de pointes estável. Primeira medicação e dose?
-63. Paciente em taquicardia QRS largo de etiologia indefinida. Por que evitar verapamil antes de esclarecer o ritmo?
-64. Mulher 28 a, QTc 520 ms congênito, sofre síncope com TV polimórfica. Qual mecanismo arrítmico típico do QT longo?
-65. Homem 60 a, taquicardia irregular QRS largo. Quais dois diagnósticos devem ser considerados primeiro?
-66. Paciente 52 a apresenta extrassístole prematura que cai sobre o platô da onda T, desencadeando TV. Nome desse fenômeno?
-67. Homem 60 a, bradicardia 42 bpm, QRS largo, pós-IAM, consciente. Qual ritmo de escape provável?
-68. Paciente 55 a, ECG: PR 240 ms, sem bloqueios. Qual definição desse distúrbio de condução?
-69. Mulher 70 a, pós-IAM inferior, BAVT persistente apesar de reperfusão. Indicação para qual dispositivo?
-70. Paciente 62 a em uso de Atropina 2 mg sem resposta no BAVT infra-hissiano. Por que a droga falha?
-71. Mulher 57 a, MP modo DDD. O que significa a primeira letra D?
-72. Homem 75 a com marca-passo VVI refere fadiga e turgência jugular quando caminha. Diagnóstico provável?
-73. Pós-IAM anterosseptal surge BAV 2º grau Mobitz II. Por que é considerado bloqueio "maligno"?
-74. Paciente com MP VVI refere fadiga e pulso canhão. Qual modo de estimulação poderia restaurar sincronia AV?
-75. Homem 74 a com MP VVI apresenta turgência jugular a cada batimento e tontura. Qual diagnóstico provável?
-76. Homem 40 a, ECG: PR 240 ms, ritmo sinusal. Como denominar esse distúrbio de condução?
-77. Homem 58 a pós-IAM, QRS 140 ms, FC 80, ritmo ventricular independente do átrio. Diagnóstico típico?
-78. Homem 63 a com BAV total sintomático persistente. Qual a indicação definitiva?
-79. Paciente 70 a, FA permanente + BAV total. Qual modo de MP preferido?
-80. Mulher 59 a, doença do nó sinusal sintomática. Dispositivo definitivo indicado?
-81. Homem 68 a, BAV 2º grau Mobitz II intermitente e sintomático. Qual conduta definitiva?
-82. Paciente 64 a, bradicardia supra-hissiana sem resposta à atropina. Próximo passo imediato?
-83. Idoso 77 a, IAM inferior evolui com BAVT sintomático. Suporte inicial recomendado?
-84. MP modo VVI: o que significam suas três letras?
-85. MP modo VDD: que câmaras ele sente e estimula?
-86. No código DDDR, o que representa o "R" final?
-87. Parada cardíaca, ritmo indetectável no monitor, sem atividade elétrica. Quais dois ritmos não-chocáveis possíveis?
-88. Paciente em RCP, compressões a 80/min e 4 cm profundidade. Qual ajuste necessário para alta qualidade?
-89. Adulto em PCR sem via aérea avançada. Relação compressão-ventilação correta?
-90. Sequência inicial no BLS para testemunha leiga ao encontrar vítima colapsada?
-91. PCR em assistolia há 2 min; quais medicações essenciais e intervalo?
-92. Equipe identifica causas reversíveis durante AESP. Cite os 5 H's prioritários.
-93. Após RCE, paciente comatoso. Medida de controle de temperatura alvo?
-94. Atleta 22 a, morte súbita recuperada; eco sugere hipertrofia septal. Qual a causa mais comum de morte súbita jovem?
-95. Jovem 30 a, FA rápida + onda delta no ECG. Qual risco de prescrever beta-bloqueador ou verapamil nesse contexto?
-96. Portador de TV sustentada e FE 30 % pós-IAM. Melhor estratégia de prevenção de morte súbita?
-97. PCR em ritmo não-chocável; já aplicada adrenalina 1 mg. Em quanto tempo repetir a dose durante RCP contínua?
-98. Pós-RCE, paciente permanece comatoso. Meta de temperatura alvo para neuroproteção?
-99. Jovem 25 a leva bolada forte no tórax e cai em FV segundos depois. Qual fenômeno explica a PCR?
-100. Parada cardíaca em FV; usado desfibrilador bifásico sem marca visível. Qual carga aplicar?
-101. Paciente > 30 anos com morte súbita recuperada; qual causa coronariana responde pela maioria dos casos?
-102. Equipe inicia RCP em PCR e investiga causas reversíveis. Cite três dos 5 H's obrigatórios.
-103. Paciente em FV recebe choque bifásico 200 J. Qual passo imediato pós-choque?
-104. Equipe de RCP discute o conceito "no hands-off". O que ele determina?
-105. Durante PCR, qual vasopressor continua recomendado pelo manual?
-106. PCR sem causa aparente: liste os 5 T's reversíveis a investigar.
-107. Qual profundidade ideal das compressões torácicas na RCP de adulto?
-108. Taxa alvo de compressões por minuto para RCP de alta qualidade?
-109. Equipe nota que o esterno não retorna completamente entre compressões. Por que isso reduz a eficácia da RCP?
-110. Jovem 30 a, FA + pré-excitação (onda delta). PA 120×80. Qual antiarrítmico indicado se estável?
-111. Homem 68 a com BAV 2º Mobitz II recém-instalado, FC 28, hipotenso. Conduta de emergência?
-112. Classe antiarrítmica IA: cite um exemplo e seu principal efeito eletrofisiológico.
-113. Classe IB: cite um fármaco e uso típico no pronto-socorro.
-114. Classe IC: qual precaução essencial antes de usar em coronariopata?
-115. Classe II (beta-bloqueadores): como ajudam no controle da FA?
-116. Classe III (ex.: amiodarona): qual o efeito sobre a repolarização?
-117. Classe IV: quais drogas e arritmias controlam no PS?
-118. Amiodarona crônica: complicação pulmonar que limita o uso?
-119. Cite dois efeitos extra-cardíacos frequentes da amiodarona prolongada.
-120. Homem 62 a, TV monomórfica sustentada estável (PA 120×75). Qual antiarrítmico EV indicado?
+1. Homem 60 a, bradicardia 42 bpm, QRS largo, pós-IAM, consciente. Qual ritmo de escape provável?
+2. Paciente 55 a, ECG: PR 240 ms, sem bloqueios. Qual definição desse distúrbio de condução?
+3. Mulher 70 a, pós-IAM inferior, BAVT persistente apesar de reperfusão. Indicação para qual dispositivo?
+4. Paciente 62 a em uso de Atropina 2 mg sem resposta no BAVT infra-hissiano. Por que a droga falha?
+5. Mulher 57 a, MP modo DDD. O que significa a primeira letra D?
+6. Homem 75 a com marca-passo VVI refere fadiga e turgência jugular quando caminha. Diagnóstico provável?
+7. Pós-IAM anterosseptal surge BAV 2º grau Mobitz II. Por que é considerado bloqueio "maligno"?
+8. Paciente com MP VVI refere fadiga e pulso canhão. Qual modo de estimulação poderia restaurar sincronia AV?
+9. Homem 74 a com MP VVI apresenta turgência jugular a cada batimento e tontura. Qual diagnóstico provável?
+10. Homem 40 a, ECG: PR 240 ms, ritmo sinusal. Como denominar esse distúrbio de condução?
+11. Homem 58 a pós-IAM, QRS 140 ms, FC 80, ritmo ventricular independente do átrio. Diagnóstico típico?
+12. Homem 63 a com BAV total sintomático persistente. Qual a indicação definitiva?
+13. Paciente 70 a, FA permanente + BAV total. Qual modo de MP preferido?
+14. Mulher 59 a, doença do nó sinusal sintomática. Dispositivo definitivo indicado?
+15. Homem 68 a, BAV 2º grau Mobitz II intermitente e sintomático. Qual conduta definitiva?
+16. Paciente 64 a, bradicardia supra-hissiana sem resposta à atropina. Próximo passo imediato?
+17. Idoso 77 a, IAM inferior evolui com BAVT sintomático. Suporte inicial recomendado?
+18. MP modo VVI: o que significam suas três letras?
+19. MP modo VDD: que câmaras ele sente e estimula?
+20. No código DDDR, o que representa o "R" final?
+21. Mulher 60 a, FA crônica não valvar, CHA2DS2-VASc = 3. Precisa anticoagulação permanente?
+22. Mulher 62 a, FA há 60 h, agendada para cardioversão elétrica. Que exame deve anteceder o procedimento?
+23. Homem 55 a, FA > 48 h cardiovertido hoje. Por quanto tempo manter anticoagulação plena pós-choque?
+24. Homem 65 a, FA não valvar, CHA2DS2-VASc = 1. Anticoagulação oral é obrigatória?
+25. Homem 72 a com FA não valvar quer saber risco de AVC. Que escore deve ser aplicado?
+26. Mulher 70 a com FA; onde se formam a maioria dos trombos responsáveis por AVC?
+27. Por que pacientes anticoagulados ainda precisam de 4 semanas de terapia após cardioversão de FA longa?
+28. Lista os DOACs disponíveis para FA não valvar que dispensam controle de INR.
+29. Homem 67 a com FA recém-diagnosticada. Qual mnemônico ABC guia o manejo inicial?
+30. Mulher 74 a em FA não valvar pede avaliação do risco tromboembólico. Quais componentes do CHA2DS2-VASC?
+31. Mesmo caso: para estimar risco de sangramento, quais itens formam o HAS-BLED?
+32. Homem 52 a com FA: CHA2DS2-VASC = 1 e HAS-BLED = 4. Qual cautela antes de anticoagular?
+33. Jovem 30 a, FA + pré-excitação (onda delta). PA 120×80. Qual antiarrítmico indicado se estável?
+34. Homem 68 a com BAV 2º Mobitz II recém-instalado, FC 28, hipotenso. Conduta de emergência?
+35. Classe antiarrítmica IA: cite um exemplo e seu principal efeito eletrofisiológico.
+36. Classe IB: cite um fármaco e uso típico no pronto-socorro.
+37. Classe IC: qual precaução essencial antes de usar em coronariopata?
+38. Classe II (beta-bloqueadores): como ajudam no controle da FA?
+39. Classe III (ex.: amiodarona): qual o efeito sobre a repolarização?
+40. Classe IV: quais drogas e arritmias controlam no PS?
+41. Amiodarona crônica: complicação pulmonar que limita o uso?
+42. Cite dois efeitos extra-cardíacos frequentes da amiodarona prolongada.
+43. Homem 62 a, TV monomórfica sustentada estável (PA 120×75). Qual antiarrítmico EV indicado?
+44. Homem 68 a, FE 30 %, NYHA III apesar de carvedilol, sacubitril/valsartana e espironolactona. ECG: QRS 160 ms em BCRE. Qual dispositivo considerar?
+45. Mulher 62 a, ICFER compensada, QRS 130 ms. Pergunta sobre TRC. Está indicada?
+46. Paciente 70 a hipertenso desenvolve IC, FE 48 %. Como classificar essa FE segundo a apostila?
+47. Homem 73 a pós-IAM, FE subiu de 30 % para 45 % após 1 ano de tratamento. Como nomear esse padrão?
+48. Paciente 55 a, dispneia PND, estertores, B3. ECG com FA. Cite 3 causas principais de IC segundo a apostila.
+49. Hospitalização por ICA perfil B (quente/úmido). Quais fármacos EV preferir nas primeiras horas?
+50. Perfil hemodinâmico C (frio/úmido) na admissão. Cite 2 drogas inotrópicas de escolha.
+51. Idosa 80 a, FE 35 %, B3, BNP alto. Que exame de imagem confirma remodelamento esférico do ventrículo?
+52. Homem 60 a, IC crônica, quer saber por que deve usar dapagliflozina. Qual benefício comprovado?
+53. Paciente 48 a com FE 25 % IC estável. Está assintomático, mas pergunta sobre ICD para morte súbita. Indicação?
+54. Mulher 75 a, FE 32 %, NYHA IV, refratária apesar de TRC e diuréticos IV. Próximo passo terapêutico?
+55. Paciente 67 a, FE 28 %, creatinina 1,8. Qual antagonista da aldosterona priorizar e monitorar?
+56. Homem 70 a em uso de IECA desenvolve tosse seca irritativa. Alternativa que mantém benefício prognóstico?
+57. Paciente 65 a, NYHA III, PA 90×60, congesto. Precisa de vasodilatador IV?
+58. Jovem 30 a, miocardite aguda, choque cardiogênico, escore inotrópico 12. Indicação segundo apostila?
+59. Planejando alta de ICA. Quais medidas devem ser concluídas antes da alta segundo a apostila?
+60. Por que diuréticos não prolongam sobrevida mesmo reduzindo sintomas?
+61. Paciente com ICFER pergunta sobre restrição de sal na dieta. Qual orientação prática?
+62. Homem 58 a, EF preservada, obesidade, HAS. Qual fisiopatologia chave na ICFEP segundo a apostila?
+63. Idosa 82 a com ICFEP descompensada. Drogas de sobrevida indicadas?
+64. Mulher 69 a, FE 40 %, considera-se ICFER ou ICFElr?
+65. Paciente 59 a, FE 45 %, pergunta se pode receber sacubitril/valsartana.
+66. Na consulta pós-alta, peso subiu 2 kg em 3 dias. Orientação imediata?
+67. Paciente com IC avançada pergunta sobre cuidados paliativos. Qual momento para iniciar discussão?
+68. Sinal clínico de baixo débito no perfil C que orienta uso de inotrópico?
+69. Qual principal biomarcador laboratorial utilizado para confirmar IC descompensada?
+70. Raio-X de tórax em IC mostra quais 2 achados clássicos de congestão pulmonar?
+71. Teste de esforço cardiopulmonar: VO2 pico < 14 mL/kg/min em ICFER sugere o quê?
+72. No edema agudo de pulmão, que vasoativo reduz pré-carga rapidamente se PA permite?
+73. Descreva o alvo de pressão sistólica habitual antes de iniciar nitroprussiato na IC aguda.
+74. Parada cardíaca, ritmo indetectável no monitor, sem atividade elétrica. Quais dois ritmos não-chocáveis possíveis?
+75. Paciente em RCP, compressões a 80/min e 4 cm profundidade. Qual ajuste necessário para alta qualidade?
+76. Adulto em PCR sem via aérea avançada. Relação compressão-ventilação correta?
+77. Sequência inicial no BLS para testemunha leiga ao encontrar vítima colapsada?
+78. PCR em assistolia há 2 min; quais medicações essenciais e intervalo?
+79. Equipe identifica causas reversíveis durante AESP. Cite os 5 H's prioritários.
+80. Após RCE, paciente comatoso. Medida de controle de temperatura alvo?
+81. Atleta 22 a, morte súbita recuperada; eco sugere hipertrofia septal. Qual a causa mais comum de morte súbita jovem?
+82. Jovem 30 a, FA rápida + onda delta no ECG. Qual risco de prescrever beta-bloqueador ou verapamil nesse contexto?
+83. Portador de TV sustentada e FE 30 % pós-IAM. Melhor estratégia de prevenção de morte súbita?
+84. PCR em ritmo não-chocável; já aplicada adrenalina 1 mg. Em quanto tempo repetir a dose durante RCP contínua?
+85. Pós-RCE, paciente permanece comatoso. Meta de temperatura alvo para neuroproteção?
+86. Jovem 25 a leva bolada forte no tórax e cai em FV segundos depois. Qual fenômeno explica a PCR?
+87. Parada cardíaca em FV; usado desfibrilador bifásico sem marca visível. Qual carga aplicar?
+88. Paciente > 30 anos com morte súbita recuperada; qual causa coronariana responde pela maioria dos casos?
+89. Equipe inicia RCP em PCR e investiga causas reversíveis. Cite três dos 5 H's obrigatórios.
+90. Paciente em FV recebe choque bifásico 200 J. Qual passo imediato pós-choque?
+91. Equipe de RCP discute o conceito "no hands-off". O que ele determina?
+92. Durante PCR, qual vasopressor continua recomendado pelo manual?
+93. PCR sem causa aparente: liste os 5 T's reversíveis a investigar.
+94. Qual profundidade ideal das compressões torácicas na RCP de adulto?
+95. Taxa alvo de compressões por minuto para RCP de alta qualidade?
+96. Equipe nota que o esterno não retorna completamente entre compressões. Por que isso reduz a eficácia da RCP?
+97. Mulher 55 a, palpitações súbitas, FC 190 (QRS estreito), PA 110×70. ECG com pseudo-S em D2 e pseudo-R' em V1. Qual droga usar para reverter?
+98. Homem 72 a, pós-IAM, FC 160 com QRS 160 ms, dissociação A-V, PA 78×48 e sudorese fria. Conduta imediata?
+99. Paciente 40 a, palpitações progressivas (fenômeno warm-up), FC 150, PR visível normal. Mecanismo provável da taquiarritmia?
+100. Idoso 80 a, dispneia, FC 110 irregular, ondas F anárquicas 400–600 bpm. Objetivo de controle da frequência em repouso?
+101. Mulher 68 a, FA há 60 h, assintomática, solicita cardioversão elétrica agendada. Qual exame deve preceder o procedimento?
+102. Homem 25 a, crise asmática, ECG mostra ritmo irregular, FC 140, ≥3 morfologias de P. Diagnóstico?
+103. Paciente 50 a, QRS estreito 300 bpm, padrão serrilhado contínuo. Qual arritmia provável?
+104. Homem 40 a, síncope durante exercício, ECG mostra pré-excitação (PR < 120 ms + onda delta). Qual é o achado clássico do WPW?
+105. Homem 60 a, taquicardia FC 180, PA 78×50, estertores bilaterais. Quais achados definem instabilidade hemodinâmica que exigem cardioversão imediata?
+106. Mulher 45 a, TSVP nodal refratária a manobras vagais, FC 190, consciente. Qual fármaco EV deve ser administrado de pronto?
+107. Idoso 78 a, ECG sem ondas P e intervalos R-R totalmente desiguais. Como se descreve esse padrão rítmico?
+108. Paciente 70 a com FA permanente, FC 135 em repouso, assintomático. Qual meta de frequência aceitável segundo controle leniente?
+109. Paciente 50 a, ECG mostra ondas serrilhadas regulares a cada 0,20 s. Qual frequência atrial esperada no flutter típico?
+110. Em circuitos de reentrada, cite os três requisitos eletrofisiológicos indispensáveis.
+111. Taquicardia inicia gradualmente com aumento progressivo da FC (warm-up). Qual o mecanismo provável?
+112. Idoso 78 a, DPOC agudizado, FC 120 irregular, ≥3 morfologias de onda P. Qual arritmia mais provável?
+113. Quais critérios eletrocardiográficos confirmam Taquicardia Atrial Multifocal?
+114. Paciente hipotenso em TSVP; cardioversão elétrica será feita. Que medida realizar se houver tempo antes do choque?
+115. No papel de ECG a 25 mm/s, qual distância máxima entre ondas R corresponde a FC > 100 bpm?
+116. Por que um choque sincronizado raramente converte taquicardia atrial automática?
+117. Paciente 56 a em taquiarritmia desenvolve estertores difusos. Qual intervenção prioritária na presença desse critério de instabilidade?
+118. Paciente com flutter atrial recebe quinidina sem bloqueio nodal AV. Qual complicação pode ocorrer?
+119. Homem 38 a, palpitações; ECG mostra onda P negativa em D2, QRS estreito, FC 140. Arritmia mais provável?
+120. Mulher 68 a, taquicardia FC 180, PA 78×48, sudorese e confusão. Qual conduta imediata no PS?
+121. Paciente com FA + cardiomiopatia hipertrófica, sem outros fatores. Precisa anticoagular?
+122. Idoso DPOC exacerbado, FC 130 irregular, ≥3 morfologias de onda P no ECG. Qual arritmia?
+123. Paciente em flutter típico recebe quinidina isolada. Qual complicação temível dessa conduta?
+124. Jovem 29 a, palpitações rápidas de início e fim súbito. Qual arritmia responde em 90 % a adenosina?
+125. Paciente em FA + pré-excitação sintomática. Quais drogas devem ser evitadas de imediato?
+126. Idosa 82 a, taquiarritmia com confusão, estertores e PA 86×54. Qual critério confirma instabilidade clínica?
+127. ECG mostra PR 100 ms + onda delta difusa em ritmo sinusal. Qual síndrome está presente?
+128. Homem 65 a, flutter atrial típico. Qual mecanismo eletrofisiológico sustenta o ritmo?
+129. Mulher 40 a, taquicardia sinusal persistente sem causa orgânica. Nome da condição?
+130. Taquiarritmia rápida: quais três condições são requisitos para circuito de reentrada?
+131. Paciente com taquiarritmia estável; distância R-R no papel é 1,2 cm (25 mm/s). FC aproximada?
+132. Homem 70 a, abuso de digoxina; FC 100, QRS estreito, ritmo regular de junção AV. Arritmia clássica?
+133. Mulher 58 a, DPOC, ECG em ritmo sinusal, ondas P com 4 morfologias diferentes, FC 90. Diagnóstico?
+134. Homem 66 a chega ao PS com dor torácica + taquicardia QRS estreito 190 bpm, PA 92×60. Ação inicial?
+135. Mulher 70 a com FA crônica, FC 130 em repouso. Meta de frequência pelo controle brando?
+136. Homem 48 a com FA há 3 dias e sem anticoagulação prévia. Próximo passo antes de cardioverter?
+137. ECG mostra taquicardia irregular com QRS estreito; quais arritmias você considera primeiro?
+138. Mulher 50 a, taquicardia estável QRS estreito. Qual mecanismo eletrofisiológico mais comum das taquiarritmias?
+139. Paciente 58 a, taquicardia QRS largo irregular. Diagnóstico a considerar primeiro?
+140. Homem 67 a, FC 220 QRS largo e regular pós-IAM, sem pulso. Qual antiarrítmico após 1º choque sem sucesso?
+141. Mulher 45 a, uso de haloperidol, apresenta TV polimórfica com rotação do eixo (torsades). Tratamento de escolha?
+142. Idoso 75 a, digoxina crônica, TV com alternância de QRS direita/esquerda e R-R regular. Arritmia típica?
+143. Paciente 30 a, QT longo congênito, episódio de síncope em torsades revertida. Mecanismo associado ao QT longo?
+144. TV com duração de 20 s, sem queda de pressão. Como classificar esse episódio?
+145. Extrassístole ventricular cai sobre o final da onda T. Qual fenômeno é esse e qual o perigo?
+146. Mulher 38 a em torsades de pointes estável. Primeira medicação e dose?
+147. Paciente em taquicardia QRS largo de etiologia indefinida. Por que evitar verapamil antes de esclarecer o ritmo?
+148. Mulher 28 a, QTc 520 ms congênito, sofre síncope com TV polimórfica. Qual mecanismo arrítmico típico do QT longo?
+149. Homem 60 a, taquicardia irregular QRS largo. Quais dois diagnósticos devem ser considerados primeiro?
+150. Paciente 52 a apresenta extrassístole prematura que cai sobre o platô da onda T, desencadeando TV. Nome desse fenômeno?
 
 ## Conteúdo clínico de referência (MedHub)
 

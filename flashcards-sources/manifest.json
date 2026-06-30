@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-30T01:30:24.447Z",
+  "generatedAt": "2026-06-30T01:40:07.028Z",
   "exports": [
     {
       "deckId": "anafilaxia",
@@ -16,7 +16,7 @@
     {
       "deckId": "cardiologia",
       "name": "Cardiologia",
-      "cards": 120,
+      "cards": 150,
       "file": "export/cardiologia.md"
     },
     {

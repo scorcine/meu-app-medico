@@ -6,7 +6,7 @@
 - deckId: `crise-hipertensiva`
 - Baralho: Crise hipertensiva
 - Cards atuais no app: 30
-- Meta: 30 cards por baralho
+- Meta: 30 cards neste baralho
 - Fonte principal: Prescrições PS
 
 ## Cards existentes (não repetir)

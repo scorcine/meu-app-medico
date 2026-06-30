@@ -1,0 +1,128 @@
+{
+  "deckId": "cardio-icc",
+  "name": "Insuficiência cardíaca",
+  "icon": "💔",
+  "desc": "30 cards — ICFER, descompensação, dispositivos e drogas de sobrevida",
+  "cards": [
+    {
+      "front": "Homem 68 a, FE 30 %, NYHA III apesar de carvedilol, sacubitril/valsartana e espironolactona. ECG: QRS 160 ms em BCRE. Qual dispositivo considerar?",
+      "back": "Candidatar à TRC · critérios: FE ≤ 35 % · QRS ≥ 150 ms com BCRE · sintomático (NYHA II-IV) em ritmo sinusal"
+    },
+    {
+      "front": "Mulher 62 a, ICFER compensada, QRS 130 ms. Pergunta sobre TRC. Está indicada?",
+      "back": "Não · TRC exige QRS ≥ 150 ms (ou 130–149 ms com recomendações menores) e morfologia BCRE"
+    },
+    {
+      "front": "Paciente 70 a hipertenso desenvolve IC, FE 48 %. Como classificar essa FE segundo a apostila?",
+      "back": "ICFElr (fração de ejeção levemente reduzida 41–49 %)"
+    },
+    {
+      "front": "Homem 73 a pós-IAM, FE subiu de 30 % para 45 % após 1 ano de tratamento. Como nomear esse padrão?",
+      "back": "ICFEm · fração de ejeção melhorada (prévia < 40 % que aumentou ≥ 10 % ultrapassando 40 %)"
+    },
+    {
+      "front": "Paciente 55 a, dispneia PND, estertores, B3. ECG com FA. Cite 3 causas principais de IC segundo a apostila.",
+      "back": "Doença arterial coronariana · hipertensão arterial sistêmica · miocardiopatias diversas"
+    },
+    {
+      "front": "Hospitalização por ICA perfil B (quente/úmido). Quais fármacos EV preferir nas primeiras horas?",
+      "back": "Diurético de alça (bolus ou contínuo) · vasodilatador (nitroglicerina ou nitroprussiato) se PA permite"
+    },
+    {
+      "front": "Perfil hemodinâmico C (frio/úmido) na admissão. Cite 2 drogas inotrópicas de escolha.",
+      "back": "Dobutamina · milrinona (ajustar pela PA e função renal)"
+    },
+    {
+      "front": "Idosa 80 a, FE 35 %, B3, BNP alto. Que exame de imagem confirma remodelamento esférico do ventrículo?",
+      "back": "Ecocardiograma bidimensional demonstrando alterações de geometria e aumento de diâmetros"
+    },
+    {
+      "front": "Homem 60 a, IC crônica, quer saber por que deve usar dapagliflozina. Qual benefício comprovado?",
+      "back": "Inibidor de SGLT2 reduz mortalidade cardiovascular · diminui hospitalizações por IC"
+    },
+    {
+      "front": "Paciente 48 a com FE 25 % IC estável. Está assintomático, mas pergunta sobre ICD para morte súbita. Indicação?",
+      "back": "Prevenção primária indicada em ICFER sintomática classe II-III, FE ≤ 35 %, otimizado ≥ 3 meses"
+    },
+    {
+      "front": "Mulher 75 a, FE 32 %, NYHA IV, refratária apesar de TRC e diuréticos IV. Próximo passo terapêutico?",
+      "back": "Considerar dispositivo de assistência circulatória mecânica ponte para transplante ou terapêutica definitiva"
+    },
+    {
+      "front": "Paciente 67 a, FE 28 %, creatinina 1,8. Qual antagonista da aldosterona priorizar e monitorar?",
+      "back": "Espironolactona 25 mg/dia · monitorar potássio e função renal"
+    },
+    {
+      "front": "Homem 70 a em uso de IECA desenvolve tosse seca irritativa. Alternativa que mantém benefício prognóstico?",
+      "back": "Trocar para BRA (losartana, valsartana, candesartana)"
+    },
+    {
+      "front": "Paciente 65 a, NYHA III, PA 90×60, congesto. Precisa de vasodilatador IV?",
+      "back": "Evitar · PAS < 90 mmHg contraindica nitratos/nitroprussiato"
+    },
+    {
+      "front": "Jovem 30 a, miocardite aguda, choque cardiogênico, escore inotrópico 12. Indicação segundo apostila?",
+      "back": "Avaliar dispositivo de assistência circulatória mecânica · escore > 10 sugere suporte"
+    },
+    {
+      "front": "Planejando alta de ICA. Quais medidas devem ser concluídas antes da alta segundo a apostila?",
+      "back": "Otimizados diuréticos VO · orientação sobre peso diário/dieta · marcar reavaliação em 7-14 dias · prescrição completa das drogas de sobrevida"
+    },
+    {
+      "front": "Por que diuréticos não prolongam sobrevida mesmo reduzindo sintomas?",
+      "back": "Atuam apenas na congestão · não interferem nos mecanismos de remodelamento cardíaco"
+    },
+    {
+      "front": "Paciente com ICFER pergunta sobre restrição de sal na dieta. Qual orientação prática?",
+      "back": "Limitar ingestão de sódio a 2-3 g/dia · evitar alimentos ultraprocessados ricos em sal"
+    },
+    {
+      "front": "Homem 58 a, EF preservada, obesidade, HAS. Qual fisiopatologia chave na ICFEP segundo a apostila?",
+      "back": "Rigidez e relaxamento prejudicado do ventrículo esquerdo · aumento de pressões de enchimento"
+    },
+    {
+      "front": "Idosa 82 a com ICFEP descompensada. Drogas de sobrevida indicadas?",
+      "back": "Nenhuma comprovada até o momento · foco em controle de PA, frequência e congestão"
+    },
+    {
+      "front": "Mulher 69 a, FE 40 %, considera-se ICFER ou ICFElr?",
+      "back": "Limite superior da ICFER (≤ 40 %) · portanto ICFER"
+    },
+    {
+      "front": "Paciente 59 a, FE 45 %, pergunta se pode receber sacubitril/valsartana.",
+      "back": "Com FE 41-49 % (ICFElr) não há indicação formal de INRA · terapia otimizada padrão"
+    },
+    {
+      "front": "Na consulta pós-alta, peso subiu 2 kg em 3 dias. Orientação imediata?",
+      "back": "Ajustar dose de diurético · reforçar vigilância de peso diário (> 2 kg/3 dias sugere retenção)"
+    },
+    {
+      "front": "Paciente com IC avançada pergunta sobre cuidados paliativos. Qual momento para iniciar discussão?",
+      "back": "Quando sintomas refratários persistem apesar de tratamento avançado · integrar paliativo precocemente"
+    },
+    {
+      "front": "Sinal clínico de baixo débito no perfil C que orienta uso de inotrópico?",
+      "back": "Extremidades frias · oligúria · confusão mental"
+    },
+    {
+      "front": "Qual principal biomarcador laboratorial utilizado para confirmar IC descompensada?",
+      "back": "BNP ou NT-proBNP elevados"
+    },
+    {
+      "front": "Raio-X de tórax em IC mostra quais 2 achados clássicos de congestão pulmonar?",
+      "back": "Cefalização das veias pulmonares · linhas B de Kerley"
+    },
+    {
+      "front": "Teste de esforço cardiopulmonar: VO2 pico < 14 mL/kg/min em ICFER sugere o quê?",
+      "back": "Mau prognóstico · possível indicação de transplante cardíaco"
+    },
+    {
+      "front": "No edema agudo de pulmão, que vasoativo reduz pré-carga rapidamente se PA permite?",
+      "back": "Nitroglicerina em altas doses bolus ou infusão"
+    },
+    {
+      "front": "Descreva o alvo de pressão sistólica habitual antes de iniciar nitroprussiato na IC aguda.",
+      "back": "PAS idealmente > 100 mmHg para evitar hipotensão abrupta"
+    }
+  ]
+}

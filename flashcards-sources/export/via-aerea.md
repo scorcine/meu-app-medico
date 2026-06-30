@@ -6,7 +6,7 @@
 - deckId: `via-aerea`
 - Baralho: Via aérea e intubação
 - Cards atuais no app: 30
-- Meta: 30 cards por baralho
+- Meta: 30 cards neste baralho
 - Fonte principal: Guia de emergência
 
 ## Cards existentes (não repetir)

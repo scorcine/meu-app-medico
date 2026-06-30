@@ -6,7 +6,7 @@
 - deckId: `gasometria`
 - Baralho: Gasometria arterial
 - Cards atuais no app: 30
-- Meta: 30 cards por baralho
+- Meta: 30 cards neste baralho
 - Fonte principal: Interpretação do exame
 
 ## Cards existentes (não repetir)

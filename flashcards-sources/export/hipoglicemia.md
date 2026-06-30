@@ -6,7 +6,7 @@
 - deckId: `hipoglicemia`
 - Baralho: Hipoglicemia
 - Cards atuais no app: 30
-- Meta: 30 cards por baralho
+- Meta: 30 cards neste baralho
 - Fonte principal: Prescrições PS
 
 ## Cards existentes (não repetir)
