@@ -1,71 +1,11 @@
 {
-  "generatedAt": "2026-06-30T00:38:55.090Z",
+  "generatedAt": "2026-06-30T00:55:11.853Z",
   "exports": [
-    {
-      "deckId": "anafilaxia",
-      "name": "Anafilaxia",
-      "cards": 30,
-      "file": "export/anafilaxia.md"
-    },
-    {
-      "deckId": "avc",
-      "name": "AVC isquêmico agudo",
-      "cards": 30,
-      "file": "export/avc.md"
-    },
     {
       "deckId": "cardio-arritmias",
       "name": "Cardiologia — Arritmias e PCR",
-      "cards": 30,
+      "cards": 60,
       "file": "export/cardio-arritmias.md"
-    },
-    {
-      "deckId": "crise-hipertensiva",
-      "name": "Crise hipertensiva",
-      "cards": 30,
-      "file": "export/crise-hipertensiva.md"
-    },
-    {
-      "deckId": "dengue",
-      "name": "Dengue no PS",
-      "cards": 30,
-      "file": "export/dengue.md"
-    },
-    {
-      "deckId": "gasometria",
-      "name": "Gasometria arterial",
-      "cards": 30,
-      "file": "export/gasometria.md"
-    },
-    {
-      "deckId": "hipoglicemia",
-      "name": "Hipoglicemia",
-      "cards": 30,
-      "file": "export/hipoglicemia.md"
-    },
-    {
-      "deckId": "iam",
-      "name": "IAM / SCA",
-      "cards": 30,
-      "file": "export/iam.md"
-    },
-    {
-      "deckId": "pneumonia",
-      "name": "Pneumonia adquirida na comunidade",
-      "cards": 30,
-      "file": "export/pneumonia.md"
-    },
-    {
-      "deckId": "sepse",
-      "name": "Sepse e choque séptico",
-      "cards": 30,
-      "file": "export/sepse.md"
-    },
-    {
-      "deckId": "via-aerea",
-      "name": "Via aérea e intubação",
-      "cards": 30,
-      "file": "export/via-aerea.md"
     }
   ]
 }

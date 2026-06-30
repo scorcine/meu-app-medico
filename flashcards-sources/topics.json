@@ -71,6 +71,7 @@
     },
     {
       "id": "cardio-arritmias",
+      "cardsPerDeck": 60,
       "sources": [
         { "kind": "ps", "conditionId": "arritmias" },
         { "kind": "ps", "conditionId": "cardioversao-eletrica" },

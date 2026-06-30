@@ -12,6 +12,7 @@ const {
   draftsDir,
   loadDecks,
   loadTopicsConfig,
+  expectedCardsForDeck,
   deckFileName,
   parseDraftFile,
   findDuplicateFronts,
@@ -57,7 +58,7 @@ function mergeDeckMeta (draft, existing) {
 function importOne (draftPath, options) {
   const draft = parseDraftFile(draftPath);
   const config = loadTopicsConfig();
-  const expected = config.cardsPerDeck || 30;
+  const expected = expectedCardsForDeck(config, draft.deckId);
   const existing = loadDecks().find(d => d.id === draft.deckId);
 
   if (draft.cards.length !== expected) {

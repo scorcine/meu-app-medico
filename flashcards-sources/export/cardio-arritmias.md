@@ -5,8 +5,8 @@
 ## Metadados
 - deckId: `cardio-arritmias`
 - Baralho: Cardiologia — Arritmias e PCR
-- Cards atuais no app: 30
-- Meta: 30 cards por baralho
+- Cards atuais no app: 60
+- Meta: 60 cards por baralho
 - Fonte principal: Guia de emergência
 
 ## Cards existentes (não repetir)
@@ -41,6 +41,36 @@
 28. Equipe identifica causas reversíveis durante AESP. Cite os 5 H's prioritários.
 29. Após RCE, paciente comatoso. Medida de controle de temperatura alvo?
 30. Atleta 22 a, morte súbita recuperada; eco sugere hipertrofia septal. Qual a causa mais comum de morte súbita jovem?
+31. Homem 60 a, taquicardia FC 180, PA 78×50, estertores bilaterais. Quais achados definem instabilidade hemodinâmica que exigem cardioversão imediata?
+32. Mulher 45 a, TSVP nodal refratária a manobras vagais, FC 190, consciente. Qual fármaco EV deve ser administrado de pronto?
+33. Idoso 78 a, ECG sem ondas P e intervalos R-R totalmente desiguais. Como se descreve esse padrão rítmico?
+34. Paciente 70 a com FA permanente, FC 135 em repouso, assintomático. Qual meta de frequência aceitável segundo controle leniente?
+35. Mulher 62 a, FA há 60 h, agendada para cardioversão elétrica. Que exame deve anteceder o procedimento?
+36. Homem 55 a, FA > 48 h cardiovertido hoje. Por quanto tempo manter anticoagulação plena pós-choque?
+37. Jovem 30 a, FA rápida + onda delta no ECG. Qual risco de prescrever beta-bloqueador ou verapamil nesse contexto?
+38. Paciente 50 a, ECG mostra ondas serrilhadas regulares a cada 0,20 s. Qual frequência atrial esperada no flutter típico?
+39. Em circuitos de reentrada, cite os três requisitos eletrofisiológicos indispensáveis.
+40. Taquicardia inicia gradualmente com aumento progressivo da FC (warm-up). Qual o mecanismo provável?
+41. Idoso 78 a, DPOC agudizado, FC 120 irregular, ≥3 morfologias de onda P. Qual arritmia mais provável?
+42. Quais critérios eletrocardiográficos confirmam Taquicardia Atrial Multifocal?
+43. Paciente hipotenso em TSVP; cardioversão elétrica será feita. Que medida realizar se houver tempo antes do choque?
+44. No papel de ECG a 25 mm/s, qual distância máxima entre ondas R corresponde a FC > 100 bpm?
+45. Por que um choque sincronizado raramente converte taquicardia atrial automática?
+46. TV com duração de 20 s, sem queda de pressão. Como classificar esse episódio?
+47. Extrassístole ventricular cai sobre o final da onda T. Qual fenômeno é esse e qual o perigo?
+48. Mulher 38 a em torsades de pointes estável. Primeira medicação e dose?
+49. Paciente em taquicardia QRS largo de etiologia indefinida. Por que evitar verapamil antes de esclarecer o ritmo?
+50. Portador de TV sustentada e FE 30 % pós-IAM. Melhor estratégia de prevenção de morte súbita?
+51. Pós-IAM anterosseptal surge BAV 2º grau Mobitz II. Por que é considerado bloqueio "maligno"?
+52. Paciente com MP VVI refere fadiga e pulso canhão. Qual modo de estimulação poderia restaurar sincronia AV?
+53. Homem 74 a com MP VVI apresenta turgência jugular a cada batimento e tontura. Qual diagnóstico provável?
+54. Homem 65 a, FA não valvar, CHA2DS2-VASc = 1. Anticoagulação oral é obrigatória?
+55. Paciente 56 a em taquiarritmia desenvolve estertores difusos. Qual intervenção prioritária na presença desse critério de instabilidade?
+56. PCR em ritmo não-chocável; já aplicada adrenalina 1 mg. Em quanto tempo repetir a dose durante RCP contínua?
+57. Pós-RCE, paciente permanece comatoso. Meta de temperatura alvo para neuroproteção?
+58. Mulher 28 a, QTc 520 ms congênito, sofre síncope com TV polimórfica. Qual mecanismo arrítmico típico do QT longo?
+59. Paciente com flutter atrial recebe quinidina sem bloqueio nodal AV. Qual complicação pode ocorrer?
+60. Homem 40 a, ECG: PR 240 ms, ritmo sinusal. Como denominar esse distúrbio de condução?
 
 ## Conteúdo clínico de referência (MedHub)
 

@@ -4,10 +4,18 @@
 const fs = require('fs');
 const path = require('path');
 const vm = require('vm');
+const { loadTopicsConfig, expectedCardsForDeck } = require('./_flashcard-sources');
 
 const root = path.join(__dirname, '..');
 const deckDir = path.join(root, 'flashcards');
 const ctx = { console };
+
+let config;
+try {
+  config = loadTopicsConfig();
+} catch {
+  config = { cardsPerDeck: 30, decks: [] };
+}
 
 fs.readdirSync(deckDir)
   .filter(f => f.startsWith('deck-') && f.endsWith('.js'))
@@ -32,10 +40,11 @@ registry.forEach(key => {
     return;
   }
   const n = deck.cards?.length || 0;
+  const expected = expectedCardsForDeck(config, deck.id);
   total += n;
-  const status = n === 30 ? 'OK' : 'AVISO';
-  if (n !== 30) ok = false;
-  console.log(status, deck.id, n, 'cards');
+  const status = n === expected ? 'OK' : 'AVISO';
+  if (n !== expected) ok = false;
+  console.log(status, deck.id, n, 'cards', `(meta ${expected})`);
 });
 
 console.log('---');

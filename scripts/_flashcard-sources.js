@@ -123,6 +123,11 @@ function getDeckTopicEntry (config, deckId) {
   return config.decks.find(d => d.id === deckId);
 }
 
+function expectedCardsForDeck (config, deckId) {
+  const entry = getDeckTopicEntry(config, deckId);
+  return entry?.cardsPerDeck || config.cardsPerDeck || 30;
+}
+
 function buildExportMarkdown (deck, topicEntry, ctx) {
   const lines = [];
   const now = new Date().toISOString();
@@ -135,7 +140,7 @@ function buildExportMarkdown (deck, topicEntry, ctx) {
   lines.push(`- deckId: \`${deck.id}\``);
   lines.push(`- Baralho: ${deck.name}`);
   lines.push(`- Cards atuais no app: ${deck.cards?.length || 0}`);
-  lines.push(`- Meta: ${topicEntry?.cardsPerDeck || 30} cards por baralho`);
+  lines.push(`- Meta: ${topicEntry?.cardsPerDeck || 30} cards neste baralho`);
   lines.push(`- Fonte principal: ${deck.sourceLabel || deck.source || 'MedHub'}`);
   lines.push('');
   lines.push('## Cards existentes (não repetir)');
@@ -267,6 +272,7 @@ module.exports = {
   loadDecks,
   loadTopicsConfig,
   getDeckTopicEntry,
+  expectedCardsForDeck,
   buildExportMarkdown,
   deckFileName,
   deckVarName,
