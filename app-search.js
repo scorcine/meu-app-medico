@@ -69,21 +69,40 @@ function medhubSearchBuildIndex () {
     });
   }
 
-  if (typeof FLASHCARD_DECKS !== 'undefined') {
-    FLASHCARD_DECKS.forEach(function (d) {
+  if (typeof FLASHCARD_TOP_DECKS !== 'undefined') {
+    FLASHCARD_TOP_DECKS.forEach(function (d) {
       medhubSearchAdd(items, {
         module: 'Flashcards',
         moduleOrder: 2.5,
         icon: d.icon || '🃏',
         title: d.name,
-        subtitle: 'Baralho de revisão',
-        keywords: medhubSearchNorm(d.name + ' ' + d.desc + ' flashcard revisao'),
+        subtitle: d.group ? 'Baralho com subtemas' : 'Baralho de revisão',
+        keywords: medhubSearchNorm(d.name + ' ' + d.desc + ' flashcard revisao cardiologia arritmias'),
         go: (function (deckId) {
           return function () {
             if (typeof fcOpenDeck === 'function') fcOpenDeck(deckId);
             else showSection('flashcards');
           };
         })(d.id)
+      });
+    });
+  }
+
+  if (typeof fcGetCardioSubtopics === 'function') {
+    fcGetCardioSubtopics().forEach(function (st) {
+      medhubSearchAdd(items, {
+        module: 'Flashcards',
+        moduleOrder: 2.5,
+        icon: st.icon || '💓',
+        title: 'Cardiologia — ' + st.name,
+        subtitle: 'Subtema de flashcards',
+        keywords: medhubSearchNorm('cardiologia ' + st.name + ' ' + st.desc + ' flashcard arritmias'),
+        go: (function (deckId) {
+          return function () {
+            if (typeof fcOpenDeck === 'function') fcOpenDeck(deckId);
+            else showSection('flashcards');
+          };
+        })(st.id)
       });
     });
   }

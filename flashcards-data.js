@@ -1,25 +1,4 @@
-/* Flashcards — agregador de baralhos (Fase A)
- *
- * COMO ADICIONAR OU AUMENTAR CARDS
- * --------------------------------
- * Manual:
- * 1. Abra flashcards/deck-<tema>.js
- * 2. Adicione { front, back } no array cards
- * 3. Bump ?v=fc-vX em app.html · node scripts/validate-flashcards.js
- *
- * Com Inner AI (pipeline):
- * 1. npm run pipeline:flashcards:export -- --topic sepse
- * 2. Upload flashcards-sources/export/sepse.md na base do assistente Inner
- * 3. Gere JSON (prompt em flashcards-sources/inner-assistant-prompt.txt)
- * 4. Salve em flashcards-sources/drafts/sepse.json
- * 5. npm run pipeline:flashcards:import -- --topic sepse
- *
- * NOVO TEMA
- * ---------
- * 1. Crie flashcards/deck-meu-tema.js com var FLASHCARD_DECK_MEU_TEMA = { id, name, ... cards }
- * 2. Registre abaixo em FLASHCARD_DECK_KEYS
- * 3. Inclua <script src="flashcards/deck-meu-tema.js"> em app.html antes deste arquivo
- */
+/* Flashcards — agregador de baralhos */
 
 const FLASHCARD_DECK_KEYS = [
   'FLASHCARD_DECK_SEPSE',
@@ -32,16 +11,143 @@ const FLASHCARD_DECK_KEYS = [
   'FLASHCARD_DECK_CRISE_HIPERTENSIVA',
   'FLASHCARD_DECK_VIA_AEREA',
   'FLASHCARD_DECK_GASOMETRIA',
-  'FLASHCARD_DECK_CARDIO_ARRITMIAS'
+  'FLASHCARD_DECK_CARDIOLOGIA'
 ];
 
-const FLASHCARD_DECKS = FLASHCARD_DECK_KEYS
-  .map(key => {
-    try {
-      return Function('return typeof ' + key + ' !== "undefined" ? ' + key + ' : null')();
-    } catch {
-      return null;
+function fcResolveDeck (key) {
+  try {
+    return Function('return typeof ' + key + ' !== "undefined" ? ' + key + ' : null')();
+  } catch {
+    return null;
+  }
+}
+
+function fcExpandCardioSubtopics (parentDeck, subtopics) {
+  const decks = [];
+  subtopics.forEach(st => {
+    decks.push({
+      ...st,
+      source: parentDeck.source,
+      sourceLabel: parentDeck.sourceLabel
+    });
+  });
+
+  const cardMap = [];
+  const allCards = [];
+  subtopics.forEach(st => {
+    st.cards.forEach((card, idx) => {
+      cardMap.push({ deckId: st.id, idx });
+      allCards.push(card);
+    });
+  });
+
+  decks.push({
+    id: 'cardiologia-todos',
+    parentId: 'cardiologia',
+    isAllGroup: true,
+    name: 'Todos — Cardiologia',
+    icon: '📚',
+    source: parentDeck.source,
+    sourceLabel: parentDeck.sourceLabel,
+    desc: allCards.length + ' cards — todos os subtemas juntos',
+    cards: allCards,
+    cardMap
+  });
+
+  return decks;
+}
+
+function fcBuildFlashcardDecks () {
+  const expanded = [];
+
+  FLASHCARD_DECK_KEYS.forEach(key => {
+    const deck = fcResolveDeck(key);
+    if (!deck) return;
+    expanded.push(deck);
+
+    if (deck.group && typeof FLASHCARD_CARDIO_SUBTOPICS !== 'undefined') {
+      expanded.push(...fcExpandCardioSubtopics(deck, FLASHCARD_CARDIO_SUBTOPICS));
     }
-  })
-  .filter(Boolean)
-  .sort((a, b) => a.name.localeCompare(b.name, 'pt-BR'));
+  });
+
+  return expanded.sort((a, b) => {
+    const aTop = a.parentId ? 1 : 0;
+    const bTop = b.parentId ? 1 : 0;
+    if (aTop !== bTop) return aTop - bTop;
+    return a.name.localeCompare(b.name, 'pt-BR');
+  });
+}
+
+const FLASHCARD_DECKS = fcBuildFlashcardDecks();
+const FLASHCARD_TOP_DECKS = FLASHCARD_DECKS.filter(d => !d.parentId);
+
+function fcGetDeckById (deckId) {
+  return FLASHCARD_DECKS.find(d => d.id === deckId) || null;
+}
+
+function fcGetCardioSubtopics () {
+  return FLASHCARD_DECKS
+    .filter(d => d.parentId === 'cardiologia' && !d.isAllGroup)
+    .sort((a, b) => a.name.localeCompare(b.name, 'pt-BR'));
+}
+
+function fcGetCardioAllDeck () {
+  return fcGetDeckById('cardiologia-todos');
+}
+
+function fcIsGroupDeck (deck) {
+  return !!(deck && deck.group);
+}
+
+function fcProgressRefForCard (deck, cardIdx) {
+  if (deck.cardMap && deck.cardMap[cardIdx]) {
+    return deck.cardMap[cardIdx];
+  }
+  return { deckId: deck.id, idx: cardIdx };
+}
+
+function fcMigrateCardioArritmiasProgress () {
+  if (typeof localStorage === 'undefined') return;
+  if (typeof FLASHCARD_CARDIO_LEGACY_FRONTS === 'undefined') return;
+
+  const legacyId = typeof FLASHCARD_CARDIO_LEGACY_ID !== 'undefined'
+    ? FLASHCARD_CARDIO_LEGACY_ID
+    : 'cardio-arritmias';
+
+  let progress;
+  try {
+    progress = JSON.parse(localStorage.getItem('medhub-flashcards-progress-v2') || '{}');
+  } catch {
+    return;
+  }
+
+  const legacy = progress[legacyId];
+  if (!legacy || !legacy.cards) return;
+
+  const frontToRef = new Map();
+  fcGetCardioSubtopics().forEach(st => {
+    st.cards.forEach((card, idx) => frontToRef.set(card.front, { deckId: st.id, idx }));
+  });
+
+  let migrated = 0;
+  FLASHCARD_CARDIO_LEGACY_FRONTS.forEach((front, oldIdx) => {
+    const prog = legacy.cards[String(oldIdx)];
+    if (!prog) return;
+    const ref = frontToRef.get(front);
+    if (!ref) return;
+    if (!progress[ref.deckId]) progress[ref.deckId] = { cards: {}, lastStudied: legacy.lastStudied };
+    if (!progress[ref.deckId].cards[String(ref.idx)]) {
+      progress[ref.deckId].cards[String(ref.idx)] = prog;
+      migrated++;
+    }
+  });
+
+  if (migrated) {
+    delete progress[legacyId];
+    try {
+      localStorage.setItem('medhub-flashcards-progress-v2', JSON.stringify(progress));
+    } catch { /* quota */ }
+  }
+}
+
+fcMigrateCardioArritmiasProgress();

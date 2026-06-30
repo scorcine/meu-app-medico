@@ -61,7 +61,7 @@ function defaultActiveHomeCards () {
     { section: 'anamnese', icon: '📝', name: 'Anamnese', desc: 'Guia clínico: queixa → protocolo → prescrição.', visible: true, enabled: true, comingSoon: false, pediatricAux: false, color: '#8b5cf6', colorBg: '#f5f3ff' },
     { section: 'consultas', icon: '📅', name: 'Histórico de atendimentos', desc: 'Registro local e PDF educacional.', visible: true, enabled: true, comingSoon: false, pediatricAux: false, color: '#a855f7', colorBg: '#faf5ff' },
     { section: 'calc-pediatrica', icon: '👶', name: 'Calculadora pediátrica', desc: 'Complemento por peso/idade — adulto é o foco.', visible: true, enabled: true, comingSoon: false, pediatricAux: true, color: '#14b8a6', colorBg: '#f0fdfa' },
-    { section: 'flashcards', icon: '🃏', name: 'Flashcards', desc: '11 temas · 420 cards — sepse, IAM, cardiologia (120), gasometria e mais.', visible: true, enabled: true, comingSoon: false, pediatricAux: false, color: '#db2777', colorBg: '#fdf2f8' }
+    { section: 'flashcards', icon: '🃏', name: 'Flashcards', desc: 'Cardiologia em 6 subtemas (120) + 10 baralhos de emergência, PS e exames.', visible: true, enabled: true, comingSoon: false, pediatricAux: false, color: '#db2777', colorBg: '#fdf2f8' }
   ];
 }
 

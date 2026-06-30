@@ -4727,8 +4727,23 @@ textarea {
   gap: 0.45rem;
 }
 
-.fc-deck-card--due .fc-deck-btn {
-  border-color: color-mix(in srgb, var(--accent) 45%, var(--border));
+.fc-deck-card--group .fc-deck-btn {
+  border-color: color-mix(in srgb, #db2777 40%, var(--border));
+}
+
+.fc-deck-subtopic-hint {
+  display: block;
+  margin-top: 0.2rem;
+  font-size: 0.72rem;
+}
+
+.fc-subtopic-grid {
+  margin-top: 0.75rem;
+}
+
+.fc-subtopic-card--all .fc-deck-btn {
+  border-color: color-mix(in srgb, var(--accent) 50%, var(--border));
+  background: linear-gradient(180deg, color-mix(in srgb, var(--accent-ring) 70%, var(--card-bg)) 0%, var(--card-bg) 100%);
 }
 
 .fc-deck-card--new .fc-deck-btn {

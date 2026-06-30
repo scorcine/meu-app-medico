@@ -58,7 +58,22 @@ function loadDecks () {
 
   return Object.keys(ctx)
     .filter(k => k.startsWith('FLASHCARD_DECK_'))
-    .map(k => ctx[k])
+    .map(k => {
+      const deck = ctx[k];
+      if (!deck) return null;
+      if (deck.group && ctx.FLASHCARD_CARDIO_SUBTOPICS) {
+        return {
+          ...deck,
+          cards: ctx.FLASHCARD_CARDIO_SUBTOPICS.flatMap(s => s.cards),
+          subtopics: ctx.FLASHCARD_CARDIO_SUBTOPICS.map(s => ({
+            id: s.id,
+            name: s.name,
+            count: s.cards.length
+          }))
+        };
+      }
+      return deck;
+    })
     .filter(Boolean)
     .sort((a, b) => a.id.localeCompare(b.id, 'pt-BR'));
 }
@@ -142,6 +157,10 @@ function buildExportMarkdown (deck, topicEntry, ctx) {
   lines.push(`- Cards atuais no app: ${deck.cards?.length || 0}`);
   lines.push(`- Meta: ${topicEntry?.cardsPerDeck || 30} cards neste baralho`);
   lines.push(`- Fonte principal: ${deck.sourceLabel || deck.source || 'MedHub'}`);
+  if (topicEntry?.subtopics?.length || deck.subtopics?.length) {
+    const subs = deck.subtopics || topicEntry.subtopics || [];
+    lines.push('- Subtemas: ' + subs.map(s => `${s.name} (${s.count || s.cards?.length || 0})`).join(' · '));
+  }
   lines.push('');
   lines.push('## Cards existentes (não repetir)');
   lines.push('');

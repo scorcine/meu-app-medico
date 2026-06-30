@@ -74,19 +74,19 @@
   <script defer src="consultas.js?v=atendimento-v4"></script>
   <script defer src="medhub-config.js?v=site-v1"></script>
   <script defer src="ferramentas.js?v=vm-v1"></script>
-  <script defer src="flashcards/deck-sepse.js?v=fc-v9"></script>
-  <script defer src="flashcards/deck-iam.js?v=fc-v9"></script>
-  <script defer src="flashcards/deck-avc.js?v=fc-v9"></script>
-  <script defer src="flashcards/deck-anafilaxia.js?v=fc-v9"></script>
-  <script defer src="flashcards/deck-dengue.js?v=fc-v9"></script>
-  <script defer src="flashcards/deck-pneumonia.js?v=fc-v9"></script>
-  <script defer src="flashcards/deck-hipoglicemia.js?v=fc-v9"></script>
-  <script defer src="flashcards/deck-crise-hipertensiva.js?v=fc-v9"></script>
-  <script defer src="flashcards/deck-via-aerea.js?v=fc-v9"></script>
-  <script defer src="flashcards/deck-gasometria.js?v=fc-v9"></script>
-  <script defer src="flashcards/deck-cardio-arritmias.js?v=fc-v9"></script>
-  <script defer src="flashcards-data.js?v=fc-v9"></script>
-  <script defer src="flashcards.js?v=fc-v9"></script>
+  <script defer src="flashcards/deck-sepse.js?v=fc-v10"></script>
+  <script defer src="flashcards/deck-iam.js?v=fc-v10"></script>
+  <script defer src="flashcards/deck-avc.js?v=fc-v10"></script>
+  <script defer src="flashcards/deck-anafilaxia.js?v=fc-v10"></script>
+  <script defer src="flashcards/deck-dengue.js?v=fc-v10"></script>
+  <script defer src="flashcards/deck-pneumonia.js?v=fc-v10"></script>
+  <script defer src="flashcards/deck-hipoglicemia.js?v=fc-v10"></script>
+  <script defer src="flashcards/deck-crise-hipertensiva.js?v=fc-v10"></script>
+  <script defer src="flashcards/deck-via-aerea.js?v=fc-v10"></script>
+  <script defer src="flashcards/deck-gasometria.js?v=fc-v10"></script>
+  <script defer src="flashcards/deck-cardiologia.js?v=fc-v10"></script>
+  <script defer src="flashcards-data.js?v=fc-v10"></script>
+  <script defer src="flashcards.js?v=fc-v10"></script>
   <script defer src="backup.js?v=backup-v2"></script>
   <script defer src="clinical-cloud.js?v=cloud-sync-v1"></script>
   <script defer src="subscription.js?v=billing-v7"></script>
@@ -465,7 +465,7 @@
         <div class="card dashboard-card clinical-wrap fc-wrap">
           <div id="fc-deck-list-view">
             <h2>Flashcards</h2>
-            <p class="muted">Revisão rápida para plantão e provas — 11 baralhos (cardiologia com 120 cards) e cenários clínicos de emergência, PS e interpretação de exames.</p>
+            <p class="muted">Revisão rápida para plantão e provas — cardiologia organizada em subtemas + 10 baralhos de emergência, PS e exames.</p>
             <p class="fc-disclaimer muted" role="note">Conteúdo educacional. Não substitui protocolo institucional nem julgamento clínico.</p>
             <div id="fc-review-banner" class="fc-review-banner" hidden></div>
             <label class="ps-search-label" for="fc-search">Buscar tema</label>
@@ -475,8 +475,16 @@
             <p id="fc-empty" class="ps-placeholder" hidden>Nenhum baralho encontrado.</p>
           </div>
 
+          <div id="fc-subtopic-view" hidden>
+            <button type="button" class="btn-back" id="fc-subtopic-back">← Voltar aos baralhos</button>
+            <h2 id="fc-subtopic-title"></h2>
+            <p id="fc-subtopic-desc" class="muted"></p>
+            <p id="fc-subtopic-count" class="ps-count muted"></p>
+            <div id="fc-subtopic-grid" class="calc-category-grid ferramentas-grid fc-subtopic-grid"></div>
+          </div>
+
           <div id="fc-study-view" hidden>
-            <button type="button" class="btn-back" id="fc-study-back">← Voltar aos baralhos</button>
+            <button type="button" class="btn-back" id="fc-study-back">← Voltar</button>
             <div class="fc-study-head">
               <h2 id="fc-study-deck-title"></h2>
               <p id="fc-study-source" class="muted fc-study-source"></p>

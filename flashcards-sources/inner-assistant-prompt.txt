@@ -40,7 +40,7 @@ Conteúdo educacional. Não substitui protocolo institucional local.
 
 === MENSAGEM PARA GERAR UM BARALHO (exemplo) ===
 
-Leia o arquivo cardio-arritmias.md anexado. Gere 30 flashcards clínicos no formato JSON especificado. deckId = cardio-arritmias.
+Leia o arquivo cardiologia.md anexado. Gere 30 flashcards clínicos no formato JSON especificado. deckId = cardio-taqui (subtema Taquiarritmias).
 
 === DEPOIS DE GERAR NA INNER ===
 

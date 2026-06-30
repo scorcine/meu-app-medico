@@ -39,6 +39,27 @@ registry.forEach(key => {
     ok = false;
     return;
   }
+
+  if (deck.group) {
+    const subs = ctx.FLASHCARD_CARDIO_SUBTOPICS || [];
+    const subTotal = subs.reduce((n, s) => n + (s.cards?.length || 0), 0);
+    total += subTotal;
+    const expected = expectedCardsForDeck(config, deck.id);
+    const status = subTotal === expected ? 'OK' : 'AVISO';
+    if (subTotal !== expected) ok = false;
+    console.log(status, deck.id, subTotal, 'cards em', subs.length, 'subtemas', `(meta ${expected})`);
+    subs.forEach(st => {
+      const n = st.cards?.length || 0;
+      if (!n) {
+        console.error('  AVISO subtema vazio:', st.id);
+        ok = false;
+      } else {
+        console.log('  ·', st.id, n);
+      }
+    });
+    return;
+  }
+
   const n = deck.cards?.length || 0;
   const expected = expectedCardsForDeck(config, deck.id);
   total += n;
@@ -48,5 +69,5 @@ registry.forEach(key => {
 });
 
 console.log('---');
-console.log('Total:', total, 'cards em', registry.length, 'baralhos');
+console.log('Total:', total, 'cards');
 process.exit(ok ? 0 : 1);

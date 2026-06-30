@@ -70,8 +70,9 @@
       ]
     },
     {
-      "id": "cardio-arritmias",
+      "id": "cardiologia",
       "cardsPerDeck": 120,
+      "group": true,
       "sources": [
         { "kind": "ps", "conditionId": "arritmias" },
         { "kind": "ps", "conditionId": "cardioversao-eletrica" },

@@ -8,6 +8,7 @@ const FC_RATING_LABELS = { easy: 'Fácil', medium: 'Médio', wrong: 'Errei' };
 const FC_NEW_DECK_IDS = [];
 
 let fcActiveDeck = null;
+let fcActiveGroupId = null;
 let fcStudyQueue = [];
 let fcStudyIndex = 0;
 let fcSessionStats = { easy: 0, medium: 0, wrong: 0, skipped: 0 };
@@ -102,31 +103,57 @@ function fcIsCardDue (cardProg) {
   return cardProg.nextReview <= fcTodayKey();
 }
 
+function fcCountableDecks () {
+  return (FLASHCARD_DECKS || []).filter(d => !d.group && !d.isAllGroup);
+}
+
+function fcGetCardProgressForStudy (deck, cardIdx) {
+  const ref = typeof fcProgressRefForCard === 'function'
+    ? fcProgressRefForCard(deck, cardIdx)
+    : { deckId: deck.id, idx: cardIdx };
+  return fcGetCardProgress(ref.deckId, ref.idx);
+}
+
 function fcDeckDueIndices (deck) {
   const due = [];
   const unseen = [];
   deck.cards.forEach((_, i) => {
-    const p = fcGetCardProgress(deck.id, i);
+    const p = fcGetCardProgressForStudy(deck, i);
     if (!p) unseen.push(i);
     else if (fcIsCardDue(p)) due.push(i);
   });
   due.sort((a, b) => {
-    const pa = fcGetCardProgress(deck.id, a);
-    const pb = fcGetCardProgress(deck.id, b);
+    const pa = fcGetCardProgressForStudy(deck, a);
+    const pb = fcGetCardProgressForStudy(deck, b);
     return (pa?.nextReview || '').localeCompare(pb?.nextReview || '');
   });
   return { due, unseen };
 }
 
 function fcDeckDueCount (deck) {
+  if (typeof fcIsGroupDeck === 'function' && fcIsGroupDeck(deck)) {
+    return (typeof fcGetCardioSubtopics === 'function' ? fcGetCardioSubtopics() : [])
+      .reduce((n, st) => n + fcDeckDueCount(st), 0);
+  }
   return fcDeckDueIndices(deck).due.length;
 }
 
 function fcTotalDueCount () {
-  return (FLASHCARD_DECKS || []).reduce((n, d) => n + fcDeckDueCount(d), 0);
+  return fcCountableDecks().reduce((n, d) => n + fcDeckDueCount(d), 0);
 }
 
 function fcDeckMasteryPct (deck) {
+  if (typeof fcIsGroupDeck === 'function' && fcIsGroupDeck(deck)) {
+    const subs = typeof fcGetCardioSubtopics === 'function' ? fcGetCardioSubtopics() : [];
+    const total = subs.reduce((n, s) => n + s.cards.length, 0);
+    if (!total) return 0;
+    let easy = 0;
+    subs.forEach(s => {
+      const dp = fcGetDeckProgress(s.id);
+      easy += Object.values(dp.cards || {}).filter(c => c.rating === 'easy').length;
+    });
+    return Math.round((easy / total) * 100);
+  }
   const dp = fcGetDeckProgress(deck.id);
   const rated = Object.keys(dp.cards || {}).length;
   if (!rated) return 0;
@@ -167,8 +194,9 @@ function initFlashcards () {
 
   document.getElementById('fc-search')?.addEventListener('input', fcRenderDeckList);
 
-  document.getElementById('fc-study-back')?.addEventListener('click', fcShowDeckList);
-  document.getElementById('fc-summary-back')?.addEventListener('click', fcShowDeckList);
+  document.getElementById('fc-study-back')?.addEventListener('click', fcStudyBack);
+  document.getElementById('fc-summary-back')?.addEventListener('click', fcStudyBack);
+  document.getElementById('fc-subtopic-back')?.addEventListener('click', fcShowDeckList);
   document.getElementById('fc-summary-restart')?.addEventListener('click', () => {
     if (!fcActiveDeck) return;
     const mode = fcDeckDueCount(fcActiveDeck) ? 'review' : (fcStudyMode === 'all' ? 'all' : 'smart');
@@ -213,9 +241,16 @@ function fcRenderReviewBanner () {
 
 function fcRenderDeckList () {
   const q = fcNorm(document.getElementById('fc-search')?.value || '');
+  const topDecks = typeof FLASHCARD_TOP_DECKS !== 'undefined' ? FLASHCARD_TOP_DECKS : (FLASHCARD_DECKS || []).filter(d => !d.parentId);
   const list = !q
-    ? (FLASHCARD_DECKS || [])
-    : (FLASHCARD_DECKS || []).filter(d => fcNorm(d.name + ' ' + d.desc + ' ' + d.id).includes(q));
+    ? topDecks
+    : topDecks.filter(d => {
+      let hay = d.name + ' ' + d.desc + ' ' + d.id;
+      if (fcIsGroupDeck(d) && typeof fcGetCardioSubtopics === 'function') {
+        fcGetCardioSubtopics().forEach(st => { hay += ' ' + st.name + ' ' + st.desc; });
+      }
+      return fcNorm(hay).includes(q);
+    });
   fcRenderReviewBanner();
   fcRenderDeckGrid(list);
 }
@@ -226,12 +261,13 @@ function fcRenderDeckGrid (decks) {
   const count = document.getElementById('fc-deck-count');
   if (!grid) return;
 
-  const totalCards = (FLASHCARD_DECKS || []).reduce((n, d) => n + d.cards.length, 0);
+  const totalCards = fcCountableDecks().reduce((n, d) => n + d.cards.length, 0);
+  const topDecks = typeof FLASHCARD_TOP_DECKS !== 'undefined' ? FLASHCARD_TOP_DECKS : decks;
   const totalDue = fcTotalDueCount();
   if (count) {
-    let txt = decks.length === (FLASHCARD_DECKS || []).length
+    let txt = decks.length === topDecks.length
       ? decks.length + ' temas · ' + totalCards + ' cards'
-      : decks.length + ' de ' + (FLASHCARD_DECKS || []).length + ' temas';
+      : decks.length + ' de ' + topDecks.length + ' temas';
     if (totalDue) txt += ' · ' + totalDue + ' para revisar';
     count.textContent = txt;
   }
@@ -246,14 +282,19 @@ function fcRenderDeckGrid (decks) {
   grid.innerHTML = decks.map(deck => {
     const pct = fcDeckMasteryPct(deck);
     const due = fcDeckDueCount(deck);
-    const { unseen } = fcDeckDueIndices(deck);
+    const cardCount = fcIsGroupDeck(deck)
+      ? (typeof fcGetCardioSubtopics === 'function' ? fcGetCardioSubtopics() : []).reduce((n, s) => n + s.cards.length, 0)
+      : deck.cards.length;
+    const { unseen } = fcIsGroupDeck(deck) ? { unseen: [] } : fcDeckDueIndices(deck);
     const isNew = FC_NEW_DECK_IDS.includes(deck.id);
+    const subtopicHint = fcIsGroupDeck(deck) ? '<span class="fc-deck-subtopic-hint muted">' + (typeof fcGetCardioSubtopics === 'function' ? fcGetCardioSubtopics().length : 0) + ' subtemas</span>' : '';
     return `
-      <article class="fc-deck-card${due ? ' fc-deck-card--due' : ''}${isNew ? ' fc-deck-card--new' : ''}">
-        <button type="button" class="calc-category-btn ferramentas-card fc-deck-btn" data-fc-deck="${deck.id}">
+      <article class="fc-deck-card${due ? ' fc-deck-card--due' : ''}${isNew ? ' fc-deck-card--new' : ''}${fcIsGroupDeck(deck) ? ' fc-deck-card--group' : ''}">
+        <button type="button" class="calc-category-btn ferramentas-card fc-deck-btn" data-fc-deck="${deck.id}"${fcIsGroupDeck(deck) ? ' data-fc-group="1"' : ''}>
           <span class="calc-category-icon">${deck.icon}</span>
           <span class="calc-category-name">${fcEscapeHtml(deck.name)}</span>
-          <span class="ferramentas-card-desc muted">${deck.cards.length} cards · ${fcEscapeHtml(deck.desc)}</span>
+          <span class="ferramentas-card-desc muted">${cardCount} cards · ${fcEscapeHtml(deck.desc)}</span>
+          ${subtopicHint}
           ${isNew ? '<span class="fc-deck-new-badge fc-deck-new-badge--highlight">Novo</span>' : ''}
           ${due ? '<span class="fc-deck-due-badge">' + due + ' para revisar</span>' : ''}
           ${!due && !isNew && unseen.length ? '<span class="fc-deck-new-badge">' + unseen.length + ' novos</span>' : ''}
@@ -263,15 +304,27 @@ function fcRenderDeckGrid (decks) {
           </span>
         </button>
         <div class="fc-deck-actions">
-          ${due ? '<button type="button" class="btn btn-sm fc-deck-review-btn" data-fc-review="' + deck.id + '">Revisar (' + due + ')</button>' : ''}
-          <button type="button" class="btn-outline btn-sm fc-deck-all-btn" data-fc-all="${deck.id}">${due ? 'Estudar tudo' : 'Estudar'}</button>
+          ${fcIsGroupDeck(deck)
+            ? '<button type="button" class="btn btn-sm" data-fc-open-group="' + deck.id + '">Ver subtemas</button>'
+            : (due ? '<button type="button" class="btn btn-sm fc-deck-review-btn" data-fc-review="' + deck.id + '">Revisar (' + due + ')</button>' : '') +
+              '<button type="button" class="btn-outline btn-sm fc-deck-all-btn" data-fc-all="' + deck.id + '">' + (due ? 'Estudar tudo' : 'Estudar') + '</button>'}
         </div>
       </article>
     `;
   }).join('');
 
   grid.querySelectorAll('[data-fc-deck]').forEach(btn => {
-    btn.addEventListener('click', () => fcStartStudy(btn.dataset.fcDeck, { mode: 'smart' }));
+    btn.addEventListener('click', () => {
+      const deck = fcGetDeckById(btn.dataset.fcDeck);
+      if (deck && fcIsGroupDeck(deck)) fcShowSubtopicView(deck.id);
+      else fcStartStudy(btn.dataset.fcDeck, { mode: 'smart' });
+    });
+  });
+  grid.querySelectorAll('[data-fc-open-group]').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      fcShowSubtopicView(btn.dataset.fcOpenGroup);
+    });
   });
   grid.querySelectorAll('[data-fc-review]').forEach(btn => {
     btn.addEventListener('click', e => {
@@ -311,7 +364,7 @@ function fcBuildStudyQueue (deck, mode) {
 }
 
 function fcStartGlobalReview () {
-  const dueByDeck = (FLASHCARD_DECKS || [])
+  const dueByDeck = fcCountableDecks()
     .map(d => ({ deck: d, due: fcDeckDueIndices(d).due }))
     .filter(x => x.due.length);
   if (!dueByDeck.length) {
@@ -319,23 +372,111 @@ function fcStartGlobalReview () {
     return;
   }
   dueByDeck.sort((a, b) => b.due.length - a.due.length);
-  fcStartStudy(dueByDeck[0].deck.id, { mode: 'review' });
+  const deck = dueByDeck[0].deck;
+  if (deck.parentId === 'cardiologia') fcActiveGroupId = 'cardiologia';
+  fcStartStudy(deck.id, { mode: 'review' });
 }
 
 function fcShowDeckList () {
   document.getElementById('fc-deck-list-view').hidden = false;
+  document.getElementById('fc-subtopic-view').hidden = true;
   document.getElementById('fc-study-view').hidden = true;
   document.getElementById('fc-summary-view').hidden = true;
   fcActiveDeck = null;
+  fcActiveGroupId = null;
   fcRenderDeckList();
+}
+
+function fcStudyBack () {
+  if (fcActiveGroupId) fcShowSubtopicView(fcActiveGroupId);
+  else fcShowDeckList();
+}
+
+function fcShowSubtopicView (groupId) {
+  const group = fcGetDeckById(groupId);
+  if (!group || !fcIsGroupDeck(group)) return;
+
+  fcActiveGroupId = groupId;
+  fcActiveDeck = null;
+
+  document.getElementById('fc-deck-list-view').hidden = true;
+  document.getElementById('fc-subtopic-view').hidden = false;
+  document.getElementById('fc-study-view').hidden = true;
+  document.getElementById('fc-summary-view').hidden = true;
+
+  document.getElementById('fc-subtopic-title').textContent = group.icon + ' ' + group.name;
+  document.getElementById('fc-subtopic-desc').textContent = group.desc;
+
+  const subs = typeof fcGetCardioSubtopics === 'function' ? fcGetCardioSubtopics() : [];
+  const allDeck = typeof fcGetCardioAllDeck === 'function' ? fcGetCardioAllDeck() : fcGetDeckById('cardiologia-todos');
+  const totalDue = subs.reduce((n, s) => n + fcDeckDueCount(s), 0);
+  const countEl = document.getElementById('fc-subtopic-count');
+  if (countEl) {
+    const total = subs.reduce((n, s) => n + s.cards.length, 0);
+    countEl.textContent = subs.length + ' subtemas · ' + total + ' cards' + (totalDue ? ' · ' + totalDue + ' para revisar' : '');
+  }
+
+  fcRenderSubtopicGrid(group, subs, allDeck);
+}
+
+function fcRenderSubtopicGrid (group, subs, allDeck) {
+  const grid = document.getElementById('fc-subtopic-grid');
+  if (!grid) return;
+
+  const items = [];
+  if (allDeck) items.push(allDeck);
+  items.push(...subs);
+
+  grid.innerHTML = items.map(deck => {
+    const due = fcDeckDueCount(deck);
+    const pct = fcDeckMasteryPct(deck);
+    const { unseen } = fcDeckDueIndices(deck);
+    const isAll = !!deck.isAllGroup;
+    return `
+      <article class="fc-deck-card fc-subtopic-card${due ? ' fc-deck-card--due' : ''}${isAll ? ' fc-subtopic-card--all' : ''}">
+        <button type="button" class="calc-category-btn ferramentas-card fc-deck-btn" data-fc-subdeck="${deck.id}">
+          <span class="calc-category-icon">${deck.icon}</span>
+          <span class="calc-category-name">${fcEscapeHtml(deck.name)}</span>
+          <span class="ferramentas-card-desc muted">${deck.cards.length} cards · ${fcEscapeHtml(deck.desc)}</span>
+          ${due ? '<span class="fc-deck-due-badge">' + due + ' para revisar</span>' : ''}
+          ${!due && unseen.length ? '<span class="fc-deck-new-badge">' + unseen.length + ' novos</span>' : ''}
+          <span class="fc-deck-progress" aria-label="Domínio ${pct}%">
+            <span class="fc-deck-progress-bar" style="width:${pct}%"></span>
+            <span class="fc-deck-progress-label">${pct}% fácil</span>
+          </span>
+        </button>
+        <div class="fc-deck-actions">
+          ${due ? '<button type="button" class="btn btn-sm" data-fc-sub-review="' + deck.id + '">Revisar (' + due + ')</button>' : ''}
+          <button type="button" class="btn-outline btn-sm" data-fc-sub-all="${deck.id}">${due ? 'Estudar tudo' : 'Estudar'}</button>
+        </div>
+      </article>
+    `;
+  }).join('');
+
+  grid.querySelectorAll('[data-fc-subdeck]').forEach(btn => {
+    btn.addEventListener('click', () => fcStartStudy(btn.dataset.fcSubdeck, { mode: 'smart' }));
+  });
+  grid.querySelectorAll('[data-fc-sub-review]').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      fcStartStudy(btn.dataset.fcSubReview, { mode: 'review' });
+    });
+  });
+  grid.querySelectorAll('[data-fc-sub-all]').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      fcStartStudy(btn.dataset.fcSubAll, { mode: 'all' });
+    });
+  });
 }
 
 function fcStartStudy (deckId, opts) {
   opts = opts || {};
-  const deck = (FLASHCARD_DECKS || []).find(d => d.id === deckId);
+  const deck = typeof fcGetDeckById === 'function' ? fcGetDeckById(deckId) : (FLASHCARD_DECKS || []).find(d => d.id === deckId);
   if (!deck) return;
 
   fcActiveDeck = deck;
+  if (deck.parentId) fcActiveGroupId = deck.parentId;
   fcStudyMode = opts.mode || 'smart';
   fcSessionStats = { easy: 0, medium: 0, wrong: 0, skipped: 0 };
   fcStudyIndex = 0;
@@ -348,6 +489,7 @@ function fcStartStudy (deckId, opts) {
   }
 
   document.getElementById('fc-deck-list-view').hidden = true;
+  document.getElementById('fc-subtopic-view').hidden = true;
   document.getElementById('fc-study-view').hidden = false;
   document.getElementById('fc-summary-view').hidden = true;
 
@@ -388,7 +530,7 @@ function fcRenderCurrentCard () {
   if (bar) bar.style.width = Math.round((current / total) * 100) + '%';
 
   const hintEl = document.getElementById('fc-study-next-hint');
-  const prev = fcGetCardProgress(fcActiveDeck.id, cardIdx);
+  const prev = fcGetCardProgressForStudy(fcActiveDeck, cardIdx);
   if (hintEl) {
     if (prev && !fcIsCardDue(prev)) {
       hintEl.textContent = 'Próxima revisão agendada: ' + fcFormatReviewDay(prev.nextReview);
@@ -428,23 +570,26 @@ function fcNextCard (rating) {
 
   const cardIdx = fcStudyQueue[fcStudyIndex];
   const progress = fcLoadProgress();
-  const deckProg = progress[fcActiveDeck.id] || { cards: {}, lastStudied: null };
-  if (!deckProg.cards) deckProg.cards = {};
 
   if (rating && FC_REVIEW_DAYS[rating]) {
     fcSessionStats[rating]++;
     const today = fcTodayKey();
-    deckProg.cards[String(cardIdx)] = {
+    const ref = typeof fcProgressRefForCard === 'function'
+      ? fcProgressRefForCard(fcActiveDeck, cardIdx)
+      : { deckId: fcActiveDeck.id, idx: cardIdx };
+    const deckProg = progress[ref.deckId] || { cards: {}, lastStudied: null };
+    if (!deckProg.cards) deckProg.cards = {};
+    deckProg.cards[String(ref.idx)] = {
       rating,
       lastReview: new Date().toISOString(),
       nextReview: fcAddDays(today, FC_REVIEW_DAYS[rating])
     };
+    deckProg.lastStudied = new Date().toISOString();
+    progress[ref.deckId] = deckProg;
   } else if (rating === null) {
     fcSessionStats.skipped++;
   }
 
-  deckProg.lastStudied = new Date().toISOString();
-  progress[fcActiveDeck.id] = deckProg;
   fcSaveProgress(progress);
 
   fcStudyIndex++;
@@ -467,10 +612,16 @@ function fcShowSummary () {
 
   document.getElementById('fc-summary-stats').innerHTML =
     (lines.length ? '<p>' + lines.join(' · ') + '</p>' : '') +
-    (fcActiveDeck ? '<p class="muted">Domínio (fácil): <strong>' + fcDeckMasteryPct(fcActiveDeck) + '%</strong></p>' : '');
+    (fcActiveDeck ? '<p class="muted">Domínio (fácil): <strong>' + fcDeckMasteryPct(
+      fcActiveDeck.parentId === 'cardiologia' ? fcGetDeckById('cardiologia') : fcActiveDeck
+    ) + '%</strong></p>' : '');
 
   const reviewEl = document.getElementById('fc-summary-review');
-  const stillDue = fcActiveDeck ? fcDeckDueCount(fcActiveDeck) : fcTotalDueCount();
+  const stillDue = fcActiveDeck
+    ? (fcIsGroupDeck(fcActiveDeck)
+      ? fcDeckDueCount(fcActiveDeck)
+      : fcDeckDueCount(fcActiveDeck))
+    : fcTotalDueCount();
   if (reviewEl) {
     if (stillDue > 0) {
       reviewEl.hidden = false;
@@ -498,5 +649,15 @@ function fcOnSectionShow () {
 
 function fcOpenDeck (deckId) {
   if (typeof showSection === 'function') showSection('flashcards');
+  const deck = typeof fcGetDeckById === 'function' ? fcGetDeckById(deckId) : null;
+  if (deck && typeof fcIsGroupDeck === 'function' && fcIsGroupDeck(deck)) {
+    fcShowSubtopicView(deckId);
+    return;
+  }
+  if (deck && deck.parentId === 'cardiologia') {
+    fcShowSubtopicView('cardiologia');
+    setTimeout(() => fcStartStudy(deckId, { mode: 'smart' }), 0);
+    return;
+  }
   fcStartStudy(deckId, { mode: 'smart' });
 }
