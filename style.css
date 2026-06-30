@@ -4731,6 +4731,27 @@ textarea {
   border-color: color-mix(in srgb, var(--accent) 45%, var(--border));
 }
 
+.fc-deck-card--new .fc-deck-btn {
+  border-color: color-mix(in srgb, #db2777 55%, var(--border));
+  background: linear-gradient(180deg, color-mix(in srgb, #fdf2f8 88%, var(--card-bg)) 0%, var(--card-bg) 100%);
+}
+
+[data-theme="dark"] .fc-deck-card--new .fc-deck-btn {
+  background: linear-gradient(180deg, color-mix(in srgb, #831843 35%, var(--card-bg)) 0%, var(--card-bg) 100%);
+  border-color: color-mix(in srgb, #f472b6 45%, var(--border));
+}
+
+.fc-deck-new-badge--highlight {
+  color: #fff;
+  background: #db2777;
+  font-weight: 700;
+}
+
+[data-theme="dark"] .fc-deck-new-badge--highlight {
+  color: #fff;
+  background: #be185d;
+}
+
 .fc-deck-actions {
   display: flex;
   flex-wrap: wrap;

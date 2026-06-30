@@ -5,6 +5,7 @@ const FC_STORAGE_KEY_V1 = 'medhub-flashcards-progress-v1';
 
 const FC_REVIEW_DAYS = { easy: 15, medium: 10, wrong: 7 };
 const FC_RATING_LABELS = { easy: 'Fácil', medium: 'Médio', wrong: 'Errei' };
+const FC_NEW_DECK_IDS = ['cardio-arritmias'];
 
 let fcActiveDeck = null;
 let fcStudyQueue = [];
@@ -246,14 +247,16 @@ function fcRenderDeckGrid (decks) {
     const pct = fcDeckMasteryPct(deck);
     const due = fcDeckDueCount(deck);
     const { unseen } = fcDeckDueIndices(deck);
+    const isNew = FC_NEW_DECK_IDS.includes(deck.id);
     return `
-      <article class="fc-deck-card${due ? ' fc-deck-card--due' : ''}">
+      <article class="fc-deck-card${due ? ' fc-deck-card--due' : ''}${isNew ? ' fc-deck-card--new' : ''}">
         <button type="button" class="calc-category-btn ferramentas-card fc-deck-btn" data-fc-deck="${deck.id}">
           <span class="calc-category-icon">${deck.icon}</span>
           <span class="calc-category-name">${fcEscapeHtml(deck.name)}</span>
           <span class="ferramentas-card-desc muted">${deck.cards.length} cards · ${fcEscapeHtml(deck.desc)}</span>
+          ${isNew ? '<span class="fc-deck-new-badge fc-deck-new-badge--highlight">Novo</span>' : ''}
           ${due ? '<span class="fc-deck-due-badge">' + due + ' para revisar</span>' : ''}
-          ${!due && unseen.length ? '<span class="fc-deck-new-badge">' + unseen.length + ' novos</span>' : ''}
+          ${!due && !isNew && unseen.length ? '<span class="fc-deck-new-badge">' + unseen.length + ' novos</span>' : ''}
           <span class="fc-deck-progress" aria-label="Domínio ${pct}%">
             <span class="fc-deck-progress-bar" style="width:${pct}%"></span>
             <span class="fc-deck-progress-label">${pct}% fácil</span>

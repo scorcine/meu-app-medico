@@ -217,19 +217,20 @@ function findDuplicateFronts (cards) {
 
 function renderDeckJs (meta, cards) {
   const varName = deckVarName(meta.id);
+  const q = s => "'" + String(s).replace(/\\/g, '\\\\').replace(/'/g, "\\'") + "'";
   const cardLines = cards.map(c =>
-    `    {\n      front: ${JSON.stringify(c.front)},\n      back: ${JSON.stringify(c.back)}\n    }`
+    `    {\n      front: ${q(c.front)},\n      back: ${q(c.back)}\n    }`
   ).join(',\n');
 
   return `/* ${meta.name} — conteúdo educacional. Não substitui protocolo institucional. */
 
 var ${varName} = {
-  id: ${JSON.stringify(meta.id)},
-  name: ${JSON.stringify(meta.name)},
-  icon: ${JSON.stringify(meta.icon)},
-  source: ${JSON.stringify(meta.source)},
-  sourceLabel: ${JSON.stringify(meta.sourceLabel)},
-  desc: ${JSON.stringify(meta.desc)},
+  id: ${q(meta.id)},
+  name: ${q(meta.name)},
+  icon: ${q(meta.icon)},
+  source: ${q(meta.source)},
+  sourceLabel: ${q(meta.sourceLabel)},
+  desc: ${q(meta.desc)},
   cards: [
 ${cardLines}
   ]

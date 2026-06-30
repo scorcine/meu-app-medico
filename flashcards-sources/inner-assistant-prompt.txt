@@ -40,7 +40,7 @@ Conteúdo educacional. Não substitui protocolo institucional local.
 
 === MENSAGEM PARA GERAR UM BARALHO (exemplo) ===
 
-Leia o arquivo sepse.md anexado. Gere 30 flashcards clínicos no formato JSON especificado. deckId = sepse.
+Leia o arquivo cardio-arritmias.md anexado. Gere 30 flashcards clínicos no formato JSON especificado. deckId = cardio-arritmias.
 
 === DEPOIS DE GERAR NA INNER ===
 
