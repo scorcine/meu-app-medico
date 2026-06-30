@@ -1,0 +1,11 @@
+{
+  "generatedAt": "2026-06-30T00:02:44.789Z",
+  "exports": [
+    {
+      "deckId": "sepse",
+      "name": "Sepse e choque séptico",
+      "cards": 30,
+      "file": "export/sepse.md"
+    }
+  ]
+}

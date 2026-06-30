@@ -1,0 +1,73 @@
+{
+  "version": 1,
+  "cardsPerDeck": 30,
+  "decks": [
+    {
+      "id": "sepse",
+      "sources": [
+        { "kind": "ps", "conditionId": "sepse-choque-septico" },
+        { "kind": "emerg-topic", "topicId": "sepse" }
+      ]
+    },
+    {
+      "id": "iam",
+      "sources": [
+        { "kind": "ps", "conditionId": "sca-iam" },
+        { "kind": "emerg-topic", "topicId": "sca" }
+      ]
+    },
+    {
+      "id": "avc",
+      "sources": [
+        { "kind": "ps", "conditionId": "avc" },
+        { "kind": "emerg-topic", "topicId": "avc" }
+      ]
+    },
+    {
+      "id": "anafilaxia",
+      "sources": [
+        { "kind": "ps", "conditionId": "alergia-anafilaxia" },
+        { "kind": "emerg-topic", "topicId": "reacoes-metabolicas" }
+      ]
+    },
+    {
+      "id": "dengue",
+      "sources": [
+        { "kind": "ps", "conditionId": "dengue" }
+      ]
+    },
+    {
+      "id": "pneumonia",
+      "sources": [
+        { "kind": "ps", "conditionId": "pneumonia-comunitaria" }
+      ]
+    },
+    {
+      "id": "hipoglicemia",
+      "sources": [
+        { "kind": "ps", "conditionId": "hipoglicemia-grave" },
+        { "kind": "ps", "conditionId": "diabetes-insulina-hipo" }
+      ]
+    },
+    {
+      "id": "crise-hipertensiva",
+      "sources": [
+        { "kind": "ps", "conditionId": "crise-hipertensiva" },
+        { "kind": "emerg-topic", "topicId": "pressao-arritmias" }
+      ]
+    },
+    {
+      "id": "via-aerea",
+      "sources": [
+        { "kind": "emerg-topic", "topicId": "via-aerea" }
+      ]
+    },
+    {
+      "id": "gasometria",
+      "sources": [
+        { "kind": "interp", "topicId": "gasometria" },
+        { "kind": "interp", "topicId": "lactato" }
+      ]
+    }
+  ]
+}

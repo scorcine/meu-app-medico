@@ -2,12 +2,17 @@
  *
  * COMO ADICIONAR OU AUMENTAR CARDS
  * --------------------------------
- * 1. Abra o arquivo do tema em flashcards/deck-<tema>.js
- *    (ex.: flashcards/deck-sepse.js)
- * 2. Adicione { front: 'pergunta clínica', back: 'resposta' } no array cards
- * 3. Atualize desc se quiser (ex.: "32 cards — ...")
- * 4. Bump ?v=fc-vX nos scripts em app.html (cache)
- * 5. Valide: node scripts/validate-flashcards.js
+ * Manual:
+ * 1. Abra flashcards/deck-<tema>.js
+ * 2. Adicione { front, back } no array cards
+ * 3. Bump ?v=fc-vX em app.html · node scripts/validate-flashcards.js
+ *
+ * Com Inner AI (pipeline):
+ * 1. npm run pipeline:flashcards:export -- --topic sepse
+ * 2. Upload flashcards-sources/export/sepse.md na base do assistente Inner
+ * 3. Gere JSON (prompt em flashcards-sources/inner-assistant-prompt.txt)
+ * 4. Salve em flashcards-sources/drafts/sepse.json
+ * 5. npm run pipeline:flashcards:import -- --topic sepse
  *
  * NOVO TEMA
  * ---------
