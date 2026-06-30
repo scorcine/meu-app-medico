@@ -68,6 +68,15 @@
         { "kind": "interp", "topicId": "gasometria" },
         { "kind": "interp", "topicId": "lactato" }
       ]
+    },
+    {
+      "id": "cardio-arritmias",
+      "sources": [
+        { "kind": "ps", "conditionId": "arritmias" },
+        { "kind": "ps", "conditionId": "cardioversao-eletrica" },
+        { "kind": "emerg-topic", "topicId": "pressao-arritmias" },
+        { "kind": "emerg-topic", "topicId": "parada-cardio" }
+      ]
     }
   ]
 }

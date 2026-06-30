@@ -17,12 +17,9 @@ fs.readdirSync(deckDir)
     vm.runInNewContext(code, ctx, { filename: file });
   });
 
-const registry = [
-  'FLASHCARD_DECK_SEPSE', 'FLASHCARD_DECK_IAM', 'FLASHCARD_DECK_AVC',
-  'FLASHCARD_DECK_ANAFILAXIA', 'FLASHCARD_DECK_DENGUE', 'FLASHCARD_DECK_PNEUMONIA',
-  'FLASHCARD_DECK_HIPOGLICEMIA', 'FLASHCARD_DECK_CRISE_HIPERTENSIVA',
-  'FLASHCARD_DECK_VIA_AEREA', 'FLASHCARD_DECK_GASOMETRIA'
-];
+const registry = Object.keys(ctx)
+  .filter(k => k.startsWith('FLASHCARD_DECK_'))
+  .sort();
 
 let ok = true;
 let total = 0;

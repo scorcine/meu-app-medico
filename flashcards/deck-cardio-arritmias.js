@@ -1,0 +1,132 @@
+/* Cardiologia — Arritmias e PCR — conteúdo educacional. Não substitui protocolo institucional. */
+
+var FLASHCARD_DECK_CARDIO_ARRITMIAS = {
+  id: "cardio-arritmias",
+  name: "Cardiologia — Arritmias e PCR",
+  icon: "💓",
+  source: "guia-emergencia",
+  sourceLabel: "Guia de emergência",
+  desc: "30 cards — TSVP, FA, TV, BAV, PCR e emergências cardíacas.",
+  cards: [
+    {
+      front: "Mulher 55 a, palpitações súbitas, FC 190 (QRS estreito), PA 110×70. ECG com pseudo-S em D2 e pseudo-R' em V1. Qual droga usar para reverter?",
+      back: "TSVP por reentrada nodal · Adenosina EV em bolus rápido"
+    },
+    {
+      front: "Homem 72 a, pós-IAM, FC 160 com QRS 160 ms, dissociação A-V, PA 78×48 e sudorese fria. Conduta imediata?",
+      back: "Taquiarritmia instável · Cardioversão elétrica sincronizada"
+    },
+    {
+      front: "Paciente 40 a, palpitações progressivas (fenômeno warm-up), FC 150, PR visível normal. Mecanismo provável da taquiarritmia?",
+      back: "Automatismo aumentado · Taquicardia automática com warm-up"
+    },
+    {
+      front: "Idoso 80 a, dispneia, FC 110 irregular, ondas F anárquicas 400–600 bpm. Objetivo de controle da frequência em repouso?",
+      back: "Fibrilação atrial estável · Manter FC < 110 bpm"
+    },
+    {
+      front: "Mulher 68 a, FA há 60 h, assintomática, solicita cardioversão elétrica agendada. Qual exame deve preceder o procedimento?",
+      back: "FA > 48 h · Realizar ecocardiograma transesofágico para excluir trombo"
+    },
+    {
+      front: "Homem 25 a, crise asmática, ECG mostra ritmo irregular, FC 140, ≥3 morfologias de P. Diagnóstico?",
+      back: "Paciente DPOC/descompensado · Taquicardia Atrial Multifocal"
+    },
+    {
+      front: "Paciente 50 a, QRS estreito 300 bpm, padrão serrilhado contínuo. Qual arritmia provável?",
+      back: "Flutter atrial típico · Frequência de ondas F ~ 300 bpm"
+    },
+    {
+      front: "Jovem 30 a, FA + pré-excitação (onda delta). PA 120×80. Qual antiarrítmico indicado se estável?",
+      back: "FA com WPW · Usar Procainamida (classe IA) ou outro classe IC/III"
+    },
+    {
+      front: "Mulher 60 a, FA crônica não valvar, CHA2DS2-VASc = 3. Precisa anticoagulação permanente?",
+      back: "Sim · CHA2DS2-VASc ≥ 2 (homem) ou ≥ 3 (mulher) indica anticoagulação"
+    },
+    {
+      front: "Homem 40 a, síncope durante exercício, ECG mostra pré-excitação (PR < 120 ms + onda delta). Qual é o achado clássico do WPW?",
+      back: "Pré-excitação ventricular · Intervalo PR curto + onda delta inicial"
+    },
+    {
+      front: "Paciente 58 a, taquicardia QRS largo irregular. Diagnóstico a considerar primeiro?",
+      back: "Regra prática · Tratar como Taquicardia Ventricular até prova em contrário"
+    },
+    {
+      front: "Homem 67 a, FC 220 QRS largo e regular pós-IAM, sem pulso. Qual antiarrítmico após 1º choque sem sucesso?",
+      back: "FV/TV refratária · Amiodarona 300 mg IV"
+    },
+    {
+      front: "Mulher 45 a, uso de haloperidol, apresenta TV polimórfica com rotação do eixo (torsades). Tratamento de escolha?",
+      back: "Torsades de pointes · Sulfato de magnésio IV · Desfibrilar se instável"
+    },
+    {
+      front: "Idoso 75 a, digoxina crônica, TV com alternância de QRS direita/esquerda e R-R regular. Arritmia típica?",
+      back: "Intoxicação digitálica · Taquicardia Ventricular bidirecional"
+    },
+    {
+      front: "Paciente 30 a, QT longo congênito, episódio de síncope em torsades revertida. Mecanismo associado ao QT longo?",
+      back: "TV polimórfica torsades · Relação direta com prolongamento do intervalo QT"
+    },
+    {
+      front: "Homem 60 a, bradicardia 42 bpm, QRS largo, pós-IAM, consciente. Qual ritmo de escape provável?",
+      back: "Ritmo idioventricular · Automatismo ventricular < 40 bpm"
+    },
+    {
+      front: "Paciente 55 a, ECG: PR 240 ms, sem bloqueios. Qual definição desse distúrbio de condução?",
+      back: "Bloqueio AV de 1º grau · PR > 200 ms"
+    },
+    {
+      front: "Mulher 70 a, pós-IAM inferior, BAVT persistente apesar de reperfusão. Indicação para qual dispositivo?",
+      back: "BAVT persistente no IAM · Marca-passo definitivo"
+    },
+    {
+      front: "Homem 68 a com BAV 2º Mobitz II recém-instalado, FC 28, hipotenso. Conduta de emergência?",
+      back: "Bloqueio infra-hissiano maligno · Marca-passo provisório transvenoso classe I"
+    },
+    {
+      front: "Paciente 62 a em uso de Atropina 2 mg sem resposta no BAVT infra-hissiano. Por que a droga falha?",
+      back: "Sistema distal não tem inervação vagal significativa · Atropina ineficaz em bloqueios infra-hissianos"
+    },
+    {
+      front: "Mulher 57 a, MP modo DDD. O que significa a primeira letra D?",
+      back: "Estimula (pace) átrio e ventrículo"
+    },
+    {
+      front: "Homem 75 a com marca-passo VVI refere fadiga e turgência jugular quando caminha. Diagnóstico provável?",
+      back: "Síndrome do marca-passo · Dissociação A-V causando sintomas de IC"
+    },
+    {
+      front: "Parada cardíaca, ritmo indetectável no monitor, sem atividade elétrica. Quais dois ritmos não-chocáveis possíveis?",
+      back: "Assistolia · Atividade Elétrica Sem Pulso (AESP)"
+    },
+    {
+      front: "Paciente em RCP, compressões a 80/min e 4 cm profundidade. Qual ajuste necessário para alta qualidade?",
+      back: "Aumentar para 5-6 cm de profundidade · Ritmo de 100-120/min"
+    },
+    {
+      front: "Adulto em PCR sem via aérea avançada. Relação compressão-ventilação correta?",
+      back: "30 compressões · 2 ventilações (30:2)"
+    },
+    {
+      front: "Sequência inicial no BLS para testemunha leiga ao encontrar vítima colapsada?",
+      back: "Seguir C-A-B · Iniciar compressões primeiro"
+    },
+    {
+      front: "PCR em assistolia há 2 min; quais medicações essenciais e intervalo?",
+      back: "Adrenalina 1 mg IV a cada 3-5 min em todos os ritmos de PCR"
+    },
+    {
+      front: "Equipe identifica causas reversíveis durante AESP. Cite os 5 H's prioritários.",
+      back: "Hipóxia · Hipovolemia · H+ (acidose) · Hipo/hipercalemia · Hipotermia"
+    },
+    {
+      front: "Após RCE, paciente comatoso. Medida de controle de temperatura alvo?",
+      back: "Manter 32-36 ºC por 24 h (controle dirigido da temperatura)"
+    },
+    {
+      front: "Atleta 22 a, morte súbita recuperada; eco sugere hipertrofia septal. Qual a causa mais comum de morte súbita jovem?",
+      back: "Cardiomiopatia hipertrófica"
+    }
+  ]
+};
