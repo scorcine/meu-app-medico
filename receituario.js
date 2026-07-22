@@ -646,8 +646,8 @@ function rxGenerateBlankReceita () {
 
   if (listView) listView.hidden = true;
   if (detailView) detailView.hidden = false;
-  if (titleEl) titleEl.textContent = 'Receituário em branco';
-  if (hintEl) hintEl.textContent = 'Receituário em branco — sem linhas. Edite se precisar antes de imprimir.';
+  if (titleEl) titleEl.textContent = 'Receituário';
+  if (hintEl) hintEl.textContent = 'Receituário sem linhas. Edite se precisar antes de imprimir.';
   if (optionsWrap) { optionsWrap.innerHTML = ''; optionsWrap.hidden = true; }
   if (medsPanel) { medsPanel.hidden = true; medsPanel.innerHTML = ''; }
   if (selectionBar) selectionBar.hidden = true;
@@ -660,7 +660,7 @@ function rxGenerateBlankReceita () {
   const addr = typeof medhubGetProfileAddressBlock === 'function' ? medhubGetProfileAddressBlock() : '';
 
   const plain = [
-    'RECEITUÁRIO EM BRANCO',
+    'RECEITUÁRIO',
     '',
     'Paciente: ________________________________',
     'Data: ' + date,
@@ -678,9 +678,9 @@ function rxGenerateBlankReceita () {
   if (textEl) textEl.value = plain;
 
   preview.innerHTML = `
-    <div class="rx-print-sheet rx-print-sheet--a4" contenteditable="true" spellcheck="true" lang="pt-BR" aria-label="Receituário em branco editável">
+    <div class="rx-print-sheet rx-print-sheet--a4" contenteditable="true" spellcheck="true" lang="pt-BR" aria-label="Receituário editável">
       <div class="rx-print-body">
-        <h4 class="rx-print-title">RECEITUÁRIO EM BRANCO</h4>
+        <h4 class="rx-print-title">RECEITUÁRIO</h4>
         <div class="rx-print-meta">
           <p><strong>Paciente:</strong> ________________________________</p>
           <p><strong>Data:</strong> ${date}</p>
@@ -698,7 +698,7 @@ function rxGenerateBlankReceita () {
 
   resultEl.hidden = false;
   const resultTitle = resultEl.querySelector('h3');
-  if (resultTitle) resultTitle.textContent = 'Receituário em branco';
+  if (resultTitle) resultTitle.textContent = 'Receituário';
   resultEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
