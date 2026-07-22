@@ -36,7 +36,9 @@ const MEDHUB_EMBED = {
     'https://dalucare.com.br'
   ],
   /** Receituário no iframe do parceiro: sem login e sem assinatura */
-  openAccess: true
+  openAccess: true,
+  /** Aceita nome/CRM via postMessage do parent (source: dalucare) */
+  importDoctorProfile: true
 };
 
 function medhubRenderPedAppPromo (container, variant) {

@@ -160,6 +160,13 @@ html, body {
   background: #fff;
 }
 
+.embed-guest-field input.embed-guest-locked,
+.embed-guest-field select.embed-guest-locked {
+  background: #eef6f3;
+  border-color: rgba(42, 107, 90, 0.35);
+  color: #1a3347;
+}
+
 .embed-guest-uf { width: 4.5rem; }
 .embed-guest-crm { width: 8.5rem; }
 

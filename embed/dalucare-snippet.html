@@ -1,12 +1,12 @@
 <!--
-  Cole no site Dalucare (www.dalucare.com.br) onde quiser o receituário MedHub.
+  Cole no site Dalucare (www.dalucare.com.br).
 
-  URL do embed:
-  https://www.medhub.ia.br/embed/prescricao.html
+  1) Substitua getDalucareDoctorProfile() pelos dados reais do médico logado.
+  2) O MedHub pede o perfil ao carregar (type: ready) e também aceita envio manual.
 -->
 <iframe
   id="medhub-rx-embed"
-  src="https://www.medhub.ia.br/embed/prescricao.html"
+  src="https://www.medhub.ia.br/embed/prescricao.html?v=rx-20260722i"
   title="Receituário MedHub"
   style="width:100%;min-height:720px;border:0;border-radius:12px;background:#f6f3ee;"
   loading="lazy"
@@ -15,14 +15,50 @@
 ></iframe>
 <script>
 (function () {
+  var MEDHUB_ORIGIN = 'https://www.medhub.ia.br';
   var frame = document.getElementById('medhub-rx-embed');
   if (!frame) return;
+
+  /** Troque esta função pelos dados do médico autenticado no Dalucare */
+  function getDalucareDoctorProfile () {
+    // Exemplo — use a sessão/API real do Dalucare:
+    // return { name: user.nome, crmUf: user.crmUf, crmNumber: user.crm };
+    return {
+      name: window.DALUCARE_DOCTOR_NAME || '',
+      crmUf: window.DALUCARE_DOCTOR_CRM_UF || 'SP',
+      crmNumber: window.DALUCARE_DOCTOR_CRM || ''
+    };
+  }
+
+  function sendDoctorToMedHub () {
+    if (!frame.contentWindow) return;
+    var profile = getDalucareDoctorProfile();
+    if (!profile || (!profile.name && !profile.crmNumber)) return;
+    frame.contentWindow.postMessage({
+      source: 'dalucare',
+      type: 'doctor-profile',
+      profile: profile
+    }, MEDHUB_ORIGIN);
+  }
+
   window.addEventListener('message', function (event) {
-    if (event.origin !== 'https://www.medhub.ia.br') return;
+    if (event.origin !== MEDHUB_ORIGIN) return;
     var data = event.data || {};
-    if (data.source === 'medhub-embed' && data.type === 'resize' && data.height) {
+    if (data.source !== 'medhub-embed') return;
+
+    if (data.type === 'resize' && data.height) {
       frame.style.height = Math.max(480, Number(data.height)) + 'px';
     }
+
+    // Embed pronto → envia nome/CRM automaticamente
+    if (data.type === 'ready') {
+      sendDoctorToMedHub();
+    }
+  });
+
+  // Fallback se o ready chegar antes do listener
+  frame.addEventListener('load', function () {
+    setTimeout(sendDoctorToMedHub, 300);
   });
 })();
 </script>
