@@ -5681,6 +5681,20 @@ textarea {
   min-height: 12rem;
 }
 
+.rx-print-sheet--a4 {
+  display: flex;
+  flex-direction: column;
+  min-height: min(70vh, 900px);
+  aspect-ratio: 210 / 297;
+  max-width: 210mm;
+  width: 100%;
+  margin-inline: auto;
+}
+
+.rx-print-body {
+  flex: 1 1 auto;
+}
+
 .rx-print-sheet:focus {
   border-color: var(--accent);
   box-shadow: 0 0 0 2px var(--accent-soft);
@@ -5736,6 +5750,11 @@ textarea {
 .rx-print-sign {
   margin-top: 1.5rem;
   font-size: 0.92rem;
+}
+
+.rx-print-sign--footer {
+  margin-top: auto;
+  padding-top: 2rem;
 }
 
 .rx-result-actions {

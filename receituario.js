@@ -290,24 +290,26 @@ function rxRenderPrintPreview (conditions, medEntries, orientacoesList) {
     : '';
 
   preview.innerHTML = `
-    <div class="rx-print-sheet" contenteditable="true" spellcheck="true" lang="pt-BR" aria-label="Receita editável">
-      <h4 class="rx-print-title">RECEITUÁRIO SIMPLES</h4>
-      <div class="rx-print-meta">
-        <p><strong>Paciente:</strong> ${ctx.paciente || '________________________________'}</p>
-        <p><strong>Data:</strong> ${date}</p>
-        <p><strong>Idade:</strong> ${ctx.idade ? ctx.idade + ' anos' : '________'}</p>
-        ${queixasLine}
+    <div class="rx-print-sheet rx-print-sheet--a4" contenteditable="true" spellcheck="true" lang="pt-BR" aria-label="Receita editável">
+      <div class="rx-print-body">
+        <h4 class="rx-print-title">RECEITUÁRIO SIMPLES</h4>
+        <div class="rx-print-meta">
+          <p><strong>Paciente:</strong> ${ctx.paciente || '________________________________'}</p>
+          <p><strong>Data:</strong> ${date}</p>
+          <p><strong>Idade:</strong> ${ctx.idade ? ctx.idade + ' anos' : '________'}</p>
+          ${queixasLine}
+        </div>
+        ${routeBlock('Uso oral:', byRoute.vo)}
+        ${routeBlock('Uso IM (aplicar no serviço de saúde):', byRoute.im)}
+        ${routeBlock('PEP HIV / TARV (28 dias — receita especial):', byRoute.tarv)}
+        ${routeBlock('Orientações prescritas:', byRoute.geral)}
+        ${orientacoesList.length ? `
+          <div class="rx-print-orient">
+            <strong>Orientações:</strong>
+            <ul>${orientacoesList.map(t => `<li>${t}</li>`).join('')}</ul>
+          </div>` : ''}
       </div>
-      ${routeBlock('Uso oral:', byRoute.vo)}
-      ${routeBlock('Uso IM (aplicar no serviço de saúde):', byRoute.im)}
-      ${routeBlock('PEP HIV / TARV (28 dias — receita especial):', byRoute.tarv)}
-      ${routeBlock('Orientações prescritas:', byRoute.geral)}
-      ${orientacoesList.length ? `
-        <div class="rx-print-orient">
-          <strong>Orientações:</strong>
-          <ul>${orientacoesList.map(t => `<li>${t}</li>`).join('')}</ul>
-        </div>` : ''}
-      <div class="rx-print-sign">
+      <div class="rx-print-sign rx-print-sign--footer">
         <p>______________________________, ${date}</p>
         <p>Dr(a). ${rxGetDoctorName() || '________________________'}</p>
         <p>CRM: ${crm}</p>
@@ -676,14 +678,16 @@ function rxGenerateBlankReceita () {
   if (textEl) textEl.value = plain;
 
   preview.innerHTML = `
-    <div class="rx-print-sheet" contenteditable="true" spellcheck="true" lang="pt-BR" aria-label="Receituário em branco editável">
-      <h4 class="rx-print-title">RECEITUÁRIO EM BRANCO</h4>
-      <div class="rx-print-meta">
-        <p><strong>Paciente:</strong> ________________________________</p>
-        <p><strong>Data:</strong> ${date}</p>
-        <p><strong>Idade:</strong> ________</p>
+    <div class="rx-print-sheet rx-print-sheet--a4" contenteditable="true" spellcheck="true" lang="pt-BR" aria-label="Receituário em branco editável">
+      <div class="rx-print-body">
+        <h4 class="rx-print-title">RECEITUÁRIO EM BRANCO</h4>
+        <div class="rx-print-meta">
+          <p><strong>Paciente:</strong> ________________________________</p>
+          <p><strong>Data:</strong> ${date}</p>
+          <p><strong>Idade:</strong> ________</p>
+        </div>
       </div>
-      <div class="rx-print-sign">
+      <div class="rx-print-sign rx-print-sign--footer">
         <p>______________________________, ${date}</p>
         <p>Dr(a). ${doctor}</p>
         <p>CRM: ${crm}</p>
@@ -936,15 +940,51 @@ function rxPrintReceita () {
       <meta charset="UTF-8">
       <title>Receituário — MedHub</title>
       <style>
-        body { font-family: Georgia, 'Times New Roman', serif; color: #111; margin: 2rem; line-height: 1.5; }
-        .rx-print-title { text-align: center; letter-spacing: 0.08em; font-size: 1.1rem; margin-bottom: 1.5rem; }
+        @page { size: A4; margin: 1.5cm; }
+        * { box-sizing: border-box; }
+        html, body {
+          height: 100%;
+          margin: 0;
+          padding: 0;
+        }
+        body {
+          font-family: Georgia, 'Times New Roman', serif;
+          color: #111;
+          line-height: 1.5;
+        }
+        .rx-print-sheet,
+        .rx-print-sheet--a4 {
+          min-height: calc(297mm - 3cm);
+          height: 100%;
+          display: flex;
+          flex-direction: column;
+          padding: 0;
+        }
+        .rx-print-body { flex: 1 1 auto; }
+        .rx-print-title { text-align: center; letter-spacing: 0.08em; font-size: 1.1rem; margin: 0 0 1.5rem; }
         .rx-print-meta p { margin: 0.25rem 0; }
         .rx-print-route { margin: 1.25rem 0 0.5rem; }
         .rx-print-meds { margin: 0.5rem 0 1rem 1.25rem; padding: 0; }
         .rx-print-meds li { margin-bottom: 0.65rem; }
         .rx-print-orient ul { margin: 0.35rem 0 0 1rem; }
         .rx-print-sign { margin-top: 2.5rem; }
-        @media print { body { margin: 1.5cm; } }
+        .rx-print-sign--footer {
+          margin-top: auto;
+          padding-top: 2rem;
+          page-break-inside: avoid;
+        }
+        @media print {
+          html, body { height: 100%; }
+          .rx-print-sheet,
+          .rx-print-sheet--a4 {
+            min-height: calc(100vh - 0.01px);
+            height: auto;
+          }
+          .rx-print-sign--footer {
+            margin-top: auto;
+            position: running(none);
+          }
+        }
       </style>
     </head>
     <body>${sheet.outerHTML}</body>
