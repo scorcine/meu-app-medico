@@ -1,17 +1,17 @@
-/* Embed Dalucare — layout compacto do receituário */
+/* Embed Dalucare — layout full-width e denso */
 
 :root {
-  --embed-bg: #f6f3ee;
+  --embed-bg: #f4f6f8;
   --embed-ink: #142033;
   --embed-muted: #5b6575;
   --embed-line: rgba(20, 32, 51, 0.12);
   --embed-accent: #0d6efd;
-  --embed-card: #fffdf9;
+  --embed-card: #ffffff;
 }
 
 * { box-sizing: border-box; }
 
-html, body {
+html, body.embed-body {
   margin: 0;
   min-height: 100%;
   font-family: "Segoe UI", system-ui, sans-serif;
@@ -19,39 +19,53 @@ html, body {
   background: var(--embed-bg);
 }
 
+/* Evita scroll duplo: o parent ajusta a altura do iframe */
+html.embed-framed,
+html.embed-framed body.embed-body {
+  overflow: hidden;
+  height: auto;
+  background: #fff;
+}
+
 .embed-shell {
-  max-width: 920px;
-  margin: 0 auto;
-  padding: 0.85rem 1rem 1.5rem;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 0.55rem 0.65rem 0.85rem;
 }
 
 .embed-top {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 0.75rem;
-  margin-bottom: 0.85rem;
-  padding-bottom: 0.65rem;
+  gap: 0.5rem;
+  margin-bottom: 0.55rem;
+  padding: 0.15rem 0 0.45rem;
   border-bottom: 1px solid var(--embed-line);
 }
 
 .embed-brand {
   font-weight: 700;
-  font-size: 0.95rem;
+  font-size: 0.88rem;
   letter-spacing: -0.01em;
 }
 
 .embed-brand span { color: var(--embed-accent); }
 
 .embed-user {
-  font-size: 0.82rem;
+  font-size: 0.78rem;
   color: var(--embed-muted);
+  text-align: right;
+  max-width: 60%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .embed-gate {
   background: var(--embed-card);
   border: 1px solid var(--embed-line);
-  border-radius: 1rem;
+  border-radius: 0.85rem;
   padding: 1.5rem 1.25rem;
   text-align: center;
 }
@@ -97,54 +111,103 @@ html, body {
   border: 1px solid var(--embed-line);
 }
 
+/* Quebra o limite de 640px do .dashboard-card do style.css */
+.embed-app .content-panel,
+.embed-app .card.dashboard-card.rx-wrap,
+.embed-app .dashboard-card,
+.embed-app .rx-wrap {
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  box-shadow: none;
+}
+
 .embed-app .rx-wrap {
   background: var(--embed-card);
   border: 1px solid var(--embed-line);
-  border-radius: 1rem;
-  padding: 1rem 1rem 1.25rem;
+  border-radius: 0.85rem;
+  padding: 0.85rem 0.9rem 1rem;
 }
 
 .embed-app h2 {
-  margin: 0 0 0.4rem;
-  font-size: 1.25rem;
+  margin: 0 0 0.35rem;
+  font-size: 1.1rem;
 }
 
 .embed-app .muted,
 .embed-app .compliance-inline-notice {
   color: var(--embed-muted);
-  font-size: 0.9rem;
+  font-size: 0.86rem;
+}
+
+.embed-app .ps-search-label {
+  margin-top: 0.15rem;
+  font-size: 0.82rem;
+}
+
+.embed-app .ps-search {
+  width: 100%;
+  margin-bottom: 0.35rem;
+}
+
+/* Grade mais densa — melhor aproveitamento da largura */
+.embed-app .calc-category-grid {
+  grid-template-columns: repeat(auto-fill, minmax(168px, 1fr));
+  gap: 0.55rem;
+  margin-top: 0.65rem;
+}
+
+.embed-app .calc-category-btn {
+  padding: 0.7rem 0.75rem;
+  border-radius: 0.7rem;
+  gap: 0.5rem;
+  background: #fff;
+}
+
+.embed-app .calc-category-icon {
+  font-size: 1.15rem;
+}
+
+.embed-app .calc-category-name {
+  font-size: 0.84rem;
+  line-height: 1.25;
+  font-weight: 600;
 }
 
 .embed-partner-note {
-  margin: 0.75rem 0 0;
-  font-size: 0.78rem;
+  margin: 0.55rem 0 0;
+  font-size: 0.72rem;
   color: var(--embed-muted);
   text-align: center;
 }
 
 .embed-guest-bar {
-  margin-bottom: 0.85rem;
-  padding: 0.85rem 1rem;
+  margin-bottom: 0.55rem;
+  padding: 0.65rem 0.75rem;
   background: var(--embed-card);
   border: 1px solid var(--embed-line);
-  border-radius: 1rem;
+  border-radius: 0.85rem;
+}
+
+.embed-guest-bar[hidden] {
+  display: none !important;
 }
 
 .embed-guest-hint {
-  margin: 0 0 0.65rem;
-  font-size: 0.82rem;
+  margin: 0 0 0.5rem;
+  font-size: 0.78rem;
 }
 
 .embed-guest-fields {
   display: grid;
   grid-template-columns: 1fr auto auto;
-  gap: 0.55rem;
+  gap: 0.45rem;
 }
 
 .embed-guest-field {
   display: grid;
-  gap: 0.25rem;
-  font-size: 0.78rem;
+  gap: 0.2rem;
+  font-size: 0.72rem;
   font-weight: 600;
   color: var(--embed-muted);
 }
@@ -155,8 +218,8 @@ html, body {
   font-weight: 500;
   color: var(--embed-ink);
   border: 1px solid var(--embed-line);
-  border-radius: 0.65rem;
-  padding: 0.55rem 0.7rem;
+  border-radius: 0.55rem;
+  padding: 0.45rem 0.6rem;
   background: #fff;
 }
 
@@ -167,31 +230,31 @@ html, body {
   color: #1a3347;
 }
 
-.embed-guest-uf { width: 4.5rem; }
-.embed-guest-crm { width: 8.5rem; }
+.embed-guest-uf { width: 4.25rem; }
+.embed-guest-crm { width: 7.5rem; }
 
 .embed-blank-card {
   display: grid;
-  gap: 0.2rem;
+  gap: 0.15rem;
   width: 100%;
-  margin: 0.85rem 0 1.1rem;
-  padding: 1rem 1.1rem;
+  margin: 0.55rem 0 0.75rem;
+  padding: 0.85rem 1rem;
   text-align: left;
   border: 2px solid var(--embed-ink);
-  border-radius: 1rem;
+  border-radius: 0.85rem;
   background: var(--embed-ink);
   color: #fffdf9;
   font: inherit;
   cursor: pointer;
-  box-shadow: var(--embed-shadow, 0 10px 28px rgba(20, 32, 51, 0.12));
+  box-shadow: 0 8px 20px rgba(20, 32, 51, 0.1);
 }
 
 .embed-blank-card strong {
-  font-size: 1.05rem;
+  font-size: 1rem;
 }
 
 .embed-blank-card span {
-  font-size: 0.86rem;
+  font-size: 0.8rem;
   opacity: 0.88;
   font-weight: 500;
 }
@@ -278,5 +341,15 @@ html, body {
   .embed-guest-uf,
   .embed-guest-crm {
     width: auto;
+  }
+
+  .embed-app .calc-category-grid {
+    grid-template-columns: repeat(auto-fill, minmax(148px, 1fr));
+  }
+}
+
+@media (min-width: 900px) {
+  .embed-app .calc-category-grid {
+    grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
   }
 }

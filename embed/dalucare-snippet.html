@@ -3,12 +3,14 @@
 
   1) Substitua getDalucareDoctorProfile() pelos dados reais do médico logado.
   2) O MedHub pede o perfil ao carregar (type: ready) e também aceita envio manual.
+  3) O listener de resize ajusta a altura do iframe (evita scroll interno estreito).
+  4) No CSS da página, NÃO use max-height no wrapper do iframe.
 -->
 <iframe
   id="medhub-rx-embed"
-  src="https://www.medhub.ia.br/embed/prescricao.html?v=rx-20260722j"
+  src="https://www.medhub.ia.br/embed/prescricao.html?v=rx-20260722k"
   title="Receituário MedHub"
-  style="width:100%;min-height:720px;border:0;border-radius:12px;background:#f6f3ee;"
+  style="display:block;width:100%;min-height:900px;height:900px;border:0;border-radius:12px;background:#fff;"
   loading="lazy"
   referrerpolicy="strict-origin-when-cross-origin"
   allow="clipboard-write"
@@ -47,7 +49,9 @@
     if (data.source !== 'medhub-embed') return;
 
     if (data.type === 'resize' && data.height) {
-      frame.style.height = Math.max(480, Number(data.height)) + 'px';
+      var h = Math.max(720, Number(data.height) || 0);
+      frame.style.height = h + 'px';
+      frame.style.minHeight = h + 'px';
     }
 
     // Embed pronto → envia nome/CRM automaticamente

@@ -67,11 +67,12 @@
 
   function embedNotifyHeight () {
     if (!isFramed()) return;
-    const height = Math.max(
+    const height = Math.ceil(Math.max(
       document.documentElement.scrollHeight,
       document.body ? document.body.scrollHeight : 0,
-      480
-    );
+      document.documentElement.offsetHeight,
+      520
+    )) + 8;
     ALLOWED_PARENTS.forEach(origin => {
       try {
         window.parent.postMessage({ source: 'medhub-embed', type: 'resize', height: height }, origin);
@@ -191,6 +192,9 @@
     const ufEl = document.getElementById('embed-guest-crm-uf');
     const numEl = document.getElementById('embed-guest-crm-number');
     const imported = partnerProfileLocked && guestName() && guestCrmNumber();
+
+    // Perfil já veio do Dalucare → esconde formulário e libera espaço
+    if (bar) bar.hidden = !!imported;
 
     if (hint) {
       hint.textContent = imported
@@ -320,6 +324,7 @@
   window.showSection = function () {};
 
   function bootGuestReceituario () {
+    document.documentElement.classList.add('embed-framed');
     showApp();
     initGuestIdentity();
     window.addEventListener('message', onParentMessage);
@@ -334,6 +339,7 @@
     embedNotifyReady();
     embedNotifyHeight();
     setTimeout(embedNotifyHeight, 400);
+    setTimeout(embedNotifyHeight, 1200);
     // Pedir de novo após 1s caso o parent ainda não estivesse pronto
     setTimeout(embedNotifyReady, 1000);
   }
