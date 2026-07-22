@@ -669,8 +669,6 @@ function rxGenerateBlankReceita () {
     'Data: ' + date,
     'Idade: ________',
     '',
-    'Uso oral:',
-    '',
     '______________________________, ' + date,
     '',
     'Dr(a). ' + doctor,
@@ -690,7 +688,6 @@ function rxGenerateBlankReceita () {
         <p><strong>Data:</strong> ${date}</p>
         <p><strong>Idade:</strong> ________</p>
       </div>
-      <p class="rx-print-route"><strong>Uso oral:</strong></p>
       <div class="rx-print-sign">
         <p>______________________________, ${date}</p>
         <p>Dr(a). ${doctor}</p>
