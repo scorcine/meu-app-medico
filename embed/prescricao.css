@@ -1,0 +1,123 @@
+/* Embed Dalucare — layout compacto do receituário */
+
+:root {
+  --embed-bg: #f6f3ee;
+  --embed-ink: #142033;
+  --embed-muted: #5b6575;
+  --embed-line: rgba(20, 32, 51, 0.12);
+  --embed-accent: #0d6efd;
+  --embed-card: #fffdf9;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  min-height: 100%;
+  font-family: "Segoe UI", system-ui, sans-serif;
+  color: var(--embed-ink);
+  background: var(--embed-bg);
+}
+
+.embed-shell {
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 0.85rem 1rem 1.5rem;
+}
+
+.embed-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.85rem;
+  padding-bottom: 0.65rem;
+  border-bottom: 1px solid var(--embed-line);
+}
+
+.embed-brand {
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: -0.01em;
+}
+
+.embed-brand span { color: var(--embed-accent); }
+
+.embed-user {
+  font-size: 0.82rem;
+  color: var(--embed-muted);
+}
+
+.embed-gate {
+  background: var(--embed-card);
+  border: 1px solid var(--embed-line);
+  border-radius: 1rem;
+  padding: 1.5rem 1.25rem;
+  text-align: center;
+}
+
+.embed-gate h1 {
+  margin: 0 0 0.5rem;
+  font-size: 1.35rem;
+}
+
+.embed-gate p {
+  margin: 0 0 1.1rem;
+  color: var(--embed-muted);
+}
+
+.embed-gate-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  justify-content: center;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 999px;
+  padding: 0.65rem 1.05rem;
+  font: inherit;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  color: inherit;
+}
+
+.btn-primary {
+  background: var(--embed-ink);
+  color: #fff;
+}
+
+.btn-ghost {
+  background: transparent;
+  border: 1px solid var(--embed-line);
+}
+
+.embed-app .rx-wrap {
+  background: var(--embed-card);
+  border: 1px solid var(--embed-line);
+  border-radius: 1rem;
+  padding: 1rem 1rem 1.25rem;
+}
+
+.embed-app h2 {
+  margin: 0 0 0.4rem;
+  font-size: 1.25rem;
+}
+
+.embed-app .muted,
+.embed-app .compliance-inline-notice {
+  color: var(--embed-muted);
+  font-size: 0.9rem;
+}
+
+.embed-partner-note {
+  margin: 0.75rem 0 0;
+  font-size: 0.78rem;
+  color: var(--embed-muted);
+  text-align: center;
+}

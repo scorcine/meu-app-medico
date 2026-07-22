@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Receituário MedHub — Embed</title>
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <script src="../theme.js"></script>
+  <link rel="stylesheet" href="../style.css?v=embed-rx-v1">
+  <link rel="stylesheet" href="prescricao.css?v=embed-rx-v1">
+
+  <script defer src="../pronto-socorro-interactive-drugs.js?v=embed-rx-v1"></script>
+  <script defer src="../pronto-socorro-interactive-data.js?v=embed-rx-v1"></script>
+  <script defer src="../pronto-socorro-interactive-core.js?v=embed-rx-v1"></script>
+  <script defer src="../pronto-socorro.js?v=embed-rx-v1"></script>
+  <script defer src="../med-apresentacoes-vo.js?v=embed-rx-v1"></script>
+  <script defer src="../receituario-data.js?v=embed-rx-v1"></script>
+  <script defer src="../receituario-ps-bridge.js?v=embed-rx-v1"></script>
+  <script defer src="../clinical-allergies.js?v=embed-rx-v1"></script>
+  <script defer src="../user-profile.js?v=embed-rx-v1"></script>
+  <script defer src="../receituario.js?v=embed-rx-v1"></script>
+  <script defer src="../medhub-config.js?v=embed-rx-v1"></script>
+  <script defer src="../subscription.js?v=embed-rx-v1"></script>
+  <script defer src="../auth-cloud.js?v=embed-rx-v1"></script>
+  <script defer src="../auth.js?v=embed-rx-v1"></script>
+  <script defer src="prescricao.js?v=embed-rx-v1"></script>
+</head>
+<body class="embed-body">
+  <div class="embed-shell">
+    <header class="embed-top">
+      <div class="embed-brand">MedHub <span>Receituário</span></div>
+      <div class="embed-user" id="embed-user-name"></div>
+    </header>
+
+    <div id="embed-gate" class="embed-gate" hidden>
+      <h1 id="embed-gate-title">Carregando…</h1>
+      <p id="embed-gate-text"></p>
+      <div id="embed-gate-actions" class="embed-gate-actions"></div>
+    </div>
+
+    <div id="embed-app" class="embed-app" hidden>
+      <section id="section-receituario" class="content-panel active">
+        <div class="card dashboard-card rx-wrap">
+          <div id="rx-list-view">
+            <h2>Receituário</h2>
+            <p class="compliance-inline-notice" role="note">
+              <strong>Modelo educacional.</strong> Sugestões VO por condição.
+              Nome e CRM vêm da <button type="button" class="link-btn" onclick="medhubOpenUserProfile()">Minha conta MedHub</button>.
+              Valide conforme sua UF antes de prescrever.
+            </p>
+            <p id="rx-profile-hint" class="rx-profile-hint muted" hidden></p>
+            <div id="rx-suggest-banner" class="rx-suggest-banner" hidden></div>
+            <label class="ps-search-label" for="rx-search">Buscar condição</label>
+            <input id="rx-search" class="ps-search" type="search" placeholder="Ex.: cefaleia, amigdalite, cistite…" autocomplete="off">
+            <div id="rx-condition-grid" class="calc-category-grid"></div>
+          </div>
+          <div id="rx-detail-view" hidden>
+            <button type="button" class="btn-back" id="rx-back">← Voltar às condições</button>
+            <div id="rx-source-banner" class="rx-source-banner" hidden></div>
+            <h2 id="rx-condition-title"></h2>
+            <p class="muted rx-detail-hint">1) Marque o esquema. 2) Escolha o medicamento. 3) Gere a receita.</p>
+            <div id="rx-options-wrap"></div>
+            <div id="rx-meds-panel" class="rx-meds-panel" hidden></div>
+            <div id="rx-selection-bar" class="rx-selection-bar" hidden>
+              <span id="rx-selection-count" class="rx-selection-count">Nenhuma opção selecionada</span>
+              <div class="rx-selection-actions">
+                <button type="button" class="btn btn-secondary" id="rx-clear-selection" disabled>Limpar</button>
+                <button type="button" class="btn" id="rx-generate" disabled>Gerar receita</button>
+              </div>
+            </div>
+            <div id="rx-validation" class="rx-validation" hidden></div>
+            <div id="rx-result" class="rx-result" hidden>
+              <h3>Receita gerada</h3>
+              <p class="muted rx-edit-hint">Clique no texto abaixo para editar antes de imprimir ou copiar.</p>
+              <div id="rx-print-preview" class="rx-print-preview"></div>
+              <textarea id="rx-result-text" class="rx-result-text" rows="12" readonly hidden aria-hidden="true"></textarea>
+              <div class="rx-result-actions">
+                <button type="button" class="btn" id="rx-print">Imprimir receita</button>
+                <button type="button" class="btn btn-secondary" id="rx-copy">Copiar texto</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <p class="embed-partner-note">Powered by MedHub · uso autorizado em dalucare.com.br</p>
+    </div>
+  </div>
+</body>
+</html>

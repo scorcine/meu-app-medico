@@ -29,6 +29,14 @@ const MEDHUB_PED_APP = {
   description: 'Protocolos, doses, calculadoras e prescrição pensados 100% para o atendimento pediátrico — app dedicado, separado deste MedHub (adulto).'
 };
 
+/** Parceiros autorizados a embutir páginas /embed/* via iframe */
+const MEDHUB_EMBED = {
+  allowedParents: [
+    'https://www.dalucare.com.br',
+    'https://dalucare.com.br'
+  ]
+};
+
 function medhubRenderPedAppPromo (container, variant) {
   if (!container) return;
   const v = variant || 'footer';

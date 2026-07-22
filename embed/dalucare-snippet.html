@@ -1,0 +1,28 @@
+<!--
+  Cole no site Dalucare (www.dalucare.com.br) onde quiser o receituário MedHub.
+
+  URL do embed:
+  https://www.medhub.ia.br/embed/prescricao.html
+-->
+<iframe
+  id="medhub-rx-embed"
+  src="https://www.medhub.ia.br/embed/prescricao.html"
+  title="Receituário MedHub"
+  style="width:100%;min-height:720px;border:0;border-radius:12px;background:#f6f3ee;"
+  loading="lazy"
+  referrerpolicy="strict-origin-when-cross-origin"
+  allow="clipboard-write"
+></iframe>
+<script>
+(function () {
+  var frame = document.getElementById('medhub-rx-embed');
+  if (!frame) return;
+  window.addEventListener('message', function (event) {
+    if (event.origin !== 'https://www.medhub.ia.br') return;
+    var data = event.data || {};
+    if (data.source === 'medhub-embed' && data.type === 'resize' && data.height) {
+      frame.style.height = Math.max(480, Number(data.height)) + 'px';
+    }
+  });
+})();
+</script>

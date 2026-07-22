@@ -8,7 +8,24 @@ function saveUsers (arr) {
   localStorage.setItem('users', JSON.stringify(arr));
 }
 
+function authSafeNextPath (raw) {
+  const value = String(raw || '').trim();
+  if (!value) return '';
+  // Só caminhos relativos internos (bloqueia //evil.com e http:)
+  if (!/^[a-zA-Z0-9][a-zA-Z0-9._/-]*\.html([?#].*)?$/.test(value)) return '';
+  if (value.includes('..')) return '';
+  return value;
+}
+
 function authGoApp () {
+  try {
+    const params = new URLSearchParams(window.location.search || '');
+    const next = authSafeNextPath(params.get('next'));
+    if (next) {
+      window.location.href = next;
+      return;
+    }
+  } catch (_) {}
   window.location.href = 'app.html';
 }
 
