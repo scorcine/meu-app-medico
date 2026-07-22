@@ -669,13 +669,12 @@ function rxGenerateBlankReceita () {
     'Data: ' + date,
     'Idade: ________',
     '',
-    'Uso EV:',
+  const plain = [
+    'RECEITUÁRIO EM BRANCO',
     '',
-    'Uso tópico:',
-    '',
-    'Uso inalatório:',
-    '',
-    'Orientações:',
+    'Paciente: ________________________________',
+    'Data: ' + date,
+    'Idade: ________',
     '',
     '______________________________, ' + date,
     '',
@@ -696,10 +695,6 @@ function rxGenerateBlankReceita () {
         <p><strong>Data:</strong> ${date}</p>
         <p><strong>Idade:</strong> ________</p>
       </div>
-      <p class="rx-print-route"><strong>Uso EV:</strong></p>
-      <p class="rx-print-route"><strong>Uso tópico:</strong></p>
-      <p class="rx-print-route"><strong>Uso inalatório:</strong></p>
-      <p class="rx-print-route"><strong>Orientações:</strong></p>
       <div class="rx-print-sign">
         <p>______________________________, ${date}</p>
         <p>Dr(a). ${doctor}</p>
