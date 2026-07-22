@@ -904,6 +904,7 @@ function rxOpenCombinedConditions (conditions, preserve) {
 
   listView.hidden = true;
   detailView.hidden = false;
+  optionsEl.hidden = false;
 
   if (titleEl) {
     titleEl.textContent = conditions.length > 1
@@ -940,6 +941,7 @@ function rxOpenCombinedConditions (conditions, preserve) {
   });
 
   rxUpdateSelectionBar();
+  detailView.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 function rxShowCondition (conditionId) {
