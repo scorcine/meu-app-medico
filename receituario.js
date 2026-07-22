@@ -669,8 +669,6 @@ function rxGenerateBlankReceita () {
     'Data: ' + date,
     'Idade: ________',
     '',
-    'Uso IM:',
-    '',
     'Uso EV:',
     '',
     'Uso tópico:',
@@ -698,7 +696,6 @@ function rxGenerateBlankReceita () {
         <p><strong>Data:</strong> ${date}</p>
         <p><strong>Idade:</strong> ________</p>
       </div>
-      <p class="rx-print-route"><strong>Uso IM:</strong></p>
       <p class="rx-print-route"><strong>Uso EV:</strong></p>
       <p class="rx-print-route"><strong>Uso tópico:</strong></p>
       <p class="rx-print-route"><strong>Uso inalatório:</strong></p>
