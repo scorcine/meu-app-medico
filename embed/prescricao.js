@@ -325,7 +325,7 @@
 
   function bootGuestReceituario () {
     document.documentElement.classList.add('embed-framed');
-    try { document.documentElement.setAttribute('data-theme', 'light'); } catch (_) {}
+    document.documentElement.setAttribute('data-theme', 'light');
     showApp();
     initGuestIdentity();
     window.addEventListener('message', onParentMessage);

@@ -53,6 +53,11 @@ html.embed-framed body.embed-body {
 
 .embed-brand span { color: var(--embed-accent); }
 
+/* Embed parceiro: sem toggle de tema (fica sempre claro) */
+.embed-body .theme-toggle {
+  display: none !important;
+}
+
 .embed-user {
   font-size: 0.78rem;
   color: var(--embed-muted);
