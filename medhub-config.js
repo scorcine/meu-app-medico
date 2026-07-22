@@ -34,7 +34,9 @@ const MEDHUB_EMBED = {
   allowedParents: [
     'https://www.dalucare.com.br',
     'https://dalucare.com.br'
-  ]
+  ],
+  /** Receituário no iframe do parceiro: sem login e sem assinatura */
+  openAccess: true
 };
 
 function medhubRenderPedAppPromo (container, variant) {

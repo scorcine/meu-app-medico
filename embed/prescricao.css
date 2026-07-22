@@ -121,3 +121,57 @@ html, body {
   color: var(--embed-muted);
   text-align: center;
 }
+
+.embed-guest-bar {
+  margin-bottom: 0.85rem;
+  padding: 0.85rem 1rem;
+  background: var(--embed-card);
+  border: 1px solid var(--embed-line);
+  border-radius: 1rem;
+}
+
+.embed-guest-hint {
+  margin: 0 0 0.65rem;
+  font-size: 0.82rem;
+}
+
+.embed-guest-fields {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 0.55rem;
+}
+
+.embed-guest-field {
+  display: grid;
+  gap: 0.25rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--embed-muted);
+}
+
+.embed-guest-field input,
+.embed-guest-field select {
+  font: inherit;
+  font-weight: 500;
+  color: var(--embed-ink);
+  border: 1px solid var(--embed-line);
+  border-radius: 0.65rem;
+  padding: 0.55rem 0.7rem;
+  background: #fff;
+}
+
+.embed-guest-uf { width: 4.5rem; }
+.embed-guest-crm { width: 8.5rem; }
+
+@media (max-width: 640px) {
+  .embed-guest-fields {
+    grid-template-columns: 1fr 1fr;
+  }
+  .embed-guest-field:first-child {
+    grid-column: 1 / -1;
+  }
+  .embed-guest-uf,
+  .embed-guest-crm {
+    width: auto;
+  }
+}
