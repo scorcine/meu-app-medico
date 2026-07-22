@@ -671,6 +671,8 @@ function rxGenerateBlankReceita () {
     '',
     'Uso oral:',
     '',
+    'Uso IM:',
+    '',
     '______________________________, ' + date,
     '',
     'Dr(a). ' + doctor,
@@ -678,7 +680,7 @@ function rxGenerateBlankReceita () {
     addr || '',
     '',
     '— Gerado pelo MedHub. Conteúdo educacional; revisar antes de prescrever.'
-  ].filter((line, i, arr) => !(line === '' && arr[i - 1] === '' && i > 8)).join('\n');
+  ].filter((line, i, arr) => !(line === '' && arr[i - 1] === '' && i > 10)).join('\n');
 
   if (textEl) textEl.value = plain;
 
@@ -691,6 +693,7 @@ function rxGenerateBlankReceita () {
         <p><strong>Idade:</strong> ________</p>
       </div>
       <p class="rx-print-route"><strong>Uso oral:</strong></p>
+      <p class="rx-print-route"><strong>Uso IM:</strong></p>
       <div class="rx-print-sign">
         <p>______________________________, ${date}</p>
         <p>Dr(a). ${doctor}</p>
