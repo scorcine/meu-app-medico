@@ -5,6 +5,83 @@ const MEDHUB_ACTIVE_PACIENTE = 'medhub-active-paciente';
 const MEDHUB_ACTIVE_IDADE = 'medhub-active-idade';
 const MEDHUB_RX_CRM_KEY = 'medhub-rx-crm';
 const MEDHUB_RX_CRM_PREFIX = 'CRM-SP';
+const MEDHUB_RX_DISCLAIMER_KEY = 'medhub-rx-disclaimer-dismissed-v1';
+
+function rxIsBoilerplateOrientacao (text) {
+  const t = String(text || '');
+  return /revisar.*(dose|prescrever|via)|conteúdo educacional|protocolo ps medhub|ferramenta educacional|não substitui/i.test(t);
+}
+
+function rxFilterClinicalOrientacoes (list) {
+  return (list || []).filter(t => t && !rxIsBoilerplateOrientacao(t));
+}
+
+function rxDisclaimerDismissed () {
+  try { return localStorage.getItem(MEDHUB_RX_DISCLAIMER_KEY) === '1'; } catch { return false; }
+}
+
+function rxSetDisclaimerDismissed () {
+  try { localStorage.setItem(MEDHUB_RX_DISCLAIMER_KEY, '1'); } catch { /* ignore */ }
+}
+
+function rxEnsureDisclaimerModal () {
+  let modal = document.getElementById('rx-disclaimer-modal');
+  if (modal) return modal;
+
+  modal = document.createElement('div');
+  modal.id = 'rx-disclaimer-modal';
+  modal.className = 'rx-disclaimer-modal';
+  modal.hidden = true;
+  modal.innerHTML = `
+    <div class="rx-disclaimer-dialog" role="dialog" aria-modal="true" aria-labelledby="rx-disclaimer-title">
+      <h3 id="rx-disclaimer-title">Antes de abrir a receita</h3>
+      <p>Revise dose, via, alergias e contraindicações antes de prescrever. Este é um modelo educacional e não substitui julgamento clínico, bula nem protocolo institucional.</p>
+      <label class="rx-disclaimer-check">
+        <input type="checkbox" id="rx-disclaimer-dont-show">
+        <span>Não avisar novamente</span>
+      </label>
+      <div class="rx-disclaimer-actions">
+        <button type="button" class="btn btn-secondary" id="rx-disclaimer-cancel">Cancelar</button>
+        <button type="button" class="btn" id="rx-disclaimer-ok">Continuar</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(modal);
+  return modal;
+}
+
+function rxShowDisclaimerThen (onContinue) {
+  if (rxDisclaimerDismissed()) {
+    onContinue();
+    return;
+  }
+
+  const modal = rxEnsureDisclaimerModal();
+  const okBtn = document.getElementById('rx-disclaimer-ok');
+  const cancelBtn = document.getElementById('rx-disclaimer-cancel');
+  const check = document.getElementById('rx-disclaimer-dont-show');
+  if (check) check.checked = false;
+
+  function cleanup () {
+    modal.hidden = true;
+    okBtn?.removeEventListener('click', onOk);
+    cancelBtn?.removeEventListener('click', onCancel);
+  }
+
+  function onOk () {
+    if (check?.checked) rxSetDisclaimerDismissed();
+    cleanup();
+    onContinue();
+  }
+
+  function onCancel () {
+    cleanup();
+  }
+
+  okBtn?.addEventListener('click', onOk);
+  cancelBtn?.addEventListener('click', onCancel);
+  modal.hidden = false;
+}
 
 function rxParseCrmNumber (stored) {
   if (!stored) return '';
@@ -244,12 +321,6 @@ function rxFormatReceitaPrint (conditions, medEntries, orientacoesList, validati
     orientacoesList.forEach(text => lines.push('• ' + text));
   }
 
-  if (validationMessages.length) {
-    lines.push('');
-    lines.push('⚠ ATENÇÃO — revisar antes de prescrever:');
-    validationMessages.forEach(m => lines.push('• ' + m.text));
-  }
-
   lines.push('');
   lines.push('______________________________, ' + date);
   lines.push('');
@@ -259,8 +330,6 @@ function rxFormatReceitaPrint (conditions, medEntries, orientacoesList, validati
   if (addr) {
     lines.push(addr);
   }
-  lines.push('');
-  lines.push('— Gerado pelo MedHub. Conteúdo educacional; revisar antes de prescrever.');
 
   return lines.join('\n');
 }
@@ -603,28 +672,40 @@ function rxGenerateReceita () {
   const { medEntries, messages, canGenerate } = rxGetValidationState();
   if (!canGenerate) return;
 
-  const orientacoesList = [];
-  const seenOrient = new Set();
-  medEntries.forEach(({ option }) => {
-    if (option.orientacoes && !seenOrient.has(option.orientacoes)) {
-      seenOrient.add(option.orientacoes);
-      orientacoesList.push(option.orientacoes);
-    }
+  rxShowDisclaimerThen(() => {
+    const orientacoesList = rxFilterClinicalOrientacoes((() => {
+      const list = [];
+      const seenOrient = new Set();
+      medEntries.forEach(({ option }) => {
+        if (option.orientacoes && !seenOrient.has(option.orientacoes)) {
+          seenOrient.add(option.orientacoes);
+          list.push(option.orientacoes);
+        }
+      });
+      return list;
+    })());
+
+    // Avisos clínicos ficam só na tela (rx-validation), não na folha impressa
+    rxRenderValidation(messages);
+
+    const text = rxFormatReceitaPrint(conditions, medEntries, orientacoesList, []);
+    const resultEl = document.getElementById('rx-result');
+    const textEl = document.getElementById('rx-result-text');
+    if (!resultEl || !textEl) return;
+
+    textEl.value = text;
+    rxRenderPrintPreview(conditions, medEntries, orientacoesList);
+    resultEl.hidden = false;
+    resultEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   });
-
-  const text = rxFormatReceitaPrint(conditions, medEntries, orientacoesList, messages.filter(m => m.severity === 'warning'));
-  const resultEl = document.getElementById('rx-result');
-  const textEl = document.getElementById('rx-result-text');
-  if (!resultEl || !textEl) return;
-
-  textEl.value = text;
-  rxRenderPrintPreview(conditions, medEntries, orientacoesList);
-  resultEl.hidden = false;
-  resultEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
 /** Receituário em branco — só identificação do médico (nome + CRM) */
 function rxGenerateBlankReceita () {
+  rxShowDisclaimerThen(() => rxGenerateBlankReceitaCore());
+}
+
+function rxGenerateBlankReceitaCore () {
   const listView = document.getElementById('rx-list-view');
   const detailView = document.getElementById('rx-detail-view');
   const titleEl = document.getElementById('rx-condition-title');
@@ -670,10 +751,8 @@ function rxGenerateBlankReceita () {
     '',
     'Dr(a). ' + doctor,
     'CRM: ' + crm,
-    addr || '',
-    '',
-    '— Gerado pelo MedHub. Conteúdo educacional; revisar antes de prescrever.'
-  ].join('\n');
+    addr || ''
+  ].filter((line, i, arr) => !(line === '' && i === arr.length - 1)).join('\n');
 
   if (textEl) textEl.value = plain;
 
@@ -841,27 +920,13 @@ function rxShowCombinedConditions (conditionIds, opts) {
 
   const sourceBanner = document.getElementById('rx-source-banner');
   if (sourceBanner) {
-    if (conditions.length > 1) {
-      sourceBanner.hidden = false;
-      sourceBanner.innerHTML = '📋 <strong>Receita combinada</strong> — selecione opções em cada queixa. Validações (ex.: dois AINEs) aplicam-se à receita inteira.';
-    } else if (conditions[0].source === 'guideline') {
-      sourceBanner.hidden = false;
-      sourceBanner.innerHTML = conditions[0].hasEtiology
-        ? '📋 <strong>Protocolo com múltiplas etiologias</strong> — seções ordenadas da mais comum à menos comum. Prescreva apenas a seção compatível com o quadro.'
-        : '📋 Opções extraídas do <strong>protocolo PS MedHub</strong> (diretriz). Selecione o esquema, escolha os medicamentos e edite a receita antes de imprimir.';
-    } else if (conditions[0].source === 'reference') {
-      sourceBanner.hidden = false;
-      sourceBanner.innerHTML = '📖 Condição sem modelo VO detalhado — use o protocolo PS como referência, selecione a opção abaixo e <strong>edite a receita</strong> manualmente.';
-    } else {
-      sourceBanner.hidden = false;
-      sourceBanner.innerHTML = '✓ Modelo completo com apresentações VO revisadas. Selecione esquemas, medicamentos e edite a receita livremente.';
-    }
+    sourceBanner.hidden = true;
+    sourceBanner.innerHTML = '';
   }
 
   optionsEl.innerHTML = conditions.map(condition => `
     <section class="rx-multi-block" data-rx-cond-id="${condition.id}">
       <h3 class="rx-multi-title">${condition.icon} ${condition.name}</h3>
-      ${condition.hasEtiology && condition.etiologyHint ? `<p class="rx-etiology-hint">${condition.etiologyHint}</p>` : ''}
       ${rxRenderConditionOptions(condition)}
     </section>
   `).join('');
