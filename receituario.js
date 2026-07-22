@@ -626,6 +626,96 @@ function rxGenerateReceita () {
   resultEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
+/** Receituário em branco — só identificação do médico (nome + CRM) */
+function rxGenerateBlankReceita () {
+  const listView = document.getElementById('rx-list-view');
+  const detailView = document.getElementById('rx-detail-view');
+  const titleEl = document.getElementById('rx-condition-title');
+  const hintEl = document.querySelector('.rx-detail-hint');
+  const optionsWrap = document.getElementById('rx-options-wrap');
+  const medsPanel = document.getElementById('rx-meds-panel');
+  const selectionBar = document.getElementById('rx-selection-bar');
+  const validation = document.getElementById('rx-validation');
+  const sourceBanner = document.getElementById('rx-source-banner');
+  const resultEl = document.getElementById('rx-result');
+  const textEl = document.getElementById('rx-result-text');
+  const preview = document.getElementById('rx-print-preview');
+
+  if (!resultEl || !preview) return;
+
+  rxActiveConditionIds = [];
+  rxSelectedOptionKeys.clear();
+  rxSelectedMedKeys.clear();
+
+  if (listView) listView.hidden = true;
+  if (detailView) detailView.hidden = false;
+  if (titleEl) titleEl.textContent = 'Receituário em branco';
+  if (hintEl) hintEl.textContent = 'Apenas nome e CRM do médico. Edite o corpo se quiser anotar à mão após imprimir.';
+  if (optionsWrap) { optionsWrap.innerHTML = ''; optionsWrap.hidden = true; }
+  if (medsPanel) { medsPanel.hidden = true; medsPanel.innerHTML = ''; }
+  if (selectionBar) selectionBar.hidden = true;
+  if (validation) { validation.hidden = true; validation.innerHTML = ''; }
+  if (sourceBanner) { sourceBanner.hidden = true; sourceBanner.innerHTML = ''; }
+
+  const crm = rxGetStoredCrmDisplay();
+  const date = new Date().toLocaleDateString('pt-BR');
+  const doctor = rxGetDoctorName() || '________________________';
+  const addr = typeof medhubGetProfileAddressBlock === 'function' ? medhubGetProfileAddressBlock() : '';
+
+  const plain = [
+    'RECEITUÁRIO EM BRANCO',
+    '',
+    'Paciente: ________________________________',
+    'Data: ' + date,
+    'Idade: ________',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '______________________________, ' + date,
+    '',
+    'Dr(a). ' + doctor,
+    'CRM: ' + crm,
+    addr || '',
+    '',
+    '— Gerado pelo MedHub. Conteúdo educacional; revisar antes de prescrever.'
+  ].filter((line, i, arr) => !(line === '' && arr[i - 1] === '' && i > 10)).join('\n');
+
+  if (textEl) textEl.value = plain;
+
+  preview.innerHTML = `
+    <div class="rx-print-sheet" contenteditable="true" spellcheck="true" lang="pt-BR" aria-label="Receituário em branco editável">
+      <h4 class="rx-print-title">RECEITUÁRIO EM BRANCO</h4>
+      <div class="rx-print-meta">
+        <p><strong>Paciente:</strong> ________________________________</p>
+        <p><strong>Data:</strong> ${date}</p>
+        <p><strong>Idade:</strong> ________</p>
+      </div>
+      <div class="rx-print-blank-body" aria-hidden="true">
+        <p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
+        <p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
+      </div>
+      <div class="rx-print-sign">
+        <p>______________________________, ${date}</p>
+        <p>Dr(a). ${doctor}</p>
+        <p>CRM: ${crm}</p>
+        ${addr ? `<p class="rx-print-address">${addr.replace(/\n/g, '<br>')}</p>` : ''}
+      </div>
+    </div>
+  `;
+
+  resultEl.hidden = false;
+  const resultTitle = resultEl.querySelector('h3');
+  if (resultTitle) resultTitle.textContent = 'Receituário em branco';
+  resultEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
 function rxClearSelection () {
   rxSelectedOptionKeys.clear();
   rxSelectedMedKeys.clear();
@@ -808,6 +898,14 @@ function rxShowList () {
   if (detailView) detailView.hidden = true;
   const sourceBanner = document.getElementById('rx-source-banner');
   if (sourceBanner) { sourceBanner.hidden = true; sourceBanner.innerHTML = ''; }
+  const optionsWrap = document.getElementById('rx-options-wrap');
+  if (optionsWrap) optionsWrap.hidden = false;
+  const hintEl = document.querySelector('.rx-detail-hint');
+  if (hintEl) {
+    hintEl.textContent = '1) Marque o esquema. 2) Escolha o medicamento. 3) Gere a receita.';
+  }
+  const resultTitle = document.querySelector('#rx-result h3');
+  if (resultTitle) resultTitle.textContent = 'Receita gerada';
   rxActiveConditionIds = [];
   rxSelectedOptionKeys.clear();
   rxSelectedMedKeys.clear();
@@ -922,6 +1020,12 @@ function initReceituario () {
   if (printBtn) printBtn.addEventListener('click', rxPrintReceita);
   if (generateBtn) generateBtn.addEventListener('click', rxGenerateReceita);
   if (clearBtn) clearBtn.addEventListener('click', rxClearSelection);
+
+  const blankBtn = document.getElementById('rx-blank');
+  if (blankBtn && !blankBtn.dataset.bound) {
+    blankBtn.dataset.bound = '1';
+    blankBtn.addEventListener('click', rxGenerateBlankReceita);
+  }
 
   rxRenderConditionList('');
 }

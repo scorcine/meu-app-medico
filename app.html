@@ -59,7 +59,7 @@
   <script defer src="receituario-data.js?v=rx-multi-v1"></script>
   <script defer src="receituario-ps-bridge.js?v=ps-etiology-v4"></script>
   <script defer src="user-profile.js?v=profile-v14"></script>
-  <script defer src="receituario.js?v=ps-etiology-v4"></script>
+  <script defer src="receituario.js?v=rx-blank-v1"></script>
   <script defer src="google-drive.js?v=compliance-v1"></script>
   <script defer src="security-crypto.js?v=session-v1"></script>
   <script defer src="compliance.js?v=legal-once-v1"></script>
@@ -379,6 +379,10 @@
             <div id="rx-suggest-banner" class="rx-suggest-banner" hidden></div>
             <label class="ps-search-label" for="rx-search">Buscar condição</label>
             <input id="rx-search" class="ps-search" type="search" placeholder="Ex.: cefaleia, amigdalite, cistite…" autocomplete="off">
+            <div class="rx-blank-actions" style="margin:0.75rem 0 1rem;display:flex;flex-wrap:wrap;gap:0.65rem;align-items:center;">
+              <button type="button" class="btn btn-secondary" id="rx-blank">Receituário em branco</button>
+              <span class="muted" style="font-size:0.85rem;">Só nome e CRM — sem medicamentos</span>
+            </div>
             <div id="rx-condition-grid" class="calc-category-grid"></div>
           </div>
           <div id="rx-detail-view" hidden>
