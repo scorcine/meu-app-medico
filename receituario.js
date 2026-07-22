@@ -238,11 +238,6 @@ function rxFormatReceitaPrint (conditions, medEntries, orientacoesList, validati
     rxAppendMedsToLines(lines, byRoute.geral, itemNum);
   }
 
-  if (!medEntries.length) {
-    lines.push('Uso oral:');
-    lines.push('');
-  }
-
   if (orientacoesList.length) {
     lines.push('');
     lines.push('Orientações:');
