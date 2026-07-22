@@ -19,10 +19,11 @@ html, body.embed-body {
   background: var(--embed-bg);
 }
 
-/* Evita scroll duplo: o parent ajusta a altura do iframe */
+/* Evita scroll duplo quando o parent redimensiona; ainda permite rolar se o iframe for baixo */
 html.embed-framed,
 html.embed-framed body.embed-body {
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
   height: auto;
   background: #fff;
 }

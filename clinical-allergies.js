@@ -3,6 +3,15 @@
 const MEDHUB_ACTIVE_PACIENTE_ALERGIAS = 'medhub-active-paciente-alergias';
 const MEDHUB_ACTIVE_ENCOUNTER = 'medhub-active-encounter';
 
+/** Normalização local (embed não carrega clinical-storage.js) */
+function clinicalAllergyNorm (text) {
+  return String(text || '')
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .trim();
+}
+
 const CLINICAL_ALLERGY_RULES = [
   {
     keywords: ['penicilina', 'penicillin', 'amoxicilina', 'ampicilina', 'clavulanato', 'clavulin', 'beta lactam', 'beta-lactam', 'beta lactamico'],
@@ -100,7 +109,7 @@ function clinicalGetActiveAllergyText () {
 
 function clinicalParseAllergyText (text) {
   const raw = (text || '').trim();
-  const norm = clinicalNorm(raw);
+  const norm = clinicalAllergyNorm(raw);
   if (!norm ||
     norm === 'nkda' ||
     norm.includes('sem alergia') ||
@@ -121,7 +130,7 @@ function clinicalParseAllergyText (text) {
   const blockedIds = new Set();
 
   CLINICAL_ALLERGY_RULES.forEach(rule => {
-    if (rule.keywords.some(k => norm.includes(clinicalNorm(k)))) {
+    if (rule.keywords.some(k => norm.includes(clinicalAllergyNorm(k)))) {
       (rule.classes || []).forEach(c => blockedClasses.add(c));
       (rule.ids || []).forEach(id => blockedIds.add(id));
     }
@@ -129,7 +138,7 @@ function clinicalParseAllergyText (text) {
 
   tokens.forEach(token => {
     CLINICAL_ALLERGY_RULES.forEach(rule => {
-      if (rule.keywords.some(k => clinicalNorm(k).includes(token) || token.includes(clinicalNorm(k)))) {
+      if (rule.keywords.some(k => clinicalAllergyNorm(k).includes(token) || token.includes(clinicalAllergyNorm(k)))) {
         (rule.classes || []).forEach(c => blockedClasses.add(c));
         (rule.ids || []).forEach(id => blockedIds.add(id));
       }
@@ -164,7 +173,7 @@ function clinicalIsDrugBlocked (drug) {
   if (profile.none) return false;
 
   const meta = clinicalDrugMeta(drug);
-  const hay = clinicalNorm([
+  const hay = clinicalAllergyNorm([
     meta.id.replace(/_/g, ' '),
     meta.name,
     drug.text || '',
@@ -221,7 +230,7 @@ async function clinicalSyncActivePatientFromAnamnese () {
   if (alergias) clinicalSetActiveAllergies(alergias);
   if (!nome || typeof pacientesLoadAll !== 'function') return;
   const list = await pacientesLoadAll();
-  const p = list.find(x => clinicalNorm(x.nome) === clinicalNorm(nome));
+  const p = list.find(x => clinicalAllergyNorm(x.nome) === clinicalAllergyNorm(nome));
   if (p) {
     clinicalSetActivePatient({ ...p, alergias: alergias || p.alergias });
   } else if (alergias) {

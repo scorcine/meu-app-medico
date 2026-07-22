@@ -325,6 +325,7 @@
 
   function bootGuestReceituario () {
     document.documentElement.classList.add('embed-framed');
+    try { document.documentElement.setAttribute('data-theme', 'light'); } catch (_) {}
     showApp();
     initGuestIdentity();
     window.addEventListener('message', onParentMessage);
@@ -334,6 +335,13 @@
 
     if (typeof initReceituario === 'function') initReceituario();
     if (typeof rxOnSectionShow === 'function') rxOnSectionShow();
+
+    // Após marcar esquema / abrir condição, recalcula altura do iframe
+    document.addEventListener('click', function (ev) {
+      if (!ev.target.closest('.rx-condition-btn, .rx-option-card, .rx-med-item, #rx-back, #rx-blank, #rx-generate')) return;
+      setTimeout(embedNotifyHeight, 50);
+      setTimeout(embedNotifyHeight, 300);
+    }, true);
 
     bindResizeObserver();
     embedNotifyReady();
