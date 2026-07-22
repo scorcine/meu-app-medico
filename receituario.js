@@ -650,7 +650,7 @@ function rxGenerateBlankReceita () {
   if (listView) listView.hidden = true;
   if (detailView) detailView.hidden = false;
   if (titleEl) titleEl.textContent = 'Receituário em branco';
-  if (hintEl) hintEl.textContent = 'Apenas nome e CRM do médico.';
+  if (hintEl) hintEl.textContent = 'Receituário em branco — sem linhas. Edite se precisar antes de imprimir.';
   if (optionsWrap) { optionsWrap.innerHTML = ''; optionsWrap.hidden = true; }
   if (medsPanel) { medsPanel.hidden = true; medsPanel.innerHTML = ''; }
   if (selectionBar) selectionBar.hidden = true;
@@ -658,20 +658,41 @@ function rxGenerateBlankReceita () {
   if (sourceBanner) { sourceBanner.hidden = true; sourceBanner.innerHTML = ''; }
 
   const crm = rxGetStoredCrmDisplay();
+  const date = new Date().toLocaleDateString('pt-BR');
   const doctor = rxGetDoctorName() || '________________________';
   const addr = typeof medhubGetProfileAddressBlock === 'function' ? medhubGetProfileAddressBlock() : '';
 
   const plain = [
+    'RECEITUÁRIO EM BRANCO',
+    '',
+    'Paciente: ________________________________',
+    'Data: ' + date,
+    'Idade: ________',
+    '',
+    'Uso oral:',
+    '',
+    '______________________________, ' + date,
+    '',
     'Dr(a). ' + doctor,
     'CRM: ' + crm,
-    addr || ''
-  ].filter(Boolean).join('\n');
+    addr || '',
+    '',
+    '— Gerado pelo MedHub. Conteúdo educacional; revisar antes de prescrever.'
+  ].join('\n');
 
   if (textEl) textEl.value = plain;
 
   preview.innerHTML = `
     <div class="rx-print-sheet" contenteditable="true" spellcheck="true" lang="pt-BR" aria-label="Receituário em branco editável">
+      <h4 class="rx-print-title">RECEITUÁRIO EM BRANCO</h4>
+      <div class="rx-print-meta">
+        <p><strong>Paciente:</strong> ________________________________</p>
+        <p><strong>Data:</strong> ${date}</p>
+        <p><strong>Idade:</strong> ________</p>
+      </div>
+      <p class="rx-print-route"><strong>Uso oral:</strong></p>
       <div class="rx-print-sign">
+        <p>______________________________, ${date}</p>
         <p>Dr(a). ${doctor}</p>
         <p>CRM: ${crm}</p>
         ${addr ? `<p class="rx-print-address">${addr.replace(/\n/g, '<br>')}</p>` : ''}
