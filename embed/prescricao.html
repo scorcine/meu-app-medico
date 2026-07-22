@@ -7,21 +7,21 @@
   <meta name="robots" content="noindex,nofollow">
   <link rel="icon" href="../favicon.svg" type="image/svg+xml">
   <script src="../theme.js"></script>
-  <link rel="stylesheet" href="../style.css?v=embed-rx-v3">
-  <link rel="stylesheet" href="prescricao.css?v=embed-rx-v3">
+  <link rel="stylesheet" href="../style.css?v=embed-rx-v4">
+  <link rel="stylesheet" href="prescricao.css?v=embed-rx-v4">
 
-  <script defer src="../pronto-socorro-interactive-drugs.js?v=embed-rx-v3"></script>
-  <script defer src="../pronto-socorro-interactive-data.js?v=embed-rx-v3"></script>
-  <script defer src="../pronto-socorro-interactive-core.js?v=embed-rx-v3"></script>
-  <script defer src="../pronto-socorro.js?v=embed-rx-v3"></script>
-  <script defer src="../med-apresentacoes-vo.js?v=embed-rx-v3"></script>
-  <script defer src="../receituario-data.js?v=embed-rx-v3"></script>
-  <script defer src="../receituario-ps-bridge.js?v=embed-rx-v3"></script>
-  <script defer src="../clinical-allergies.js?v=embed-rx-v3"></script>
-  <script defer src="../user-profile.js?v=embed-rx-v3"></script>
-  <script defer src="../receituario.js?v=embed-rx-v3"></script>
-  <script defer src="../medhub-config.js?v=embed-rx-v3"></script>
-  <script defer src="prescricao.js?v=embed-rx-v3"></script>
+  <script defer src="../pronto-socorro-interactive-drugs.js?v=embed-rx-v4"></script>
+  <script defer src="../pronto-socorro-interactive-data.js?v=embed-rx-v4"></script>
+  <script defer src="../pronto-socorro-interactive-core.js?v=embed-rx-v4"></script>
+  <script defer src="../pronto-socorro.js?v=embed-rx-v4"></script>
+  <script defer src="../med-apresentacoes-vo.js?v=embed-rx-v4"></script>
+  <script defer src="../receituario-data.js?v=embed-rx-v4"></script>
+  <script defer src="../receituario-ps-bridge.js?v=embed-rx-v4"></script>
+  <script defer src="../clinical-allergies.js?v=embed-rx-v4"></script>
+  <script defer src="../user-profile.js?v=embed-rx-v4"></script>
+  <script defer src="../receituario.js?v=embed-rx-v4"></script>
+  <script defer src="../medhub-config.js?v=embed-rx-v4"></script>
+  <script defer src="prescricao.js?v=embed-rx-v4"></script>
 </head>
 <body class="embed-body">
   <div class="embed-shell">
@@ -63,14 +63,16 @@
               <strong>Modelo educacional.</strong> Sugestões VO por condição via MedHub · uso autorizado na Dalucare.
               Valide conforme sua UF antes de prescrever.
             </p>
-  <p id="rx-profile-hint" class="rx-profile-hint muted" hidden></p>
+            <p id="rx-profile-hint" class="rx-profile-hint muted" hidden></p>
             <div id="rx-suggest-banner" class="rx-suggest-banner" hidden></div>
-            <label class="ps-search-label" for="rx-search">Buscar condição</label>
+
+            <button type="button" class="embed-blank-card" id="rx-blank">
+              <strong>Receituário em branco</strong>
+              <span>Gera só nome e CRM do médico — sem medicamentos</span>
+            </button>
+
+            <label class="ps-search-label" for="rx-search">Ou buscar condição</label>
             <input id="rx-search" class="ps-search" type="search" placeholder="Ex.: cefaleia, amigdalite, cistite…" autocomplete="off">
-            <div class="embed-blank-actions">
-              <button type="button" class="btn btn-ghost" id="rx-blank">Receituário em branco</button>
-              <span class="muted embed-blank-hint">Só nome e CRM do médico — sem medicamentos</span>
-            </div>
             <div id="rx-condition-grid" class="calc-category-grid"></div>
           </div>
           <div id="rx-detail-view" hidden>
