@@ -37,10 +37,15 @@ function medhubDefaultProfile (sessionUser) {
 }
 
 function medhubProfileHasIdentityFields (profile) {
-  if (!profile?.userType) return false;
+  if (!profile) return false;
   if (!String(profile.rxDisplayName || '').trim()) return false;
-  if (profile.userType === 'student') return true;
-  if (profile.userType === 'doctor') {
+  let userType = profile.userType;
+  if (userType !== 'student' && userType !== 'doctor') {
+    if (String(profile.crmNumber || '').replace(/\D/g, '')) userType = 'doctor';
+    else return false;
+  }
+  if (userType === 'student') return true;
+  if (userType === 'doctor') {
     return !!String(profile.crmNumber || '').replace(/\D/g, '');
   }
   return false;
@@ -249,18 +254,29 @@ function medhubNeedsProfileOnboarding (profile) {
   return !medhubIsProfileSetupComplete(profile);
 }
 
+function medhubHealProfileIdentity (profile) {
+  if (!profile || typeof profile !== 'object') return profile;
+  const next = { ...profile };
+  if (next.userType !== 'student' && next.userType !== 'doctor') {
+    if (String(next.crmNumber || '').replace(/\D/g, '')) next.userType = 'doctor';
+  }
+  if (medhubProfileHasIdentityFields(next)) next.onboardingComplete = true;
+  return next;
+}
+
 function medhubProfileDataComplete (profile) {
   if (!profile) return false;
-  return !!(profile.onboardingComplete && medhubProfileHasIdentityFields(profile));
+  const healed = medhubHealProfileIdentity(profile);
+  return medhubProfileHasIdentityFields(healed);
 }
 
 function medhubIsProfileSetupComplete (profile) {
-  const p = profile || medhubLoadUserProfile();
+  const p = medhubHealProfileIdentity(profile || medhubLoadUserProfile());
   if (medhubProfileDataComplete(p)) return true;
   const user = typeof getSession === 'function' ? getSession() : null;
   if (user?.email) {
     const snap = medhubLoadProfileSetupBackup(user.email);
-    if (snap?.onboardingComplete && medhubSnapshotProfileSetupComplete(snap)) return true;
+    if (snap && medhubProfileHasIdentityFields(medhubHealProfileIdentity(snap))) return true;
   }
   return false;
 }

@@ -34,16 +34,26 @@ function defaultProfile (sessionName) {
   };
 }
 
+function inferUserType (profile) {
+  if (profile?.userType === 'student' || profile?.userType === 'doctor') return profile.userType;
+  if (String(profile?.crmNumber || '').replace(/\D/g, '')) return 'doctor';
+  return '';
+}
+
 function normalizeProfile (raw, sessionName) {
   const base = defaultProfile(sessionName);
   if (!raw || typeof raw !== 'object') return base;
 
+  const crmNumber = String(raw.crmNumber || '').replace(/\D/g, '');
+  let userType = raw.userType === 'student' || raw.userType === 'doctor' ? raw.userType : '';
+  if (!userType && crmNumber) userType = 'doctor';
+
   const profile = {
     ...base,
     rxDisplayName: String(raw.rxDisplayName ?? base.rxDisplayName).trim(),
-    userType: raw.userType === 'student' || raw.userType === 'doctor' ? raw.userType : '',
+    userType,
     crmUf: String(raw.crmUf || base.crmUf).toUpperCase().slice(0, 2),
-    crmNumber: String(raw.crmNumber || '').replace(/\D/g, ''),
+    crmNumber,
     address: String(raw.address || '').trim(),
     addressCity: String(raw.addressCity || '').trim(),
     addressState: String(raw.addressState || '').toUpperCase().slice(0, 2),
@@ -55,6 +65,7 @@ function normalizeProfile (raw, sessionName) {
   };
 
   if (!CRM_UFS.has(profile.crmUf)) profile.crmUf = 'SP';
+  if (profileOnboardingComplete(profile)) profile.onboardingComplete = true;
   return profile;
 }
 
@@ -62,18 +73,22 @@ function identityConfigured (profile) {
   if (profile.userType === 'student') {
     return !!(profile.rxDisplayName && profile.userType === 'student');
   }
-  if (profile.userType === 'doctor') {
+  if (profile.userType === 'doctor' || String(profile.crmNumber || '').replace(/\D/g, '')) {
     return !!(profile.rxDisplayName && profile.crmNumber);
   }
-  return !!(profile.rxDisplayName && profile.crmNumber);
+  return false;
 }
 
 function profileOnboardingComplete (profile) {
-  if (profile?.onboardingComplete) return true;
-  if (!profile?.userType) return false;
-  if (profile.userType === 'student') return true;
-  if (profile.userType === 'doctor') {
-    return !!(profile.crmNumber && profile.crmUf);
+  if (!profile) return false;
+  if (profile.onboardingComplete && (profile.userType === 'student' || profile.userType === 'doctor')) {
+    if (profile.userType === 'student') return !!profile.rxDisplayName;
+    return !!(profile.rxDisplayName && profile.crmNumber);
+  }
+  const userType = inferUserType(profile);
+  if (userType === 'student') return !!profile.rxDisplayName;
+  if (userType === 'doctor') {
+    return !!(profile.rxDisplayName && profile.crmNumber && profile.crmUf);
   }
   return false;
 }
@@ -122,7 +137,16 @@ async function getProfessionalProfile (email, sessionName) {
   if (!cloudAuthEnabled()) return null;
   const stored = await kv.get(profileKey(email));
   if (!stored) return null;
-  return normalizeProfile(stored, sessionName);
+  const normalized = normalizeProfile(stored, sessionName);
+  const needsHeal =
+    (!stored.userType && normalized.userType) ||
+    (!stored.onboardingComplete && normalized.onboardingComplete);
+  if (needsHeal) {
+    try {
+      await kv.set(profileKey(email), normalized);
+    } catch { /* best-effort heal */ }
+  }
+  return normalized;
 }
 
 async function saveProfessionalProfile (email, updates, options = {}) {

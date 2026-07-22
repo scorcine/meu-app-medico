@@ -230,7 +230,12 @@ async function medhubCloudSaveProfile (profile, currentPassword) {
 
 function medhubCloudProfileComplete (profile) {
   if (!profile) return false;
-  if (profile.complete || profile.onboardingComplete) return true;
+  if (profile.complete || profile.onboardingComplete) {
+    if (typeof medhubProfileHasIdentityFields === 'function') {
+      return medhubProfileHasIdentityFields(profile) || !!(profile.userType && profile.rxDisplayName);
+    }
+    return true;
+  }
   if (typeof medhubProfileHasIdentityFields === 'function') {
     return medhubProfileHasIdentityFields(profile);
   }
@@ -283,31 +288,37 @@ function medhubApplyCloudProfileLocal (profile, options) {
   ) {
     return;
   }
+  const source = typeof medhubHealProfileIdentity === 'function'
+    ? medhubHealProfileIdentity(profile)
+    : profile;
   const merged = { ...local };
 
-  if (profile.rxDisplayName != null && String(profile.rxDisplayName).trim()) {
-    merged.rxDisplayName = String(profile.rxDisplayName).trim();
+  if (source.rxDisplayName != null && String(source.rxDisplayName).trim()) {
+    merged.rxDisplayName = String(source.rxDisplayName).trim();
   }
-  if (profile.userType === 'student' || profile.userType === 'doctor') {
-    merged.userType = profile.userType;
+  if (source.userType === 'student' || source.userType === 'doctor') {
+    merged.userType = source.userType;
+  } else if (!merged.userType && String(source.crmNumber || '').replace(/\D/g, '')) {
+    merged.userType = 'doctor';
   }
-  if (profile.crmUf) merged.crmUf = profile.crmUf;
-  if (profile.crmNumber != null) {
-    merged.crmNumber = String(profile.crmNumber).replace(/\D/g, '');
+  if (source.crmUf) merged.crmUf = source.crmUf;
+  if (source.crmNumber != null) {
+    merged.crmNumber = String(source.crmNumber).replace(/\D/g, '');
   }
-  if (profile.address != null) merged.address = profile.address;
-  if (profile.addressCity != null) merged.addressCity = profile.addressCity;
-  if (profile.addressState != null) merged.addressState = profile.addressState;
-  if (profile.addressZip != null) merged.addressZip = profile.addressZip;
-  if (profile.identityLocked) merged.identityLocked = true;
-  if (profile.identityChangeCount != null) {
+  if (source.address != null) merged.address = source.address;
+  if (source.addressCity != null) merged.addressCity = source.addressCity;
+  if (source.addressState != null) merged.addressState = source.addressState;
+  if (source.addressZip != null) merged.addressZip = source.addressZip;
+  if (source.identityLocked) merged.identityLocked = true;
+  if (source.identityChangeCount != null) {
     merged.identityChangeCount = Math.max(
       Number(local.identityChangeCount) || 0,
-      Number(profile.identityChangeCount) || 0
+      Number(source.identityChangeCount) || 0
     );
   }
-  if (medhubCloudProfileComplete(profile) || medhubCloudProfileComplete(merged)) {
+  if (medhubCloudProfileComplete(source) || medhubCloudProfileComplete(merged)) {
     merged.onboardingComplete = true;
+    if (!merged.userType && merged.crmNumber) merged.userType = 'doctor';
   }
 
   medhubSaveUserProfileLocal(merged);
@@ -417,6 +428,15 @@ async function medhubEnsureProfileOnboarding () {
     return false;
   }
 
+  // Sempre prioriza a nuvem em computadores novos / terminais de trabalho
+  if (typeof medhubCloudSyncAvailable === 'function' && await medhubCloudSyncAvailable()) {
+    const restored = await medhubRestoreProfileFromCloud(null);
+    if (restored && medhubIsProfileSetupComplete(medhubLoadUserProfile())) {
+      medhubClearFreshLogin();
+      return true;
+    }
+  }
+
   if (await medhubAdmitIfLocalProfileComplete()) return true;
 
   const signupOnly = medhubHasFreshLogin();
@@ -424,11 +444,12 @@ async function medhubEnsureProfileOnboarding () {
   if (signupOnly) {
     if (typeof medhubCloudSyncAvailable === 'function' && await medhubCloudSyncAvailable()) {
       const restored = await medhubRestoreProfileFromCloud(null);
-      if (restored) {
+      if (restored && medhubIsProfileSetupComplete(medhubLoadUserProfile())) {
         medhubClearFreshLogin();
         return true;
       }
     }
+    // Só limpa perfil local em cadastro novo de verdade — nunca em login normal
     if (typeof medhubClearProfileStateForNewAccount === 'function') {
       medhubClearProfileStateForNewAccount(user.email);
     }
@@ -440,12 +461,6 @@ async function medhubEnsureProfileOnboarding () {
   }
 
   if (typeof medhubCloudSyncAvailable === 'function' && await medhubCloudSyncAvailable()) {
-    const restored = await medhubRestoreProfileFromCloud(null);
-    if (restored) {
-      medhubClearFreshLogin();
-      return true;
-    }
-
     if (await medhubAdmitIfLocalProfileComplete()) return true;
 
     const cloud = await medhubFetchCloudProfileWithRetry(3);
@@ -457,6 +472,12 @@ async function medhubEnsureProfileOnboarding () {
       if (typeof logout === 'function') logout();
       else window.location.href = 'login.html';
       return false;
+    }
+
+    if (cloud.profile && medhubCloudProfileComplete(cloud.profile)) {
+      medhubApplyCloudProfileLocal(cloud.profile, { force: true });
+      medhubClearFreshLogin();
+      return true;
     }
   } else if (user?.email && typeof medhubRestoreProfileFromSetupBackup === 'function') {
     medhubRestoreProfileFromSetupBackup(user.email);
