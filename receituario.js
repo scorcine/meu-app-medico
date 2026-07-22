@@ -883,6 +883,10 @@ function rxShowCombinedConditions (conditionIds, opts) {
     .filter(Boolean);
   if (!conditions.length) return;
 
+  rxOpenCombinedConditions(conditions, preserve);
+}
+
+function rxOpenCombinedConditions (conditions, preserve) {
   rxActiveConditionIds = conditions.map(c => c.id);
   if (!preserve) {
     rxSelectedOptionKeys.clear();
@@ -908,11 +912,11 @@ function rxShowCombinedConditions (conditionIds, opts) {
   }
   if (detailHint) {
     if (conditions.length === 1 && conditions[0].hasEtiology) {
-      detailHint.textContent = '1) Confirme a etiologia (seções numeradas por frequência). 2) Marque o esquema da seção correta. 3) Escolha os medicamentos e gere a receita.';
+      detailHint.textContent = '1) Confirme a etiologia. 2) Marque o esquema. 3) Escolha os medicamentos e gere a receita.';
     } else if (conditions.length > 1) {
-      detailHint.textContent = 'Receita combinada — marque esquemas de cada queixa abaixo. Todos os medicamentos sairão em uma única receita.';
+      detailHint.textContent = 'Receita combinada — marque esquemas de cada queixa abaixo.';
     } else {
-      detailHint.textContent = '1) Marque o esquema (ex.: AINE). 2) Escolha o medicamento na lista. 3) Gere a receita para imprimir.';
+      detailHint.textContent = '1) Marque o esquema. 2) Escolha o medicamento. 3) Gere a receita.';
     }
   }
   if (resultEl) resultEl.hidden = true;

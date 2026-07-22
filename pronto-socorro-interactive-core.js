@@ -611,7 +611,7 @@ function psRenderInteractiveRx (conditionId, container) {
       <ul class="ps-rx-result-list">
         ${analysis.messages.map(m => `<li class="ps-rx-msg ps-rx-msg--${m.severity}">${m.text}</li>`).join('')}
       </ul>
-      <p class="ps-rx-disclaimer">Ferramenta educacional — não substitui julgamento clínico nem bula/local.</p>
+      <p class="ps-rx-disclaimer" hidden></p>
     `;
     resultEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   });

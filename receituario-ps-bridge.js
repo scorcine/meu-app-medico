@@ -121,7 +121,7 @@ function rxPsMedToRxOption (conditionId, psMed) {
     classes: optionClasses,
     items: [],
     meds,
-    orientacoes: 'Protocolo PS MedHub (diretriz). Revisar via, dose, alergias e contraindicações antes de prescrever.'
+    orientacoes: ''
   };
 }
 
@@ -347,7 +347,7 @@ function rxBuildFullCatalog () {
               text: 'Consulte o protocolo PS MedHub desta condição e transcreva/adapte a prescrição VO aqui.',
               classes: []
             }],
-            orientacoes: 'Esta condição ainda não possui opções VO estruturadas no receituário. Use o módulo Prescrições PS como diretriz.'
+            orientacoes: ''
           }]
         }]
       });
