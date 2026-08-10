@@ -263,13 +263,38 @@ async function medhubRestoreProfileFromCloud (loginProfile) {
 
   if (!(await medhubCloudSyncAvailable())) return false;
 
-  const cloud = await medhubFetchCloudProfileWithRetry(3);
-  if (!cloud.ok) return false;
-
-  if (medhubCloudProfileComplete(cloud.profile) || cloud.onboardingComplete) {
-    medhubApplyCloudProfileLocal(cloud.profile, { force: true });
-    return true;
+  const cloud = await medhubFetchCloudProfileWithRetry(5);
+  if (cloud.ok && (medhubCloudProfileComplete(cloud.profile) || cloud.onboardingComplete)) {
+    if (cloud.profile && medhubCloudProfileComplete(cloud.profile)) {
+      medhubApplyCloudProfileLocal(cloud.profile, { force: true });
+      return true;
+    }
   }
+
+  // /api/auth/me também devolve o perfil (backup para PC novo)
+  try {
+    const me = await medhubCloudMe();
+    if (me?.profile && medhubCloudProfileComplete(me.profile)) {
+      medhubApplyCloudProfileLocal(me.profile, { force: true });
+      return true;
+    }
+  } catch { /* ignore */ }
+
+  return false;
+}
+
+/**
+ * No dispositivo atual o perfil está completo, mas a nuvem pode estar vazia
+ * (bug antigo de 1º save). Empurra para a nuvem para o próximo PC/login funcionar.
+ */
+async function medhubEnsureCloudHasCompleteProfile () {
+  if (typeof medhubIsProfileSetupComplete !== 'function') return false;
+  if (typeof medhubLoadUserProfile !== 'function') return false;
+  if (!medhubIsProfileSetupComplete(medhubLoadUserProfile())) return false;
+  if (!(await medhubCloudSyncAvailable())) return false;
+
+  const cloud = await medhubFetchCloudProfileWithRetry(2);
+  if (cloud.ok && medhubCloudProfileComplete(cloud.profile)) return true;
 
   const pushed = await medhubPushEffectiveProfileToCloud();
   return !!(pushed.ok && medhubCloudProfileComplete(pushed.profile));
@@ -331,8 +356,19 @@ function medhubApplyCloudProfileLocal (profile, options) {
 async function medhubSyncProfileAfterLogin () {
   if (typeof medhubCloudSyncAvailable !== 'function') return;
   if (!(await medhubCloudSyncAvailable())) return;
-  if (medhubHasFreshLogin()) return;
+
+  // 1) Puxa da nuvem (computador novo)
   await medhubRestoreProfileFromCloud(null);
+
+  // 2) Se o PC atual tem perfil completo e a nuvem não, sobe agora
+  //    (corrige contas antigas que só tinham dado local)
+  await medhubEnsureCloudHasCompleteProfile();
+}
+
+function medhubApplyLoginProfile (loginData) {
+  if (!loginData?.profile || !medhubCloudProfileComplete(loginData.profile)) return false;
+  medhubApplyCloudProfileLocal(loginData.profile, { force: true });
+  return true;
 }
 
 async function medhubValidateCloudSession () {
@@ -390,11 +426,6 @@ async function medhubApplyCloudSession (loginData, password) {
   }
 }
 
-function medhubApplyLoginProfile (loginData) {
-  if (!loginData?.profile || !medhubCloudProfileComplete(loginData.profile)) return;
-  medhubApplyCloudProfileLocal(loginData.profile, { force: true });
-}
-
 async function medhubProfileNeedsOnboarding () {
   if (typeof medhubIsProfileSetupComplete !== 'function') return false;
   const profile = typeof medhubLoadUserProfile === 'function' ? medhubLoadUserProfile() : null;
@@ -412,8 +443,9 @@ async function medhubAdmitIfLocalProfileComplete () {
   const profile = typeof medhubLoadUserProfile === 'function' ? medhubLoadUserProfile() : null;
   if (!medhubIsProfileSetupComplete(profile)) return false;
 
+  // Garante que a nuvem também tenha o perfil (próximo PC)
   if (typeof medhubCloudSyncAvailable === 'function' && await medhubCloudSyncAvailable()) {
-    await medhubTryPushLocalProfileToCloud();
+    await medhubEnsureCloudHasCompleteProfile();
   }
   medhubClearFreshLogin();
   return true;
@@ -428,7 +460,14 @@ async function medhubEnsureProfileOnboarding () {
     return false;
   }
 
-  // Sempre prioriza a nuvem em computadores novos / terminais de trabalho
+  // Já tem perfil local completo (inclui o que veio no login) → entra no app
+  if (medhubIsProfileSetupComplete(medhubLoadUserProfile())) {
+    await medhubEnsureCloudHasCompleteProfile();
+    medhubClearFreshLogin();
+    return true;
+  }
+
+  // Computador novo / local vazio: nuvem manda
   if (typeof medhubCloudSyncAvailable === 'function' && await medhubCloudSyncAvailable()) {
     const restored = await medhubRestoreProfileFromCloud(null);
     if (restored && medhubIsProfileSetupComplete(medhubLoadUserProfile())) {
@@ -437,56 +476,25 @@ async function medhubEnsureProfileOnboarding () {
     }
   }
 
-  if (await medhubAdmitIfLocalProfileComplete()) return true;
+  // Backup local (mesmo e-mail neste browser)
+  if (user.email && typeof medhubRestoreProfileFromSetupBackup === 'function') {
+    medhubRestoreProfileFromSetupBackup(user.email);
+    if (medhubIsProfileSetupComplete(medhubLoadUserProfile())) {
+      await medhubEnsureCloudHasCompleteProfile();
+      medhubClearFreshLogin();
+      return true;
+    }
+  }
 
-  const signupOnly = medhubHasFreshLogin();
-
-  if (signupOnly) {
-    if (typeof medhubCloudSyncAvailable === 'function' && await medhubCloudSyncAvailable()) {
-      const restored = await medhubRestoreProfileFromCloud(null);
-      if (restored && medhubIsProfileSetupComplete(medhubLoadUserProfile())) {
-        medhubClearFreshLogin();
-        return true;
-      }
-    }
-    // Só limpa perfil local em cadastro novo de verdade — nunca em login normal
-    if (typeof medhubClearProfileStateForNewAccount === 'function') {
-      medhubClearProfileStateForNewAccount(user.email);
-    }
-    if (typeof medhubSanitizeProfileForFreshOnboarding === 'function') {
-      medhubSanitizeProfileForFreshOnboarding(user);
-    }
+  // Cadastro realmente novo (flag) sem perfil na nuvem → Passo 2
+  // Nunca apaga dados se a nuvem já tiver perfil completo (já tentamos acima).
+  if (medhubHasFreshLogin()) {
     medhubGoProfileOnboarding();
     return false;
   }
 
-  if (typeof medhubCloudSyncAvailable === 'function' && await medhubCloudSyncAvailable()) {
-    if (await medhubAdmitIfLocalProfileComplete()) return true;
-
-    const cloud = await medhubFetchCloudProfileWithRetry(3);
-    if (!cloud.ok) {
-      alert(
-        'Não foi possível carregar seu perfil na nuvem.\n\n' +
-        'Verifique sua conexão e tente entrar novamente. Seus dados profissionais ficam salvos na conta — não repita o cadastro de nome/CRM sem necessidade.'
-      );
-      if (typeof logout === 'function') logout();
-      else window.location.href = 'login.html';
-      return false;
-    }
-
-    if (cloud.profile && medhubCloudProfileComplete(cloud.profile)) {
-      medhubApplyCloudProfileLocal(cloud.profile, { force: true });
-      medhubClearFreshLogin();
-      return true;
-    }
-  } else if (user?.email && typeof medhubRestoreProfileFromSetupBackup === 'function') {
-    medhubRestoreProfileFromSetupBackup(user.email);
-    if (medhubIsProfileSetupComplete(medhubLoadUserProfile())) {
-      medhubClearFreshLogin();
-      return true;
-    }
-  }
-
+  // Login normal sem perfil completável → onboarding (uma vez)
+  // Sem alert de logout agressivo: em PC novo só preenche o que falta.
   medhubGoProfileOnboarding();
   return false;
 }
@@ -539,7 +547,24 @@ function medhubClearFreshLogin () {
 }
 
 async function medhubFinishCloudAuth (loginData, config, options = {}) {
+  // Perfil já completo na nuvem (login em PC novo ou re-cadastro) → app direto
+  if (loginData?.profile && medhubCloudProfileComplete(loginData.profile)) {
+    medhubApplyCloudProfileLocal(loginData.profile, { force: true });
+    medhubClearFreshLogin();
+    authGoApp();
+    return true;
+  }
+
+  if (typeof medhubIsProfileSetupComplete === 'function' &&
+      medhubIsProfileSetupComplete(typeof medhubLoadUserProfile === 'function' ? medhubLoadUserProfile() : null)) {
+    medhubClearFreshLogin();
+    await medhubEnsureCloudHasCompleteProfile();
+    authGoApp();
+    return true;
+  }
+
   if (options.forceOnboarding) {
+    // Só limpa local se a nuvem realmente não tem perfil completo
     if (typeof medhubClearProfileStateForNewAccount === 'function') {
       medhubClearProfileStateForNewAccount(loginData.user.email);
     }
@@ -558,15 +583,24 @@ async function medhubFinishCloudAuth (loginData, config, options = {}) {
 async function medhubAfterCloudAuth (loginData, password, options = {}) {
   if (loginData?.user?.email) medhubRemoveStaleLocalUser(loginData.user.email);
   await medhubApplyCloudSession(loginData, password);
-  medhubApplyLoginProfile(loginData);
-  if (options.forceOnboarding) medhubMarkFreshLogin();
-  else medhubClearFreshLogin();
+
+  // Login em PC novo: perfil da resposta de login é a fonte da verdade
+  const appliedFromLogin = medhubApplyLoginProfile(loginData);
+  if (appliedFromLogin) {
+    medhubClearFreshLogin();
+  } else if (options.forceOnboarding) {
+    medhubMarkFreshLogin();
+  } else {
+    medhubClearFreshLogin();
+  }
+
   await medhubUnlockSession(password, loginData.user.email);
 
   if (typeof medhubCloudSyncAfterUnlock === 'function') {
     await medhubCloudSyncAfterUnlock();
   }
 
+  // Puxa nuvem + sobe local completo se a nuvem estiver vazia
   if (typeof medhubSyncProfileAfterLogin === 'function') {
     await medhubSyncProfileAfterLogin();
   }
@@ -581,9 +615,16 @@ async function medhubAfterCloudAuth (loginData, password, options = {}) {
 
   const config = await medhubFetchAuthConfig();
 
+  // forceOnboarding só se ainda faltar perfil após sync da nuvem
+  const stillNeedsOnboarding = !(typeof medhubIsProfileSetupComplete === 'function' &&
+    medhubIsProfileSetupComplete(typeof medhubLoadUserProfile === 'function' ? medhubLoadUserProfile() : null));
+  const finishOptions = {
+    forceOnboarding: !!(options.forceOnboarding && stillNeedsOnboarding)
+  };
+
   if (medhubHasAcceptedLegal(loginData.user.email)) {
     medhubAcceptLegalLocal(loginData.user.email, config);
-    return medhubFinishCloudAuth(loginData, config, options);
+    return medhubFinishCloudAuth(loginData, config, finishOptions);
   }
 
   const legal = loginData.user?.legal;
@@ -592,7 +633,7 @@ async function medhubAfterCloudAuth (loginData, password, options = {}) {
 
   if (termsOk && privacyOk) {
     medhubAcceptLegalLocal(loginData.user.email, config);
-    return medhubFinishCloudAuth(loginData, config, options);
+    return medhubFinishCloudAuth(loginData, config, finishOptions);
   }
 
   medhubShowLegalModal(async () => {
@@ -602,7 +643,7 @@ async function medhubAfterCloudAuth (loginData, password, options = {}) {
     } else {
       medhubAcceptLegalLocal(loginData.user.email, config);
     }
-    await medhubFinishCloudAuth(loginData, config, options);
+    await medhubFinishCloudAuth(loginData, config, finishOptions);
   });
 
   return true;
