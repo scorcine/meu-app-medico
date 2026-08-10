@@ -9,7 +9,7 @@ const {
 const { getUser, publicUser, saveUser } = require('../_users');
 const { getSubscriptionStatus } = require('../_subscription');
 const { platformUnavailableMessage } = require('../_platform');
-const { getProfessionalProfile, publicProfile } = require('../_profile');
+const { getProfessionalProfile, publicProfile, ensurePaidUserProfile } = require('../_profile');
 const { recordUserActivity } = require('../_activity-kv');
 
 module.exports = async (req, res) => {
@@ -70,13 +70,15 @@ module.exports = async (req, res) => {
     await recordUserActivity(email, 'login');
 
     const token = createSessionToken(user, user.sessionVersion);
-    const profile = publicProfile(await getProfessionalProfile(email, user.name));
+    // Auto-libera perfil na nuvem se a assinatura está ativa e o Passo 2 trava-se
+    const profileRaw = await ensurePaidUserProfile(email, user, sub)
+      || await getProfessionalProfile(email, user.name);
 
     json(res, 200, {
       token,
       user: publicUser(user),
       subscription: sub,
-      profile
+      profile: publicProfile(profileRaw)
     });
   } catch (err) {
     json(res, 500, { error: err.message || 'Erro ao entrar' });

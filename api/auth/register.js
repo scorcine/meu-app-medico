@@ -11,6 +11,7 @@ const { saveUser, userExists, publicUser } = require('../_users');
 const { getSubscriptionStatus } = require('../_subscription');
 const { platformUnavailableMessage } = require('../_platform');
 const { verifyCheckoutForRegister, redeemCouponForRegister, saveCustomerBilling } = require('../_billing-kv');
+const { ensurePaidUserProfile, publicProfile } = require('../_profile');
 
 const TERMS_VERSION = process.env.MEDHUB_TERMS_VERSION || '2026-06-07-v2';
 const PRIVACY_VERSION = process.env.MEDHUB_PRIVACY_VERSION || '2026-06-07-v2';
@@ -175,11 +176,14 @@ module.exports = async (req, res) => {
     }
 
     const token = createSessionToken(user, user.sessionVersion);
+    // Cria perfil completo na nuvem no cadastro pago → app direto em qualquer PC
+    const profileRaw = await ensurePaidUserProfile(email, user, sub);
 
     json(res, 201, {
       token,
       user: publicUser(user),
-      subscription: sub
+      subscription: sub,
+      profile: publicProfile(profileRaw)
     });
   } catch (err) {
     const msg = err.message || 'Erro ao cadastrar';

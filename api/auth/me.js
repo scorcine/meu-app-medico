@@ -11,7 +11,7 @@ const { getClinicalBundle, saveClinicalBundle } = require('../_clinical-kv');
 const { recordUserActivity, getUserActivity, publicActivity } = require('../_activity-kv');
 const { processRetentionPing } = require('../_retention');
 const { authenticateRequest } = require('../_request-auth');
-const { getProfessionalProfile, publicProfile } = require('../_profile');
+const { getProfessionalProfile, publicProfile, ensurePaidUserProfile } = require('../_profile');
 
 module.exports = async (req, res) => {
   if (req.method === 'GET') {
@@ -37,7 +37,8 @@ async function handleGet (req, res) {
       await getUserActivity(auth.user.email),
       auth.user.createdAt
     );
-    const rawProfile = await getProfessionalProfile(auth.user.email, auth.user.name);
+    const rawProfile = await ensurePaidUserProfile(auth.user.email, auth.user, sub)
+      || await getProfessionalProfile(auth.user.email, auth.user.name);
     const profile = publicProfile(rawProfile);
     const out = {
       user: publicUser(auth.user),

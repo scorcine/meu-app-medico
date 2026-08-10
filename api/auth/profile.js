@@ -4,8 +4,10 @@ const {
   getProfessionalProfile,
   saveProfessionalProfile,
   publicProfile,
-  profileOnboardingComplete
+  profileOnboardingComplete,
+  ensurePaidUserProfile
 } = require('../_profile');
+const { getSubscriptionStatus } = require('../_subscription');
 
 module.exports = async (req, res) => {
   if (req.method === 'GET') {
@@ -26,7 +28,9 @@ async function handleGet (req, res) {
   if (!auth) return;
 
   try {
-    const raw = await getProfessionalProfile(auth.user.email, auth.user.name);
+    const sub = await getSubscriptionStatus(auth.user.email, { user: auth.user, loadUser: false });
+    const raw = await ensurePaidUserProfile(auth.user.email, auth.user, sub)
+      || await getProfessionalProfile(auth.user.email, auth.user.name);
     const profile = publicProfile(raw);
     json(res, 200, {
       profile,

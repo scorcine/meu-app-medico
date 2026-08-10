@@ -149,6 +149,84 @@ async function getProfessionalProfile (email, sessionName) {
   return normalized;
 }
 
+/**
+ * Liberação automática: assinante ativo sem perfil completo na nuvem
+ * deixa de ficar preso no Passo 2 (sem script/admin manual).
+ *
+ * - Cria perfil com nome da conta, tipo estudante e onboardingComplete
+ * - Médico pode atualizar CRM depois em Minha conta (1ª alteração livre até o lock)
+ * - Não sobrescreve médico com CRM ou perfil já completo
+ */
+async function ensurePaidUserProfile (email, user, subscription) {
+  if (!cloudAuthEnabled()) return null;
+  if (!subscription || !(subscription.active || subscription.devBypass)) {
+    return getProfessionalProfile(email, user?.name);
+  }
+
+  const existing = await getProfessionalProfile(email, user?.name);
+  if (existing && profileOnboardingComplete(existing)) {
+    return existing;
+  }
+
+  // Médico sem CRM ainda em preenchimento — não forçar estudante
+  if (existing?.userType === 'doctor' && !String(existing.crmNumber || '').replace(/\D/g, '')) {
+    return existing;
+  }
+
+  // Tem identidade válida, só falta flag de onboarding → só completa a flag
+  if (existing && identityConfigured(existing)) {
+    try {
+      const healed = normalizeProfile({
+        ...existing,
+        onboardingComplete: true
+      }, user?.name);
+      healed.updatedAt = new Date().toISOString();
+      await kv.set(profileKey(normalizeEmail(email)), healed);
+      return healed;
+    } catch {
+      return existing;
+    }
+  }
+
+  const name = String(user?.name || existing?.rxDisplayName || '').trim();
+  if (!name) {
+    return existing;
+  }
+
+  // Perfil ausente/incompleto → semente automática
+  try {
+    const seeded = normalizeProfile({
+      rxDisplayName: name,
+      userType: existing?.userType === 'doctor' ? 'doctor' : 'student',
+      crmUf: existing?.crmUf || 'SP',
+      crmNumber: String(existing?.crmNumber || '').replace(/\D/g, ''),
+      address: existing?.address || '',
+      addressCity: existing?.addressCity || '',
+      addressState: existing?.addressState || '',
+      addressZip: existing?.addressZip || '',
+      identityLocked: true,
+      identityChangeCount: Number(existing?.identityChangeCount) || 0,
+      onboardingComplete: true
+    }, user?.name);
+
+    // Se ficou doctor sem CRM, cai para estudante para não travar o login
+    if (seeded.userType === 'doctor' && !seeded.crmNumber) {
+      seeded.userType = 'student';
+    }
+    if (!profileOnboardingComplete(seeded)) {
+      seeded.userType = 'student';
+      seeded.crmNumber = '';
+      seeded.onboardingComplete = true;
+    }
+
+    seeded.updatedAt = new Date().toISOString();
+    await kv.set(profileKey(normalizeEmail(email)), seeded);
+    return seeded;
+  } catch {
+    return existing;
+  }
+}
+
 async function saveProfessionalProfile (email, updates, options = {}) {
   if (!cloudAuthEnabled()) throw new Error('Armazenamento na nuvem não configurado.');
 
@@ -230,6 +308,7 @@ module.exports = {
   MAX_IDENTITY_CHANGES,
   IDENTITY_LIMIT_NOTICE,
   getProfessionalProfile,
+  ensurePaidUserProfile,
   saveProfessionalProfile,
   publicProfile
 };
