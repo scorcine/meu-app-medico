@@ -836,20 +836,25 @@ footer {
   border: 1px solid var(--border-color, rgba(255, 255, 255, 0.12));
   border-radius: 10px;
   cursor: pointer;
-  transition: border-color 0.15s, background 0.15s;
+  -webkit-tap-highlight-color: transparent;
+  transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
 }
 
 .onboarding-role-card:hover {
   border-color: var(--accent, #3b82f6);
 }
 
-.onboarding-role-card:has(input:checked) {
+.onboarding-role-card:has(input:checked),
+.onboarding-role-card--selected {
   border-color: var(--accent, #3b82f6);
   background: var(--bg-surface-muted);
+  box-shadow: 0 0 0 1px var(--accent, #3b82f6);
 }
 
 .onboarding-role-card input {
   margin-top: 0.2rem;
+  width: 1.1rem;
+  height: 1.1rem;
 }
 
 .onboarding-role-title {
@@ -863,6 +868,34 @@ footer {
 
 .onboarding-profile-card {
   padding-bottom: 1.5rem;
+}
+
+.onboarding-must-choose {
+  margin-top: -0.15rem;
+}
+
+.onboarding-required-mark {
+  color: #ef4444;
+  font-weight: 700;
+}
+
+.onboarding-role-error {
+  margin: 0.55rem 0 0;
+  color: #f87171;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.onboarding-status--error {
+  color: #f87171;
+}
+
+.onboarding-status--ok {
+  color: #34d399;
+}
+
+.onboarding-status--info {
+  color: var(--text-muted, #94a3b8);
 }
 
 .auth-step-badge {

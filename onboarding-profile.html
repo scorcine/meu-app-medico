@@ -6,13 +6,13 @@
   <title>Passo 2 — Seu perfil • MedHub</title>
   <link rel="icon" href="assets/medhub-logo.png?v=logo-v2" type="image/png">
   <script src="theme.js"></script>
-  <link rel="stylesheet" href="style.css?v=auth-register-v4">
-  <link rel="stylesheet" href="auth-mobile.css?v=auth-mobile-v1">
+  <link rel="stylesheet" href="style.css?v=auth-register-v5">
+  <link rel="stylesheet" href="auth-mobile.css?v=auth-mobile-v2">
   <script defer src="security-crypto.js?v=session-v1"></script>
   <script defer src="user-profile.js?v=profile-v14"></script>
   <script defer src="auth-cloud.js?v=cloud-v19"></script>
   <script defer src="auth.js?v=onboarding-v7"></script>
-  <script defer src="onboarding-profile.js?v=12"></script>
+  <script defer src="onboarding-profile.js?v=13"></script>
 </head>
 <body class="auth-body">
   <header class="auth-page-header">
@@ -23,25 +23,27 @@
   </header>
 
   <main class="auth-main">
-    <form class="card auth-card onboarding-profile-card" id="onboarding-profile-form">
+    <form class="card auth-card onboarding-profile-card" id="onboarding-profile-form" novalidate>
       <p class="auth-step-badge muted">Passo 2 de 2 — configuração única</p>
       <h1>Seu perfil profissional</h1>
-      <p class="auth-hint muted">Esta etapa aparece <strong>somente no primeiro acesso</strong>. Depois, login e senha abrem o app direto. Informe se você é estudante ou médico(a) formado(a).</p>
+      <p class="auth-hint muted">Esta etapa aparece <strong>somente no primeiro acesso</strong>. Depois, login e senha abrem o app direto.</p>
+      <p class="auth-hint onboarding-must-choose"><strong>Toque em uma opção abaixo</strong> (estudante ou médico) e depois em Continuar.</p>
 
       <fieldset class="onboarding-role-fieldset">
-        <legend>Você é:</legend>
-        <div class="onboarding-role-group" role="radiogroup" aria-label="Tipo de usuário">
+        <legend>Você é: <span class="onboarding-required-mark">*</span></legend>
+        <div class="onboarding-role-group" role="radiogroup" aria-label="Tipo de usuário" aria-required="true">
           <label class="onboarding-role-card">
-            <input type="radio" name="userType" value="student" required>
+            <input type="radio" name="userType" value="student">
             <span class="onboarding-role-title">Estudante de medicina</span>
             <span class="onboarding-role-desc muted">Sem CRM no receituário por enquanto.</span>
           </label>
           <label class="onboarding-role-card">
-            <input type="radio" name="userType" value="doctor" required>
+            <input type="radio" name="userType" value="doctor">
             <span class="onboarding-role-title">Médico(a) formado(a)</span>
             <span class="onboarding-role-desc muted">Informe UF e número do CRM.</span>
           </label>
         </div>
+        <p id="onboarding-role-error" class="onboarding-role-error" hidden>Selecione estudante ou médico(a) para continuar.</p>
       </fieldset>
 
       <label for="onboarding-rx-name">Nome completo (como na receita)</label>

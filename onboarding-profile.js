@@ -12,6 +12,7 @@ function initOnboardingProfilePage () {
   const previewEl = document.getElementById('onboarding-rx-preview');
   const statusEl = document.getElementById('onboarding-status');
   const roleInputs = form.querySelectorAll('input[name="userType"]');
+  const roleErrorEl = document.getElementById('onboarding-role-error');
 
   if (crmUfEl && !crmUfEl.options.length) {
     const ufs = typeof MEDHUB_CRM_UFS !== 'undefined'
@@ -31,13 +32,40 @@ function initOnboardingProfilePage () {
     return form.querySelector('input[name="userType"]:checked')?.value || '';
   }
 
+  function showStatus (message, kind) {
+    if (!statusEl) return;
+    if (!message) {
+      statusEl.hidden = true;
+      statusEl.textContent = '';
+      statusEl.className = 'anamnese-save-status';
+      return;
+    }
+    statusEl.hidden = false;
+    statusEl.textContent = message;
+    statusEl.className = 'anamnese-save-status onboarding-status--' + (kind || 'info');
+  }
+
+  function syncRoleCards () {
+    form.querySelectorAll('.onboarding-role-card').forEach(card => {
+      const input = card.querySelector('input[name="userType"]');
+      const checked = !!(input && input.checked);
+      card.classList.toggle('onboarding-role-card--selected', checked);
+      card.setAttribute('aria-checked', checked ? 'true' : 'false');
+    });
+    if (roleErrorEl) roleErrorEl.hidden = !!selectedUserType();
+  }
+
   function updateCrmVisibility () {
     const isDoctor = selectedUserType() === 'doctor';
     if (crmBlock) {
       crmBlock.hidden = !isDoctor;
       crmBlock.classList.toggle('onboarding-crm-fields--visible', isDoctor);
     }
-    if (crmNumEl) crmNumEl.required = isDoctor;
+    if (crmNumEl) {
+      crmNumEl.required = isDoctor;
+      if (!isDoctor) crmNumEl.value = '';
+    }
+    syncRoleCards();
     if (isDoctor && crmBlock) {
       requestAnimationFrame(() => {
         crmBlock.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -59,12 +87,24 @@ function initOnboardingProfilePage () {
     previewEl.textContent = `Dr(a). ${name} · ${crm}`;
   }
 
+  function selectRole (value) {
+    const input = form.querySelector('input[name="userType"][value="' + value + '"]');
+    if (!input) return;
+    input.checked = true;
+    updateCrmVisibility();
+  }
+
   roleInputs.forEach(input => {
     input.addEventListener('change', updateCrmVisibility);
     input.addEventListener('click', updateCrmVisibility);
   });
   form.querySelectorAll('.onboarding-role-card').forEach(card => {
-    card.addEventListener('click', () => {
+    card.addEventListener('click', e => {
+      // Garante seleção no toque (iOS / labels aninhados)
+      const input = card.querySelector('input[name="userType"]');
+      if (input && e.target !== input) {
+        input.checked = true;
+      }
       setTimeout(updateCrmVisibility, 0);
     });
   });
@@ -81,7 +121,7 @@ function initOnboardingProfilePage () {
 
   form.addEventListener('submit', async e => {
     e.preventDefault();
-    if (statusEl) statusEl.hidden = true;
+    showStatus('');
 
     const userType = selectedUserType();
     const rxDisplayName = nameEl?.value?.trim() || '';
@@ -89,23 +129,26 @@ function initOnboardingProfilePage () {
     const crmNumber = (crmNumEl?.value || '').replace(/\D/g, '');
 
     if (!userType) {
-      alert('Selecione estudante ou médico(a) formado(a).');
+      if (roleErrorEl) roleErrorEl.hidden = false;
+      showStatus('Selecione se você é estudante ou médico(a) formado(a).', 'error');
+      form.querySelector('.onboarding-role-fieldset')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
       return;
     }
     if (!rxDisplayName) {
-      alert('Informe seu nome completo.');
+      showStatus('Informe seu nome completo.', 'error');
+      nameEl?.focus();
       return;
     }
     if (userType === 'doctor' && !crmNumber) {
-      alert('Informe o número do CRM.');
+      showStatus('Informe o número do CRM para médico(a) formado(a).', 'error');
       crmNumEl?.focus();
       return;
     }
 
     const sessionUser = typeof getSession === 'function' ? getSession() : null;
     if (!sessionUser?.email) {
-      alert('Sessão expirada. Faça login novamente.');
-      window.location.replace('login.html');
+      showStatus('Sessão expirada. Redirecionando para o login…', 'error');
+      setTimeout(() => { window.location.replace('login.html'); }, 800);
       return;
     }
 
@@ -118,45 +161,67 @@ function initOnboardingProfilePage () {
     };
 
     const btn = document.getElementById('onboarding-submit-btn');
-    if (btn) btn.disabled = true;
+    if (btn) {
+      btn.disabled = true;
+      btn.textContent = 'Salvando…';
+    }
+    showStatus('Salvando seu perfil…', 'info');
 
     const cloudAvailable = typeof medhubCloudSyncAvailable === 'function' &&
       await medhubCloudSyncAvailable();
     const productionSite = typeof medhubIsProductionSite === 'function' && medhubIsProductionSite();
 
     if (productionSite && !cloudAvailable) {
-      if (btn) btn.disabled = false;
-      alert('Sincronização na nuvem indisponível. Tente novamente em instantes.');
+      if (btn) {
+        btn.disabled = false;
+        btn.textContent = 'Continuar para o app';
+      }
+      showStatus('Sincronização na nuvem indisponível. Tente novamente em instantes.', 'error');
       return;
     }
 
     if (cloudAvailable) {
       const saved = await medhubCloudSaveProfile(payload);
       if (!saved.ok) {
-        if (btn) btn.disabled = false;
-        alert(
-          (saved.error || 'Não foi possível salvar nome e CRM na nuvem.') +
-          '\n\nVerifique sua conexão e tente novamente. Esses dados precisam ficar na nuvem para funcionar em outros dispositivos.'
+        if (btn) {
+          btn.disabled = false;
+          btn.textContent = 'Continuar para o app';
+        }
+        const authFail = saved.code === 'password_required' || /sessão|token|não autoriz|unauthorized|login/i.test(saved.error || '');
+        if (authFail || saved.code === 'account_deleted') {
+          showStatus((saved.error || 'Sessão inválida.') + ' Faça login novamente.', 'error');
+          setTimeout(() => { window.location.replace('login.html'); }, 1200);
+          return;
+        }
+        showStatus(
+          (saved.error || 'Não foi possível salvar o perfil.') +
+          ' Verifique a conexão e tente de novo.',
+          'error'
         );
         return;
       }
 
-      const verify = typeof medhubFetchCloudProfileWithRetry === 'function'
-        ? await medhubFetchCloudProfileWithRetry(3)
-        : await medhubCloudFetchProfile();
-      if (
-        !verify.ok ||
-        !(typeof medhubCloudProfileComplete === 'function' && medhubCloudProfileComplete(verify.profile))
-      ) {
-        if (btn) btn.disabled = false;
-        alert(
-          'Seu perfil ainda não foi confirmado na nuvem.\n\n' +
-          'Aguarde alguns segundos e toque em Continuar novamente.'
-        );
-        return;
+      let confirmed = saved.profile;
+      const completeFn = typeof medhubCloudProfileComplete === 'function'
+        ? medhubCloudProfileComplete
+        : (p) => !!(p && p.userType && p.rxDisplayName);
+
+      if (!completeFn(confirmed)) {
+        const verify = typeof medhubFetchCloudProfileWithRetry === 'function'
+          ? await medhubFetchCloudProfileWithRetry(3)
+          : await medhubCloudFetchProfile();
+        if (verify.ok && completeFn(verify.profile)) {
+          confirmed = verify.profile;
+        }
       }
+
+      if (!completeFn(confirmed)) {
+        // Salvou payload localmente mesmo se GET da nuvem falhar — evita loop infinito
+        confirmed = { ...payload, complete: true, onboardingComplete: true };
+      }
+
       if (typeof medhubApplyCloudProfileLocal === 'function') {
-        medhubApplyCloudProfileLocal(verify.profile, { force: true });
+        medhubApplyCloudProfileLocal(confirmed, { force: true });
       }
     }
 
@@ -168,8 +233,12 @@ function initOnboardingProfilePage () {
     }
 
     if (typeof medhubClearFreshLogin === 'function') medhubClearFreshLogin();
+    showStatus('Perfil salvo. Abrindo o app…', 'ok');
     window.location.replace('app.html');
   });
+
+  // Atalho de DEBUG: não — apenas API pública se necessário
+  window.medhubSelectOnboardingRole = selectRole;
 }
 
 async function initOnboardingProfileGate () {

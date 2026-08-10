@@ -153,7 +153,7 @@ async function saveProfessionalProfile (email, updates, options = {}) {
   if (!cloudAuthEnabled()) throw new Error('Armazenamento na nuvem não configurado.');
 
   const { user, currentPassword, sessionName } = options;
-  const current = await getProfessionalProfile(email, sessionName);
+  const current = (await getProfessionalProfile(email, sessionName)) || defaultProfile(sessionName);
   const next = normalizeProfile({ ...current, ...updates }, sessionName);
 
   const locked = current.identityLocked || identityConfigured(current);
