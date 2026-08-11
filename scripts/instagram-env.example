@@ -1,0 +1,10 @@
+# Cole estas linhas no arquivo .env.local (na raiz do meu-app-medico)
+# NÃO envie este arquivo para o Git / chat.
+
+META_ACCESS_TOKEN=
+INSTAGRAM_BUSINESS_ACCOUNT_ID=
+MEDHUB_PUBLIC_ORIGIN=https://www.medhub.ia.br
+
+# Opcional (para renovar token longo):
+# META_APP_ID=
+# META_APP_SECRET=

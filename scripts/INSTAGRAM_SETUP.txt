@@ -1,0 +1,162 @@
+═══════════════════════════════════════════════════════════
+PUBLICAÇÃO AUTOMÁTICA INSTAGRAM — PASSO A PASSO (MedHub)
+Conta: @medhub_app já profissional e ligada ao Facebook
+═══════════════════════════════════════════════════════════
+
+FAÇA SÓ UMA VEZ (configuração). Depois: 1 comando para postar.
+
+
+────────────────────────────────────────────────────────────
+PASSO 1 — Abrir o Meta for Developers
+────────────────────────────────────────────────────────────
+1. Entre em: https://developers.facebook.com
+2. Login com o MESMO Facebook da Página "MedHub Aplicativo Médico"
+3. Clique em "Meus apps" → "Criar app"
+4. Tipo: Negócios / Other / Business
+5. Nome: MedHub Publisher
+6. Conclua a criação
+
+
+────────────────────────────────────────────────────────────
+PASSO 2 — Adicionar Instagram Graph API
+────────────────────────────────────────────────────────────
+1. No painel do app → "Adicionar produtos"
+2. Adicione "Instagram" / "Instagram Graph API"
+3. (Opcional) Adicione também "Facebook Login" se a Meta pedir
+
+
+────────────────────────────────────────────────────────────
+PASSO 3 — Gerar token com permissões
+────────────────────────────────────────────────────────────
+1. Abra: https://developers.facebook.com/tools/explorer/
+2. Em "Meta App": selecione MedHub Publisher
+3. Em "User or Page": escolha a PÁGINA "MedHub Aplicativo Médico"
+   (não use o perfil pessoal)
+4. Clique em "Permissions" / "Add a Permission" e marque:
+     - pages_show_list
+     - pages_read_engagement
+     - instagram_basic
+     - instagram_content_publish
+5. Clique em "Generate Access Token"
+6. Autorize Página + Instagram
+7. COPIE o token (é o token CURTO, vale ~1 h)
+   → guarde num bloco de notas só no seu PC
+
+
+────────────────────────────────────────────────────────────
+PASSO 4 — Pegar o INSTAGRAM_BUSINESS_ACCOUNT_ID
+────────────────────────────────────────────────────────────
+Ainda no Graph API Explorer (com o token da Página):
+
+1. Na caixa de consulta, digite:
+     me?fields=instagram_business_account
+   e clique em Submit
+
+2. Se não vier nada, tente:
+     me/accounts
+   depois clique na Página e rode:
+     {PAGE_ID}?fields=instagram_business_account
+
+3. Copie o número de:
+     "instagram_business_account": { "id": "1784........" }
+
+4. Confira se é o @ certo:
+     {ESSE_ID}?fields=id,username
+   Deve retornar username medhub_app (ou o @ da MedHub)
+
+
+────────────────────────────────────────────────────────────
+PASSO 5 — Transformar token CURTO em token LONGO (~60 dias)
+────────────────────────────────────────────────────────────
+1. No app → Configurações → Básico
+2. Copie:
+     - ID do app        → META_APP_ID
+     - Chave secreta    → META_APP_SECRET  (mostrar)
+
+3. No navegador, abra esta URL (troque os 3 valores):
+
+https://graph.facebook.com/v21.0/oauth/access_token?grant_type=fb_exchange_token&client_id=SEU_APP_ID&client_secret=SEU_APP_SECRET&fb_exchange_token=SEU_TOKEN_CURTO
+
+4. A página mostra um JSON com "access_token": "...."
+   → Esse é o META_ACCESS_TOKEN (longo). COPIE.
+
+
+────────────────────────────────────────────────────────────
+PASSO 6 — Colocar no projeto (PC)
+────────────────────────────────────────────────────────────
+1. Abra a pasta do projeto:
+   C:\Users\User\Desktop\meu-app-medico
+
+2. Crie (ou edite) o arquivo:
+   .env.local
+
+3. Cole o modelo de:
+   scripts/instagram-env.example
+
+4. Preencha:
+
+META_ACCESS_TOKEN=cole_o_token_LONGO_aqui
+INSTAGRAM_BUSINESS_ACCOUNT_ID=1784cole_o_id_aqui
+MEDHUB_PUBLIC_ORIGIN=https://www.medhub.ia.br
+
+5. SALVE. Nunca faça commit desse arquivo nem cole o token no chat.
+
+
+────────────────────────────────────────────────────────────
+PASSO 7 — Me avise OU rode o comando
+────────────────────────────────────────────────────────────
+Opção A — falar comigo:
+  "env pronto, pode publicar o Caso 1"
+
+Opção B — você mesmo no terminal (PowerShell):
+
+  cd C:\Users\User\Desktop\meu-app-medico
+
+  # Teste sem publicar:
+  node scripts/publish-instagram-case.js --dir "D:\MedHub_app\Divulgação\Casos Clinicos\Caso 1" --dry-run
+
+  # Publicar de verdade (imagens no ar no site):
+  # 1) o script copia para public/ig/...
+  # 2) se as URLs ainda não existirem no site, use:
+
+  node scripts/publish-instagram-case.js --dir "D:\MedHub_app\Divulgação\Casos Clinicos\Caso 1" --upload-temp
+
+  # Ou suba public/ig no git/push e rode SEM --upload-temp
+
+
+────────────────────────────────────────────────────────────
+O QUE FICA AUTOMÁTICO
+────────────────────────────────────────────────────────────
+✓ FEED carrossel (7 imagens + legenda) com 1 comando
+
+△ STORIES
+  A Meta limita stories via API (sem enquetes/adesivos bonitos).
+  Feed = automático. Stories = Business Suite ou celular (30s),
+  arquivos já prontos em PUBLICAR_AGORA.
+
+
+────────────────────────────────────────────────────────────
+PROBLEMAS COMUNS
+────────────────────────────────────────────────────────────
+• instagram_business_account vazio
+  → Religar Instagram à Página no Facebook e usar token da PÁGINA
+
+• (#10) Permission denied / does not have permission
+  → Regenerar token com instagram_content_publish
+
+• Invalid OAuth access token
+  → Token expirou; refaça passo 3–5
+
+• Image download failed
+  → Use --upload-temp ou publique as imagens no site (public/ig)
+
+• App em modo Development
+  → Ok para você (admin) publicar; não precisa “Live” no início
+
+
+────────────────────────────────────────────────────────────
+ORDEM RÁPIDA (só lembrete)
+────────────────────────────────────────────────────────────
+Developers → criar app → Explorer → permissões → token
+→ pegar IG ID → trocar token longo → .env.local → comando publish
+═══════════════════════════════════════════════════════════
