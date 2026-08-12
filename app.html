@@ -16,7 +16,7 @@
   <meta name="apple-mobile-web-app-title" content="MedHub">
   <link rel="apple-touch-icon" href="/assets/icons/icon-192.png?v=icon-v2">
   <script src="theme.js?v=2"></script>
-  <link rel="stylesheet" href="style.css?v=tx-home-v1">
+  <link rel="stylesheet" href="style.css?v=tx-home-v2">
   <link rel="stylesheet" href="app-mobile.css?v=pwa-header-v1">
   <script defer src="calculators-risco.js"></script>
   <script defer src="calculators-cardio.js"></script>
@@ -73,7 +73,7 @@
   <script defer src="pacientes.js?v=atendimento-v4"></script>
   <script defer src="consultas.js?v=atendimento-v4"></script>
   <script defer src="medhub-config.js?v=site-v1"></script>
-  <script defer src="ferramentas.js?v=tx-home-v1"></script>
+  <script defer src="ferramentas.js?v=tx-home-v2"></script>
   <script defer src="flashcards/deck-sepse.js?v=fc-v11"></script>
   <script defer src="flashcards/deck-iam.js?v=fc-v11"></script>
   <script defer src="flashcards/deck-avc.js?v=fc-v11"></script>
@@ -95,7 +95,7 @@
   <script defer src="medhub-site-config.js?v=site-ui-v3"></script>
   <script defer src="app.js?v=tx-home-v1"></script>
   <script defer src="auth.js?v=compliance-v1"></script>
-  <script defer src="pwa-install.js?v=pwa-v3"></script>
+  <script defer src="pwa-install.js?v=pwa-v4"></script>
 </head>
 <body class="app-page" onload="initApp()">
   <header class="app-header">
@@ -186,32 +186,31 @@
             <p id="user-greeting" class="home-greeting"></p>
             <p id="home-courtesy-countdown" class="home-courtesy-countdown" hidden role="status"></p>
             <p class="home-tagline">Apoio clínico no plantão — protocolos, prescrição e calculadoras para <strong>clínica médica do adulto</strong>.</p>
-          </header>
 
-          <section class="home-section home-treatment-section" aria-label="Tratamentos rápidos">
-            <h3 class="home-main-title">💊 Tratamentos rápidos</h3>
-            <p class="home-main-lead muted">Busque a doença, informe alergias e escolha as medicações.</p>
-            <div class="home-treatment-grid">
-              <button type="button" class="home-treatment-card home-treatment-card--hospital" data-section="tratamento-hospitalar">
-                <span class="home-treatment-card-icon" aria-hidden="true">🏥</span>
-                <span class="home-treatment-card-body">
-                  <span class="home-treatment-card-name">Tratamento hospitalar</span>
-                  <span class="home-treatment-card-desc">IM/EV · internação e plantão — escolha as opções por doença</span>
-                </span>
-              </button>
-              <button type="button" class="home-treatment-card home-treatment-card--home" data-section="receituario">
-                <span class="home-treatment-card-icon" aria-hidden="true">🏠</span>
-                <span class="home-treatment-card-body">
-                  <span class="home-treatment-card-name">Tratamento para casa</span>
-                  <span class="home-treatment-card-desc">VO · alta e ambulatorial — escolha e gere a receita</span>
-                </span>
-              </button>
+            <div class="home-hero-treatments" aria-label="Tratamentos rápidos">
+              <p class="home-hero-treatments-label">Atalhos principais</p>
+              <div class="home-treatment-grid">
+                <button type="button" class="home-treatment-card home-treatment-card--hospital" data-section="tratamento-hospitalar">
+                  <span class="home-treatment-card-icon" aria-hidden="true">🏥</span>
+                  <span class="home-treatment-card-body">
+                    <span class="home-treatment-card-name">Tratamento hospitalar</span>
+                    <span class="home-treatment-card-desc">IM/EV · busque a doença e escolha as medicações</span>
+                  </span>
+                </button>
+                <button type="button" class="home-treatment-card home-treatment-card--home" data-section="receituario">
+                  <span class="home-treatment-card-icon" aria-hidden="true">🏠</span>
+                  <span class="home-treatment-card-body">
+                    <span class="home-treatment-card-name">Tratamento para casa</span>
+                    <span class="home-treatment-card-desc">VO · receita ambulatorial com escolha de medicações</span>
+                  </span>
+                </button>
+              </div>
             </div>
-          </section>
+          </header>
 
           <section class="home-section home-main-section">
             <h3 class="home-main-title">🧰 Outras ferramentas</h3>
-            <p class="home-main-lead muted">Atalhos para os demais módulos — toque para abrir.</p>
+            <p class="home-main-lead muted">Demais módulos do plantão — toque para abrir.</p>
             <div id="home-ferramentas-grid" class="calc-category-grid ferramentas-grid home-ferramentas-grid"></div>
           </section>
 

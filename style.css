@@ -4634,11 +4634,26 @@ textarea {
   margin: 0 0 1.35rem;
 }
 
+.home-hero-treatments {
+  margin-top: 1.15rem;
+  text-align: left;
+}
+
+.home-hero-treatments-label {
+  margin: 0 0 0.55rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  opacity: 0.9;
+  color: var(--text-on-accent, #fff);
+}
+
 .home-treatment-grid {
   display: grid;
   grid-template-columns: 1fr;
   gap: 0.75rem;
-  margin-top: 0.75rem;
+  margin-top: 0;
 }
 
 @media (min-width: 640px) {
@@ -4652,32 +4667,30 @@ textarea {
   align-items: flex-start;
   gap: 0.85rem;
   text-align: left;
-  padding: 1.1rem 1.15rem;
-  min-height: 6.5rem;
+  padding: 1.05rem 1.1rem;
+  min-height: 5.75rem;
   border-radius: 14px;
-  border: 1px solid color-mix(in srgb, var(--home-card-accent, var(--accent)) 45%, var(--border, #dce4ec));
-  background: var(--home-card-bg, var(--bg-surface-muted));
-  color: inherit;
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  background: #ffffff;
+  color: #0f172a;
   cursor: pointer;
-  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
-  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+  box-shadow: 0 8px 22px rgba(15, 23, 42, 0.18);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
-.home-treatment-card:hover,
-.home-treatment-card:focus-visible {
-  transform: translateY(-1px);
-  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.08);
+.home-hero .home-treatment-card:hover,
+.home-hero .home-treatment-card:focus-visible {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.22);
   outline: none;
 }
 
 .home-treatment-card--hospital {
-  --home-card-accent: #d97706;
-  --home-card-bg: #fffbeb;
+  border-left: 4px solid #d97706;
 }
 
 .home-treatment-card--home {
-  --home-card-accent: #0d6efd;
-  --home-card-bg: #eff6ff;
+  border-left: 4px solid #0d6efd;
 }
 
 .home-treatment-card-icon {
@@ -4697,22 +4710,27 @@ textarea {
   font-size: 1.05rem;
   font-weight: 700;
   line-height: 1.3;
-  color: color-mix(in srgb, var(--home-card-accent) 75%, #0f172a);
+  color: #0f172a;
 }
 
 .home-treatment-card-desc {
-  font-size: 0.86rem;
+  font-size: 0.84rem;
   line-height: 1.4;
-  color: var(--text-secondary, #64748b);
+  color: #475569;
 }
 
-[data-theme="dark"] .home-treatment-card--hospital,
-[data-theme="dark"] .home-treatment-card--home {
-  background: color-mix(in srgb, var(--home-card-accent) 14%, var(--bg-surface, #1e293b));
+[data-theme="dark"] .home-treatment-card {
+  background: #0f172a;
+  color: #f8fafc;
+  border-color: rgba(255, 255, 255, 0.2);
 }
 
 [data-theme="dark"] .home-treatment-card-name {
   color: #f8fafc;
+}
+
+[data-theme="dark"] .home-treatment-card-desc {
+  color: #cbd5e1;
 }
 
 .clinical-allergy-panel {
