@@ -75,6 +75,11 @@ function clinicalRefreshAllergyUi () {
       document.getElementById('section-receituario')?.classList.contains('active')) {
     rxClearSelection();
   }
+  if (typeof currentThConditionId !== 'undefined' && currentThConditionId &&
+      typeof showTratamentoHospitalarCondition === 'function' &&
+      document.getElementById('section-tratamento-hospitalar')?.classList.contains('active')) {
+    showTratamentoHospitalarCondition(currentThConditionId, { skipGate: true });
+  }
 }
 
 function clinicalSetActivePatient (patient) {
@@ -221,6 +226,143 @@ function clinicalAllergyBannerHtml () {
   return '<p class="clinical-allergy-banner" role="alert">' +
     '<strong>Alergias do paciente:</strong> ' + profile.raw +
     ' — medicamentos relacionados foram ocultados das opções.</p>';
+}
+
+const MEDHUB_ALLERGY_ASKED = 'medhub-allergy-asked-session';
+
+function clinicalAllergyWasAsked () {
+  return sessionStorage.getItem(MEDHUB_ALLERGY_ASKED) === '1' || clinicalHasActiveEncounter();
+}
+
+function clinicalMarkAllergyAsked () {
+  sessionStorage.setItem(MEDHUB_ALLERGY_ASKED, '1');
+  clinicalBeginEncounter();
+}
+
+/** Painel compacto para colar no topo de TH / tratamento para casa */
+function clinicalAllergyPanelHtml (inputId) {
+  const id = inputId || 'clinical-allergy-input';
+  const current = clinicalGetActiveAllergyText();
+  const nega = !current || clinicalParseAllergyText(current).none;
+  return `
+    <div class="clinical-allergy-panel" data-allergy-panel>
+      <p class="clinical-allergy-panel-title"><strong>Alergia medicamentosa?</strong> Obrigatório antes de escolher medicações.</p>
+      <div class="clinical-allergy-panel-row">
+        <label class="clinical-allergy-nega">
+          <input type="checkbox" data-allergy-nega ${nega && clinicalAllergyWasAsked() ? 'checked' : ''}>
+          Nega alergias
+        </label>
+        <input type="text" id="${id}" class="clinical-allergy-input" data-allergy-input
+          placeholder="Ex.: penicilina, dipirona, AINE…"
+          value="${nega ? '' : String(current).replace(/"/g, '&quot;')}"
+          ${nega && clinicalAllergyWasAsked() ? 'disabled' : ''}>
+      </div>
+    </div>`;
+}
+
+function clinicalBindAllergyPanel (root, onChange) {
+  if (!root) return;
+  const panel = root.querySelector('[data-allergy-panel]') || root;
+  if (panel.dataset.allergyPanelBound) return;
+  panel.dataset.allergyPanelBound = '1';
+
+  const nega = panel.querySelector('[data-allergy-nega]');
+  const input = panel.querySelector('[data-allergy-input]');
+  if (!nega || !input) return;
+
+  const apply = () => {
+    clinicalMarkAllergyAsked();
+    if (nega.checked) {
+      input.value = '';
+      input.disabled = true;
+      clinicalSetActiveAllergies('Nega alergias');
+    } else {
+      input.disabled = false;
+      clinicalSetActiveAllergies(input.value || '');
+    }
+    if (typeof onChange === 'function') onChange();
+  };
+
+  nega.addEventListener('change', apply);
+  input.addEventListener('change', apply);
+  input.addEventListener('blur', apply);
+}
+
+/**
+ * Garante que o usuário respondeu sobre alergia antes de seguir.
+ * Resolve true se pode continuar.
+ */
+function clinicalEnsureAllergyGate (opts) {
+  const options = opts || {};
+  if (clinicalAllergyWasAsked() && (clinicalGetActiveAllergyText() || options.allowEmpty)) {
+    return Promise.resolve(true);
+  }
+
+  return new Promise(resolve => {
+    let modal = document.getElementById('clinical-allergy-modal');
+    if (!modal) {
+      modal = document.createElement('div');
+      modal.id = 'clinical-allergy-modal';
+      modal.className = 'clinical-allergy-modal';
+      modal.hidden = true;
+      modal.innerHTML = `
+        <div class="clinical-allergy-modal-backdrop" data-allergy-cancel></div>
+        <div class="clinical-allergy-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="clinical-allergy-modal-title">
+          <h3 id="clinical-allergy-modal-title">Alergia medicamentosa</h3>
+          <p class="muted">Antes de ver as opções de tratamento, informe se o paciente tem alergia.</p>
+          <label class="clinical-allergy-nega">
+            <input type="checkbox" id="clinical-allergy-modal-nega">
+            Nega alergias
+          </label>
+          <label for="clinical-allergy-modal-input" class="ps-search-label">Quais alergias?</label>
+          <input type="text" id="clinical-allergy-modal-input" class="ps-search clinical-allergy-input"
+            placeholder="Ex.: penicilina, dipirona, AINE…">
+          <div class="clinical-allergy-modal-actions">
+            <button type="button" class="btn btn-secondary" data-allergy-cancel>Cancelar</button>
+            <button type="button" class="btn" id="clinical-allergy-modal-ok">Continuar</button>
+          </div>
+        </div>`;
+      document.body.appendChild(modal);
+    }
+
+    const nega = document.getElementById('clinical-allergy-modal-nega');
+    const input = document.getElementById('clinical-allergy-modal-input');
+    const ok = document.getElementById('clinical-allergy-modal-ok');
+    const current = clinicalGetActiveAllergyText();
+    const parsed = clinicalParseAllergyText(current);
+    nega.checked = !!(current && parsed.none);
+    input.value = nega.checked ? '' : (current || '');
+    input.disabled = nega.checked;
+    modal.hidden = false;
+
+    const cleanup = (result) => {
+      modal.hidden = true;
+      nega.onchange = null;
+      ok.onclick = null;
+      modal.querySelectorAll('[data-allergy-cancel]').forEach(el => { el.onclick = null; });
+      resolve(result);
+    };
+
+    nega.onchange = () => {
+      input.disabled = nega.checked;
+      if (nega.checked) input.value = '';
+    };
+
+    ok.onclick = () => {
+      if (!nega.checked && !input.value.trim()) {
+        input.focus();
+        input.placeholder = 'Informe a alergia ou marque “Nega alergias”';
+        return;
+      }
+      clinicalMarkAllergyAsked();
+      clinicalSetActiveAllergies(nega.checked ? 'Nega alergias' : input.value.trim());
+      cleanup(true);
+    };
+
+    modal.querySelectorAll('[data-allergy-cancel]').forEach(el => {
+      el.onclick = () => cleanup(false);
+    });
+  });
 }
 
 async function clinicalSyncActivePatientFromAnamnese () {

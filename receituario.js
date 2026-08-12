@@ -883,7 +883,20 @@ function rxShowCombinedConditions (conditionIds, opts) {
     .filter(Boolean);
   if (!conditions.length) return;
 
-  rxOpenCombinedConditions(conditions, preserve);
+  const open = () => rxOpenCombinedConditions(conditions, preserve);
+
+  if (opts && opts.skipGate) {
+    open();
+    return;
+  }
+
+  if (typeof clinicalEnsureAllergyGate === 'function') {
+    clinicalEnsureAllergyGate().then(ok => {
+      if (ok) open();
+    });
+    return;
+  }
+  open();
 }
 
 function rxOpenCombinedConditions (conditions, preserve) {
@@ -1066,8 +1079,24 @@ function rxPrintReceita () {
   win.print();
 }
 
+function rxRenderAllergyPanel () {
+  const mount = document.getElementById('rx-allergy-mount');
+  if (!mount || typeof clinicalAllergyPanelHtml !== 'function') return;
+  mount.innerHTML = clinicalAllergyPanelHtml('rx-allergy-input');
+  clinicalBindAllergyPanel(mount, () => {
+    if (typeof clinicalInvalidateAllergyCache === 'function') clinicalInvalidateAllergyCache();
+    rxPurgeBlockedSelectedMeds();
+    if (rxActiveConditionIds.length) {
+      rxRenderMedsPanel();
+      rxUpdateSelectionBar();
+    }
+  });
+}
+
 function rxOnSectionShow () {
+  rxSyncFromAnamnese();
   rxUpdateProfileHint();
+  rxRenderAllergyPanel();
   if (typeof clinicalInvalidateAllergyCache === 'function') clinicalInvalidateAllergyCache();
   rxRenderConditionList(document.getElementById('rx-search')?.value || '');
   const activeQueixa = rxGetActiveQueixa();
@@ -1106,6 +1135,7 @@ function initReceituario () {
   }
 
   rxUpdateProfileHint();
+  rxRenderAllergyPanel();
 
   if (search) search.addEventListener('input', () => rxRenderConditionList(search.value));
   if (backBtn) backBtn.addEventListener('click', rxShowList);

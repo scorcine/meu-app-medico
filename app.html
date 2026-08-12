@@ -16,7 +16,7 @@
   <meta name="apple-mobile-web-app-title" content="MedHub">
   <link rel="apple-touch-icon" href="/assets/icons/icon-192.png?v=icon-v2">
   <script src="theme.js?v=2"></script>
-  <link rel="stylesheet" href="style.css?v=rx-20260722h">
+  <link rel="stylesheet" href="style.css?v=tx-home-v1">
   <link rel="stylesheet" href="app-mobile.css?v=pwa-header-v1">
   <script defer src="calculators-risco.js"></script>
   <script defer src="calculators-cardio.js"></script>
@@ -37,9 +37,9 @@
   <script defer src="calculators-extras.js?v=procedimentos"></script>
   <script defer src="emergency-guide.js?v=queda-tce-v1"></script>
   <script defer src="ventilacao-mecanica.js?v=vm-calc-v2"></script>
-  <script defer src="tratamento-hospitalar-content-1.js?v=th-expand-v1"></script>
-  <script defer src="tratamento-hospitalar-content-2.js?v=th-expand-v1"></script>
-  <script defer src="tratamento-hospitalar.js?v=th-expand-v1"></script>
+  <script defer src="tratamento-hospitalar-content-1.js?v=th-select-v1"></script>
+  <script defer src="tratamento-hospitalar-content-2.js?v=th-select-v1"></script>
+  <script defer src="tratamento-hospitalar.js?v=th-select-v1"></script>
   <script defer src="pronto-socorro-content-1.js?v=ps-etiology-v4"></script>
   <script defer src="pronto-socorro-content-2.js?v=ps-etiology-v4"></script>
   <script defer src="pronto-socorro-content-3.js?v=ps-etiology-v4"></script>
@@ -59,13 +59,13 @@
   <script defer src="receituario-data.js?v=rx-20260722h"></script>
   <script defer src="receituario-ps-bridge.js?v=rx-20260722h"></script>
   <script defer src="user-profile.js?v=profile-v14"></script>
-  <script defer src="receituario.js?v=rx-20260722h"></script>
+  <script defer src="receituario.js?v=tx-home-v1"></script>
   <script defer src="google-drive.js?v=compliance-v1"></script>
   <script defer src="security-crypto.js?v=session-v1"></script>
   <script defer src="compliance.js?v=legal-once-v1"></script>
   <script defer src="anamnese.js?v=anam-encounter-v1"></script>
   <script defer src="clinical-storage.js?v=atendimento-v3"></script>
-  <script defer src="clinical-allergies.js?v=atendimento-v5"></script>
+  <script defer src="clinical-allergies.js?v=allergy-gate-v1"></script>
   <script defer src="exames-data.js?v=atendimento-v3"></script>
   <script defer src="exames.js?v=atendimento-v3"></script>
   <script defer src="interpretacao-exame-data.js?v=atendimento-v3"></script>
@@ -73,7 +73,7 @@
   <script defer src="pacientes.js?v=atendimento-v4"></script>
   <script defer src="consultas.js?v=atendimento-v4"></script>
   <script defer src="medhub-config.js?v=site-v1"></script>
-  <script defer src="ferramentas.js?v=vm-v1"></script>
+  <script defer src="ferramentas.js?v=tx-home-v1"></script>
   <script defer src="flashcards/deck-sepse.js?v=fc-v11"></script>
   <script defer src="flashcards/deck-iam.js?v=fc-v11"></script>
   <script defer src="flashcards/deck-avc.js?v=fc-v11"></script>
@@ -93,7 +93,7 @@
   <script defer src="auth-cloud.js?v=cloud-v21"></script>
   <script defer src="app-search.js?v=search-v3"></script>
   <script defer src="medhub-site-config.js?v=site-ui-v3"></script>
-  <script defer src="app.js?v=site-ui-v2"></script>
+  <script defer src="app.js?v=tx-home-v1"></script>
   <script defer src="auth.js?v=compliance-v1"></script>
   <script defer src="pwa-install.js?v=pwa-v3"></script>
 </head>
@@ -157,7 +157,7 @@
         <button type="button" class="sidebar-link" data-section="anamnese">Anamnese</button>
         <button type="button" class="sidebar-link" data-section="consultas">Histórico de atendimentos</button>
         <p class="sidebar-group">Prescrição &amp; exames</p>
-        <button type="button" class="sidebar-link" data-section="receituario">Receituário</button>
+        <button type="button" class="sidebar-link" data-section="receituario">Tratamento para casa</button>
         <button type="button" class="sidebar-link" data-section="medicacoes">Medicações</button>
         <button type="button" class="sidebar-link" data-section="exames">Exames</button>
         <button type="button" class="sidebar-link" data-section="interpretacao-exame">Interpretação do exame</button>
@@ -188,9 +188,30 @@
             <p class="home-tagline">Apoio clínico no plantão — protocolos, prescrição e calculadoras para <strong>clínica médica do adulto</strong>.</p>
           </header>
 
+          <section class="home-section home-treatment-section" aria-label="Tratamentos rápidos">
+            <h3 class="home-main-title">💊 Tratamentos rápidos</h3>
+            <p class="home-main-lead muted">Busque a doença, informe alergias e escolha as medicações.</p>
+            <div class="home-treatment-grid">
+              <button type="button" class="home-treatment-card home-treatment-card--hospital" data-section="tratamento-hospitalar">
+                <span class="home-treatment-card-icon" aria-hidden="true">🏥</span>
+                <span class="home-treatment-card-body">
+                  <span class="home-treatment-card-name">Tratamento hospitalar</span>
+                  <span class="home-treatment-card-desc">IM/EV · internação e plantão — escolha as opções por doença</span>
+                </span>
+              </button>
+              <button type="button" class="home-treatment-card home-treatment-card--home" data-section="receituario">
+                <span class="home-treatment-card-icon" aria-hidden="true">🏠</span>
+                <span class="home-treatment-card-body">
+                  <span class="home-treatment-card-name">Tratamento para casa</span>
+                  <span class="home-treatment-card-desc">VO · alta e ambulatorial — escolha e gere a receita</span>
+                </span>
+              </button>
+            </div>
+          </section>
+
           <section class="home-section home-main-section">
-            <h3 class="home-main-title">🧰 Ferramentas rápidas</h3>
-            <p class="home-main-lead muted">Atalhos para os módulos mais usados — toque para abrir.</p>
+            <h3 class="home-main-title">🧰 Outras ferramentas</h3>
+            <p class="home-main-lead muted">Atalhos para os demais módulos — toque para abrir.</p>
             <div id="home-ferramentas-grid" class="calc-category-grid ferramentas-grid home-ferramentas-grid"></div>
           </section>
 
@@ -344,7 +365,8 @@
         <div class="card dashboard-card ps-wrap">
           <div id="th-list-view">
             <h2>Tratamento hospitalar</h2>
-            <p class="muted">Principais condições com indicação de medicação IM ou EV — posologia em ampola (apresentações usuais no Brasil). Revisado jun/2026.</p>
+            <p class="muted">Busque a doença, informe alergias e escolha as medicações IM/EV (ampolas usuais no Brasil).</p>
+            <div id="th-allergy-mount"></div>
             <label class="ps-search-label" for="th-search">Buscar condição</label>
             <input id="th-search" class="ps-search" type="search" placeholder="Ex.: cefaleia, sepse, pneumonia, náusea…" autocomplete="off">
             <p id="th-count" class="ps-count muted"></p>
@@ -354,7 +376,15 @@
           <div id="th-condition-view" hidden>
             <button type="button" class="btn-back" id="th-back">← Voltar à lista</button>
             <h2 id="th-condition-title"></h2>
+            <p class="muted th-detail-hint">Marque as medicações desejadas. Itens bloqueados por alergia ficam ocultos.</p>
             <div id="th-condition-content" class="emerg-content"></div>
+            <div id="th-selection-bar" class="rx-selection-bar" hidden>
+              <span id="th-selection-count" class="rx-selection-count">Nenhuma medicação selecionada</span>
+              <div class="rx-selection-actions">
+                <button type="button" class="btn btn-secondary" id="th-clear-selection" disabled>Limpar</button>
+                <button type="button" class="btn" id="th-copy-selection" disabled>Copiar seleção</button>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -372,13 +402,15 @@
       <section id="section-receituario" class="content-panel">
         <div class="card dashboard-card rx-wrap">
           <div id="rx-list-view">
-            <h2>Receituário</h2>
+            <h2>Tratamento para casa</h2>
+            <p class="muted">Busque a doença, informe alergias, escolha o esquema VO e gere a receita.</p>
             <p id="rx-profile-hint" class="rx-profile-hint muted" hidden></p>
+            <div id="rx-allergy-mount"></div>
             <div id="rx-suggest-banner" class="rx-suggest-banner" hidden></div>
             <label class="ps-search-label" for="rx-search">Buscar condição</label>
             <input id="rx-search" class="ps-search" type="search" placeholder="Ex.: cefaleia, amigdalite, cistite…" autocomplete="off">
             <div class="rx-blank-actions" style="margin:0.75rem 0 1rem;display:flex;flex-wrap:wrap;gap:0.65rem;align-items:center;">
-              <button type="button" class="btn btn-secondary" id="rx-blank">Receituário em branco</button>
+              <button type="button" class="btn btn-secondary" id="rx-blank">Receita em branco</button>
               <span class="muted" style="font-size:0.85rem;">Só nome e CRM — sem medicamentos</span>
             </div>
             <div id="rx-condition-grid" class="calc-category-grid"></div>

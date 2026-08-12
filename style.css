@@ -4630,6 +4630,225 @@ textarea {
   margin-top: 0;
 }
 
+.home-treatment-section {
+  margin: 0 0 1.35rem;
+}
+
+.home-treatment-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+}
+
+@media (min-width: 640px) {
+  .home-treatment-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.home-treatment-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+  text-align: left;
+  padding: 1.1rem 1.15rem;
+  min-height: 6.5rem;
+  border-radius: 14px;
+  border: 1px solid color-mix(in srgb, var(--home-card-accent, var(--accent)) 45%, var(--border, #dce4ec));
+  background: var(--home-card-bg, var(--bg-surface-muted));
+  color: inherit;
+  cursor: pointer;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.home-treatment-card:hover,
+.home-treatment-card:focus-visible {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.08);
+  outline: none;
+}
+
+.home-treatment-card--hospital {
+  --home-card-accent: #d97706;
+  --home-card-bg: #fffbeb;
+}
+
+.home-treatment-card--home {
+  --home-card-accent: #0d6efd;
+  --home-card-bg: #eff6ff;
+}
+
+.home-treatment-card-icon {
+  font-size: 1.75rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.home-treatment-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0;
+}
+
+.home-treatment-card-name {
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1.3;
+  color: color-mix(in srgb, var(--home-card-accent) 75%, #0f172a);
+}
+
+.home-treatment-card-desc {
+  font-size: 0.86rem;
+  line-height: 1.4;
+  color: var(--text-secondary, #64748b);
+}
+
+[data-theme="dark"] .home-treatment-card--hospital,
+[data-theme="dark"] .home-treatment-card--home {
+  background: color-mix(in srgb, var(--home-card-accent) 14%, var(--bg-surface, #1e293b));
+}
+
+[data-theme="dark"] .home-treatment-card-name {
+  color: #f8fafc;
+}
+
+.clinical-allergy-panel {
+  margin: 0.85rem 0 1rem;
+  padding: 0.85rem 0.95rem;
+  border-radius: 12px;
+  border: 1px solid color-mix(in srgb, #dc2626 28%, var(--border, #dce4ec));
+  background: color-mix(in srgb, #dc2626 6%, var(--bg-surface, #fff));
+}
+
+.clinical-allergy-panel-title {
+  margin: 0 0 0.55rem;
+  font-size: 0.92rem;
+}
+
+.clinical-allergy-panel-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  align-items: center;
+}
+
+.clinical-allergy-nega {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+
+.clinical-allergy-input {
+  flex: 1 1 12rem;
+  min-width: 0;
+  padding: 0.55rem 0.7rem;
+  border-radius: 8px;
+  border: 1px solid var(--border, #dce4ec);
+  background: var(--bg-surface, #fff);
+  color: inherit;
+}
+
+.clinical-allergy-banner {
+  margin: 0 0 0.85rem;
+  padding: 0.65rem 0.8rem;
+  border-radius: 10px;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #991b1b;
+  font-size: 0.9rem;
+}
+
+[data-theme="dark"] .clinical-allergy-banner {
+  background: color-mix(in srgb, #dc2626 18%, #1e293b);
+  border-color: color-mix(in srgb, #dc2626 40%, #334155);
+  color: #fecaca;
+}
+
+.clinical-allergy-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.clinical-allergy-modal[hidden] {
+  display: none !important;
+}
+
+.clinical-allergy-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.45);
+}
+
+.clinical-allergy-modal-dialog {
+  position: relative;
+  z-index: 1;
+  width: min(420px, 100%);
+  padding: 1.15rem 1.2rem 1.2rem;
+  border-radius: 14px;
+  background: var(--bg-surface, #fff);
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.22);
+}
+
+.clinical-allergy-modal-dialog h3 {
+  margin: 0 0 0.4rem;
+}
+
+.clinical-allergy-modal-dialog .clinical-allergy-nega {
+  margin: 0.75rem 0 0.65rem;
+}
+
+.clinical-allergy-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.55rem;
+  margin-top: 1rem;
+}
+
+.th-med-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  margin: 0.75rem 0 1rem;
+}
+
+.th-med-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding: 0.65rem 0.75rem;
+  border-radius: 10px;
+  border: 1px solid var(--border, #e2e8f0);
+  background: var(--bg-surface-muted, #f8fafc);
+}
+
+.th-med-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.55rem;
+  font-size: 0.92rem;
+  line-height: 1.4;
+  cursor: pointer;
+}
+
+.th-med-option input {
+  margin-top: 0.2rem;
+  flex-shrink: 0;
+}
+
+.th-detail-hint {
+  margin: 0.35rem 0 0.75rem;
+}
+
 .home-tool-card {
   min-height: 5.5rem;
   padding: 0.85rem 0.9rem;

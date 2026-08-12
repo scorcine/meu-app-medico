@@ -165,7 +165,7 @@ function showSection (sectionId) {
 
   showCalcCategories();
   if (typeof showEmergenciaCategories === 'function') showEmergenciaCategories();
-  if (typeof showTratamentoHospitalarHome === 'function') showTratamentoHospitalarHome();
+  if (sectionId === 'tratamento-hospitalar' && typeof thOnSectionShow === 'function') thOnSectionShow();
   if (typeof showProntoSocorroHome === 'function') showProntoSocorroHome();
   if (sectionId === 'receituario' && typeof rxOnSectionShow === 'function') rxOnSectionShow();
   if (sectionId === 'medicacoes' && typeof medShowList === 'function') medShowList();

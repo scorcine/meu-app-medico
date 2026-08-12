@@ -1,6 +1,6 @@
 /* Tratamento hospitalar — condições com medicação IM/EV e navegação */
 
-const MEDHUB_TH_BUILD = 'th-expand-v1';
+const MEDHUB_TH_BUILD = 'th-select-v1';
 
 const TH_CONTENT = Object.assign(
   {},
@@ -68,12 +68,58 @@ TH_CONDITIONS.forEach(c => {
 });
 
 let currentThConditionId = null;
+const thSelectedMedKeys = new Set();
+
+function thSplitMedChoices (liText) {
+  const raw = String(liText || '').replace(/\s+/g, ' ').trim();
+  if (!raw) return [];
+
+  const colonIdx = raw.search(/:\s/);
+  let prefix = '';
+  let body = raw;
+  if (colonIdx >= 0 && colonIdx < 80) {
+    prefix = raw.slice(0, colonIdx).trim();
+    body = raw.slice(colonIdx + 1).trim();
+  }
+
+  const parts = body
+    .split(/\s·\s|\s•\s/)
+    .map(p => p.trim())
+    .filter(Boolean);
+
+  if (parts.length <= 1) {
+    return [{ key: raw, label: raw, prefix: '' }];
+  }
+
+  return parts.map((part, i) => ({
+    key: `${prefix}::${i}::${part}`,
+    label: prefix ? `${prefix}: ${part}` : part,
+    prefix
+  }));
+}
+
+function thIsMedBlocked (label) {
+  if (typeof clinicalIsDrugBlocked !== 'function') return false;
+  return clinicalIsDrugBlocked({ text: label, label });
+}
+
+function thRenderAllergyPanel () {
+  const mount = document.getElementById('th-allergy-mount');
+  if (!mount) return;
+  if (typeof clinicalAllergyPanelHtml === 'function') {
+    mount.innerHTML = clinicalAllergyPanelHtml('th-allergy-input');
+    clinicalBindAllergyPanel(mount, () => {
+      if (currentThConditionId) showTratamentoHospitalarCondition(currentThConditionId, { skipGate: true });
+    });
+  }
+}
 
 function initTratamentoHospitalar () {
   const grid = document.getElementById('th-condition-grid');
   if (!grid || grid.dataset.thBound) return;
   grid.dataset.thBound = '1';
 
+  thRenderAllergyPanel();
   renderThGrid(TH_CONDITIONS);
 
   const search = document.getElementById('th-search');
@@ -89,6 +135,24 @@ function initTratamentoHospitalar () {
 
   const backBtn = document.getElementById('th-back');
   if (backBtn) backBtn.onclick = showTratamentoHospitalarHome;
+
+  const clearBtn = document.getElementById('th-clear-selection');
+  if (clearBtn && !clearBtn.dataset.bound) {
+    clearBtn.dataset.bound = '1';
+    clearBtn.addEventListener('click', () => {
+      thSelectedMedKeys.clear();
+      document.querySelectorAll('#th-condition-content [data-th-med]').forEach(input => {
+        input.checked = false;
+      });
+      thUpdateSelectionBar();
+    });
+  }
+
+  const copyBtn = document.getElementById('th-copy-selection');
+  if (copyBtn && !copyBtn.dataset.bound) {
+    copyBtn.dataset.bound = '1';
+    copyBtn.addEventListener('click', thCopySelection);
+  }
 }
 
 function renderThGrid (items) {
@@ -124,18 +188,26 @@ function renderThGrid (items) {
 
 function showTratamentoHospitalarHome () {
   currentThConditionId = null;
+  thSelectedMedKeys.clear();
   const list = document.getElementById('th-list-view');
   const detail = document.getElementById('th-condition-view');
   if (list) list.hidden = false;
   if (detail) detail.hidden = true;
   const search = document.getElementById('th-search');
   if (search) search.value = '';
+  thRenderAllergyPanel();
   renderThGrid(TH_CONDITIONS);
+  thUpdateSelectionBar();
 }
 
-function showTratamentoHospitalarCondition (conditionId) {
+async function showTratamentoHospitalarCondition (conditionId, opts) {
   const condition = TH_CONDITIONS.find(c => c.id === conditionId);
   if (!condition) return;
+
+  if (!(opts && opts.skipGate) && typeof clinicalEnsureAllergyGate === 'function') {
+    const ok = await clinicalEnsureAllergyGate();
+    if (!ok) return;
+  }
 
   currentThConditionId = conditionId;
   document.getElementById('th-list-view').hidden = true;
@@ -143,5 +215,89 @@ function showTratamentoHospitalarCondition (conditionId) {
   document.getElementById('th-condition-title').textContent = `${condition.icon} ${condition.name}`;
 
   const contentEl = document.getElementById('th-condition-content');
-  contentEl.innerHTML = `<div class="emerg-algo-block emerg-algo-single">${condition.html}</div>`;
+  const allergyBanner = typeof clinicalAllergyBannerHtml === 'function' ? clinicalAllergyBannerHtml() : '';
+  const wrap = document.createElement('div');
+  wrap.className = 'emerg-algo-block emerg-algo-single';
+  wrap.innerHTML = condition.html;
+
+  wrap.querySelectorAll('ul.ps-med-options').forEach(ul => {
+    const items = [...ul.querySelectorAll(':scope > li')];
+    const box = document.createElement('div');
+    box.className = 'th-med-options';
+
+    items.forEach((li, liIdx) => {
+      const choices = thSplitMedChoices(li.textContent);
+      const group = document.createElement('div');
+      group.className = 'th-med-group';
+
+      choices.forEach((choice, cIdx) => {
+        const blocked = thIsMedBlocked(choice.label);
+        if (blocked) return;
+
+        const key = `${conditionId}:${liIdx}:${cIdx}`;
+        const label = document.createElement('label');
+        label.className = 'th-med-option';
+        label.innerHTML = `
+          <input type="checkbox" data-th-med data-th-key="${key}" data-th-label="${choice.label.replace(/"/g, '&quot;')}"
+            ${thSelectedMedKeys.has(key) ? 'checked' : ''}>
+          <span>${choice.label}</span>`;
+        group.appendChild(label);
+      });
+
+      if (group.children.length) box.appendChild(group);
+    });
+
+    ul.replaceWith(box);
+  });
+
+  contentEl.innerHTML = allergyBanner;
+  contentEl.appendChild(wrap);
+
+  contentEl.querySelectorAll('[data-th-med]').forEach(input => {
+    input.addEventListener('change', () => {
+      const key = input.dataset.thKey;
+      if (input.checked) thSelectedMedKeys.add(key);
+      else thSelectedMedKeys.delete(key);
+      thUpdateSelectionBar();
+    });
+  });
+
+  thUpdateSelectionBar();
+}
+
+function thUpdateSelectionBar () {
+  const bar = document.getElementById('th-selection-bar');
+  const count = document.getElementById('th-selection-count');
+  const clearBtn = document.getElementById('th-clear-selection');
+  const copyBtn = document.getElementById('th-copy-selection');
+  if (!bar) return;
+
+  const n = thSelectedMedKeys.size;
+  bar.hidden = !currentThConditionId;
+  if (count) count.textContent = n ? `${n} medicação(ões) selecionada(s)` : 'Nenhuma medicação selecionada';
+  if (clearBtn) clearBtn.disabled = n === 0;
+  if (copyBtn) copyBtn.disabled = n === 0;
+}
+
+function thCopySelection () {
+  const lines = [];
+  document.querySelectorAll('#th-condition-content [data-th-med]:checked').forEach((input, i) => {
+    lines.push(`${i + 1}. ${input.dataset.thLabel || input.parentElement?.textContent?.trim() || ''}`);
+  });
+  if (!lines.length) return;
+  const text = lines.join('\n');
+  if (navigator.clipboard?.writeText) {
+    navigator.clipboard.writeText(text).catch(() => {});
+  }
+  const copyBtn = document.getElementById('th-copy-selection');
+  if (copyBtn) {
+    const prev = copyBtn.textContent;
+    copyBtn.textContent = 'Copiado!';
+    setTimeout(() => { copyBtn.textContent = prev; }, 1500);
+  }
+}
+
+function thOnSectionShow () {
+  thRenderAllergyPanel();
+  if (!currentThConditionId) showTratamentoHospitalarHome();
 }
