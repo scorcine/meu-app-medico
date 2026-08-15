@@ -641,6 +641,22 @@ function novoAtendimentoSetChestClassification (value) {
   } catch { /* sessão indisponível */ }
 }
 
+const NOVO_ATENDIMENTO_CHEST_SCORES = [
+  { id: 'heart', label: 'HEART', hint: 'Dor torácica indiferenciada' },
+  { id: 'timi-ua', label: 'TIMI UA/NSTEMI', hint: 'SCA sem supra de ST' },
+  { id: 'grace', label: 'GRACE 2.0', hint: 'Risco e urgência da estratégia invasiva' },
+  { id: 'timi-stemi', label: 'TIMI STEMI', hint: 'Mortalidade no IAM com supra' },
+  { id: 'killip', label: 'Killip', hint: 'Classe hemodinâmica no IAM' },
+  { id: 'wells', label: 'Wells (TEP)', hint: 'Dor torácica com suspeita de embolia' },
+  { id: 'perc', label: 'PERC', hint: 'Excluir TEP em baixo risco' }
+];
+
+function novoAtendimentoChestScores () {
+  if (typeof CALC_FORMS === 'undefined') return NOVO_ATENDIMENTO_CHEST_SCORES;
+  const available = NOVO_ATENDIMENTO_CHEST_SCORES.filter(score => CALC_FORMS[score.id]);
+  return available.length ? available : NOVO_ATENDIMENTO_CHEST_SCORES;
+}
+
 const NOVO_ATENDIMENTO_CHEST_STEPS = [
   { value: 'stemi', protocol: 'stemi', label: 'Supra de ST ou BRE novo', hint: 'Abrir STEMI — reperfusão imediata' },
   { value: 'nstemi-ua', protocol: 'nstemi-ua', label: 'Sem supra, SCA provável', hint: 'Abrir NSTEMI / Angina instável' },
@@ -765,10 +781,15 @@ function novoAtendimentoRenderProtocol () {
         <div class="novo-atendimento-protocolo-scores novo-atendimento-protocolo-scores-priority">
           <div>
             <strong>Primeiro: classificar a dor torácica</strong>
-            <span>O HEART estima risco de evento cardíaco; não confirma sozinho IAM nem dor muscular. ECG em até 10 minutos e troponina seriada continuam prioritários.</span>
+            <span>Comece pelo HEART; os demais escores refinam a estratificação depois do ECG e da troponina. Nenhum escore confirma ou exclui IAM sozinho — ECG em até 10 minutos e troponina seriada continuam prioritários.</span>
           </div>
           <div class="novo-atendimento-protocolo-score-buttons">
-            <button type="button" data-open-score="heart"><strong>HEART</strong><span>Dor torácica indiferenciada</span></button>
+            ${novoAtendimentoChestScores().map((score, index) => `
+              <button type="button" data-open-score="${score.id}"${index === 0 ? ' data-score-primary="true"' : ''}>
+                <strong>${novoAtendimentoEscape(score.label)}</strong>
+                <span>${novoAtendimentoEscape(score.hint)}</span>
+              </button>
+            `).join('')}
           </div>
         </div>` : ''}
       ${matches.length ? `

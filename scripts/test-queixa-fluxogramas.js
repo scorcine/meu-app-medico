@@ -308,6 +308,22 @@ if (calcSaida.classificacao === 'nao-sca' && calcSaida.liberado &&
   fail('Saída da calculadora não retomou o fluxo: ' + JSON.stringify(calcSaida));
 }
 
+/* 12. O cartão da queixa oferece o conjunto de escores da dor torácica */
+const chestScores = evalIn(`(() => {
+  novoAtendimentoQueixas = ['Dor torácica'];
+  novoAtendimentoRenderProtocol();
+  const bloco = document.querySelector('.novo-atendimento-protocolo-scores-priority');
+  const botoes = bloco ? [...bloco.querySelectorAll('[data-open-score]')].map(b => b.dataset.openScore) : [];
+  return { botoes, primeiro: bloco?.querySelector('[data-score-primary]')?.dataset.openScore || '' };
+})()`);
+
+const esperados = ['heart', 'timi-ua', 'grace', 'timi-stemi', 'killip', 'wells', 'perc'];
+if (esperados.every(id => chestScores.botoes.includes(id)) && chestScores.primeiro === 'heart') {
+  pass(`Dor torácica oferece ${chestScores.botoes.length} calculadoras, com HEART em destaque`);
+} else {
+  fail('Calculadoras da dor torácica incompletas: ' + JSON.stringify(chestScores));
+}
+
 const calcSemDor = evalIn(`(() => {
   sessionStorage.setItem('medhub-new-encounter-draft', JSON.stringify({
     nome: 'Teste', queixas: ['Cefaleia'], step: 'queixas'

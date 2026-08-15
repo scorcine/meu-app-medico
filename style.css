@@ -5744,7 +5744,12 @@ textarea {
 }
 
 .novo-atendimento-protocolo-scores-priority .novo-atendimento-protocolo-score-buttons {
-  grid-template-columns: minmax(0, 22rem);
+  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+}
+
+.novo-atendimento-protocolo-score-buttons button[data-score-primary] {
+  border-color: #f0b429;
+  background: rgba(240, 180, 41, 0.12);
 }
 
 .novo-atendimento-protocolo-scores > div:first-child strong,
