@@ -1,0 +1,18 @@
+---
+description: Always commit and push finished feature work without asking
+alwaysApply: true
+---
+
+# Commit e publish automáticos
+
+Quando uma tarefa de feature/fix estiver concluída e os testes relevantes passarem:
+
+1. **Commit automaticamente** — não pergunte se deve commitar.
+2. **Inclua só os arquivos da feature** — nunca misture admin/api/credenciais/relatórios não relacionados.
+3. **Push para o remote** em seguida (`git push`), a menos que o push falhe por autenticação/rede.
+4. Resuma no final o que foi commitado e o hash/URL se disponível.
+
+Exceções (aí sim pergunte ou pare):
+- Mudanças destrutivas (`push --force`, reset hard)
+- Arquivos com segredos (`.env`, credentials)
+- O usuário pediu explicitamente para **não** publicar naquele turno
