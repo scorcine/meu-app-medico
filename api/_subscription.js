@@ -41,6 +41,18 @@ function billingGrantStillValid (snapshot) {
   return new Date(snapshot.currentPeriodEnd).getTime() > Date.now();
 }
 
+function isPrepaidSnapshot (snapshot) {
+  if (!snapshot) return false;
+  if (snapshot.source === 'pix') return true;
+  return String(snapshot.plan || '').endsWith('_pix');
+}
+
+function prepaidAccessStillValid (snapshot) {
+  if (!isPrepaidSnapshot(snapshot) || !snapshot.active) return false;
+  if (!snapshot.currentPeriodEnd) return false;
+  return new Date(snapshot.currentPeriodEnd).getTime() > Date.now();
+}
+
 function normalizeEmail (email) {
   return String(email || '').trim().toLowerCase();
 }
@@ -118,6 +130,18 @@ async function getSubscriptionStatus (email, options = {}) {
     return cachedStatus;
   }
 
+  if (prepaidAccessStillValid(cached)) {
+    return { ...cachedStatus, source: cached.source || 'pix' };
+  }
+
+  if (isPrepaidSnapshot(cached)) {
+    return {
+      ...(cachedStatus || { email: norm, customerId }),
+      active: false,
+      reason: 'pix_expired'
+    };
+  }
+
   const cacheMissingCourtesy = cachedStatus?.active && cached && cached.courtesyEndsAt == null && cached.isCourtesy == null;
   if (cachedStatus?.active && !cacheMissingCourtesy) {
     return cachedStatus;
@@ -156,6 +180,8 @@ module.exports = {
   getSubscriptionStatus,
   resolveCustomerId,
   billingGrantStillValid,
+  prepaidAccessStillValid,
+  isPrepaidSnapshot,
   isOwnerEmail,
   parseOwnerEmails
 };

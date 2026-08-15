@@ -7578,6 +7578,16 @@ body.pricing-page .pricing-v2 {
   font-size: 1rem;
 }
 
+.pricing-v2-cta-pix {
+  margin-top: 0.55rem;
+}
+
+.pricing-v2-pix-note {
+  margin: 0.55rem 0 0;
+  font-size: 0.78rem;
+  line-height: 1.35;
+}
+
 .pricing-v2-cta-primary {
   font-weight: 700;
 }

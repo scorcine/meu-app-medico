@@ -1,5 +1,26 @@
 /* Verificação de assinatura MedHub Pro (Stripe) — médico solo */
 
+let _medhubUserAccess = null;
+
+function medhubSetUserAccess (access) {
+  _medhubUserAccess = access && typeof access === 'object' ? access : null;
+}
+
+function medhubGetUserAccess () {
+  return _medhubUserAccess;
+}
+
+function medhubCanAccessSection (sectionId) {
+  const id = String(sectionId || '').trim();
+  if (!id || id === 'inicio' || id === 'perfil') return true;
+
+  const access = medhubGetUserAccess();
+  if (!access) return true;
+  if (access.mode === 'none') return false;
+  if (!access.active || access.mode === 'full') return true;
+  return access.mode === 'partial' && Array.isArray(access.sections) && access.sections.includes(id);
+}
+
 function medhubIsLocalDev () {
   if (window.location.protocol === 'file:') return true;
   const host = window.location.hostname;
@@ -149,6 +170,7 @@ async function medhubVerifySubscription (email) {
   if (!norm) return { active: false };
 
   if (medhubIsLocalDev()) {
+    medhubSetUserAccess({ active: true, mode: 'full', sections: [] });
     return { active: true, localDev: true };
   }
 
@@ -156,11 +178,12 @@ async function medhubVerifySubscription (email) {
     try {
       const me = await medhubCloudMe();
       if (me?.subscription) {
+        medhubSetUserAccess(me.access || null);
         if (me.subscription.misconfigured) {
           return { active: false, misconfigured: true, reason: me.subscription.reason };
         }
         if (me.subscription.devBypass) return { active: true, devBypass: true };
-        return { ...me.subscription, activity: me.activity || null };
+        return { ...me.subscription, access: me.access || null, activity: me.activity || null };
       }
     } catch {
       /* fallback abaixo removido em produção */
@@ -177,18 +200,26 @@ async function medhubRequireSubscription (user) {
     alert('Assinaturas temporariamente indisponíveis. O administrador precisa configurar Stripe e KV na Vercel.');
     return false;
   }
-  if (status.active) return true;
+  const access = status.access;
+  if (access?.mode === 'none') {
+    // Revogação administrativa explícita prevalece sobre acessos anteriores.
+  } else if (access?.active && (access.mode === 'full' || access.mode === 'partial')) {
+    return true;
+  } else if (status.active) {
+    return true;
+  }
 
   const q = new URLSearchParams({ reason: 'subscription', email: user.email });
   window.location.href = 'index.html?' + q.toString() + '#planos';
   return false;
 }
 
-async function medhubOpenCheckout (plan, email) {
+async function medhubOpenCheckout (plan, email, method) {
   const norm = String(email || '').trim().toLowerCase();
+  const payMethod = String(method || 'card').trim().toLowerCase() === 'pix' ? 'pix' : 'card';
 
   try {
-    const payload = { plan };
+    const payload = { plan, method: payMethod };
     if (norm) payload.email = norm;
     if (typeof medhubGetAttributionPayload === 'function') {
       const attribution = medhubGetAttributionPayload();
@@ -211,6 +242,10 @@ async function medhubOpenCheckout (plan, email) {
     }
     if (data.code === 'invalid_coupon') {
       alert(data.error || 'Cupom inválido.');
+      return;
+    }
+    if (data.code === 'pix_not_enabled') {
+      alert(data.error || 'Pix ainda não está disponível. Use cartão Visa/Mastercard ou fale com o suporte.');
       return;
     }
     alert(data.error || 'Não foi possível iniciar o pagamento.');

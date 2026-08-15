@@ -104,7 +104,8 @@ async function saveCheckoutRecord (record) {
       status: data.subscriptionStatus || 'active',
       plan: data.plan,
       active: !!data.subscriptionActive,
-      currentPeriodEnd: data.currentPeriodEnd || null
+      currentPeriodEnd: data.currentPeriodEnd || null,
+      source: data.source || (data.paymentMethod === 'pix' ? 'pix' : 'stripe')
     });
   }
   return data;
@@ -113,6 +114,31 @@ async function saveCheckoutRecord (record) {
 async function getCheckoutRecord (sessionId) {
   if (!cloudAuthEnabled() || !sessionId) return null;
   return kv.get(checkoutKey(sessionId));
+}
+
+async function computePrepaidPeriodEnd (customerId, days) {
+  const durationMs = Math.max(1, Number(days) || 30) * 24 * 60 * 60 * 1000;
+  let base = Date.now();
+
+  if (customerId) {
+    try {
+      const existing = await getCustomerBilling(customerId);
+      const endMs = existing?.currentPeriodEnd
+        ? new Date(existing.currentPeriodEnd).getTime()
+        : 0;
+      if (Number.isFinite(endMs) && endMs > base) base = endMs;
+    } catch { /* best-effort */ }
+  }
+
+  return new Date(base + durationMs).toISOString();
+}
+
+function isPixCheckoutSession (session) {
+  if (!session) return false;
+  if (session.metadata?.medhub_payment === 'pix') return true;
+  return session.mode === 'payment' && Array.isArray(session.payment_method_types)
+    ? session.payment_method_types.includes('pix')
+    : false;
 }
 
 async function syncCheckoutSession (session) {
@@ -131,6 +157,7 @@ async function syncCheckoutSession (session) {
   const email = normalizeEmail(
     session.customer_details?.email ||
     session.customer_email ||
+    session.metadata?.medhub_email ||
     subscription?.metadata?.email ||
     ''
   );
@@ -142,6 +169,10 @@ async function syncCheckoutSession (session) {
   let subscriptionId = typeof session.subscription === 'string'
     ? session.subscription
     : subscription?.id || null;
+  let source = 'stripe';
+
+  const paid = session.payment_status === 'paid' || session.status === 'complete';
+  const pixCheckout = isPixCheckoutSession(session);
 
   if (subscription) {
     subscriptionActive = ['active', 'trialing'].includes(subscription.status);
@@ -150,9 +181,19 @@ async function syncCheckoutSession (session) {
     currentPeriodEnd = subscription.current_period_end
       ? new Date(subscription.current_period_end * 1000).toISOString()
       : null;
+  } else if (pixCheckout && paid) {
+    // Pix no Brasil é pagamento único: liberamos um período pré-pago.
+    const days = Number(session.metadata?.medhub_access_days || 0)
+      || (plan === 'annual' ? 365 : 30);
+    plan = plan === 'annual' ? 'annual_pix' : 'monthly_pix';
+    subscriptionActive = true;
+    subscriptionStatus = 'active';
+    subscriptionId = typeof session.payment_intent === 'string'
+      ? session.payment_intent
+      : session.payment_intent?.id || session.id;
+    currentPeriodEnd = await computePrepaidPeriodEnd(customerId, days);
+    source = 'pix';
   }
-
-  const paid = session.payment_status === 'paid' || session.status === 'complete';
 
   const record = {
     sessionId: session.id,
@@ -165,13 +206,24 @@ async function syncCheckoutSession (session) {
     currentPeriodEnd,
     paymentStatus: session.payment_status,
     status: session.status,
-    paid
+    paid,
+    source,
+    paymentMethod: pixCheckout ? 'pix' : (session.metadata?.medhub_payment || 'card')
   };
 
   await saveCheckoutRecord(record);
 
-  if (customerId && subscription) {
-    await saveCustomerBilling(snapshotFromSubscription(subscription, email));
+  if (customerId && paid && (subscription || pixCheckout)) {
+    await saveCustomerBilling({
+      email,
+      customerId,
+      subscriptionId,
+      status: subscriptionStatus || 'active',
+      plan,
+      active: !!record.subscriptionActive,
+      currentPeriodEnd,
+      source
+    });
   }
 
   return record;
@@ -334,6 +386,11 @@ async function verifyCheckoutForRegister (sessionId) {
   }
 
   if (!record.subscriptionActive) {
+    // Pix pré-pago já marca acesso no sync; assinatura Stripe é o caminho do cartão.
+    if (record.source === 'pix' || record.paymentMethod === 'pix' || String(record.plan || '').endsWith('_pix')) {
+      return { ok: false, code: 'payment_pending', error: 'Pagamento Pix ainda não confirmado.' };
+    }
+
     const sub = await getActiveSubscription(stripe, record.customerId);
     if (!sub) {
       return { ok: false, code: 'subscription_required', error: 'Assinatura ativa necessária.' };

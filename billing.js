@@ -23,10 +23,16 @@ async function initPricingPage () {
   medhubApplyPlatformGate(config);
 
   document.getElementById('btn-plan-monthly')?.addEventListener('click', () => {
-    medhubOpenCheckout('monthly', checkoutEmail);
+    medhubOpenCheckout('monthly', checkoutEmail, 'card');
+  });
+  document.getElementById('btn-plan-monthly-pix')?.addEventListener('click', () => {
+    medhubOpenCheckout('monthly', checkoutEmail, 'pix');
   });
   document.getElementById('btn-plan-annual')?.addEventListener('click', () => {
-    medhubOpenCheckout('annual', checkoutEmail);
+    medhubOpenCheckout('annual', checkoutEmail, 'card');
+  });
+  document.getElementById('btn-plan-annual-pix')?.addEventListener('click', () => {
+    medhubOpenCheckout('annual', checkoutEmail, 'pix');
   });
 
   if (typeof mountAppShowcase === 'function') {
@@ -76,7 +82,7 @@ function medhubApplyPlatformGate (config) {
     }
   }
 
-  document.querySelectorAll('#btn-plan-monthly, #btn-plan-annual').forEach(function (btn) {
+  document.querySelectorAll('#btn-plan-monthly, #btn-plan-monthly-pix, #btn-plan-annual, #btn-plan-annual-pix').forEach(function (btn) {
     btn.disabled = !checkoutReady;
   });
 

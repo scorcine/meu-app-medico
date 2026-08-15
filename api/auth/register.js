@@ -104,7 +104,7 @@ module.exports = async (req, res) => {
         plan: checkout.plan,
         status: checkout.subscriptionStatus || 'active',
         currentPeriodEnd: checkout.currentPeriodEnd,
-        source: 'checkout'
+        source: checkout.source || (checkout.paymentMethod === 'pix' ? 'pix' : 'checkout')
       };
     } else if (coupon) {
       const redeemed = await redeemCouponForRegister(email, coupon);
@@ -171,7 +171,8 @@ module.exports = async (req, res) => {
         status: sub.status || 'active',
         plan: sub.plan,
         active: true,
-        currentPeriodEnd: sub.currentPeriodEnd || null
+        currentPeriodEnd: sub.currentPeriodEnd || null,
+        source: sub.source || 'checkout'
       });
     }
 

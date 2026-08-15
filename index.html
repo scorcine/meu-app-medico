@@ -14,14 +14,14 @@
   <meta name="apple-mobile-web-app-title" content="MedHub">
   <link rel="apple-touch-icon" href="/assets/icons/icon-192.png?v=icon-v2">
   <script src="theme.js"></script>
-  <link rel="stylesheet" href="style.css?v=pwa-v1">
+  <link rel="stylesheet" href="style.css?v=pix-v1">
   <link rel="stylesheet" href="landing-mobile.css?v=landing-mobile-v1">
   <script defer src="medhub-config.js?v=site-v3"></script>
   <script defer src="medhub-meta-pixel.js?v=meta-v1"></script>
   <script defer src="medhub-attribution.js?v=attr-v1"></script>
-  <script defer src="subscription.js?v=billing-v5"></script>
+  <script defer src="subscription.js?v=pix-v1"></script>
   <script defer src="app-showcase.js?v=showcase-v4"></script>
-  <script defer src="billing.js?v=billing-v5"></script>
+  <script defer src="billing.js?v=pix-v1"></script>
   <script defer src="landing.js?v=landing-v6"></script>
   <script defer src="pwa-install.js?v=pwa-v2"></script>
 </head>
@@ -213,7 +213,9 @@
             <li>✓ Garantia de 7 dias</li>
             <li>✓ 1 médico · 1 conta</li>
           </ul>
-          <button type="button" class="btn pricing-v2-cta" id="btn-plan-monthly">Assinar mensal</button>
+          <button type="button" class="btn pricing-v2-cta" id="btn-plan-monthly">Cartão — renovação automática</button>
+          <button type="button" class="btn btn-secondary pricing-v2-cta pricing-v2-cta-pix" id="btn-plan-monthly-pix">Pix — 30 dias (sem renovação)</button>
+          <p class="pricing-v2-pix-note muted">Elo e Hipercard não passam na Stripe. Use Pix ou Visa/Mastercard.</p>
         </article>
 
         <article class="pricing-v2-plan card pricing-v2-plan-featured">
