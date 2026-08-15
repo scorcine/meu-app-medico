@@ -2567,6 +2567,48 @@ function emergActionKey (text, index) {
   return `${index}-${(hash >>> 0).toString(36)}`;
 }
 
+/* Pistas da queixa do atendimento para sugerir (nunca decidir) a opção do seletor */
+const EMERG_PICKER_QUEIXA_HINTS = {
+  'foco-sepse': {
+    pulmonar: ['pneumonia', 'tosse', 'dispneia', 'falta de ar', 'expectoracao', 'catarro', 'derrame pleural', 'influenza', 'gripe', 'covid', 'tuberculose'],
+    urinario: ['itu', 'infeccao urinaria', 'pielonefrite', 'disuria', 'dor ao urinar', 'cistite', 'polaciuria', 'urina'],
+    abdominal: ['abdome', 'abdominal', 'apendicite', 'colecistite', 'diverticulite', 'peritonite', 'colangite', 'diarreia', 'barriga'],
+    pele: ['celulite', 'erisipela', 'abscesso', 'ferida', 'lesao de pele', 'furunculo', 'ulcera', 'fasceite'],
+    neutropenia: ['neutropenia', 'quimioterapia', 'oncologico', 'leucemia'],
+    cateter: ['cateter', 'acesso venoso', 'porto cath', 'dialise', 'flebite'],
+    snc: ['meningite', 'encefalite', 'rigidez de nuca', 'cefaleia com febre', 'convulsao com febre']
+  }
+};
+
+function emergQueixaAtiva () {
+  try {
+    return sessionStorage.getItem('medhub-active-queixa') || '';
+  } catch {
+    return '';
+  }
+}
+
+function emergNormalizeTexto (text) {
+  return String(text || '')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, ' ')
+    .trim();
+}
+
+/** Opção que combina com a queixa ativa, para exibir como sugestão a confirmar */
+function emergPickerSuggestion (pickerId, options) {
+  const hints = EMERG_PICKER_QUEIXA_HINTS[pickerId];
+  const queixa = ` ${emergNormalizeTexto(emergQueixaAtiva())} `;
+  if (!hints || queixa.trim().length < 3) return null;
+
+  const encontrada = options.find(option => (hints[option.value] || []).some(hint =>
+    queixa.includes(` ${emergNormalizeTexto(hint)} `)
+  ));
+  return encontrada ? encontrada.value : null;
+}
+
 function initEmergProtocolPickers (root, state, persist) {
   const clearAll = [];
 
@@ -2604,6 +2646,10 @@ function initEmergProtocolPickers (root, state, persist) {
     const panel = picker.querySelector('.emerg-picker-panel');
     const buttons = [...picker.querySelectorAll('.emerg-picker-option')];
     const emptyLabel = picker.dataset.pickerEmpty || 'Nenhuma opção escolhida ainda.';
+    const suggested = emergPickerSuggestion(pickerId, options);
+    const suggestedText = suggested
+      ? options.find(option => option.value === suggested)?.text || ''
+      : '';
 
     function setPanel (open) {
       panel.hidden = !open;
@@ -2618,11 +2664,12 @@ function initEmergProtocolPickers (root, state, persist) {
       picker.classList.toggle('is-answered', !!option);
       summary.textContent = option
         ? `${picker.dataset.pickerPrefix || 'Selecionado'}: ${option.text}`
-        : emptyLabel;
+        : (suggestedText ? `Sugestão pela queixa: ${suggestedText} — confirme antes de seguir.` : emptyLabel);
 
       buttons.forEach(button => {
         const selected = !!option && button.dataset.pickerValue === option.value;
         button.classList.toggle('is-selected', selected);
+        button.classList.toggle('is-suggested', !option && button.dataset.pickerValue === suggested);
         button.setAttribute('aria-checked', selected ? 'true' : 'false');
       });
 

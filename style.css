@@ -2993,6 +2993,11 @@ body.app-page {
   border-color: var(--accent);
 }
 
+.emerg-picker-option.is-suggested {
+  border-color: rgba(240, 180, 41, 0.7);
+  border-style: dashed;
+}
+
 .emerg-picker-clear {
   margin-top: 0.6rem;
   padding: 0.35rem 0.6rem;
@@ -5155,6 +5160,15 @@ textarea {
 .novo-atendimento-emergency-routes {
   display: grid;
   gap: 0.7rem;
+}
+
+.novo-atendimento-protocolo-group {
+  margin: 1rem 0 0.5rem;
+  color: var(--text-muted);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .novo-atendimento-emergency-route {

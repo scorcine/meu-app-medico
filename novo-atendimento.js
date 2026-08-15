@@ -98,21 +98,123 @@ function novoAtendimentoNormalize (text) {
     .trim();
 }
 
+/* Termos leigos e abreviações reduzidos ao termo clínico usado nos fluxogramas */
+const NOVO_ATENDIMENTO_SINONIMOS = [
+  ['falta de ar', 'dispneia'],
+  ['dificuldade para respirar', 'dispneia'],
+  ['dificuldade de respirar', 'dispneia'],
+  ['cansaco para respirar', 'dispneia'],
+  ['sufocamento', 'dispneia'],
+  ['chiado no peito', 'sibilancia'],
+  ['chiado', 'sibilancia'],
+  ['dor no peito', 'dor toracica'],
+  ['aperto no peito', 'dor toracica'],
+  ['queimacao no peito', 'dor toracica'],
+  ['dor de cabeca', 'cefaleia'],
+  ['dor de barriga', 'dor abdominal'],
+  ['dor na barriga', 'dor abdominal'],
+  ['dor de estomago', 'dor abdominal'],
+  ['colica na barriga', 'dor abdominal'],
+  ['dor nas costas', 'lombalgia'],
+  ['dor lombar', 'lombalgia'],
+  ['dor ao urinar', 'disuria'],
+  ['ardencia ao urinar', 'disuria'],
+  ['queimacao ao urinar', 'disuria'],
+  ['dor de garganta', 'odinofagia'],
+  ['dor de ouvido', 'otalgia'],
+  ['dor de dente', 'odontalgia'],
+  ['dor nas juntas', 'artralgia'],
+  ['dor nas articulacoes', 'artralgia'],
+  ['sangue nas fezes', 'sangramento digestivo'],
+  ['fezes escuras', 'melena'],
+  ['vomito com sangue', 'hematemese'],
+  ['sangramento pelo nariz', 'epistaxe'],
+  ['sangramento nasal', 'epistaxe'],
+  ['nariz sangrando', 'epistaxe'],
+  ['desmaio', 'sincope'],
+  ['perda de consciencia', 'sincope'],
+  ['perdeu a consciencia', 'sincope'],
+  ['ataque epileptico', 'crise convulsiva'],
+  ['convulsao', 'crise convulsiva'],
+  ['convulsionando', 'crise convulsiva'],
+  ['pressao alta', 'crise hipertensiva'],
+  ['pressao muito alta', 'crise hipertensiva'],
+  ['acucar baixo', 'hipoglicemia'],
+  ['glicemia baixa', 'hipoglicemia'],
+  ['acucar alto', 'hiperglicemia'],
+  ['glicemia alta', 'hiperglicemia'],
+  ['coracao acelerado', 'palpitacao'],
+  ['coracao disparado', 'palpitacao'],
+  ['batedeira', 'palpitacao'],
+  ['boca torta', 'paralisia facial'],
+  ['perda de forca de um lado', 'hemiparesia'],
+  ['fraqueza de um lado', 'hemiparesia'],
+  ['fala arrastada', 'disartria'],
+  ['nao consegue falar', 'afasia'],
+  ['bateu a cabeca', 'trauma cranioencefalico'],
+  ['batida na cabeca', 'trauma cranioencefalico'],
+  ['tce', 'trauma cranioencefalico'],
+  ['mordida de cachorro', 'mordedura animal'],
+  ['mordida de cao', 'mordedura animal'],
+  ['mordida de gato', 'mordedura animal'],
+  ['picada de cobra', 'acidente ofidico'],
+  ['picada de escorpiao', 'escorpionismo'],
+  ['picada de abelha', 'reacao alergica'],
+  ['coceira', 'prurido'],
+  ['manchas na pele', 'lesao de pele'],
+  ['ferida infectada', 'lesao de pele'],
+  ['perna inchada', 'edema de membros inferiores'],
+  ['pernas inchadas', 'edema de membros inferiores'],
+  ['inchaco nas pernas', 'edema de membros inferiores'],
+  ['olho vermelho', 'hiperemia ocular'],
+  ['vista embacada', 'alteracao visual'],
+  ['corrimento vaginal', 'corrimento genital'],
+  ['sangramento vaginal', 'sangramento uterino'],
+  ['nao consegue evacuar', 'constipacao'],
+  ['intestino preso', 'constipacao'],
+  ['confusao mental', 'confusao aguda'],
+  ['fora de si', 'confusao aguda'],
+  ['muito sonolento', 'rebaixamento do nivel de consciencia'],
+  ['nao acorda', 'rebaixamento do nivel de consciencia'],
+  ['bebeu muito', 'intoxicacao alcoolica'],
+  ['tomou remedio demais', 'intoxicacao exogena'],
+  ['tentativa de suicidio', 'intoxicacao exogena'],
+  ['queimou', 'queimadura'],
+  ['gestante', 'gravidez'],
+  ['gravida', 'gravidez'],
+  ['bebe', 'lactente'],
+  ['nenem', 'lactente'],
+  ['recem nascido', 'neonato']
+];
+
+const NOVO_ATENDIMENTO_STOPWORDS = new Set([
+  'de', 'da', 'do', 'das', 'dos', 'com', 'sem', 'em', 'no', 'na', 'nos', 'nas',
+  'por', 'para', 'ao', 'aos', 'a', 'o', 'as', 'os', 'um', 'uma', 'e', 'ou',
+  'ha', 'muito', 'muita', 'pouco', 'leve', 'forte', 'agudo', 'aguda', 'agudos',
+  'agudas', 'cronico', 'cronica', 'suspeita', 'suspeito', 'quadro', 'paciente',
+  'referida', 'referido', 'queixa', 'dias', 'dia', 'horas', 'hora', 'hoje'
+]);
+
+/* Palavras genéricas: sozinhas só casam com alvos de um único termo */
+const NOVO_ATENDIMENTO_TERMOS_GENERICOS = new Set([
+  'dor', 'crise', 'mal', 'edema', 'inchaco', 'sangramento', 'lesao', 'alteracao', 'perda'
+]);
+
 const NOVO_ATENDIMENTO_EMERGENCY_ROUTES = [
   {
     topic: 'parada-cardio', protocol: 'acls-adulto', icon: '⚡',
-    aliases: ['parada cardiorrespiratoria', 'parada cardiaca', 'pcr', 'aesp', 'assistolia', 'fibrilacao ventricular', 'fv', 'tv sem pulso'],
+    aliases: ['parada cardiorrespiratoria', 'parada cardiaca', 'pcr', 'aesp', 'assistolia', 'fibrilacao ventricular', 'fv', 'tv sem pulso', 'sem pulso', 'morte subita', 'inconsciente sem pulso'],
     alert: 'Parada cardiorrespiratória: acione ajuda, inicie RCP de alta qualidade e conecte o desfibrilador.'
   },
   { topic: 'parada-cardio', protocol: 'bls-adulto', icon: '🫀', aliases: ['bls', 'suporte basico de vida'] },
   { topic: 'parada-cardio', protocol: 'pals-ped', icon: '👶', aliases: ['pals', 'parada pediatrica', 'pcr pediatrica'] },
-  { topic: 'parada-cardio', protocol: 'bradicardia', icon: '🐢', aliases: ['bradicardia', 'pulso lento', 'ritmo lento'] },
-  { topic: 'parada-cardio', protocol: 'taquicardia', icon: '⚡', aliases: ['taquicardia instavel', 'taquiarritmia instavel', 'tv com pulso', 'torsades'] },
-  { topic: 'parada-cardio', protocol: 'rosc', icon: '✅', aliases: ['rosc', 'pos pcr', 'retorno da circulacao espontanea'] },
+  { topic: 'parada-cardio', protocol: 'bradicardia', icon: '🐢', aliases: ['bradicardia', 'pulso lento', 'ritmo lento', 'bradiarritmia', 'bloqueio atrioventricular', 'bav'] },
+  { topic: 'parada-cardio', protocol: 'taquicardia', icon: '⚡', aliases: ['taquicardia instavel', 'taquiarritmia instavel', 'tv com pulso', 'torsades', 'taquicardia', 'tsv', 'taquicardia supraventricular', 'fibrilacao atrial instavel', 'flutter instavel'] },
+  { topic: 'parada-cardio', protocol: 'rosc', icon: '✅', aliases: ['rosc', 'pos pcr', 'retorno da circulacao espontanea', 'cuidados pos parada'] },
 
   {
     topic: 'sca', protocol: 'dor-inicial', icon: '❤️‍🔥', chest: true,
-    aliases: ['dor toracica', 'dor no peito', 'precordialgia', 'angina', 'sindrome coronariana aguda', 'sca', 'infarto', 'iam'],
+    aliases: ['dor toracica', 'dor no peito', 'precordialgia', 'angina', 'sindrome coronariana aguda', 'sca', 'infarto', 'iam', 'desconforto toracico', 'dor retroesternal', 'equivalente anginoso'],
     alert: 'Dor torácica: realizar ECG de 12 derivações em até 10 minutos.'
   },
   { topic: 'sca', protocol: 'stemi', icon: '🚨', aliases: ['stemi', 'iam com supra', 'infarto com supra', 'iamcsst'] },
@@ -121,7 +223,7 @@ const NOVO_ATENDIMENTO_EMERGENCY_ROUTES = [
 
   {
     topic: 'avc', protocol: 'fast', icon: '🧠',
-    aliases: ['avc', 'ave', 'derrame', 'deficit neurologico focal', 'hemiparesia', 'hemiplegia', 'paralisia facial', 'desvio de rima', 'afasia'],
+    aliases: ['avc', 'ave', 'derrame', 'deficit neurologico focal', 'hemiparesia', 'hemiplegia', 'paralisia facial', 'desvio de rima', 'afasia', 'disartria', 'fraqueza subita', 'alteracao subita da fala'],
     alert: 'Suspeita de AVC: registrar o último momento bem e ativar avaliação neurológica imediatamente.'
   },
   { topic: 'avc', protocol: 'trombolise', icon: '💉', aliases: ['trombolise avc', 'alteplase avc', 'tenecteplase avc'] },
@@ -130,30 +232,32 @@ const NOVO_ATENDIMENTO_EMERGENCY_ROUTES = [
 
   {
     topic: 'sepse', protocol: 'bundle-hora1', icon: '🩸',
-    aliases: ['sepse', 'choque septico', 'septicemia', 'infeccao com disfuncao organica'],
+    aliases: ['sepse', 'choque septico', 'septicemia', 'infeccao com disfuncao organica', 'febre com hipotensao', 'infeccao grave', 'qsofa positivo'],
     alert: 'Suspeita de sepse: avaliar disfunção orgânica e iniciar o Bundle Hora-1 sem atraso.'
   },
-  { topic: 'sepse', protocol: 'norepi-map', icon: '💉', aliases: ['noradrenalina', 'norepinefrina', 'choque refratario'] },
-  { topic: 'sepse', protocol: 'lactato-reavaliacao', icon: '🧪', aliases: ['lactato elevado', 'reavaliacao de lactato'] },
+  /* Febre isolada entra como rastreio (sem alerta vermelho) — o Bundle continua a um clique */
+  { topic: 'sepse', protocol: 'bundle-hora1', icon: '🩸', aliases: ['febre', 'hipertermia', 'calafrios', 'febre alta', 'infeccao'] },
+  { topic: 'sepse', protocol: 'norepi-map', icon: '💉', aliases: ['noradrenalina', 'norepinefrina', 'choque refratario', 'hipotensao refrataria', 'choque'] },
+  { topic: 'sepse', protocol: 'lactato-reavaliacao', icon: '🧪', aliases: ['lactato elevado', 'reavaliacao de lactato', 'hiperlactatemia'] },
 
   {
     topic: 'trauma', protocol: 'atls-abcde', icon: '🆘',
-    aliases: ['trauma', 'politrauma', 'atropelamento', 'acidente automobilistico', 'acidente de moto', 'ferimento por arma de fogo', 'ferimento por arma branca'],
+    aliases: ['trauma', 'politrauma', 'atropelamento', 'acidente automobilistico', 'acidente de moto', 'ferimento por arma de fogo', 'ferimento por arma branca', 'agressao fisica', 'esfaqueamento', 'ferimento grave', 'acidente de carro'],
     alert: 'Trauma: priorizar avaliação primária ABCDE e tratar ameaças imediatas à vida.'
   },
-  { topic: 'trauma', protocol: 'via-aerea-vortex', icon: '🌪️', aliases: ['via aerea dificil', 'intubacao dificil', 'nao intuba nao ventila'] },
-  { topic: 'trauma', protocol: 'mtp-transfusao', icon: '🩸', aliases: ['hemorragia macica', 'transfusao macica', 'choque hemorragico'] },
-  { topic: 'trauma', protocol: 'pecarn-tce', icon: '👶', aliases: ['tce pediatrico', 'trauma craniano pediatrico', 'queda crianca'] },
-  { topic: 'trauma', protocol: 'queda-propria-altura-tc', icon: '🧓', aliases: ['queda da propria altura', 'queda em idoso', 'queda idoso'] },
+  { topic: 'trauma', protocol: 'via-aerea-vortex', icon: '🌪️', aliases: ['via aerea dificil', 'intubacao dificil', 'nao intuba nao ventila', 'obstrucao de via aerea', 'estridor', 'engasgo'] },
+  { topic: 'trauma', protocol: 'mtp-transfusao', icon: '🩸', aliases: ['hemorragia macica', 'transfusao macica', 'choque hemorragico', 'sangramento macico'] },
+  { topic: 'trauma', protocol: 'pecarn-tce', icon: '👶', aliases: ['tce pediatrico', 'trauma craniano pediatrico', 'queda crianca', 'trauma cranioencefalico'] },
+  { topic: 'trauma', protocol: 'queda-propria-altura-tc', icon: '🧓', aliases: ['queda da propria altura', 'queda em idoso', 'queda idoso', 'queda'] },
 
-  { topic: 'via-aerea', protocol: 'rsi-7-passos', icon: '🌬️', aliases: ['sequencia rapida de intubacao', 'intubacao orotraqueal', 'iot', 'rsi'] },
-  { topic: 'via-aerea', protocol: 'ventilacao-mecanica', icon: '🫁', aliases: ['ventilacao mecanica', 'ajuste ventilatorio'] },
+  { topic: 'via-aerea', protocol: 'rsi-7-passos', icon: '🌬️', aliases: ['sequencia rapida de intubacao', 'intubacao orotraqueal', 'iot', 'rsi', 'insuficiencia respiratoria', 'rebaixamento do nivel de consciencia', 'glasgow baixo'] },
+  { topic: 'via-aerea', protocol: 'ventilacao-mecanica', icon: '🫁', aliases: ['ventilacao mecanica', 'ajuste ventilatorio', 'parametros ventilatorios'] },
   { topic: 'via-aerea', protocol: 'dope-pos-iot', icon: '🚨', aliases: ['hipoxemia pos iot', 'dessaturacao pos intubacao', 'dope'] },
   { topic: 'via-aerea', protocol: 'desmame-ventilatorio', icon: '🫁', aliases: ['desmame ventilatorio', 'extubacao'] },
 
   {
     topic: 'reacoes-metabolicas', protocol: 'anafilaxia', icon: '💉',
-    aliases: ['anafilaxia', 'choque anafilatico', 'reacao alergica grave', 'edema de glote'],
+    aliases: ['anafilaxia', 'choque anafilatico', 'reacao alergica grave', 'edema de glote', 'angioedema', 'urticaria com dispneia'],
     alert: 'Anafilaxia: administrar adrenalina IM imediatamente; não aguardar acesso venoso.'
   },
   {
@@ -168,46 +272,226 @@ const NOVO_ATENDIMENTO_EMERGENCY_ROUTES = [
   },
   {
     topic: 'reacoes-metabolicas', protocol: 'dka-hhs', icon: '🧪',
-    aliases: ['cetoacidose diabetica', 'cad', 'estado hiperosmolar', 'ehh', 'coma hiperosmolar'],
+    aliases: ['cetoacidose diabetica', 'cad', 'estado hiperosmolar', 'ehh', 'coma hiperosmolar', 'hiperglicemia', 'descompensacao diabetica'],
     alert: 'Crise hiperglicêmica: avaliar volume, potássio, cetonas, gasometria e osmolaridade antes da insulina.'
   },
 
-  { topic: 'obstetricia', protocol: 'preeclampsia-eclampsia', icon: '🤰', aliases: ['pre eclampsia', 'preeclampsia', 'eclampsia', 'convulsao na gestante', 'hipertensao gestacional'] },
+  { topic: 'obstetricia', protocol: 'preeclampsia-eclampsia', icon: '🤰', aliases: ['pre eclampsia', 'preeclampsia', 'eclampsia', 'convulsao na gestante', 'crise convulsiva na gestante', 'hipertensao gestacional', 'cefaleia na gravidez', 'gravidez com hipertensao'] },
   { topic: 'obstetricia', protocol: 'hemorragia-pos-parto', icon: '🩸', aliases: ['hemorragia pos parto', 'sangramento pos parto', 'atonia uterina'] },
-  { topic: 'obstetricia', protocol: 'prolapso-cordao', icon: '🚨', aliases: ['prolapso de cordao', 'cordao prolapsado'] },
+  { topic: 'obstetricia', protocol: 'prolapso-cordao', icon: '🚨', aliases: ['prolapso de cordao', 'cordao prolapsado', 'trabalho de parto com bradicardia fetal'] },
 
-  { topic: 'pediatrica', protocol: 'pcr-pediatrico', icon: '👶', aliases: ['parada cardiorrespiratoria pediatrica', 'pcr infantil'] },
-  { topic: 'pediatrica', protocol: 'bronquiolite', icon: '👶', aliases: ['bronquiolite', 'vsl', 'virus sincicial respiratorio'] },
-  { topic: 'pediatrica', protocol: 'broselow-doses', icon: '📏', aliases: ['broselow', 'doses pediatricas de emergencia'] },
+  { topic: 'pediatrica', protocol: 'pcr-pediatrico', icon: '👶', aliases: ['parada cardiorrespiratoria pediatrica', 'pcr infantil', 'parada em crianca'] },
+  { topic: 'pediatrica', protocol: 'bronquiolite', icon: '👶', aliases: ['bronquiolite', 'vsl', 'virus sincicial respiratorio', 'sibilancia no lactente', 'lactente com dispneia'] },
+  { topic: 'pediatrica', protocol: 'broselow-doses', icon: '📏', aliases: ['broselow', 'doses pediatricas de emergencia', 'dose pediatrica'] },
 
-  { topic: 'toxicologia', protocol: 'overdose-opioide', icon: '☠️', aliases: ['overdose de opioide', 'intoxicacao por opioide', 'morfina overdose', 'fentanil overdose', 'heroina overdose'] },
-  { topic: 'toxicologia', protocol: 'paracetamol-rumack', icon: '💊', aliases: ['intoxicacao por paracetamol', 'overdose de paracetamol', 'acetaminofeno overdose'] },
-  { topic: 'toxicologia', protocol: 'hipertermia-maligna-calor', icon: '🔥', aliases: ['hipertermia maligna', 'golpe de calor', 'insolacao grave'] },
+  { topic: 'toxicologia', protocol: 'overdose-opioide', icon: '☠️', aliases: ['overdose de opioide', 'intoxicacao por opioide', 'morfina overdose', 'fentanil overdose', 'heroina overdose', 'miose com apneia'] },
+  { topic: 'toxicologia', protocol: 'paracetamol-rumack', icon: '💊', aliases: ['intoxicacao por paracetamol', 'overdose de paracetamol', 'acetaminofeno overdose', 'intoxicacao exogena'] },
+  { topic: 'toxicologia', protocol: 'hipertermia-maligna-calor', icon: '🔥', aliases: ['hipertermia maligna', 'golpe de calor', 'insolacao grave', 'exposicao ao calor'] },
   { topic: 'toxicologia', protocol: 'hipotermia-swiss', icon: '❄️', aliases: ['hipotermia', 'exposicao ao frio'] },
 
-  { topic: 'pressao-arritmias', protocol: 'crise-hipertensiva', icon: '🔺', aliases: ['crise hipertensiva', 'emergencia hipertensiva', 'hipertensao grave', 'pressao muito alta'] },
-  { topic: 'pressao-arritmias', protocol: 'wpw-instavel', icon: '⚡', aliases: ['wolff parkinson white', 'wpw', 'pre excitacao instavel'] },
+  { topic: 'pressao-arritmias', protocol: 'crise-hipertensiva', icon: '🔺', aliases: ['crise hipertensiva', 'emergencia hipertensiva', 'hipertensao grave', 'pressao muito alta', 'urgencia hipertensiva'] },
+  { topic: 'pressao-arritmias', protocol: 'wpw-instavel', icon: '⚡', aliases: ['wolff parkinson white', 'wpw', 'pre excitacao instavel', 'palpitacao', 'arritmia'] },
 
-  { topic: 'procedimentos', protocol: 'sedasia', icon: '💤', aliases: ['sedacao', 'sedacao para procedimento', 'sedasia'] },
-  { topic: 'procedimentos', protocol: 'puncao-lombar', icon: '🛠️', aliases: ['puncao lombar', 'coleta de liquor'] },
-  { topic: 'procedimentos', protocol: 'iot-covid-safe', icon: '😷', aliases: ['intubacao covid', 'iot covid'] }
+  { topic: 'procedimentos', protocol: 'sedasia', icon: '💤', aliases: ['sedacao', 'sedacao para procedimento', 'sedasia', 'analgesia para procedimento'] },
+  { topic: 'procedimentos', protocol: 'puncao-lombar', icon: '🛠️', aliases: ['puncao lombar', 'coleta de liquor', 'suspeita de meningite', 'meningite'] },
+  { topic: 'procedimentos', protocol: 'iot-covid-safe', icon: '😷', aliases: ['intubacao covid', 'iot covid', 'covid grave'] }
 ];
 
-function novoAtendimentoAliasMatches (value, alias) {
-  const normalizedAlias = novoAtendimentoNormalize(alias);
-  return (` ${value} `).includes(` ${normalizedAlias} `);
+/* Queixa/sintoma → condutas de Prescrições de PS (diferenciais mais prováveis primeiro) */
+const NOVO_ATENDIMENTO_PS_ROUTES = [
+  { aliases: ['dispneia', 'sibilancia', 'insuficiencia respiratoria', 'desconforto respiratorio', 'taquipneia'], ps: ['asma-broncoespasmo', 'dpoc-exacerbada', 'pneumonia-comunitaria', 'edema-agudo-pulmao', 'tep', 'bronquite-aguda'] },
+  { aliases: ['dor toracica', 'precordialgia', 'angina', 'infarto', 'sca'], ps: ['sca-iam', 'tep', 'arritmias', 'dispepsia-drge'] },
+  { aliases: ['cefaleia', 'enxaqueca', 'migranea'], ps: ['cefaleias', 'sinusite-aguda', 'crise-hipertensiva', 'meningite-bacteriana'] },
+  { aliases: ['febre', 'calafrios', 'hipertermia', 'sindrome febril'], ps: ['gripe-influenza', 'pneumonia-comunitaria', 'pielonefrite', 'dengue', 'amigdalite-bacteriana', 'sepse-choque-septico', 'malaria', 'leptospirose', 'chikungunya'] },
+  { aliases: ['dor abdominal', 'abdome agudo', 'colica abdominal', 'dor epigastrica'], ps: ['abdome-agudo', 'apendicite-aguda', 'colecistite-aguda', 'colica-renal', 'pancreatite-aguda', 'diverticulite', 'dispepsia-drge', 'desconforto-abdominal'] },
+  { aliases: ['nausea', 'vomito', 'emese', 'enjoo'], ps: ['vomitos-agudos', 'dispepsia-drge', 'diarreia-gastroenterite', 'cetoacidose-diabetica'] },
+  { aliases: ['diarreia', 'gastroenterite', 'disenteria'], ps: ['diarreia-gastroenterite', 'parasitoses-intestinais', 'disturbios-eletroliticos', 'antiparasitarios'] },
+  { aliases: ['tosse', 'expectoracao', 'catarro'], ps: ['tosse', 'bronquite-aguda', 'pneumonia-comunitaria', 'asma-broncoespasmo', 'gripe-influenza', 'tuberculose', 'dpoc-exacerbada'] },
+  { aliases: ['tontura', 'vertigem', 'labirintite', 'desequilibrio'], ps: ['sindrome-vestibular', 'sincope', 'anemia-ferropriva', 'crise-hipertensiva', 'disturbios-eletroliticos'] },
+  { aliases: ['sincope', 'lipotimia', 'pre sincope'], ps: ['sincope', 'arritmias', 'disturbios-eletroliticos', 'anemia-ferropriva'] },
+  { aliases: ['palpitacao', 'taquicardia', 'arritmia'], ps: ['arritmias', 'crise-tireotoxica', 'ansiedade-crise', 'cardioversao-eletrica'] },
+  { aliases: ['disuria', 'polaciuria', 'urina com sangue', 'hematuria', 'infeccao urinaria', 'itu'], ps: ['cistite-itu-baixa', 'pielonefrite', 'colica-renal', 'gonorreia-clamidia'] },
+  { aliases: ['lombalgia', 'ciatalgia', 'dor cervical', 'torcicolo'], ps: ['lombalgia-ciatalgia', 'colica-renal', 'pielonefrite', 'artralgia-dor-msk'] },
+  { aliases: ['crise convulsiva', 'estado de mal epileptico', 'epilepsia'], ps: ['crise-convulsiva-em', 'hipoglicemia-grave', 'meningite-bacteriana', 'eclampsia-pre-eclampsia'] },
+  { aliases: ['confusao aguda', 'delirium', 'agitacao psicomotora', 'desorientacao'], ps: ['delirium', 'hipoglicemia-grave', 'disturbios-eletroliticos', 'pielonefrite', 'intoxicacoes-exogenas'] },
+  { aliases: ['odinofagia', 'faringite', 'amigdalite'], ps: ['amigdalite-bacteriana', 'mononucleose', 'gripe-influenza', 'afta-estomatite'] },
+  { aliases: ['otalgia', 'otite', 'secrecao no ouvido'], ps: ['otite-media', 'otite-externa'] },
+  { aliases: ['obstrucao nasal', 'coriza', 'espirros', 'rinite', 'sinusite'], ps: ['rinite-alergica', 'sinusite-aguda', 'gripe-influenza'] },
+  { aliases: ['hiperemia ocular', 'secrecao ocular', 'olho', 'conjuntivite', 'alteracao visual'], ps: ['conjuntivite', 'corpo-estranho-ocular', 'hordeolo', 'trauma-ocular'] },
+  { aliases: ['lesao de pele', 'ferida', 'celulite', 'abscesso', 'pus na pele', 'erisipela'], ps: ['celulite', 'erisipela', 'abscesso-cutaneo', 'impetigo', 'furunculose', 'herpes-zoster', 'ulcera-varicosa'] },
+  { aliases: ['prurido', 'urticaria', 'reacao alergica', 'coceira na pele'], ps: ['alergia-anafilaxia', 'edema-angioneurotico', 'escabiose', 'micoses-superficiais', 'rinite-alergica'] },
+  { aliases: ['edema de membros inferiores', 'panturrilha dolorosa', 'trombose'], ps: ['edema-mmi', 'tvp', 'varizes-mmi', 'erisipela', 'edema-agudo-pulmao'] },
+  { aliases: ['epistaxe'], ps: ['epistaxe', 'crise-hipertensiva'] },
+  { aliases: ['sangramento digestivo', 'melena', 'hematemese', 'hemorragia digestiva'], ps: ['hda', 'dispepsia-drge', 'hemorroidas', 'fissura-anal'] },
+  { aliases: ['dor anal', 'sangramento anal', 'hemorroida'], ps: ['hemorroidas', 'fissura-anal', 'constipacao'] },
+  { aliases: ['constipacao', 'flatulencia', 'distensao abdominal'], ps: ['constipacao', 'desconforto-abdominal', 'abdome-agudo'] },
+  { aliases: ['sangramento uterino', 'metrorragia', 'sangramento na gravidez'], ps: ['sangramento-uterino', 'ameaca-aborto', 'eclampsia-pre-eclampsia'] },
+  { aliases: ['corrimento genital', 'prurido vaginal', 'vulvovaginite'], ps: ['vulvovaginites', 'candidiase', 'gonorreia-clamidia', 'ulceras-genitais'] },
+  { aliases: ['lesao genital', 'ferida genital', 'ist', 'dst'], ps: ['ulceras-genitais', 'gonorreia-clamidia', 'balanopostite', 'violencia-sexual-pep'] },
+  { aliases: ['artralgia', 'artrite', 'dor articular', 'gota'], ps: ['gota', 'artralgia-dor-msk', 'chikungunya', 'anemia-falciforme'] },
+  { aliases: ['hipoglicemia'], ps: ['hipoglicemia-grave', 'diabetes-insulina-hipo'] },
+  { aliases: ['hiperglicemia', 'cetoacidose', 'estado hiperosmolar'], ps: ['cetoacidose-diabetica', 'estado-hiperosmolar', 'diabetes-insulina-hipo'] },
+  { aliases: ['crise hipertensiva', 'hipertensao'], ps: ['crise-hipertensiva', 'edema-agudo-pulmao', 'sca-iam'] },
+  { aliases: ['intoxicacao alcoolica', 'abstinencia alcoolica', 'alcoolismo'], ps: ['alcoolismo-intox-abstinencia', 'abstinencia-alcoolica', 'intoxicacoes-exogenas'] },
+  { aliases: ['intoxicacao exogena', 'overdose', 'ingestao de medicamento'], ps: ['intoxicacoes-exogenas', 'alcoolismo-intox-abstinencia'] },
+  { aliases: ['queimadura', 'insolacao'], ps: ['queimaduras', 'insolacao'] },
+  { aliases: ['mordedura animal', 'arranhadura de gato'], ps: ['profilaxia-antirrabica', 'celulite', 'abscesso-cutaneo'] },
+  { aliases: ['acidente ofidico', 'picada de animal', 'escorpionismo'], ps: ['acidente-ofidico', 'escorpionismo', 'alergia-anafilaxia', 'profilaxia-antirrabica'] },
+  { aliases: ['trauma', 'politrauma', 'queda', 'acidente'], ps: ['trauma-atls', 'trauma-ocular', 'queimaduras', 'artralgia-dor-msk'] },
+  { aliases: ['ansiedade', 'crise de panico', 'nervosismo'], ps: ['ansiedade-crise', 'crise-tireotoxica'] },
+  { aliases: ['soluco'], ps: ['soluco-persistente'] },
+  { aliases: ['perda de peso', 'emagrecimento', 'sudorese noturna'], ps: ['tuberculose', 'crise-tireotoxica', 'anemia-ferropriva'] },
+  { aliases: ['palidez', 'fraqueza', 'astenia', 'cansaco'], ps: ['anemia-ferropriva', 'anemia-falciforme', 'disturbios-eletroliticos', 'sepse-choque-septico'] },
+  { aliases: ['violencia sexual', 'estupro', 'abuso sexual'], ps: ['violencia-sexual-pep', 'ulceras-genitais'] },
+  { aliases: ['dor de dente', 'odontalgia', 'lesao na boca', 'afta'], ps: ['afta-estomatite', 'queilite', 'amigdalite-bacteriana'] },
+  { aliases: ['micose', 'frieira', 'unha', 'tinea'], ps: ['micoses-superficiais', 'tinea', 'frieira', 'escabiose', 'pediculose'] },
+  { aliases: ['piolho', 'pediculose', 'sarna', 'escabiose'], ps: ['pediculose', 'escabiose'] },
+  { aliases: ['verme', 'parasitose', 'giardiase', 'amebiase', 'oxiurose', 'ascaridiase'], ps: ['parasitoses-intestinais', 'ascaridiase', 'antiparasitarios'] },
+  { aliases: ['dor no cateter', 'flebite', 'dor no acesso venoso'], ps: ['flebite', 'celulite'] }
+];
+
+function novoAtendimentoAplicarSinonimos (text) {
+  let value = ` ${novoAtendimentoNormalize(text)} `;
+  NOVO_ATENDIMENTO_SINONIMOS.forEach(([termo, clinico]) => {
+    value = value.split(` ${termo} `).join(` ${clinico} `);
+  });
+  return value.trim();
 }
 
-function novoAtendimentoEmergencyMatches () {
+/* Reduz plurais comuns do português para comparar "vômitos" com "vômito" */
+function novoAtendimentoRadical (token) {
+  if (token.length <= 3) return token;
+  if (token.endsWith('oes') || token.endsWith('aes')) return `${token.slice(0, -3)}ao`;
+  if (token.endsWith('ais')) return `${token.slice(0, -3)}al`;
+  if (token.endsWith('eis')) return `${token.slice(0, -3)}el`;
+  if (token.endsWith('ns')) return `${token.slice(0, -2)}m`;
+  if (token.endsWith('s')) return token.slice(0, -1);
+  return token;
+}
+
+function novoAtendimentoTermos (text) {
+  const termos = novoAtendimentoAplicarSinonimos(text)
+    .split(' ')
+    .filter(Boolean)
+    .filter(token => !NOVO_ATENDIMENTO_STOPWORDS.has(token))
+    .map(novoAtendimentoRadical)
+    .filter(token => token.length > 1);
+  return [...new Set(termos)];
+}
+
+/**
+ * Casa queixa e alvo. No modo estrito (apelidos curados) todos os termos do alvo
+ * precisam estar na queixa, para "dispneia" não puxar "urticária com dispneia".
+ * No modo parcial (nomes longos de protocolos e condutas) basta a queixa estar
+ * contida no nome, para "cefaleia" encontrar "Cefaleias (tensional, enxaqueca…)".
+ */
+function novoAtendimentoTermosCasam (queixaTermos, alvoTermos, parcial) {
+  if (!queixaTermos.length || !alvoTermos.length) return false;
+  const comuns = alvoTermos.filter(token => queixaTermos.includes(token));
+  if (!comuns.length) return false;
+
+  if (queixaTermos.length === 1 &&
+      NOVO_ATENDIMENTO_TERMOS_GENERICOS.has(queixaTermos[0]) &&
+      alvoTermos.length > 1) {
+    return false;
+  }
+
+  if (comuns.length === alvoTermos.length) return true;
+  return !!parcial && comuns.length === queixaTermos.length;
+}
+
+function novoAtendimentoCasaLista (queixaTermos, lista, parcial) {
+  return (lista || []).some(item =>
+    novoAtendimentoTermosCasam(queixaTermos, novoAtendimentoTermos(item), parcial)
+  );
+}
+
+let novoAtendimentoEmergencyIndexCache = null;
+
+/** Rotas curadas + nome de cada protocolo do guia, para que nenhum fluxograma fique órfão */
+function novoAtendimentoEmergencyIndex () {
+  if (novoAtendimentoEmergencyIndexCache) return novoAtendimentoEmergencyIndexCache;
+
+  const routes = NOVO_ATENDIMENTO_EMERGENCY_ROUTES.map(route => ({
+    ...route,
+    aliases: [...route.aliases],
+    nomes: []
+  }));
+
+  if (typeof EMERGENCY_TOPICS !== 'undefined') {
+    EMERGENCY_TOPICS.forEach(topic => {
+      (topic.protocols || []).forEach(protocol => {
+        const nome = String(protocol.name || '').replace(/\s*[—–-]\s*/g, ' ');
+        const curadas = routes.filter(route => route.topic === topic.id && route.protocol === protocol.id);
+        if (curadas.length) {
+          curadas[0].nomes.push(nome);
+          return;
+        }
+        routes.push({
+          topic: topic.id,
+          protocol: protocol.id,
+          icon: protocol.icon || '🚨',
+          aliases: [],
+          nomes: [nome]
+        });
+      });
+    });
+  }
+
+  novoAtendimentoEmergencyIndexCache = routes;
+  return routes;
+}
+
+function novoAtendimentoEmergencyMatches (queixas) {
+  const lista = queixas || novoAtendimentoQueixas;
   const matches = [];
 
-  novoAtendimentoQueixas.forEach(queixa => {
-    const value = novoAtendimentoNormalize(queixa);
-    NOVO_ATENDIMENTO_EMERGENCY_ROUTES.forEach(route => {
-      if (!route.aliases.some(alias => novoAtendimentoAliasMatches(value, alias))) return;
+  lista.forEach(queixa => {
+    const termos = novoAtendimentoTermos(queixa);
+    novoAtendimentoEmergencyIndex().forEach(route => {
+      const casou = novoAtendimentoCasaLista(termos, route.aliases, false) ||
+        novoAtendimentoCasaLista(termos, route.nomes, true);
+      if (!casou) return;
       const key = `${route.topic}:${route.protocol}`;
       if (!matches.some(item => item.key === key)) matches.push({ ...route, key, queixa });
     });
+  });
+
+  return matches;
+}
+
+function novoAtendimentoPsCondition (conditionId) {
+  if (typeof PS_CONDITIONS === 'undefined') return null;
+  return PS_CONDITIONS.find(condition => condition.id === conditionId) || null;
+}
+
+/** Condutas de PS ligadas à queixa: mapa curado + nome de todas as 106 condições */
+function novoAtendimentoPsMatches (queixas) {
+  const lista = queixas || novoAtendimentoQueixas;
+  const matches = [];
+
+  const adicionar = (conditionId, queixa) => {
+    const condition = novoAtendimentoPsCondition(conditionId);
+    if (!condition) return;
+    if (matches.some(item => item.id === condition.id)) return;
+    matches.push({ id: condition.id, name: condition.name, icon: condition.icon || '📋', queixa });
+  };
+
+  lista.forEach(queixa => {
+    const termos = novoAtendimentoTermos(queixa);
+
+    NOVO_ATENDIMENTO_PS_ROUTES.forEach(route => {
+      if (!novoAtendimentoCasaLista(termos, route.aliases, false)) return;
+      route.ps.forEach(conditionId => adicionar(conditionId, queixa));
+    });
+
+    if (typeof PS_CONDITIONS !== 'undefined') {
+      PS_CONDITIONS.forEach(condition => {
+        if (novoAtendimentoTermosCasam(termos, novoAtendimentoTermos(condition.name), true)) {
+          adicionar(condition.id, queixa);
+        }
+      });
+    }
   });
 
   return matches;
@@ -305,6 +589,24 @@ function novoAtendimentoOpenEmergencyProtocol (topicId, protocolId) {
   }, 80);
 }
 
+function novoAtendimentoOpenPsCondition (conditionId) {
+  if (typeof showSection === 'function') showSection('pronto-socorro');
+  window.setTimeout(() => {
+    if (typeof initProntoSocorro === 'function') initProntoSocorro();
+    if (typeof showProntoSocorroCondition === 'function') showProntoSocorroCondition(conditionId);
+    novoAtendimentoMountContexto(document.getElementById('ps-condition-content'));
+  }, 80);
+}
+
+function novoAtendimentoOpenPsBusca (query) {
+  if (typeof showSection === 'function') showSection('pronto-socorro');
+  window.setTimeout(() => {
+    if (typeof initProntoSocorro === 'function') initProntoSocorro();
+    if (typeof showProntoSocorroHome === 'function') showProntoSocorroHome();
+    novoAtendimentoPrefillSearch('pronto-socorro', query);
+  }, 80);
+}
+
 function novoAtendimentoOpenChestProtocol () {
   novoAtendimentoOpenEmergencyProtocol('sca', 'dor-inicial');
 }
@@ -326,10 +628,35 @@ function novoAtendimentoRenderProtocol () {
   const { protocolo } = novoAtendimentoElements();
   if (!protocolo) return;
 
-  const matches = novoAtendimentoEmergencyMatches();
-  if (!matches.length) {
+  if (!novoAtendimentoQueixas.length) {
     protocolo.hidden = true;
     protocolo.innerHTML = '';
+    return;
+  }
+
+  const matches = novoAtendimentoEmergencyMatches().slice(0, 8);
+  const psMatches = novoAtendimentoPsMatches().slice(0, 9);
+
+  if (!matches.length && !psMatches.length) {
+    protocolo.hidden = false;
+    protocolo.innerHTML = `
+      <div class="novo-atendimento-protocolo-body">
+        <div class="novo-atendimento-protocolo-heading">
+          <div>
+            <p class="novo-atendimento-step">Nenhum fluxograma reconhecido</p>
+            <h3>Buscar conduta pelas queixas informadas</h3>
+          </div>
+        </div>
+        <p class="muted">Use outro termo (ex.: “dispneia”, “dor abdominal”) ou pesquise direto nas Prescrições de PS.</p>
+        <div class="novo-atendimento-protocolo-score-buttons">
+          <button type="button" data-open-ps-search="${novoAtendimentoEscape(novoAtendimentoQueixas[0])}">
+            <strong>Abrir Prescrições de PS</strong><span>Busca preenchida com a queixa</span>
+          </button>
+        </div>
+      </div>`;
+    protocolo.querySelectorAll('[data-open-ps-search]').forEach(button => {
+      button.addEventListener('click', () => novoAtendimentoOpenPsBusca(button.dataset.openPsSearch));
+    });
     return;
   }
 
@@ -349,29 +676,47 @@ function novoAtendimentoRenderProtocol () {
     <div class="novo-atendimento-protocolo-body">
       <div class="novo-atendimento-protocolo-heading">
         <div>
-          <p class="novo-atendimento-step">${matches.length > 1 ? 'Protocolos sugeridos automaticamente' : 'Protocolo sugerido automaticamente'}</p>
-          <h3>${matches.length > 1 ? `${matches.length} protocolos relacionados às queixas` : 'Acesso direto à conduta de emergência'}</h3>
+          <p class="novo-atendimento-step">Fluxogramas ligados às queixas</p>
+          <h3>${matches.length + psMatches.length} condutas sugeridas automaticamente</h3>
         </div>
       </div>
-      <div class="novo-atendimento-emergency-routes">
-        ${matches.map(route => {
-          const meta = novoAtendimentoEmergencyProtocolMeta(route);
-          return `
+      ${matches.length ? `
+        <p class="novo-atendimento-protocolo-group">Guia de emergência</p>
+        <div class="novo-atendimento-emergency-routes">
+          ${matches.map(route => {
+            const meta = novoAtendimentoEmergencyProtocolMeta(route);
+            return `
+              <article class="novo-atendimento-emergency-route">
+                <span class="novo-atendimento-emergency-route-icon" aria-hidden="true">${meta.icon}</span>
+                <div>
+                  <small>${novoAtendimentoEscape(meta.topic)}</small>
+                  <strong>${novoAtendimentoEscape(meta.name)}</strong>
+                  <span>Relacionado a: ${novoAtendimentoEscape(route.queixa)}</span>
+                </div>
+                <button type="button" class="btn btn-secondary"
+                  data-open-emergency-topic="${novoAtendimentoEscape(route.topic)}"
+                  data-open-emergency-protocol="${novoAtendimentoEscape(route.protocol)}">
+                  Abrir agora →
+                </button>
+              </article>`;
+          }).join('')}
+        </div>` : ''}
+      ${psMatches.length ? `
+        <p class="novo-atendimento-protocolo-group">Prescrições de PS · diferenciais da queixa</p>
+        <div class="novo-atendimento-emergency-routes">
+          ${psMatches.map(condition => `
             <article class="novo-atendimento-emergency-route">
-              <span class="novo-atendimento-emergency-route-icon" aria-hidden="true">${meta.icon}</span>
+              <span class="novo-atendimento-emergency-route-icon" aria-hidden="true">${condition.icon}</span>
               <div>
-                <small>${novoAtendimentoEscape(meta.topic)}</small>
-                <strong>${novoAtendimentoEscape(meta.name)}</strong>
-                <span>Relacionado a: ${novoAtendimentoEscape(route.queixa)}</span>
+                <small>Prescrições de PS</small>
+                <strong>${novoAtendimentoEscape(condition.name)}</strong>
+                <span>Relacionado a: ${novoAtendimentoEscape(condition.queixa)}</span>
               </div>
-              <button type="button" class="btn btn-secondary"
-                data-open-emergency-topic="${novoAtendimentoEscape(route.topic)}"
-                data-open-emergency-protocol="${novoAtendimentoEscape(route.protocol)}">
-                Abrir agora →
+              <button type="button" class="btn btn-secondary" data-open-ps-condition="${novoAtendimentoEscape(condition.id)}">
+                Abrir conduta →
               </button>
-            </article>`;
-        }).join('')}
-      </div>
+            </article>`).join('')}
+        </div>` : ''}
       ${hasChest ? `
         <div class="novo-atendimento-protocolo-scores">
           <div>
@@ -394,6 +739,9 @@ function novoAtendimentoRenderProtocol () {
         button.dataset.openEmergencyProtocol
       );
     });
+  });
+  protocolo.querySelectorAll('[data-open-ps-condition]').forEach(button => {
+    button.addEventListener('click', () => novoAtendimentoOpenPsCondition(button.dataset.openPsCondition));
   });
   protocolo.querySelectorAll('[data-open-score]').forEach(button => {
     button.addEventListener('click', () => novoAtendimentoOpenScore(button.dataset.openScore));
@@ -452,6 +800,8 @@ function novoAtendimentoSyncQueixasDraft () {
   if (!data) return;
   data.queixas = [...novoAtendimentoQueixas];
   sessionStorage.setItem(MEDHUB_NEW_ENCOUNTER_DRAFT, JSON.stringify(data));
+  /* Protocolos e prescrições leem a queixa ativa; atualiza já no passo das queixas */
+  sessionStorage.setItem('medhub-active-queixa', novoAtendimentoQueixas.join('; '));
 }
 
 function novoAtendimentoRenderQueixas () {
@@ -586,7 +936,8 @@ function novoAtendimentoRestore () {
 function novoAtendimentoPrefillSearch (sectionId, query) {
   const map = {
     'tratamento-hospitalar': 'th-search',
-    receituario: 'rx-search'
+    receituario: 'rx-search',
+    'pronto-socorro': 'ps-search'
   };
   const inputId = map[sectionId];
   if (!inputId || !query) return;
@@ -601,7 +952,11 @@ function novoAtendimentoPrefillSearch (sectionId, query) {
 function novoAtendimentoOpenTreatment (sectionId) {
   const data = novoAtendimentoReadDraft();
   const queixas = data?.queixas?.length ? data.queixas : [];
-  const queryText = queixas.join('; ');
+  /* Sintomas como "dispneia" não existem nos catálogos de tratamento:
+     junta os diagnósticos ligados à queixa para a busca encontrar a conduta */
+  const relacionados = novoAtendimentoPsMatches(queixas).map(condition => condition.name);
+  const termos = [...queixas, ...relacionados];
+  const queryText = termos.join('; ');
 
   if (data) {
     data.lastTreatment = sectionId;
@@ -612,8 +967,8 @@ function novoAtendimentoOpenTreatment (sectionId) {
 
   window.setTimeout(() => {
     if (sectionId === 'tratamento-hospitalar' && typeof thOpenFromQueixas === 'function') {
-      const opened = thOpenFromQueixas(queixas, { skipGate: true });
-      if (!opened) novoAtendimentoPrefillSearch(sectionId, queixas[0] || queryText);
+      const opened = thOpenFromQueixas(termos, { skipGate: true });
+      if (!opened) novoAtendimentoPrefillSearch(sectionId, queixas[0] || '');
       return;
     }
 
@@ -625,7 +980,7 @@ function novoAtendimentoOpenTreatment (sectionId) {
         rxShowCombinedConditions(matches.map(c => c.id), { skipGate: true });
         return;
       }
-      novoAtendimentoPrefillSearch(sectionId, queixas[0] || queryText);
+      novoAtendimentoPrefillSearch(sectionId, queixas[0] || '');
     }
   }, 120);
 }
