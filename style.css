@@ -5069,8 +5069,8 @@ textarea {
     linear-gradient(rgba(56, 189, 248, 0.13) 1px, transparent 1px),
     linear-gradient(90deg, rgba(56, 189, 248, 0.13) 1px, transparent 1px);
   background-size: 46px 46px;
-  mask-image: radial-gradient(120% 80% at 50% 20%, #000 35%, transparent 78%);
-  -webkit-mask-image: radial-gradient(120% 80% at 50% 20%, #000 35%, transparent 78%);
+  mask-image: radial-gradient(150% 115% at 50% 22%, #000 48%, transparent 94%);
+  -webkit-mask-image: radial-gradient(150% 115% at 50% 22%, #000 48%, transparent 94%);
 }
 
 .home-hero-glow {
@@ -9740,6 +9740,14 @@ body.app-page .app-content {
   height: 2.9rem;
   overflow: hidden;
   pointer-events: none;
+  /* Papel de ECG: quadrículas finas com linhas de referência a cada 5 quadros */
+  background-image:
+    linear-gradient(rgba(240, 180, 41, 0.16) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(240, 180, 41, 0.16) 1px, transparent 1px),
+    linear-gradient(rgba(240, 180, 41, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(240, 180, 41, 0.1) 1px, transparent 1px);
+  background-size: 55px 55px, 55px 55px, 11px 11px, 11px 11px;
+  background-position: center bottom;
   mask-image: linear-gradient(90deg, transparent 0%, #000 7%, #000 93%, transparent 100%);
   -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 7%, #000 93%, transparent 100%);
 }
