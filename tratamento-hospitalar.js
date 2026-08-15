@@ -1,6 +1,6 @@
 /* Tratamento hospitalar — condições com medicação IM/EV e navegação */
 
-const MEDHUB_TH_BUILD = 'th-auto-v1';
+const MEDHUB_TH_BUILD = 'th-auto-v4';
 
 const TH_CONTENT = Object.assign(
   {},
@@ -67,28 +67,33 @@ function thNormText (text) {
     .trim();
 }
 
+const TH_MIN_QUERY_LENGTH = 4;
+
 function thParseQueixaSegments (queixa) {
-  if (Array.isArray(queixa)) return queixa.map(s => String(s || '').trim()).filter(s => s.length >= 2);
-  if (!queixa || !String(queixa).trim()) return [];
-  return String(queixa)
-    .split(/[,;\n]+|\s+\be\s+|\s+\/\s+|\s+\+\s+/i)
+  const list = Array.isArray(queixa)
+    ? queixa.map(s => String(s || ''))
+    : String(queixa || '').split(/[,;\n]+|\s+\be\s+|\s+\/\s+|\s+\+\s+/i);
+
+  return list
     .map(s => s.trim())
-    .filter(s => s.length >= 2);
+    .filter(s => thNormText(s).length >= TH_MIN_QUERY_LENGTH);
+}
+
+/** Palavra inteira evita que trechos curtos casem no meio de outro termo */
+function thHasWord (haystack, needle) {
+  if (!needle || needle.length < 3) return false;
+  return new RegExp(`(^|\\s)${needle}(\\s|$)`).test(haystack);
 }
 
 function thMatchScore (cond, norm) {
-  if (!norm || norm.length < 2) return 0;
+  if (!norm || norm.length < TH_MIN_QUERY_LENGTH) return 0;
   let score = 0;
-  const aliases = cond.aliases || [];
+  const aliases = (cond.aliases || []).map(thNormText);
   const nameNorm = thNormText(cond.name);
 
-  if (aliases.some(a => thNormText(a) === norm)) score += 200;
-  else if (aliases.some(a => {
-    const an = thNormText(a);
-    return an.length >= 4 && (norm.includes(an) || an.includes(norm));
-  })) score += 120;
-  else if (nameNorm.includes(norm) && norm.length >= 4) score += 80;
-  else if (norm.includes(nameNorm.split(' ')[0]) && nameNorm.split(' ')[0].length >= 5) score += 60;
+  if (aliases.some(a => a === norm)) score += 200;
+  else if (aliases.some(a => a.length >= 4 && (thHasWord(norm, a) || thHasWord(a, norm)))) score += 120;
+  else if (thHasWord(nameNorm, norm)) score += 90;
 
   if (/ombro|omalgia|joelho|cervical|musculoesquelet|artralgia|dor muscular/.test(norm) && cond.id === 'artralgia-dor-msk') {
     score += 80;
@@ -101,20 +106,23 @@ function thMatchScore (cond, norm) {
 }
 
 function thMatchConditions (queixa) {
-  const segments = thParseQueixaSegments(queixa);
-  const queries = segments.length ? segments : [String(queixa || '')];
+  const queries = thParseQueixaSegments(queixa);
   const byId = new Map();
 
   queries.forEach(q => {
     const norm = thNormText(q);
-    if (!norm || norm.length < 2) return;
+    if (norm.length < TH_MIN_QUERY_LENGTH) return;
+
+    let best = null;
     TH_CONDITIONS.forEach(cond => {
       const score = thMatchScore(cond, norm);
-      if (score >= 50) {
-        const prev = byId.get(cond.id);
-        if (!prev || score > prev.score) byId.set(cond.id, { cond, score });
-      }
+      if (score >= 90 && (!best || score > best.score)) best = { cond, score };
     });
+
+    if (best) {
+      const prev = byId.get(best.cond.id);
+      if (!prev || best.score > prev.score) byId.set(best.cond.id, best);
+    }
   });
 
   return [...byId.values()]
@@ -145,33 +153,173 @@ TH_CONDITIONS.forEach(c => {
 
 let currentThConditionId = null;
 const thSelectedMedKeys = new Set();
+const thSelectedDrugs = new Set();
+const thSelectedRoutes = new Map();
+const thDrugRoutePref = new Map();
+
+/** Separa por "·" apenas fora de parênteses, para não quebrar "(dor intensa · curto prazo)" */
+function thSplitOutsideParens (text) {
+  const parts = [];
+  let depth = 0;
+  let buffer = '';
+
+  for (let i = 0; i < text.length; i++) {
+    const ch = text[i];
+    if (ch === '(' || ch === '[') depth++;
+    else if (ch === ')' || ch === ']') depth = Math.max(0, depth - 1);
+
+    const isSeparator = depth === 0 && (ch === '·' || ch === '•') &&
+      /\s/.test(text[i - 1] || ' ') && /\s/.test(text[i + 1] || ' ');
+
+    if (isSeparator) {
+      parts.push(buffer);
+      buffer = '';
+    } else {
+      buffer += ch;
+    }
+  }
+  parts.push(buffer);
+
+  return parts.map(p => p.trim()).filter(Boolean);
+}
 
 function thSplitMedChoices (liText) {
   const raw = String(liText || '').replace(/\s+/g, ' ').trim();
-  if (!raw) return [];
+  if (!raw) return { prefix: '', choices: [] };
 
   const colonIdx = raw.search(/:\s/);
   let prefix = '';
   let body = raw;
   if (colonIdx >= 0 && colonIdx < 80) {
-    prefix = raw.slice(0, colonIdx).trim();
+    prefix = raw.slice(0, colonIdx).trim().replace(/:$/, '');
     body = raw.slice(colonIdx + 1).trim();
   }
 
-  const parts = body
-    .split(/\s·\s|\s•\s/)
-    .map(p => p.trim())
-    .filter(Boolean);
+  const parts = thSplitOutsideParens(body);
+  if (!parts.length) return { prefix: '', choices: [] };
 
-  if (parts.length <= 1) {
-    return [{ key: raw, label: raw, prefix: '' }];
+  return {
+    prefix,
+    choices: parts.map((part, i) => ({
+      index: i,
+      text: part,
+      label: prefix ? `${prefix}: ${part}` : part
+    }))
+  };
+}
+
+/** Identidade do fármaco para reaproveitar a marcação entre condições */
+function thMedIdentity (label) {
+  const raw = String(label || '');
+  const afterPrefix = raw.includes(':') ? raw.slice(raw.indexOf(':') + 1) : raw;
+  const beforeDose = afterPrefix.split(/\d/)[0];
+  const words = thNormText(beforeDose)
+    .split(' ')
+    .filter(w => w.length >= 3 && !['amp', 'ampola', 'linha', 'dose', 'mais'].includes(w));
+  return words.slice(0, 2).join(' ');
+}
+
+const TH_ROUTE_LABELS = {
+  ev: 'EV',
+  im: 'IM',
+  vo: 'VO',
+  sc: 'SC',
+  sl: 'SL',
+  ir: 'Retal',
+  neb: 'Nebulização',
+  inal: 'Inalatória',
+  nasal: 'Intranasal'
+};
+
+/* Vias possíveis por fármaco — impede oferecer via inexistente ou proscrita
+   (ex.: diclofenaco e tenoxicam não podem ser EV) */
+const TH_DRUG_ROUTES = {
+  dipirona: ['ev', 'im', 'vo'],
+  diclofenaco: ['im', 'vo'],
+  tenoxicam: ['im', 'vo'],
+  cetoprofeno: ['ev', 'im', 'vo'],
+  ketorolaco: ['ev', 'im', 'vo'],
+  ibuprofeno: ['vo'],
+  nimesulida: ['vo'],
+  paracetamol: ['ev', 'vo'],
+  tramadol: ['ev', 'im', 'vo'],
+  morfina: ['ev', 'im', 'sc', 'vo'],
+  fentanil: ['ev'],
+  meperidina: ['ev', 'im'],
+  codeina: ['vo'],
+  dexametasona: ['ev', 'im', 'vo'],
+  metilprednisolona: ['ev', 'im'],
+  hidrocortisona: ['ev', 'im'],
+  prednisona: ['vo'],
+  metoclopramida: ['ev', 'im', 'vo'],
+  ondansetrona: ['ev', 'im', 'vo'],
+  bromoprida: ['ev', 'im', 'vo'],
+  dimenidrinato: ['ev', 'im', 'vo'],
+  escopolamina: ['ev', 'im', 'vo'],
+  hioscina: ['ev', 'im', 'vo'],
+  omeprazol: ['ev', 'vo'],
+  pantoprazol: ['ev', 'vo'],
+  ranitidina: ['ev', 'im', 'vo'],
+  diazepam: ['ev', 'im', 'vo', 'ir'],
+  midazolam: ['ev', 'im', 'nasal'],
+  haloperidol: ['ev', 'im', 'vo'],
+  prometazina: ['im', 'vo'],
+  clorpromazina: ['im', 'vo'],
+  ciclobenzaprina: ['vo'],
+  epinefrina: ['ev', 'im'],
+  adrenalina: ['ev', 'im'],
+  hidroxizina: ['vo'],
+  ceftriaxona: ['ev', 'im'],
+  cefazolina: ['ev', 'im'],
+  cefepime: ['ev'],
+  oxacilina: ['ev'],
+  ampicilina: ['ev', 'im'],
+  amoxicilina: ['vo'],
+  clindamicina: ['ev', 'im', 'vo'],
+  vancomicina: ['ev'],
+  gentamicina: ['ev', 'im'],
+  azitromicina: ['ev', 'vo'],
+  claritromicina: ['ev', 'vo'],
+  metronidazol: ['ev', 'vo'],
+  ciprofloxacino: ['ev', 'vo'],
+  levofloxacino: ['ev', 'vo'],
+  moxifloxacino: ['ev', 'vo'],
+  aciclovir: ['ev', 'vo'],
+  oseltamivir: ['vo'],
+  salbutamol: ['neb', 'inal'],
+  ipratropio: ['neb', 'inal'],
+  budesonida: ['neb', 'inal']
+};
+
+/** Vias citadas no próprio texto do protocolo, na ordem em que aparecem */
+function thExtractRoutesFromText (text) {
+  const found = [];
+  const push = (route) => { if (route && !found.includes(route)) found.push(route); };
+  const re = /\b(IM|EV|IV|VO|SC|SL|VR)\b|nebuliza\w*|inalat\w*|intranasal|via retal/g;
+  let match;
+
+  while ((match = re.exec(String(text || '')))) {
+    const token = match[0].toLowerCase();
+    if (token === 'iv') push('ev');
+    else if (token === 'vr' || token === 'via retal') push('ir');
+    else if (token.startsWith('nebuliza')) push('neb');
+    else if (token.startsWith('inalat')) push('inal');
+    else if (token === 'intranasal') push('nasal');
+    else push(token);
   }
 
-  return parts.map((part, i) => ({
-    key: `${prefix}::${i}::${part}`,
-    label: prefix ? `${prefix}: ${part}` : part,
-    prefix
-  }));
+  return found;
+}
+
+function thRoutesForMed (text, drug) {
+  const allowed = TH_DRUG_ROUTES[drug];
+  const fromText = thExtractRoutesFromText(text);
+
+  if (!allowed) return fromText;
+  if (!fromText.length) return allowed;
+
+  const intersection = fromText.filter(r => allowed.includes(r));
+  return intersection.length ? intersection : allowed;
 }
 
 function thIsMedBlocked (label) {
@@ -213,8 +361,15 @@ function initTratamentoHospitalar () {
     clearBtn.dataset.bound = '1';
     clearBtn.addEventListener('click', () => {
       thSelectedMedKeys.clear();
+      thSelectedDrugs.clear();
+      thSelectedRoutes.clear();
+      thDrugRoutePref.clear();
       document.querySelectorAll('#th-condition-content [data-th-med]').forEach(input => {
         input.checked = false;
+        input.closest('.th-med-option')?.classList.remove('th-med-synced');
+      });
+      document.querySelectorAll('#th-condition-content .th-med-routes').forEach(row => {
+        row.hidden = true;
       });
       thUpdateSelectionBar();
     });
@@ -261,6 +416,9 @@ function renderThGrid (items) {
 function showTratamentoHospitalarHome () {
   currentThConditionId = null;
   thSelectedMedKeys.clear();
+  thSelectedDrugs.clear();
+  thSelectedRoutes.clear();
+  thDrugRoutePref.clear();
   const list = document.getElementById('th-list-view');
   const detail = document.getElementById('th-condition-view');
   if (list) list.hidden = false;
@@ -276,6 +434,50 @@ async function showTratamentoHospitalarCondition (conditionId, opts) {
   return showTratamentoHospitalarConditions([conditionId], opts);
 }
 
+function thPickRoute (key, drug, routes) {
+  const stored = thSelectedRoutes.get(key);
+  if (stored && routes.includes(stored)) return stored;
+  const preferred = drug ? thDrugRoutePref.get(drug) : null;
+  if (preferred && routes.includes(preferred)) return preferred;
+  return routes[0];
+}
+
+function thBuildRouteRow (key, drug, routes, checked) {
+  const row = document.createElement('div');
+  row.className = 'th-med-routes';
+  row.hidden = !checked;
+  row.dataset.thRouteFor = key;
+
+  const chosen = thPickRoute(key, drug, routes);
+  if (checked) thSelectedRoutes.set(key, chosen);
+
+  const caption = document.createElement('span');
+  caption.className = 'th-med-routes-label';
+  caption.textContent = routes.length > 1 ? 'Via:' : 'Via disponível:';
+  row.appendChild(caption);
+
+  routes.forEach(route => {
+    if (routes.length === 1) {
+      const only = document.createElement('span');
+      only.className = 'th-route-fixed';
+      only.dataset.thRouteFixed = route;
+      only.textContent = TH_ROUTE_LABELS[route] || route.toUpperCase();
+      row.appendChild(only);
+      return;
+    }
+
+    const option = document.createElement('label');
+    option.className = 'th-route-option';
+    option.innerHTML = `
+      <input type="radio" name="th-route-${key}" data-th-route="${route}" data-th-route-key="${key}"
+        data-th-route-drug="${drug}" ${route === chosen ? 'checked' : ''}>
+      <span>${TH_ROUTE_LABELS[route] || route.toUpperCase()}</span>`;
+    row.appendChild(option);
+  });
+
+  return row;
+}
+
 function thBuildSelectableMeds (condition, wrap) {
   wrap.querySelectorAll('ul.ps-med-options').forEach(ul => {
     const items = [...ul.querySelectorAll(':scope > li')];
@@ -283,25 +485,49 @@ function thBuildSelectableMeds (condition, wrap) {
     box.className = 'th-med-options';
 
     items.forEach((li, liIdx) => {
-      const choices = thSplitMedChoices(li.textContent);
+      const { prefix, choices } = thSplitMedChoices(li.textContent);
+      if (!choices.length) return;
+
       const group = document.createElement('div');
       group.className = 'th-med-group';
 
-      choices.forEach((choice, cIdx) => {
-        const blocked = thIsMedBlocked(choice.label);
-        if (blocked) return;
+      if (prefix) {
+        const title = document.createElement('p');
+        title.className = 'th-med-group-title';
+        title.textContent = prefix;
+        group.appendChild(title);
+      }
 
+      choices.forEach((choice, cIdx) => {
         const key = `${condition.id}:${liIdx}:${cIdx}`;
+        const drug = thMedIdentity(choice.label);
+        const blocked = thIsMedBlocked(choice.label);
+        const selectedByKey = thSelectedMedKeys.has(key);
+        const selectedByDrug = !selectedByKey && !!drug && thSelectedDrugs.has(drug);
+        const checked = !blocked && (selectedByKey || selectedByDrug);
+        if (checked) thSelectedMedKeys.add(key);
+
+        const item = document.createElement('div');
+        item.className = 'th-med-item';
+
         const label = document.createElement('label');
-        label.className = 'th-med-option';
+        label.className = `th-med-option${blocked ? ' th-med-blocked' : ''}${checked && selectedByDrug ? ' th-med-synced' : ''}`;
         label.innerHTML = `
-          <input type="checkbox" data-th-med data-th-key="${key}" data-th-label="${choice.label.replace(/"/g, '&quot;')}"
-            ${thSelectedMedKeys.has(key) ? 'checked' : ''}>
-          <span>${choice.label}</span>`;
-        group.appendChild(label);
+          <input type="checkbox" data-th-med data-th-key="${key}" data-th-drug="${drug}"
+            data-th-label="${choice.label.replace(/"/g, '&quot;')}"
+            ${checked ? 'checked' : ''} ${blocked ? 'disabled' : ''}>
+          <span>${choice.text}${blocked ? ' <em class="th-med-flag">evitar — alergia relatada</em>' : ''}</span>`;
+        item.appendChild(label);
+
+        const routes = blocked ? [] : thRoutesForMed(choice.text, drug);
+        if (routes.length) {
+          item.appendChild(thBuildRouteRow(key, drug, routes, checked));
+        }
+
+        group.appendChild(item);
       });
 
-      if (group.children.length) box.appendChild(group);
+      box.appendChild(group);
     });
 
     ul.replaceWith(box);
@@ -350,16 +576,84 @@ async function showTratamentoHospitalarConditions (conditionIds, opts) {
     contentEl.appendChild(section);
   });
 
+  const applySelection = (input) => {
+    const key = input.dataset.thKey;
+    const row = contentEl.querySelector(`.th-med-routes[data-th-route-for="${key}"]`);
+
+    if (input.checked) {
+      thSelectedMedKeys.add(key);
+      if (row) {
+        row.hidden = false;
+        thSyncRouteRow(row, input.dataset.thDrug);
+      }
+    } else {
+      thSelectedMedKeys.delete(key);
+      thSelectedRoutes.delete(key);
+      if (row) row.hidden = true;
+    }
+  };
+
   contentEl.querySelectorAll('[data-th-med]').forEach(input => {
     input.addEventListener('change', () => {
-      const key = input.dataset.thKey;
-      if (input.checked) thSelectedMedKeys.add(key);
-      else thSelectedMedKeys.delete(key);
+      applySelection(input);
+
+      // Mesmo fármaco em outra condição acompanha a marcação
+      const drug = input.dataset.thDrug;
+      const ownCondition = String(input.dataset.thKey || '').split(':')[0];
+      if (drug) {
+        if (input.checked) thSelectedDrugs.add(drug);
+        else thSelectedDrugs.delete(drug);
+
+        contentEl.querySelectorAll('[data-th-med]').forEach(twin => {
+          if (twin === input || twin.disabled) return;
+          if (twin.dataset.thDrug !== drug) return;
+          if (String(twin.dataset.thKey || '').split(':')[0] === ownCondition) return;
+          if (twin.checked === input.checked) return;
+          twin.checked = input.checked;
+          applySelection(twin);
+          twin.closest('.th-med-option')?.classList.toggle('th-med-synced', input.checked);
+        });
+      }
+
       thUpdateSelectionBar();
     });
   });
 
+  contentEl.querySelectorAll('input[data-th-route]').forEach(radio => {
+    radio.addEventListener('change', () => {
+      if (!radio.checked) return;
+      const key = radio.dataset.thRouteKey;
+      const drug = radio.dataset.thRouteDrug;
+      thSelectedRoutes.set(key, radio.dataset.thRoute);
+      if (drug) thDrugRoutePref.set(drug, radio.dataset.thRoute);
+    });
+  });
+
+  contentEl.querySelectorAll('[data-th-med]:checked').forEach(input => {
+    if (input.dataset.thDrug) thSelectedDrugs.add(input.dataset.thDrug);
+  });
+
   thUpdateSelectionBar();
+}
+
+/** Aplica a via preferida do fármaco na linha recém-exibida, se disponível ali */
+function thSyncRouteRow (row, drug) {
+  const key = row.dataset.thRouteFor;
+  const radios = [...row.querySelectorAll('input[data-th-route]')];
+
+  if (!radios.length) {
+    const fixed = row.querySelector('.th-route-fixed');
+    if (fixed) thSelectedRoutes.set(key, fixed.dataset.thRouteFixed);
+    return;
+  }
+
+  const preferred = drug ? thDrugRoutePref.get(drug) : null;
+  const target = radios.find(r => r.dataset.thRoute === preferred) ||
+    radios.find(r => r.checked) ||
+    radios[0];
+
+  target.checked = true;
+  thSelectedRoutes.set(key, target.dataset.thRoute);
 }
 
 function thOpenFromQueixas (queixas, opts) {
@@ -394,8 +688,16 @@ function thUpdateSelectionBar () {
 
 function thCopySelection () {
   const lines = [];
-  document.querySelectorAll('#th-condition-content [data-th-med]:checked').forEach((input, i) => {
-    lines.push(`${i + 1}. ${input.dataset.thLabel || input.parentElement?.textContent?.trim() || ''}`);
+  const seenDrugs = new Set();
+  document.querySelectorAll('#th-condition-content [data-th-med]:checked').forEach(input => {
+    const drug = input.dataset.thDrug;
+    if (drug && seenDrugs.has(drug)) return;
+    if (drug) seenDrugs.add(drug);
+
+    const route = thSelectedRoutes.get(input.dataset.thKey);
+    const routeLabel = route ? ` — via ${TH_ROUTE_LABELS[route] || route.toUpperCase()}` : '';
+    const text = input.dataset.thLabel || input.closest('.th-med-option')?.textContent?.trim() || '';
+    lines.push(`${lines.length + 1}. ${text}${routeLabel}`);
   });
   if (!lines.length) return;
   const text = lines.join('\n');
