@@ -1,6 +1,6 @@
 /* Tratamento hospitalar — condições com medicação IM/EV e navegação */
 
-const MEDHUB_TH_BUILD = 'th-auto-v4';
+const MEDHUB_TH_BUILD = 'th-auto-v5';
 
 const TH_CONTENT = Object.assign(
   {},
@@ -153,9 +153,10 @@ TH_CONDITIONS.forEach(c => {
 
 let currentThConditionId = null;
 const thSelectedMedKeys = new Set();
-const thSelectedDrugs = new Set();
 const thSelectedRoutes = new Map();
 const thDrugRoutePref = new Map();
+/* Fármaco repetido em outra condição fica espelhado e travado, para não prescrever duas vezes */
+const thDrugOwner = new Map();
 
 /** Separa por "·" apenas fora de parênteses, para não quebrar "(dor intensa · curto prazo)" */
 function thSplitOutsideParens (text) {
@@ -361,15 +362,20 @@ function initTratamentoHospitalar () {
     clearBtn.dataset.bound = '1';
     clearBtn.addEventListener('click', () => {
       thSelectedMedKeys.clear();
-      thSelectedDrugs.clear();
       thSelectedRoutes.clear();
       thDrugRoutePref.clear();
+      thDrugOwner.clear();
       document.querySelectorAll('#th-condition-content [data-th-med]').forEach(input => {
         input.checked = false;
-        input.closest('.th-med-option')?.classList.remove('th-med-synced');
+        if (input.dataset.thBlocked !== '1') input.disabled = false;
+        const label = input.closest('.th-med-option');
+        label?.classList.remove('th-med-mirror');
+        label?.querySelector('.th-med-mirror-note')?.remove();
       });
       document.querySelectorAll('#th-condition-content .th-med-routes').forEach(row => {
         row.hidden = true;
+        row.classList.remove('th-med-routes-locked');
+        row.querySelectorAll('input[data-th-route]').forEach(radio => { radio.disabled = false; });
       });
       thUpdateSelectionBar();
     });
@@ -416,9 +422,9 @@ function renderThGrid (items) {
 function showTratamentoHospitalarHome () {
   currentThConditionId = null;
   thSelectedMedKeys.clear();
-  thSelectedDrugs.clear();
   thSelectedRoutes.clear();
   thDrugRoutePref.clear();
+  thDrugOwner.clear();
   const list = document.getElementById('th-list-view');
   const detail = document.getElementById('th-condition-view');
   if (list) list.hidden = false;
@@ -442,9 +448,9 @@ function thPickRoute (key, drug, routes) {
   return routes[0];
 }
 
-function thBuildRouteRow (key, drug, routes, checked) {
+function thBuildRouteRow (key, drug, routes, checked, locked) {
   const row = document.createElement('div');
-  row.className = 'th-med-routes';
+  row.className = `th-med-routes${locked ? ' th-med-routes-locked' : ''}`;
   row.hidden = !checked;
   row.dataset.thRouteFor = key;
 
@@ -470,7 +476,7 @@ function thBuildRouteRow (key, drug, routes, checked) {
     option.className = 'th-route-option';
     option.innerHTML = `
       <input type="radio" name="th-route-${key}" data-th-route="${route}" data-th-route-key="${key}"
-        data-th-route-drug="${drug}" ${route === chosen ? 'checked' : ''}>
+        data-th-route-drug="${drug}" ${route === chosen ? 'checked' : ''} ${locked ? 'disabled' : ''}>
       <span>${TH_ROUTE_LABELS[route] || route.toUpperCase()}</span>`;
     row.appendChild(option);
   });
@@ -502,26 +508,26 @@ function thBuildSelectableMeds (condition, wrap) {
         const key = `${condition.id}:${liIdx}:${cIdx}`;
         const drug = thMedIdentity(choice.label);
         const blocked = thIsMedBlocked(choice.label);
-        const selectedByKey = thSelectedMedKeys.has(key);
-        const selectedByDrug = !selectedByKey && !!drug && thSelectedDrugs.has(drug);
-        const checked = !blocked && (selectedByKey || selectedByDrug);
-        if (checked) thSelectedMedKeys.add(key);
+        const owner = drug ? thDrugOwner.get(drug) : null;
+        const mirror = !blocked && !!owner && owner.key !== key && owner.conditionId !== condition.id;
+        const checked = !blocked && (thSelectedMedKeys.has(key) || mirror);
+        if (checked && !mirror) thSelectedMedKeys.add(key);
 
         const item = document.createElement('div');
         item.className = 'th-med-item';
 
         const label = document.createElement('label');
-        label.className = `th-med-option${blocked ? ' th-med-blocked' : ''}${checked && selectedByDrug ? ' th-med-synced' : ''}`;
+        label.className = `th-med-option${blocked ? ' th-med-blocked' : ''}${mirror ? ' th-med-mirror' : ''}`;
         label.innerHTML = `
           <input type="checkbox" data-th-med data-th-key="${key}" data-th-drug="${drug}"
-            data-th-label="${choice.label.replace(/"/g, '&quot;')}"
-            ${checked ? 'checked' : ''} ${blocked ? 'disabled' : ''}>
-          <span>${choice.text}${blocked ? ' <em class="th-med-flag">evitar — alergia relatada</em>' : ''}</span>`;
+            data-th-label="${choice.label.replace(/"/g, '&quot;')}" data-th-blocked="${blocked ? '1' : '0'}"
+            ${checked ? 'checked' : ''} ${blocked || mirror ? 'disabled' : ''}>
+          <span>${choice.text}${blocked ? ' <em class="th-med-flag">evitar — alergia relatada</em>' : ''}${mirror ? ` <em class="th-med-mirror-note">já selecionado em ${owner.conditionName}</em>` : ''}</span>`;
         item.appendChild(label);
 
         const routes = blocked ? [] : thRoutesForMed(choice.text, drug);
         if (routes.length) {
-          item.appendChild(thBuildRouteRow(key, drug, routes, checked));
+          item.appendChild(thBuildRouteRow(key, drug, routes, checked, mirror));
         }
 
         group.appendChild(item);
@@ -578,13 +584,16 @@ async function showTratamentoHospitalarConditions (conditionIds, opts) {
 
   const applySelection = (input) => {
     const key = input.dataset.thKey;
+    const drug = input.dataset.thDrug;
     const row = contentEl.querySelector(`.th-med-routes[data-th-route-for="${key}"]`);
 
     if (input.checked) {
       thSelectedMedKeys.add(key);
       if (row) {
         row.hidden = false;
-        thSyncRouteRow(row, input.dataset.thDrug);
+        thSyncRouteRow(row, drug);
+        const route = thSelectedRoutes.get(key);
+        if (route && drug) thDrugRoutePref.set(drug, route);
       }
     } else {
       thSelectedMedKeys.delete(key);
@@ -597,21 +606,27 @@ async function showTratamentoHospitalarConditions (conditionIds, opts) {
     input.addEventListener('change', () => {
       applySelection(input);
 
-      // Mesmo fármaco em outra condição acompanha a marcação
       const drug = input.dataset.thDrug;
-      const ownCondition = String(input.dataset.thKey || '').split(':')[0];
-      if (drug) {
-        if (input.checked) thSelectedDrugs.add(drug);
-        else thSelectedDrugs.delete(drug);
+      const key = input.dataset.thKey;
+      const conditionId = String(key || '').split(':')[0];
 
+      if (drug) {
+        if (input.checked) {
+          thDrugOwner.set(drug, {
+            key,
+            conditionId,
+            conditionName: thConditionNameById(conditionId)
+          });
+        } else {
+          thDrugOwner.delete(drug);
+        }
+
+        const ownerName = thDrugOwner.get(drug)?.conditionName || '';
         contentEl.querySelectorAll('[data-th-med]').forEach(twin => {
-          if (twin === input || twin.disabled) return;
+          if (twin === input || twin.dataset.thBlocked === '1') return;
           if (twin.dataset.thDrug !== drug) return;
-          if (String(twin.dataset.thKey || '').split(':')[0] === ownCondition) return;
-          if (twin.checked === input.checked) return;
-          twin.checked = input.checked;
-          applySelection(twin);
-          twin.closest('.th-med-option')?.classList.toggle('th-med-synced', input.checked);
+          if (String(twin.dataset.thKey || '').split(':')[0] === conditionId) return;
+          thSetMirrorState(twin, input.checked, ownerName, drug);
         });
       }
 
@@ -626,14 +641,60 @@ async function showTratamentoHospitalarConditions (conditionIds, opts) {
       const drug = radio.dataset.thRouteDrug;
       thSelectedRoutes.set(key, radio.dataset.thRoute);
       if (drug) thDrugRoutePref.set(drug, radio.dataset.thRoute);
+
+      // Espelhos do mesmo fármaco acompanham a via escolhida
+      if (drug) {
+        contentEl.querySelectorAll('.th-med-routes-locked').forEach(row => {
+          const mirror = row.querySelector(`input[data-th-route-drug="${drug}"]`);
+          if (mirror) thSyncRouteRow(row, drug);
+        });
+      }
     });
   });
 
-  contentEl.querySelectorAll('[data-th-med]:checked').forEach(input => {
-    if (input.dataset.thDrug) thSelectedDrugs.add(input.dataset.thDrug);
-  });
-
   thUpdateSelectionBar();
+}
+
+function thConditionNameById (conditionId) {
+  const found = TH_CONDITIONS.find(c => c.id === conditionId);
+  return found ? found.name : 'outra condição';
+}
+
+/** Deixa a duplicata marcada, porém travada — a escolha vale para os dois tratamentos */
+function thSetMirrorState (input, on, ownerName, drug) {
+  const label = input.closest('.th-med-option');
+  const item = input.closest('.th-med-item');
+
+  input.checked = on;
+  input.disabled = on;
+  label?.classList.toggle('th-med-mirror', on);
+
+  const span = label?.querySelector('span');
+  let note = label?.querySelector('.th-med-mirror-note');
+  if (on) {
+    if (!note && span) {
+      note = document.createElement('em');
+      note.className = 'th-med-mirror-note';
+      span.appendChild(note);
+    }
+    if (note) note.textContent = ` já selecionado em ${ownerName}`;
+  } else if (note) {
+    note.remove();
+  }
+
+  const row = item?.querySelector('.th-med-routes');
+  if (row) {
+    row.hidden = !on;
+    row.classList.toggle('th-med-routes-locked', on);
+    if (on) thSyncRouteRow(row, drug);
+    row.querySelectorAll('input[data-th-route]').forEach(radio => { radio.disabled = on; });
+  }
+
+  const key = input.dataset.thKey;
+  if (!on) {
+    thSelectedMedKeys.delete(key);
+    thSelectedRoutes.delete(key);
+  }
 }
 
 /** Aplica a via preferida do fármaco na linha recém-exibida, se disponível ali */
@@ -690,6 +751,7 @@ function thCopySelection () {
   const lines = [];
   const seenDrugs = new Set();
   document.querySelectorAll('#th-condition-content [data-th-med]:checked').forEach(input => {
+    if (input.disabled) return;
     const drug = input.dataset.thDrug;
     if (drug && seenDrugs.has(drug)) return;
     if (drug) seenDrugs.add(drug);
