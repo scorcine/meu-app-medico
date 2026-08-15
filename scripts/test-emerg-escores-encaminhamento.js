@@ -224,6 +224,95 @@ function testStemiGuidedMedicationFlow () {
   }
 }
 
+function testGraceStaysEarly () {
+  const ui = buildUi();
+  const nstemi = ui.run(`(() => {
+    showEmergenciaTopic('sca');
+    showEmergenciaProtocol('nstemi-ua');
+    const pages = [...document.querySelectorAll('.emerg-protocol-page')];
+    return {
+      gracePage: pages.findIndex(p => p.querySelector('form[data-emerg-calc="grace"]')),
+      total: pages.length
+    };
+  })()`);
+  if (nstemi.gracePage >= 0 && nstemi.gracePage < nstemi.total - 1) {
+    pass('GRACE fica nas etapas iniciais do NSTEMI, nunca como última');
+  } else {
+    fail('GRACE ficou no fim do NSTEMI: ' + JSON.stringify(nstemi));
+  }
+
+  const ecg = ui.run(`(() => {
+    showEmergenciaProtocol('ecg-modelos');
+    return [...document.querySelectorAll('form[data-emerg-calc]')].map(f => f.dataset.emergCalc);
+  })()`);
+  if (!ecg.includes('grace')) {
+    pass('Revisão de ECG não pede GRACE de novo no fim do fluxo');
+  } else {
+    fail('GRACE reaparece na revisão de ECG: ' + JSON.stringify(ecg));
+  }
+}
+
+function testClosureSummary () {
+  const ui = buildUi();
+  const result = ui.run(`(() => {
+    sessionStorage.setItem('medhub-new-encounter-draft', JSON.stringify({
+      nome: 'Maria Teste', idade: '61 anos', sexo: 'Feminino', queixas: ['Dor torácica']
+    }));
+    showEmergenciaTopic('sca');
+    showEmergenciaProtocol('nstemi-ua');
+
+    const content = document.getElementById('emerg-topic-content');
+    const firstAction = content.querySelector('[data-emerg-action]');
+    const acao = firstAction.textContent.replace(/\\s+/g, ' ').trim();
+    firstAction.click();
+
+    const next = content.querySelector('.emerg-page-next');
+    const pages = content.querySelectorAll('.emerg-protocol-page').length;
+    for (let i = 0; i < pages; i++) next.click();
+
+    const closure = content.querySelector('.emerg-protocol-closure');
+    const confirmacoes = [...closure.querySelectorAll('[data-emerg-closure]')].map(b => b.dataset.emergClosure);
+    closure.querySelector('[data-emerg-closure="hemodinamica"]').click();
+    closure.querySelector('[data-emerg-summary]').click();
+
+    const resumo = closure.querySelector('[data-emerg-summary-out]');
+    return {
+      closureVisible: !closure.hidden,
+      confirmacoes,
+      titulo: document.getElementById('emerg-topic-title').textContent,
+      acao,
+      resumo: resumo.textContent.replace(/\\s+/g, ' ').trim(),
+      podeImprimir: !!resumo.querySelector('[data-emerg-print]'),
+      podeCopiar: !!resumo.querySelector('[data-emerg-copy]'),
+      proximoVisivel: !document.querySelector('.emerg-protocol-next').hidden
+    };
+  })()`);
+
+  if (result.closureVisible && result.confirmacoes.join(',') === 'medicacao,hemodinamica,transferencia,reavaliacao') {
+    pass('Concluir pede confirmação de medicação, hemodinâmica, transferência e reavaliação');
+  } else {
+    fail('Etapa de confirmação ausente: ' + JSON.stringify(result));
+  }
+  if (/NSTEMI/i.test(result.titulo) && !/ECG/i.test(result.titulo)) {
+    pass('Concluir não pula sozinho para outro protocolo');
+  } else {
+    fail('Protocolo avançou sem confirmação: ' + JSON.stringify(result.titulo));
+  }
+  if (result.resumo.includes('Maria Teste') &&
+      result.resumo.includes('Hemodinâmica acionada') &&
+      result.resumo.includes(result.acao) &&
+      result.podeImprimir && result.podeCopiar) {
+    pass('Resumo final documenta paciente, condutas e confirmações com imprimir/copiar');
+  } else {
+    fail('Resumo final incompleto: ' + JSON.stringify(result));
+  }
+  if (result.proximoVisivel) {
+    pass('Depois do resumo o próximo protocolo continua disponível como escolha');
+  } else {
+    fail('Encaminhamento desapareceu após o resumo: ' + JSON.stringify(result));
+  }
+}
+
 function testBranchingHandoff () {
   const ui = buildUi();
   ui.run(`showEmergenciaTopic('sca'); showEmergenciaProtocol('dor-inicial');`);
@@ -327,6 +416,8 @@ testScorePriorityChest();
 testScoreEarlyNstemiSepse();
 testNoInventedStemiTimi();
 testStemiGuidedMedicationFlow();
+testGraceStaysEarly();
+testClosureSummary();
 testBranchingHandoff();
 testNoArrayFallbackAutoOpen();
 testNoInventedScoresOnBls();

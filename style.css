@@ -3362,6 +3362,135 @@ body.app-page {
   color: var(--text-primary);
 }
 
+.emerg-protocol-closure {
+  margin-top: 1rem;
+  padding: 0.9rem;
+  border: 1px solid color-mix(in srgb, #16a34a 45%, var(--border));
+  border-radius: 10px;
+  background: color-mix(in srgb, #16a34a 7%, transparent);
+}
+
+.emerg-protocol-closure[hidden] {
+  display: none !important;
+}
+
+.emerg-closure-head strong {
+  color: var(--text-primary);
+  font-size: 0.92rem;
+}
+
+.emerg-closure-head p {
+  margin: 0.2rem 0 0;
+  color: var(--text-muted);
+  font-size: 0.76rem;
+}
+
+.emerg-closure-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+  gap: 0.5rem;
+  margin: 0.7rem 0;
+}
+
+.emerg-closure-btn {
+  min-height: 52px;
+  padding: 0.5rem 0.6rem;
+  background: var(--bg-surface-active);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-primary);
+  text-align: left;
+}
+
+.emerg-closure-btn strong,
+.emerg-closure-btn span {
+  display: block;
+}
+
+.emerg-closure-btn strong {
+  font-size: 0.78rem;
+}
+
+.emerg-closure-btn span {
+  margin-top: 0.12rem;
+  color: var(--text-muted);
+  font-size: 0.68rem;
+  line-height: 1.35;
+}
+
+.emerg-closure-btn.is-confirmed {
+  border-color: #16a34a;
+  background: color-mix(in srgb, #16a34a 16%, var(--bg-surface-active));
+}
+
+.emerg-closure-btn.is-confirmed strong::before {
+  content: "✓ ";
+  color: #16a34a;
+}
+
+.emerg-closure-actions button {
+  width: 100%;
+  min-height: 46px;
+}
+
+.emerg-summary {
+  margin-top: 0.8rem;
+  padding: 0.85rem;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: 9px;
+}
+
+.emerg-summary[hidden] {
+  display: none !important;
+}
+
+.emerg-summary-body h1 {
+  margin: 0;
+  color: var(--text-primary);
+  font-size: 0.95rem;
+}
+
+.emerg-summary-body h2 {
+  margin: 0.8rem 0 0.25rem;
+  color: var(--text-accent);
+  font-size: 0.8rem;
+}
+
+.emerg-summary-body .meta {
+  margin: 0.25rem 0 0;
+  color: var(--text-muted);
+  font-size: 0.72rem;
+}
+
+.emerg-summary-body ul {
+  margin: 0.2rem 0 0 1.1rem;
+  padding: 0;
+}
+
+.emerg-summary-body li {
+  color: var(--text-primary);
+  font-size: 0.74rem;
+  line-height: 1.45;
+}
+
+.emerg-summary-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+  margin-top: 0.85rem;
+}
+
+.emerg-summary-actions button {
+  min-height: 44px;
+}
+
+@media (max-width: 600px) {
+  .emerg-summary-actions {
+    grid-template-columns: 1fr;
+  }
+}
+
 .emerg-protocol-next {
   margin-top: 1rem;
   padding: 0.85rem;

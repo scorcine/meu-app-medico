@@ -2500,7 +2500,6 @@ const EMERG_SCORE_LIBRARY = [
 const EMERG_PROTOCOL_SCORES = {
   'sca:dor-inicial': ['heart'],
   'sca:nstemi-ua': ['grace'],
-  'sca:ecg-modelos': ['grace'],
   'sepse:bundle-hora1': ['qsofa', 'sofa'],
   'trauma:atls-abcde': ['gcs', 'rts', 'iss'],
   'avc:trombolise': ['nihss'],
@@ -2529,7 +2528,11 @@ const EMERG_NEXT_PROTOCOLS = {
   'parada-cardio:acls-adulto': [{ id: 'rosc', label: 'Retorno da circulação → cuidados pós-PCR' }]
 };
 
+/* Material de consulta (atlas de ECG): citar escore não significa recalculá-lo aqui */
+const EMERG_REFERENCE_PROTOCOLS = new Set(['sca:ecg-modelos']);
+
 function emergProtocolScoreIds (topicId, protocol) {
+  if (EMERG_REFERENCE_PROTOCOLS.has(`${topicId}:${protocol.id}`)) return [];
   const ids = [...(EMERG_PROTOCOL_SCORES[`${topicId}:${protocol.id}`] || [])];
   const html = protocol.html || '';
   const text = html.replace(/<[^>]*>/g, ' ');
@@ -3210,6 +3213,7 @@ function initEmergStemiWorkflow (root, state, persist) {
     if (p2) {
       const result = emergStemiP2y12Dose(p2.dataset.stemiP2, p2.dataset.stemiStrategy, age);
       state.picks[`stemi-p2-${p2.dataset.stemiStrategy}`] = p2.dataset.stemiP2;
+      state.picks[`stemi-dose-p2-${p2.dataset.stemiStrategy}`] = `${result.title}: ${result.dose}`;
       persist();
       p2.closest('[data-stemi-panel]').querySelector('[data-stemi-result]').innerHTML = resultCard(result);
       return;
@@ -3230,6 +3234,7 @@ function initEmergStemiWorkflow (root, state, persist) {
       input.setCustomValidity('');
       state.picks['stemi-weight'] = weight || '';
       state.picks['stemi-fibrinolytic'] = fibrinolytic.dataset.stemiFibrinolytic;
+      state.picks['stemi-dose-fibrinolytic'] = `${result.title}: ${result.dose}`;
       persist();
       panel.querySelector('[data-stemi-result]').innerHTML = resultCard(result);
     }
@@ -3237,17 +3242,57 @@ function initEmergStemiWorkflow (root, state, persist) {
 
   refreshContraState();
   return () => {
-    delete state.picks['stemi-contra'];
-    delete state.picks['stemi-p2-pci'];
-    delete state.picks['stemi-p2-lysis'];
-    delete state.picks['stemi-weight'];
-    delete state.picks['stemi-fibrinolytic'];
+    Object.keys(state.picks)
+      .filter(key => key.startsWith('stemi-'))
+      .forEach(key => delete state.picks[key]);
     panels.forEach(panel => {
       panel.hidden = true;
       panel.innerHTML = '';
     });
     refreshContraState();
   };
+}
+
+/* Fechamento do protocolo: o que precisa estar confirmado antes de documentar */
+const EMERG_CLOSING_CONFIRMATIONS = [
+  { id: 'medicacao', label: 'Medicações administradas', hint: 'Antiagregante, anticoagulante e sintomáticos conforme escolhido' },
+  { id: 'hemodinamica', label: 'Hemodinâmica acionada', hint: 'Cateterismo/ICP comunicado, com horário registrado' },
+  { id: 'transferencia', label: 'Transferência acionada', hint: 'Unidade de destino, transporte e vaga confirmados' },
+  { id: 'reavaliacao', label: 'Monitorização e reavaliação definidas', hint: 'Monitor, exames seriados e horário da reavaliação' }
+];
+
+function emergSummaryPatientLine () {
+  try {
+    const draft = JSON.parse(sessionStorage.getItem('medhub-new-encounter-draft') || 'null');
+    if (!draft?.nome) return '';
+    return [draft.nome, draft.idade, draft.sexo, (draft.queixas || []).join(' · ')]
+      .filter(Boolean).join(' · ');
+  } catch {
+    return '';
+  }
+}
+
+function emergPrintSummary (title, html) {
+  const win = typeof window.open === 'function'
+    ? window.open('', '_blank', 'width=820,height=900')
+    : null;
+  if (!win) {
+    window.print?.();
+    return;
+  }
+  win.document.write(`<!doctype html><html lang="pt-BR"><head><meta charset="utf-8">
+    <title>${title}</title>
+    <style>
+      body { margin: 24px; font-family: Arial, Helvetica, sans-serif; color: #111; font-size: 12pt; }
+      h1 { font-size: 15pt; margin: 0 0 4px; }
+      h2 { font-size: 12pt; margin: 18px 0 6px; border-bottom: 1px solid #999; padding-bottom: 3px; }
+      ul { margin: 4px 0 0 18px; padding: 0; }
+      li { margin: 3px 0; }
+      .meta { color: #444; font-size: 10pt; }
+    </style></head><body>${html}</body></html>`);
+  win.document.close();
+  win.focus();
+  win.print?.();
 }
 
 function initEmergProtocolExperience (root, topicId, protocol) {
@@ -3311,6 +3356,12 @@ function initEmergProtocolExperience (root, topicId, protocol) {
   groups.push(...headedGroups);
   if (!groups.length) groups.push({ title: 'Protocolo', nodes: originalNodes });
 
+  /* Escore é decisão de entrada — nunca pode ser a última etapa do protocolo */
+  const scoreGroupIndex = groups.findIndex(entry => /Classificar com escores/i.test(entry.title));
+  if (scoreGroupIndex > 0 && scoreGroupIndex === groups.length - 1) {
+    groups.unshift(...groups.splice(scoreGroupIndex, 1));
+  }
+
   const toolbar = document.createElement('div');
   toolbar.className = 'emerg-protocol-toolbar';
   const hasOptions = optionActions.length > 0;
@@ -3356,7 +3407,7 @@ function initEmergProtocolExperience (root, topicId, protocol) {
   nextPanel.hidden = true;
   if (nextOptions.length) {
     nextPanel.innerHTML = `
-      <strong>Protocolo concluído — continuar em:</strong>
+      <strong>Continuar o atendimento em:</strong>
       <div class="emerg-next-grid">
         ${nextOptions.map((option, index) => `
           <button type="button" class="emerg-next-btn" data-emerg-next="${index}">
@@ -3387,16 +3438,125 @@ function initEmergProtocolExperience (root, topicId, protocol) {
     });
   }
 
-  root.append(toolbar, pager, pages, controls, nextPanel);
+  const closurePanel = document.createElement('section');
+  closurePanel.className = 'emerg-protocol-closure';
+  closurePanel.hidden = true;
+  closurePanel.innerHTML = `
+    <div class="emerg-closure-head">
+      <strong>Confirmar condutas antes de fechar</strong>
+      <p>Toque no que já foi feito. O resumo sai pronto para imprimir ou colar no prontuário.</p>
+    </div>
+    <div class="emerg-closure-grid">
+      ${EMERG_CLOSING_CONFIRMATIONS.map(item => `
+        <button type="button" class="emerg-closure-btn" data-emerg-closure="${item.id}" aria-pressed="false">
+          <strong>${item.label}</strong><span>${item.hint}</span>
+        </button>`).join('')}
+    </div>
+    <div class="emerg-closure-actions">
+      <button type="button" data-emerg-summary>Fechar protocolo e gerar resumo</button>
+    </div>
+    <div class="emerg-summary" data-emerg-summary-out hidden></div>`;
+
+  root.append(toolbar, pager, pages, controls, closurePanel, nextPanel);
 
   const prevButton = controls.querySelector('.emerg-page-prev');
   const nextButton = controls.querySelector('.emerg-page-next');
   const resetButton = toolbar.querySelector('.emerg-progress-reset');
+  const summaryOut = closurePanel.querySelector('[data-emerg-summary-out]');
 
   function countChecked (nodes) {
     return nodes.reduce((n, node) =>
       n + (node.getAttribute('aria-checked') === 'true' ? 1 : 0), 0);
   }
+
+  function collectChecked (nodes) {
+    return nodes
+      .filter(node => node.getAttribute('aria-checked') === 'true')
+      .map(node => node.textContent.replace(/^✓/, '').replace(/\s+/g, ' ').trim())
+      .filter(Boolean);
+  }
+
+  function summaryBlock (title, items) {
+    if (!items.length) return '';
+    return `<h2>${title}</h2><ul>${items.map(item => `<li>${item}</li>`).join('')}</ul>`;
+  }
+
+  function buildSummaryHtml () {
+    const paciente = emergSummaryPatientLine();
+    const condutas = collectChecked(sequenceActions);
+    const opcoes = collectChecked(optionActions);
+    const seletores = [...root.querySelectorAll('.emerg-picker.is-answered .emerg-picker-summary')]
+      .map(node => node.textContent.trim())
+      .filter(Boolean);
+
+    const decisoes = [];
+    if (state.picks['stemi-contra'] === 'clear') {
+      decisoes.push('Fibrinólise: sintomas &lt; 12 h e sem contraindicações absolutas na revisão.');
+    }
+    if (state.picks['stemi-contra'] === 'present') {
+      decisoes.push('Fibrinólise contraindicada — priorizada transferência para ICP.');
+    }
+    Object.keys(state.picks)
+      .filter(key => key.startsWith('stemi-dose-'))
+      .forEach(key => decisoes.push(state.picks[key]));
+
+    const confirmacoes = EMERG_CLOSING_CONFIRMATIONS
+      .filter(item => state.picks[`close:${item.id}`] === true)
+      .map(item => item.label);
+
+    const pendentes = sequenceActions.length - condutas.length;
+    const agora = new Date().toLocaleString('pt-BR');
+
+    return `
+      <h1>${protocol.name} — resumo do atendimento</h1>
+      <p class="meta">${[paciente, `Fechado em ${agora}`].filter(Boolean).join(' · ')}</p>
+      ${summaryBlock('Condutas realizadas', condutas)}
+      ${summaryBlock('Opções escolhidas', opcoes)}
+      ${summaryBlock('Definições do fluxo', seletores)}
+      ${summaryBlock('Medicação e doses calculadas', decisoes)}
+      ${summaryBlock('Confirmações de fechamento', confirmacoes)}
+      <p class="meta">${pendentes > 0
+        ? `${pendentes} conduta(s) do fluxo não foram marcadas.`
+        : 'Todas as condutas do fluxo foram marcadas.'}</p>`;
+  }
+
+  function renderSummary () {
+    const html = buildSummaryHtml();
+    summaryOut.hidden = false;
+    summaryOut.innerHTML = `
+      <div class="emerg-summary-body">${html}</div>
+      <div class="emerg-summary-actions">
+        <button type="button" data-emerg-print>Imprimir / salvar PDF</button>
+        <button type="button" class="secondary" data-emerg-copy>Copiar texto</button>
+      </div>`;
+    summaryOut.querySelector('[data-emerg-print]').addEventListener('click', () => {
+      emergPrintSummary(`${protocol.name} — resumo`, html);
+    });
+    summaryOut.querySelector('[data-emerg-copy]').addEventListener('click', event => {
+      const body = summaryOut.querySelector('.emerg-summary-body');
+      navigator.clipboard?.writeText((body.innerText || body.textContent).trim());
+      event.currentTarget.textContent = 'Texto copiado ✓';
+    });
+    summaryOut.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  closurePanel.querySelectorAll('[data-emerg-closure]').forEach(button => {
+    const key = `close:${button.dataset.emergClosure}`;
+    const apply = () => {
+      const active = state.picks[key] === true;
+      button.setAttribute('aria-pressed', active ? 'true' : 'false');
+      button.classList.toggle('is-confirmed', active);
+    };
+    button.addEventListener('click', () => {
+      state.picks[key] = state.picks[key] !== true;
+      apply();
+      emergSaveProtocolProgress(topicId, protocol.id, state);
+      if (!summaryOut.hidden) renderSummary();
+    });
+    apply();
+  });
+
+  closurePanel.querySelector('[data-emerg-summary]').addEventListener('click', renderSummary);
 
   updateStatus = () => {
     const parts = [];
@@ -3418,14 +3578,12 @@ function initEmergProtocolExperience (root, topicId, protocol) {
     });
     prevButton.hidden = state.page === 0;
     const isLast = state.page === groups.length - 1;
-    const single = nextOptions.length === 1 ? nextOptions[0] : null;
     nextButton.textContent = isLast
-      ? (state.finished
-        ? (single ? single.label : 'Protocolo revisado ✓')
-        : (single ? `Concluir e ${single.label.toLowerCase()}` : 'Concluir protocolo'))
+      ? (state.finished ? 'Condutas em confirmação ✓' : 'Concluir e confirmar condutas')
       : `Próximo: ${groups[state.page + 1].title} →`;
     nextButton.classList.toggle('is-finished', isLast && state.finished);
-    nextPanel.hidden = !(isLast && state.finished && nextOptions.length > 1);
+    closurePanel.hidden = !(isLast && state.finished);
+    nextPanel.hidden = !(isLast && state.finished && nextOptions.length > 0);
     updateStatus();
     emergSaveProtocolProgress(topicId, protocol.id, state);
     if (scroll) toolbar.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -3440,25 +3598,8 @@ function initEmergProtocolExperience (root, topicId, protocol) {
     }
     state.finished = true;
     showPage(state.page, false);
-
-    /* Um único caminho possível → abre direto; vários ramos → o usuário escolhe */
-    if (nextOptions.length === 1) {
-      const option = nextOptions[0];
-      if (option.action === 'nao-sca') {
-        emergRememberChestClassification('nao-sca');
-        if (typeof showSection === 'function') showSection('novo-atendimento');
-        return;
-      }
-      if (topicId === 'sca' && protocol.id === 'dor-inicial') {
-        emergRememberChestClassification(option.id);
-      }
-      if (option.topicId !== topicId) showEmergenciaTopic(option.topicId);
-      showEmergenciaProtocol(option.id);
-      return;
-    }
-    if (nextOptions.length > 1) {
-      nextPanel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    }
+    /* Nada abre sozinho: o protocolo fecha com confirmação e resumo documentável */
+    closurePanel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   });
   const clearPickers = initEmergProtocolPickers(
     root,
@@ -3479,6 +3620,12 @@ function initEmergProtocolExperience (root, topicId, protocol) {
       resetHandlers.forEach(reset => reset());
       clearPickers();
       clearStemiWorkflow();
+      summaryOut.hidden = true;
+      summaryOut.innerHTML = '';
+      closurePanel.querySelectorAll('[data-emerg-closure]').forEach(button => {
+        button.setAttribute('aria-pressed', 'false');
+        button.classList.remove('is-confirmed');
+      });
       showPage(0, false);
     });
   }
