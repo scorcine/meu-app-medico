@@ -4350,6 +4350,185 @@ textarea {
   color: var(--outline-btn-text);
 }
 
+/* Novo atendimento — entrada principal do fluxo clínico */
+.sidebar-link[data-section="novo-atendimento"] {
+  margin: 0.25rem 0.55rem 0.6rem;
+  width: calc(100% - 1.1rem);
+  border-radius: 9px;
+  color: #ffffff;
+  background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+  box-shadow: 0 5px 14px rgba(13, 110, 253, 0.22);
+  font-weight: 700;
+}
+
+.sidebar-link[data-section="novo-atendimento"]:hover,
+.sidebar-link[data-section="novo-atendimento"].active {
+  color: #ffffff;
+  background: linear-gradient(135deg, var(--accent-hover), var(--accent));
+}
+
+.novo-atendimento-card {
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.novo-atendimento-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1.4rem;
+  padding-bottom: 1.1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.novo-atendimento-icon {
+  display: grid;
+  place-items: center;
+  width: 3.25rem;
+  height: 3.25rem;
+  flex: 0 0 3.25rem;
+  border-radius: 14px;
+  background: var(--accent-soft);
+  font-size: 1.65rem;
+}
+
+.novo-atendimento-header h2 {
+  margin: 0.15rem 0 0.35rem;
+}
+
+.novo-atendimento-header .muted {
+  margin: 0;
+}
+
+.novo-atendimento-step {
+  margin: 0;
+  color: var(--accent);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.novo-atendimento-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.novo-atendimento-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.85rem;
+}
+
+.novo-atendimento-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.novo-atendimento-field strong,
+.novo-atendimento-allergy legend strong {
+  color: #dc2626;
+}
+
+.novo-atendimento-age {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.novo-atendimento-age .anamnese-input {
+  min-width: 0;
+}
+
+.novo-atendimento-age > span {
+  color: var(--text-secondary);
+  font-size: 0.88rem;
+  font-weight: 500;
+}
+
+.novo-atendimento-allergy {
+  margin: 0.25rem 0 0;
+  padding: 1rem;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--bg-surface-alt);
+}
+
+.novo-atendimento-allergy legend {
+  padding: 0 0.35rem;
+  color: var(--text-primary);
+  font-size: 0.94rem;
+  font-weight: 700;
+}
+
+.novo-atendimento-allergy-options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.65rem;
+  margin-bottom: 0.8rem;
+}
+
+.novo-atendimento-allergy-options label {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-height: 3rem;
+  padding: 0.7rem 0.8rem;
+  border: 1px solid var(--border-input);
+  border-radius: 9px;
+  background: var(--bg-input);
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
+.novo-atendimento-allergy-options label:has(input:checked) {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  box-shadow: 0 0 0 2px var(--accent-ring);
+}
+
+.novo-atendimento-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  margin-top: 0.25rem;
+}
+
+.novo-atendimento-status {
+  margin: 0;
+  padding: 0.8rem 0.9rem;
+  border-radius: 9px;
+  font-size: 0.9rem;
+}
+
+.novo-atendimento-status--ok {
+  color: var(--result-ok-text);
+  background: var(--result-ok-bg);
+  border: 1px solid var(--result-ok-border);
+}
+
+@media (max-width: 620px) {
+  .novo-atendimento-grid,
+  .novo-atendimento-allergy-options {
+    grid-template-columns: 1fr;
+  }
+
+  .novo-atendimento-header {
+    gap: 0.75rem;
+  }
+
+  .novo-atendimento-icon {
+    width: 2.75rem;
+    height: 2.75rem;
+    flex-basis: 2.75rem;
+  }
+}
+
 .anamnese-save-status {
   margin-top: 0.75rem;
   padding: 0.65rem 0.85rem;

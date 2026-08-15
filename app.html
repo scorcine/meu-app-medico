@@ -16,7 +16,7 @@
   <meta name="apple-mobile-web-app-title" content="MedHub">
   <link rel="apple-touch-icon" href="/assets/icons/icon-192.png?v=icon-v2">
   <script src="theme.js?v=2"></script>
-  <link rel="stylesheet" href="style.css?v=tx-home-v2">
+  <link rel="stylesheet" href="style.css?v=encounter-v1">
   <link rel="stylesheet" href="app-mobile.css?v=pwa-header-v1">
   <script defer src="calculators-risco.js"></script>
   <script defer src="calculators-cardio.js"></script>
@@ -93,7 +93,8 @@
   <script defer src="auth-cloud.js?v=cloud-v21"></script>
   <script defer src="app-search.js?v=search-v3"></script>
   <script defer src="medhub-site-config.js?v=site-ui-v3"></script>
-  <script defer src="app.js?v=tx-home-v1"></script>
+  <script defer src="novo-atendimento.js?v=encounter-v1"></script>
+  <script defer src="app.js?v=encounter-v1"></script>
   <script defer src="auth.js?v=compliance-v1"></script>
   <script defer src="pwa-install.js?v=pwa-v4"></script>
 </head>
@@ -152,7 +153,9 @@
       <p class="sidebar-title">Menu</p>
       <nav class="sidebar-nav" id="app-sidebar-nav" aria-label="Menu principal">
         <button type="button" class="sidebar-link active" data-section="inicio">Início</button>
-        <p class="sidebar-group">Roteiro local (opcional)</p>
+        <p class="sidebar-group">Atendimento</p>
+        <button type="button" class="sidebar-link sidebar-link--primary" data-section="novo-atendimento">➕ Novo atendimento</button>
+        <p class="sidebar-group">Registros do paciente</p>
         <button type="button" class="sidebar-link" data-section="pacientes">Cadastro do paciente</button>
         <button type="button" class="sidebar-link" data-section="anamnese">Anamnese</button>
         <button type="button" class="sidebar-link" data-section="consultas">Histórico de atendimentos</button>
@@ -217,6 +220,74 @@
           <p class="home-disclaimer" role="note">
             <strong>Aviso:</strong> ferramenta educacional de apoio à decisão. Não substitui julgamento clínico, bula, protocolo institucional nem prontuário legal. Revise sempre antes de prescrever ou orientar o paciente.
           </p>
+        </article>
+      </section>
+
+      <section id="section-novo-atendimento" class="content-panel">
+        <article class="card dashboard-card novo-atendimento-card">
+          <header class="novo-atendimento-header">
+            <span class="novo-atendimento-icon" aria-hidden="true">🩺</span>
+            <div>
+              <p class="novo-atendimento-step">Novo atendimento · Dados iniciais</p>
+              <h2>Identificação do paciente</h2>
+              <p class="muted">Preencha os dados abaixo para iniciar. As informações serão usadas durante este atendimento.</p>
+            </div>
+          </header>
+
+          <form id="novo-atendimento-form" class="novo-atendimento-form">
+            <label class="novo-atendimento-field novo-atendimento-field--wide" for="novo-atendimento-nome">
+              <span>Nome do paciente <strong aria-hidden="true">*</strong></span>
+              <input id="novo-atendimento-nome" class="anamnese-input" type="text" autocomplete="off"
+                placeholder="Digite o nome completo" required>
+            </label>
+
+            <div class="novo-atendimento-grid">
+              <label class="novo-atendimento-field" for="novo-atendimento-sexo">
+                <span>Sexo <strong aria-hidden="true">*</strong></span>
+                <select id="novo-atendimento-sexo" class="anamnese-input" required>
+                  <option value="">Selecione</option>
+                  <option value="Feminino">Feminino</option>
+                  <option value="Masculino">Masculino</option>
+                  <option value="Outro">Outro</option>
+                </select>
+              </label>
+
+              <label class="novo-atendimento-field" for="novo-atendimento-idade">
+                <span>Idade <strong aria-hidden="true">*</strong></span>
+                <div class="novo-atendimento-age">
+                  <input id="novo-atendimento-idade" class="anamnese-input" type="number" inputmode="numeric"
+                    min="0" max="130" placeholder="Ex.: 45" required>
+                  <span>anos</span>
+                </div>
+              </label>
+            </div>
+
+            <fieldset class="novo-atendimento-allergy">
+              <legend>O paciente possui alguma alergia? <strong aria-hidden="true">*</strong></legend>
+              <div class="novo-atendimento-allergy-options">
+                <label>
+                  <input type="radio" name="novo-atendimento-alergia" value="nao" required>
+                  <span>Não possui</span>
+                </label>
+                <label>
+                  <input type="radio" name="novo-atendimento-alergia" value="sim" required>
+                  <span>Sim, possui alergia</span>
+                </label>
+              </div>
+
+              <label id="novo-atendimento-alergia-detalhe-wrap" class="novo-atendimento-field" for="novo-atendimento-alergia-detalhe" hidden>
+                <span>Qual alergia?</span>
+                <input id="novo-atendimento-alergia-detalhe" class="anamnese-input" type="text"
+                  placeholder="Ex.: penicilina, dipirona, AINE">
+              </label>
+            </fieldset>
+
+            <div class="novo-atendimento-actions">
+              <button type="submit" class="btn">Salvar dados do paciente</button>
+              <button type="button" class="btn btn-secondary" id="novo-atendimento-limpar">Limpar</button>
+            </div>
+            <p id="novo-atendimento-status" class="novo-atendimento-status" hidden role="status"></p>
+          </form>
         </article>
       </section>
 

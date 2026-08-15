@@ -5,7 +5,7 @@ const SITE_CONFIG_KEY = 'medhub:site-config';
 const HEX_COLOR = /^#[0-9a-fA-F]{6}$/;
 
 const ALLOWED_SECTIONS = new Set([
-  'inicio', 'pacientes', 'anamnese', 'consultas', 'receituario', 'medicacoes',
+  'inicio', 'novo-atendimento', 'pacientes', 'anamnese', 'consultas', 'receituario', 'medicacoes',
   'exames', 'interpretacao-exame', 'guia-emergencia', 'pronto-socorro',
   'tratamento-hospitalar', 'ventilacao-mecanica', 'calc-essenciais',
   'calc-pediatrica', 'perfil'
@@ -20,7 +20,9 @@ const CARD_SECTIONS = new Set([...ALLOWED_SECTIONS, ...FUTURE_SECTIONS]);
 function defaultSidebar () {
   return [
     { type: 'item', id: 'inicio', label: 'Início', visible: true, enabled: true, icon: '🏠', color: '' },
-    { type: 'group', label: 'Roteiro local (opcional)' },
+    { type: 'group', label: 'Atendimento' },
+    { type: 'item', id: 'novo-atendimento', label: 'Novo atendimento', visible: true, enabled: true, icon: '➕', color: '#0d6efd' },
+    { type: 'group', label: 'Registros do paciente' },
     { type: 'item', id: 'pacientes', label: 'Cadastro do paciente', visible: true, enabled: true, icon: '👤', color: '#6366f1' },
     { type: 'item', id: 'anamnese', label: 'Anamnese', visible: true, enabled: true, icon: '📝', color: '#8b5cf6' },
     { type: 'item', id: 'consultas', label: 'Histórico de atendimentos', visible: true, enabled: true, icon: '📅', color: '#a855f7' },
@@ -159,7 +161,22 @@ function mergeSidebar (saved) {
     }
   });
 
-  return promoteFlashcardsSidebar(merged.length ? merged : defaults);
+  const base = merged.length ? merged : defaults;
+  const encounter = base.find(e => e.type === 'item' && e.id === 'novo-atendimento') ||
+    defaults.find(e => e.type === 'item' && e.id === 'novo-atendimento');
+  const reordered = base
+    .filter(e => !(e.type === 'item' && e.id === 'novo-atendimento'))
+    .filter(e => !(e.type === 'group' && e.label === 'Atendimento'))
+    .map(e => e.type === 'group' && e.label === 'Roteiro local (opcional)'
+      ? { ...e, label: 'Registros do paciente' }
+      : e);
+  const inicioIndex = reordered.findIndex(e => e.type === 'item' && e.id === 'inicio');
+  reordered.splice(inicioIndex >= 0 ? inicioIndex + 1 : 0, 0,
+    { type: 'group', label: 'Atendimento' },
+    encounter
+  );
+
+  return promoteFlashcardsSidebar(reordered);
 }
 
 function normalizeHomeCard (entry, def) {

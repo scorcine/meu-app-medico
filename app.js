@@ -109,6 +109,7 @@ function initAppCore (user) {
       initInterpretacaoExame();
       initPacientes();
       initConsultas();
+      initNovoAtendimento();
       initFerramentas();
       initFlashcards();
       initBackup();
@@ -176,6 +177,7 @@ function showSection (sectionId) {
   if (sectionId === 'pacientes' && typeof pacientesOnSectionShow === 'function') pacientesOnSectionShow();
   if (sectionId === 'consultas' && typeof consultasOnSectionShow === 'function') consultasOnSectionShow();
   if (sectionId === 'anamnese' && typeof anamneseOnSectionShow === 'function') anamneseOnSectionShow();
+  if (sectionId === 'novo-atendimento' && typeof novoAtendimentoOnSectionShow === 'function') novoAtendimentoOnSectionShow();
   if (sectionId === 'perfil' && typeof backupMaybePromptFirstUse === 'function') backupMaybePromptFirstUse();
   if (sectionId === 'calc-pediatrica' && typeof initPediatricCalcPanel === 'function') {
     initPediatricCalcPanel();
