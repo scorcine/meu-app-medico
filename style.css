@@ -3387,11 +3387,15 @@ body.app-page {
 
 .emerg-page-next {
   margin-left: auto;
+  background: var(--state-wait);
+  border: 1px solid var(--state-wait);
+  color: #1a1205;
+  font-weight: 700;
 }
 
 .emerg-page-next.is-finished {
-  background: #15803d;
-  border-color: #15803d;
+  background: var(--state-done);
+  border-color: var(--state-done);
 }
 
 .emerg-score-block {
@@ -3477,6 +3481,10 @@ body.app-page {
 .emerg-closure-actions button {
   width: 100%;
   min-height: 46px;
+  background: var(--state-wait);
+  border: 1px solid var(--state-wait);
+  color: #1a1205;
+  font-weight: 700;
 }
 
 .emerg-summary {
@@ -3529,6 +3537,15 @@ body.app-page {
 
 .emerg-summary-actions button {
   min-height: 44px;
+  background: var(--state-done);
+  border: 1px solid var(--state-done);
+  color: #04220f;
+  font-weight: 700;
+}
+
+.emerg-summary-actions button.secondary {
+  background: transparent;
+  color: var(--state-done);
 }
 
 @media (max-width: 600px) {
@@ -3554,6 +3571,9 @@ body.app-page {
 .emerg-next-btn {
   width: 100%;
   min-height: 44px;
+  background: color-mix(in srgb, var(--state-wait) 14%, var(--bg-surface-active));
+  border: 1px solid var(--state-wait);
+  color: var(--text-primary);
   text-align: left;
 }
 
