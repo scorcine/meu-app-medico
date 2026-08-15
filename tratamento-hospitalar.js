@@ -1,6 +1,6 @@
 /* Tratamento hospitalar — condições com medicação IM/EV e navegação */
 
-const MEDHUB_TH_BUILD = 'th-auto-v7';
+const MEDHUB_TH_BUILD = 'th-auto-v8';
 
 const TH_CONTENT = Object.assign(
   {},
@@ -519,11 +519,31 @@ function initTratamentoHospitalar () {
     copyBtn.addEventListener('click', thCopySelection);
   }
 
-  const prescriptionBtn = document.getElementById('th-generate-prescription');
-  if (prescriptionBtn && !prescriptionBtn.dataset.bound) {
-    prescriptionBtn.dataset.bound = '1';
-    prescriptionBtn.addEventListener('click', thGeneratePrescription);
+  thEnsurePrescriptionButton();
+}
+
+/** Cria o botão se o app.html em cache ainda for o antigo, sem ele */
+function thEnsurePrescriptionButton () {
+  const actions = document.querySelector('#th-selection-bar .rx-selection-actions');
+  if (!actions) return null;
+
+  let btn = document.getElementById('th-generate-prescription');
+  if (!btn) {
+    btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'btn';
+    btn.id = 'th-generate-prescription';
+    btn.textContent = 'Gerar prescrição';
+    btn.disabled = true;
+    actions.appendChild(btn);
   }
+
+  if (!btn.dataset.bound) {
+    btn.dataset.bound = '1';
+    btn.addEventListener('click', thGeneratePrescription);
+  }
+
+  return btn;
 }
 
 function renderThGrid (items) {
@@ -876,7 +896,7 @@ function thUpdateSelectionBar () {
   const count = document.getElementById('th-selection-count');
   const clearBtn = document.getElementById('th-clear-selection');
   const copyBtn = document.getElementById('th-copy-selection');
-  const prescriptionBtn = document.getElementById('th-generate-prescription');
+  const prescriptionBtn = thEnsurePrescriptionButton();
   if (!bar) return;
 
   const n = thSelectedMedKeys.size;
