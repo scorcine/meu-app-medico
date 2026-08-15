@@ -3344,7 +3344,13 @@ function emergSummaryContext () {
     doctor: emergSummaryEscape(profile?.rxDisplayName || 'Médico(a) responsável'),
     crm: emergSummaryEscape(crm || 'CRM não informado'),
     startedAt: emergSummaryEscape(startedLabel),
-    finishedAt: emergSummaryEscape(new Date().toLocaleString('pt-BR'))
+    finishedAt: emergSummaryEscape(new Date().toLocaleString('pt-BR')),
+    patientNameRaw: String(draft?.nome || ''),
+    patientIdRaw: String(sessionStorage.getItem('medhub-active-paciente-id') || ''),
+    complaintRaw: (draft?.queixas || []).join(' · '),
+    doctorRaw: String(profile?.rxDisplayName || 'Médico(a) responsável'),
+    crmRaw: crm || 'CRM não informado',
+    startedIso: String(draft?.startedAt || '')
   };
 }
 
@@ -3615,15 +3621,21 @@ function initEmergProtocolExperience (root, topicId, protocol) {
     if (state.picks['stemi-contra'] === 'present') {
       decisoes.push('Fibrinólise contraindicada — priorizada transferência para ICP.');
     }
-    if (state.picks['stemi-reperfusion'] === 'success') {
-      decisoes.push('Reperfusão satisfatória confirmada pelos critérios clínicos/eletrocardiográficos.');
-    }
-    if (state.picks['stemi-reperfusion'] === 'failure') {
-      decisoes.push('Falha ou suspeita de falha de reperfusão — indicada ICP de resgate/reavaliação hemodinâmica imediata.');
-    }
     Object.keys(state.picks)
       .filter(key => key.startsWith('stemi-dose-'))
       .forEach(key => decisoes.push(state.picks[key]));
+
+    const reperfusion = [];
+    if (state.picks['stemi-reperfusion']) {
+      if (state.picks['stemi-fibrinolytic']) {
+        reperfusion.push('Após fibrinólise: ECG repetido em 60–90 min; avaliar redução ≥50% do supra de ST, alívio da dor e arritmia de reperfusão.');
+      } else {
+        reperfusion.push('Após ICP primária: avaliar fluxo coronariano TIMI 3, redução do supra de ST, estabilidade e ausência de isquemia recorrente.');
+      }
+      reperfusion.push(state.picks['stemi-reperfusion'] === 'success'
+        ? 'Resultado: reperfusão satisfatória.'
+        : 'Resultado: falha ou suspeita de falha — indicada ICP de resgate/reavaliação hemodinâmica imediata.');
+    }
 
     const confirmacoes = EMERG_CLOSING_CONFIRMATIONS
       .filter(item => state.picks[`close:${item.id}`] === true)
@@ -3640,6 +3652,7 @@ function initEmergProtocolExperience (root, topicId, protocol) {
       ${summaryBlock('Opções escolhidas', opcoes)}
       ${summaryBlock('Definições do fluxo', seletores)}
       ${summaryBlock('Medicação e doses calculadas', decisoes)}
+      ${summaryBlock('Critérios de reperfusão', reperfusion)}
       ${summaryBlock('Confirmações de fechamento', confirmacoes)}
       <p class="meta">${pendentes > 0
         ? `${pendentes} conduta(s) do fluxo não foram marcadas.`
@@ -3714,7 +3727,7 @@ function initEmergProtocolExperience (root, topicId, protocol) {
       });
     });
 
-    finalizeButton.addEventListener('click', () => {
+    finalizeButton.addEventListener('click', async () => {
       state.picks['stemi-finalized'] = true;
       emergSaveProtocolProgress(topicId, protocol.id, state);
       applyReperfusion();
@@ -3722,6 +3735,38 @@ function initEmergProtocolExperience (root, topicId, protocol) {
       finalizedStatus.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       /* Clique do usuário permite abrir a janela sem bloqueio do navegador */
       emergPrintSummary(`${protocol.name} — resumo do atendimento`, html);
+
+      finalizeButton.disabled = true;
+      const context = emergSummaryContext();
+      const textHolder = document.createElement('div');
+      textHolder.innerHTML = html;
+      const summaryText = (textHolder.innerText || textHolder.textContent || '')
+        .replace(/\n{3,}/g, '\n\n')
+        .trim();
+
+      let saved = null;
+      if (typeof consultasRegisterEmergencyProtocol === 'function') {
+        saved = await consultasRegisterEmergencyProtocol({
+          sourceId: `emergency:${protocol.id}:${context.startedIso || context.patientNameRaw}`,
+          protocolo: protocol.name,
+          pacienteId: context.patientIdRaw,
+          pacienteNome: context.patientNameRaw || 'Paciente não informado',
+          data: context.startedAt,
+          queixa: context.complaintRaw,
+          medico: context.doctorRaw,
+          crm: context.crmRaw,
+          reperfusao: state.picks['stemi-reperfusion'],
+          summaryHtml: html,
+          summaryText,
+          notas: 'Atendimento finalizado automaticamente pelo Guia de emergência.'
+        });
+      }
+
+      finalizedStatus.textContent = saved?.cloudSaved
+        ? 'Protocolo STEMI finalizado · PDF gerado · atendimento salvo na nuvem ✓'
+        : (saved?.ok
+            ? 'Protocolo STEMI finalizado · PDF gerado · salvo localmente (sincronização com a nuvem pendente)'
+            : 'Protocolo STEMI finalizado e PDF gerado ✓');
     });
 
     applyReperfusion();

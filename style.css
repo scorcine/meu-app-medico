@@ -6194,6 +6194,35 @@ label.novo-atendimento-prefilled {
   margin-top: 0.75rem;
 }
 
+#section-consultas .clinical-wrap {
+  display: flex;
+  flex-direction: column;
+}
+
+#section-consultas .clinical-wrap > h2 {
+  order: -3;
+}
+
+#section-consultas .clinical-wrap > p {
+  order: -2;
+}
+
+#section-consultas .completed-encounters {
+  order: -1;
+  margin: 0.6rem 0 1.2rem;
+  padding: 0.8rem;
+  background: var(--bg-surface-alt);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+
+#section-consultas .completed-encounters .clinical-record-list {
+  max-height: min(52vh, 560px);
+  overflow-y: auto;
+  padding-right: 0.35rem;
+  scrollbar-gutter: stable;
+}
+
 .clinical-record-item {
   flex-direction: column;
   align-items: stretch;

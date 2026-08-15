@@ -380,7 +380,7 @@ function testStemiReperfusionBeforeFinalize () {
     fail('Etapa de reperfusão incompleta: ' + JSON.stringify(result));
   }
   if (result.finalizeVisible && result.finalized && result.printAfter &&
-      /Falha ou suspeita de falha de reperfusão/i.test(result.summary)) {
+      /falha ou suspeita de falha/i.test(result.summary)) {
     pass('Resultado da reperfusão entra no resumo e libera Finalizar protocolo');
   } else {
     fail('Finalização após reperfusão falhou: ' + JSON.stringify(result));

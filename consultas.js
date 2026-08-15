@@ -149,6 +149,8 @@ function consultasExportPdf (c) {
         <tr><th>Tipo</th><td>${consultasEscapeHtml(tipo).replace(/<br>/g, ' ')}</td></tr>
         <tr><th>Status</th><td>${consultasEscapeHtml(status).replace(/<br>/g, ' ')}</td></tr>
         <tr><th>Profissional</th><td>${consultasEscapeHtml(c.medico).replace(/<br>/g, ' ')}</td></tr>
+        ${c.crm ? `<tr><th>CRM</th><td>${consultasEscapeHtml(c.crm).replace(/<br>/g, ' ')}</td></tr>` : ''}
+        ${c.protocolo ? `<tr><th>Protocolo</th><td>${consultasEscapeHtml(c.protocolo).replace(/<br>/g, ' ')}</td></tr>` : ''}
       </table>
       <h2>Queixa / motivo</h2>
       <p>${consultasEscapeHtml(c.queixa)}</p>
@@ -222,17 +224,22 @@ async function consultasRenderList () {
   list.forEach(c => {
     const tipo = consultasLabel(CONSULTA_TIPOS, c.tipo);
     const status = consultasLabel(CONSULTA_STATUS, c.status);
+    const automatic = c.source === 'emergency-protocol';
+    const reperfusion = c.reperfusao === 'success'
+      ? 'Reperfusão satisfatória'
+      : (c.reperfusao === 'failure' ? 'Falha/suspeita de falha de reperfusão' : '');
     const li = document.createElement('li');
     li.className = 'clinical-record-item anamnese-history-item';
     li.innerHTML = `
       <div class="clinical-record-meta">
-        <strong>${c.pacienteNome || 'Paciente não informado'}</strong>
-        <span>${c.data || '—'} · ${tipo} · ${status}</span>
-        ${c.queixa ? '<span class="clinical-record-snippet">' + c.queixa + '</span>' : ''}
+        <strong>${consultasEscapeHtml(c.pacienteNome || 'Paciente não informado').replace(/<br>/g, ' ')}</strong>
+        <span>${consultasEscapeHtml(c.data || '—').replace(/<br>/g, ' ')} · ${consultasEscapeHtml(automatic ? (c.protocolo || 'Emergência') : tipo)} · ${consultasEscapeHtml(status)}</span>
+        ${reperfusion ? `<span class="clinical-record-tag">${consultasEscapeHtml(reperfusion)}</span>` : ''}
+        ${c.queixa ? '<span class="clinical-record-snippet">' + consultasEscapeHtml(c.queixa) + '</span>' : ''}
       </div>
       <div class="clinical-record-actions">
         <button type="button" class="btn-outline clinical-record-btn" data-cons-action="pdf" data-id="${c.id}">Exportar PDF</button>
-        <button type="button" class="btn-outline clinical-record-btn" data-cons-action="edit" data-id="${c.id}">Editar</button>
+        <button type="button" class="btn-outline clinical-record-btn" data-cons-action="edit" data-id="${c.id}">${automatic ? 'Abrir atendimento' : 'Editar'}</button>
         <button type="button" class="btn-outline clinical-record-btn" data-cons-action="delete" data-id="${c.id}">Excluir</button>
       </div>`;
     listEl.appendChild(li);
@@ -346,6 +353,79 @@ async function consultasRegisterFromAnamnese (anamData, pacienteId) {
   list.push(entry);
   await consultasSaveAll(list);
   return entry;
+}
+
+/**
+ * Registra automaticamente um protocolo finalizado.
+ * clinicalSaveList criptografa localmente e agenda o backup E2E na nuvem.
+ */
+async function consultasRegisterEmergencyProtocol (data) {
+  if (!data?.pacienteNome || !data?.summaryText) {
+    return { ok: false, error: 'Dados insuficientes para salvar o atendimento.' };
+  }
+
+  const list = await consultasLoadAll();
+  const now = new Date().toISOString();
+  const sourceId = String(data.sourceId || '');
+  const existingIndex = sourceId
+    ? list.findIndex(item => item.sourceId === sourceId)
+    : -1;
+
+  const entry = {
+    id: existingIndex >= 0 ? list[existingIndex].id : clinicalNewId(),
+    source: 'emergency-protocol',
+    sourceId,
+    protocolo: data.protocolo || '',
+    pacienteId: data.pacienteId || '',
+    pacienteNome: data.pacienteNome,
+    data: data.data || new Date().toLocaleString('pt-BR'),
+    tipo: 'ps',
+    status: 'realizada',
+    queixa: data.queixa || '',
+    conduta: data.summaryText,
+    notas: data.notas || 'Registro automático ao finalizar protocolo de emergência.',
+    medico: data.medico || '',
+    crm: data.crm || '',
+    reperfusao: data.reperfusao || '',
+    summaryHtml: data.summaryHtml || '',
+    createdAt: existingIndex >= 0 ? list[existingIndex].createdAt : now,
+    updatedAt: now
+  };
+
+  if (existingIndex >= 0) list[existingIndex] = { ...list[existingIndex], ...entry };
+  else list.push(entry);
+
+  await consultasSaveAll(list);
+  consultasRenderList();
+
+  let cloud = null;
+  if (typeof medhubCloudPushClinical === 'function') {
+    try {
+      cloud = await medhubCloudPushClinical();
+
+      /* Se a nuvem mudou em outro aparelho, mescla antes de tentar novamente. */
+      if (cloud?.cloudNewer && typeof medhubCloudPullClinical === 'function') {
+        const pull = await medhubCloudPullClinical({ force: true });
+        if (pull?.ok) {
+          const merged = await consultasLoadAll();
+          const idx = merged.findIndex(item => item.sourceId === sourceId);
+          if (idx >= 0) merged[idx] = { ...merged[idx], ...entry };
+          else merged.push(entry);
+          await consultasSaveAll(merged);
+          cloud = await medhubCloudPushClinical();
+        }
+      }
+    } catch (error) {
+      cloud = { ok: false, error: error?.message || 'Falha ao sincronizar.' };
+    }
+  }
+
+  return {
+    ok: true,
+    entry,
+    cloudSaved: cloud?.ok === true,
+    cloudPending: !cloud?.ok
+  };
 }
 
 function initConsultas () {

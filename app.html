@@ -17,7 +17,7 @@
   <meta name="apple-mobile-web-app-title" content="MedHub">
   <link rel="apple-touch-icon" href="/assets/icons/icon-192.png?v=icon-v2">
   <script src="theme.js?v=2"></script>
-  <link rel="stylesheet" href="style.css?v=reperfusao-final-v1">
+  <link rel="stylesheet" href="style.css?v=atendimentos-cloud-v1">
   <link rel="stylesheet" href="app-mobile.css?v=pwa-header-v1">
   <script defer src="calculators-risco.js"></script>
   <script defer src="calculators-cardio.js"></script>
@@ -36,7 +36,7 @@
   <script defer src="calculators-derma.js"></script>
   <script defer src="calculators-orto.js"></script>
   <script defer src="calculators-extras.js?v=procedimentos"></script>
-  <script defer src="emergency-guide.js?v=reperfusao-pdf-v2"></script>
+  <script defer src="emergency-guide.js?v=atendimentos-cloud-v1"></script>
   <script defer src="ventilacao-mecanica.js?v=vm-calc-v2"></script>
   <script defer src="tratamento-hospitalar-content-1.js?v=th-select-v2"></script>
   <script defer src="tratamento-hospitalar-content-2.js?v=th-select-v1"></script>
@@ -72,7 +72,7 @@
   <script defer src="interpretacao-exame-data.js?v=atendimento-v3"></script>
   <script defer src="interpretacao-exame.js?v=atendimento-v3"></script>
   <script defer src="pacientes.js?v=atendimento-v4"></script>
-  <script defer src="consultas.js?v=atendimento-v4"></script>
+  <script defer src="consultas.js?v=atendimentos-cloud-v1"></script>
   <script defer src="medhub-config.js?v=site-v1"></script>
   <script defer src="ferramentas.js?v=retired-sections-v1"></script>
   <script defer src="flashcards/deck-sepse.js?v=fc-v11"></script>
@@ -165,12 +165,12 @@
         <button type="button" class="sidebar-link active" data-section="inicio">Início</button>
         <p class="sidebar-group">Atendimento</p>
         <button type="button" class="sidebar-link sidebar-link--primary" data-section="novo-atendimento">➕ Novo paciente</button>
+        <button type="button" class="sidebar-link" data-section="consultas">Atendimentos realizados</button>
         <!-- Registros do paciente: oculto por enquanto (uso futuro em ambiente hospitalar) -->
         <div id="sidebar-registros-paciente" hidden>
           <p class="sidebar-group">Registros do paciente</p>
           <button type="button" class="sidebar-link" data-section="pacientes">Cadastro do paciente</button>
           <button type="button" class="sidebar-link" data-section="anamnese">Anamnese</button>
-          <button type="button" class="sidebar-link" data-section="consultas">Histórico de atendimentos</button>
         </div>
         <p class="sidebar-group">Prescrição &amp; exames</p>
         <button type="button" class="sidebar-link" data-section="receituario">Tratamento para casa</button>
@@ -1076,9 +1076,9 @@
 
       <section id="section-consultas" class="content-panel">
         <div class="card dashboard-card clinical-wrap">
-          <h2>Histórico de atendimentos</h2>
-          <p class="compliance-inline-notice" role="note">Registro local opcional vinculado ao paciente — <strong>não substitui prontuário legal</strong>.</p>
-          <p class="muted">Histórico simples de atendimentos no dispositivo. Use <strong>Exportar PDF</strong> para rascunho educacional (Salvar como PDF no diálogo do navegador).</p>
+          <h2>Atendimentos realizados</h2>
+          <p class="compliance-inline-notice" role="note">Os atendimentos finalizados são protegidos localmente e sincronizados de forma criptografada com a nuvem da conta. <strong>Não substitui prontuário legal.</strong></p>
+          <p class="muted">Selecione um paciente para consultar novamente as condutas, doses, critérios de reperfusão e exportar o PDF.</p>
 
           <h3 id="cons-form-title">Nova consulta</h3>
           <form id="cons-form" class="anamnese-form">
@@ -1129,8 +1129,8 @@
             <p id="cons-save-status" class="anamnese-save-status" hidden></p>
           </form>
 
-          <section class="anamnese-history">
-            <h3>Histórico de consultas</h3>
+          <section class="anamnese-history completed-encounters">
+            <h3>Pacientes atendidos</h3>
             <label class="ps-search-label" for="cons-filter">Buscar</label>
             <input id="cons-filter" class="ps-search" type="search" placeholder="Paciente, queixa ou conduta…" autocomplete="off">
             <p id="cons-locked" class="compliance-inline-notice" hidden>Dados protegidos — desbloqueie com sua senha ao abrir o app.</p>
