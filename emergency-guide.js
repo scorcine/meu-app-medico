@@ -722,10 +722,48 @@ const SEPSE_PROTOCOLS = [
         <tr><td>Vasopressor</td><td>Noradrenalina se PAM &lt; 65 após/durante ressuscitação volêmica</td></tr>
       </table>
 
-      <h4>Reconhecimento rápido (Sepsis-3)</h4>
+      <h4>Focos possíveis e investigação dirigida</h4>
+      <p>Marque o foco suspeito após história, exame e exames disponíveis. Mais de um foco pode permanecer em investigação.</p>
+      <div class="emerg-choice-grid">
+        <span class="emerg-flow-step"><strong>Pulmonar</strong> — sintomas respiratórios, ausculta, Rx/US pulmonar; cultura respiratória se indicada</span>
+        <span class="emerg-flow-step"><strong>Urinário</strong> — sintomas urinários, urina tipo I e urocultura; imagem se obstrução/abscesso</span>
+        <span class="emerg-flow-step"><strong>Abdominal</strong> — dor/peritonismo, enzimas e função hepática; US/TC conforme hipótese</span>
+        <span class="emerg-flow-step"><strong>Pele e partes moles</strong> — inspecionar feridas, celulite, fasciíte, pé diabético e dispositivos</span>
+        <span class="emerg-flow-step"><strong>Sistema nervoso central</strong> — meningismo ou alteração neurológica; hemoculturas e líquor quando seguro</span>
+        <span class="emerg-flow-step"><strong>Cateter / endovascular</strong> — avaliar acessos, próteses, sopro e sinais embólicos</span>
+        <span class="emerg-flow-step"><strong>Sem foco definido</strong> — culturas dirigidas, exame completo e imagem orientada pela clínica</span>
+      </div>
+
+      <h4>Antibiótico empírico inicial por foco</h4>
+      <p>Iniciar em até 1 hora quando indicado, após culturas se isso não atrasar o tratamento. Ajustar a função renal, alergias, epidemiologia e protocolo institucional.</p>
+      <div class="emerg-choice-grid">
+        <span class="emerg-flow-step"><strong>Pulmonar comunitário:</strong> ceftriaxona 1 g EV 12/12 h + azitromicina 500 mg EV 24/24 h</span>
+        <span class="emerg-flow-step"><strong>Urinário:</strong> ceftriaxona 1 g EV 24/24 h; ampliar se risco de resistência ou choque</span>
+        <span class="emerg-flow-step"><strong>Abdominal:</strong> piperacilina-tazobactam 4,5 g EV 6/6 h; considerar meropenem conforme risco</span>
+        <span class="emerg-flow-step"><strong>Pele / partes moles:</strong> cobrir estreptococo e S. aureus; incluir MRSA e avaliação cirúrgica quando indicado</span>
+        <span class="emerg-flow-step"><strong>SNC:</strong> seguir protocolo específico de meningite/encefalite sem atrasar terapia</span>
+        <span class="emerg-flow-step"><strong>Choque ou foco indefinido:</strong> cobertura ampla conforme flora local e fatores de risco, com descalonamento após culturas</span>
+      </div>
+      <p class="emerg-note"><strong>Atenção:</strong> os esquemas são referências educacionais. Validar dose, diluição, alergias, função renal/hepática, peso, gestação e antibiograma institucional antes de prescrever.</p>
+
+      <h4>Controle do foco e reavaliação</h4>
+      <div class="emerg-flow-v">
+        <span class="emerg-flow-step">Reavaliar perfusão, consciência, diurese, PAM e sinais de congestão após volume</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">Repetir lactato em 2–4 h se inicial &gt; 2 mmol/L ou conforme protocolo</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">Drenar abscesso, remover dispositivo infectado ou solicitar cirurgia quando indicado</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">Revisar culturas e resposta em 24–48 h; ajustar ou descalonar antimicrobianos</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step emerg-flow-loop">Definir internação/UTI e manter monitorização conforme gravidade</span>
+      </div>
+
+      <h4>Critérios e alertas (Sepsis-3)</h4>
       <ul>
-        <li>Infecção suspeita/confirmada + disfunção orgânica (ΔSOFA ≥ 2 ou qSOFA ≥ 2)</li>
-        <li>Choque séptico: necessidade de vasopressor para PAM ≥ 65 + lactato &gt; 2 mmol/L apesar de volume</li>
+        <li>Infecção suspeita/confirmada + disfunção orgânica (ΔSOFA ≥ 2; qSOFA é ferramenta de alerta, não critério diagnóstico isolado)</li>
+        <li>Choque séptico: necessidade de vasopressor para PAM ≥ 65 + lactato &gt; 2 mmol/L apesar de volume adequado</li>
+        <li>Não atrasar antibiótico em choque ou alta probabilidade de sepse; colher culturas antes quando possível sem atraso relevante</li>
       </ul>
       <p class="emerg-note">Surviving Sepsis Campaign 2021 · Sepsis-3. Use calculadoras <strong>qSOFA</strong> e <strong>SOFA</strong> em Calculadoras essenciais. Adaptar ATB ao protocolo institucional e foco infeccioso.</p>
     `
@@ -2469,6 +2507,216 @@ function showEmergenciaTopic (topicId) {
     <p class="coming-soon">Conteúdo em construção — adicione algoritmos em <strong>emergency-guide.js</strong> no array <code>protocols</code> deste tópico.</p>`;
 }
 
+const MEDHUB_EMERG_PROGRESS_PREFIX = 'medhub-emerg-progress-v1';
+
+function emergProtocolScope () {
+  const patientId = sessionStorage.getItem('medhub-active-paciente-id') || '';
+  const patientName = sessionStorage.getItem('medhub-active-paciente') || '';
+  const encounter = sessionStorage.getItem('medhub-active-encounter') === '1';
+  const identity = patientId || patientName || (encounter ? 'active' : 'no-encounter');
+  return identity.toLowerCase().replace(/[^a-z0-9_-]+/g, '-').slice(0, 80);
+}
+
+function emergProtocolProgressKey (topicId, protocolId) {
+  return `${MEDHUB_EMERG_PROGRESS_PREFIX}:${emergProtocolScope()}:${topicId}:${protocolId}`;
+}
+
+function emergReadProtocolProgress (topicId, protocolId) {
+  try {
+    const saved = JSON.parse(sessionStorage.getItem(emergProtocolProgressKey(topicId, protocolId)) || '{}');
+    return {
+      checked: saved.checked && typeof saved.checked === 'object' ? saved.checked : {},
+      page: Number.isInteger(saved.page) ? saved.page : 0,
+      finished: saved.finished === true
+    };
+  } catch {
+    return { checked: {}, page: 0, finished: false };
+  }
+}
+
+function emergSaveProtocolProgress (topicId, protocolId, state) {
+  try {
+    sessionStorage.setItem(emergProtocolProgressKey(topicId, protocolId), JSON.stringify(state));
+  } catch { /* sessão sem armazenamento disponível */ }
+}
+
+function emergActionKey (text, index) {
+  let hash = 2166136261;
+  for (let i = 0; i < text.length; i++) {
+    hash ^= text.charCodeAt(i);
+    hash = Math.imul(hash, 16777619);
+  }
+  return `${index}-${(hash >>> 0).toString(36)}`;
+}
+
+function initEmergProtocolExperience (root, topicId, protocol) {
+  if (!root || root.dataset.emergInteractive === '1') return;
+  root.dataset.emergInteractive = '1';
+
+  const state = emergReadProtocolProgress(topicId, protocol.id);
+  const actions = [...root.querySelectorAll('.emerg-flow-step, .emerg-steps > li')];
+  const actionByKey = new Map();
+
+  actions.forEach((action, index) => {
+    const key = emergActionKey(action.textContent.trim(), index);
+    actionByKey.set(key, action);
+    action.dataset.emergAction = key;
+    action.classList.add('emerg-action');
+    action.setAttribute('role', 'checkbox');
+    action.setAttribute('tabindex', '0');
+
+    const marker = document.createElement('span');
+    marker.className = 'emerg-action-marker';
+    marker.setAttribute('aria-hidden', 'true');
+    action.prepend(marker);
+
+    const applyChecked = checked => {
+      action.classList.toggle('is-checked', checked);
+      action.setAttribute('aria-checked', checked ? 'true' : 'false');
+      marker.textContent = checked ? '✓' : '';
+    };
+    applyChecked(state.checked[key] === true);
+
+    const toggle = event => {
+      if (event.type === 'keydown' && event.key !== 'Enter' && event.key !== ' ') return;
+      if (event.type === 'keydown') event.preventDefault();
+      const checked = action.getAttribute('aria-checked') !== 'true';
+      state.checked[key] = checked;
+      state.finished = false;
+      applyChecked(checked);
+      updateStatus();
+      emergSaveProtocolProgress(topicId, protocol.id, state);
+    };
+    action.addEventListener('click', toggle);
+    action.addEventListener('keydown', toggle);
+  });
+
+  const originalNodes = [...root.children];
+  const preamble = [];
+  const headedGroups = [];
+  let group = null;
+
+  originalNodes.forEach(node => {
+    if (node.tagName === 'H4') {
+      group = { title: node.textContent.trim(), nodes: [node] };
+      headedGroups.push(group);
+    } else if (group) {
+      group.nodes.push(node);
+    } else {
+      preamble.push(node);
+    }
+  });
+
+  const preambleHasWorkflow = preamble.some(node =>
+    node.matches?.('.emerg-flow-v, .emerg-steps, .emerg-table, .calc-block, .emerg-flowcharts-row')
+  );
+  const groups = [];
+  if (preamble.length && (preambleHasWorkflow || !headedGroups.length)) {
+    groups.push({ title: 'Condutas iniciais', nodes: preamble });
+  } else if (preamble.length && headedGroups.length) {
+    headedGroups[0].nodes.unshift(...preamble);
+  }
+  groups.push(...headedGroups);
+  if (!groups.length) groups.push({ title: 'Protocolo', nodes: originalNodes });
+
+  const toolbar = document.createElement('div');
+  toolbar.className = 'emerg-protocol-toolbar';
+  toolbar.innerHTML = `
+    <div>
+      <strong>${actions.length ? 'Checklist do atendimento' : 'Protocolo por etapas'}</strong>
+      <p>${actions.length
+        ? 'Marque apenas o que foi realizado ou está disponível. Itens desmarcados não impedem avançar.'
+        : 'Avance pelas etapas para consultar todo o conteúdo deste protocolo.'}</p>
+    </div>
+    ${actions.length
+      ? '<button type="button" class="emerg-progress-reset">Limpar marcações</button>'
+      : ''}`;
+
+  const pager = document.createElement('div');
+  pager.className = 'emerg-protocol-pager';
+  const pageStatus = document.createElement('div');
+  pageStatus.className = 'emerg-page-status';
+  pageStatus.setAttribute('aria-live', 'polite');
+  const pages = document.createElement('div');
+  pages.className = 'emerg-protocol-pages';
+
+  groups.forEach((entry, index) => {
+    const page = document.createElement('section');
+    page.className = 'emerg-protocol-page';
+    page.dataset.emergPage = String(index);
+    page.hidden = true;
+    entry.nodes.forEach(node => page.appendChild(node));
+    pages.appendChild(page);
+  });
+
+  const controls = document.createElement('div');
+  controls.className = 'emerg-page-controls';
+  controls.innerHTML = `
+    <button type="button" class="secondary emerg-page-prev">← Anterior</button>
+    <button type="button" class="emerg-page-next"></button>`;
+
+  root.append(toolbar, pager, pages, controls);
+
+  const prevButton = controls.querySelector('.emerg-page-prev');
+  const nextButton = controls.querySelector('.emerg-page-next');
+  const resetButton = toolbar.querySelector('.emerg-progress-reset');
+
+  function checkedCount () {
+    return Object.values(state.checked).filter(Boolean).length;
+  }
+
+  function updateStatus () {
+    const marked = checkedCount();
+    const suffix = actions.length
+      ? ` · ${marked} de ${actions.length} condutas marcadas`
+      : '';
+    pageStatus.textContent = `Etapa ${state.page + 1} de ${groups.length}: ${groups[state.page].title}${suffix}`;
+    pager.classList.toggle('is-finished', state.finished);
+  }
+
+  function showPage (index, scroll) {
+    state.page = Math.max(0, Math.min(index, groups.length - 1));
+    pages.querySelectorAll('.emerg-protocol-page').forEach((page, pageIndex) => {
+      page.hidden = pageIndex !== state.page;
+    });
+    prevButton.hidden = state.page === 0;
+    const isLast = state.page === groups.length - 1;
+    nextButton.textContent = isLast
+      ? (state.finished ? 'Protocolo revisado ✓' : 'Concluir protocolo')
+      : `Próximo: ${groups[state.page + 1].title} →`;
+    nextButton.classList.toggle('is-finished', isLast && state.finished);
+    updateStatus();
+    emergSaveProtocolProgress(topicId, protocol.id, state);
+    if (scroll) toolbar.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  pager.appendChild(pageStatus);
+  prevButton.addEventListener('click', () => showPage(state.page - 1, true));
+  nextButton.addEventListener('click', () => {
+    if (state.page < groups.length - 1) {
+      showPage(state.page + 1, true);
+      return;
+    }
+    state.finished = true;
+    showPage(state.page, false);
+  });
+  if (resetButton) {
+    resetButton.addEventListener('click', () => {
+      state.checked = {};
+      state.finished = false;
+      actionByKey.forEach(action => {
+        action.classList.remove('is-checked');
+        action.setAttribute('aria-checked', 'false');
+        const marker = action.querySelector('.emerg-action-marker');
+        if (marker) marker.textContent = '';
+      });
+      showPage(0, false);
+    });
+  }
+
+  showPage(state.page, false);
+}
+
 function showEmergenciaProtocol (protocolId) {
   const topic = EMERGENCY_TOPICS.find(t => t.id === currentEmergTopicId);
   if (!topic) return;
@@ -2488,6 +2736,11 @@ function showEmergenciaProtocol (protocolId) {
     <div class="emerg-algo-block emerg-algo-single">
       ${protocol.html}
     </div>`;
+  initEmergProtocolExperience(
+    contentEl.querySelector('.emerg-algo-block'),
+    currentEmergTopicId,
+    protocol
+  );
   initEmergEcgLightbox(contentEl);
   initEmergCalcForms(contentEl);
   if (protocolId === 'ventilacao-mecanica' && typeof medhubBindVmCalcForm === 'function') {
