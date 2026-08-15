@@ -9711,36 +9711,7 @@ body.app-page .app-content {
   }
 }
 
-/* —— Traçado de ECG em movimento no fundo do app —— */
-.app-ecg {
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  overflow: hidden;
-  pointer-events: none;
-}
-
-.app-ecg-svg {
-  position: absolute;
-  left: 0;
-  top: 56%;
-  width: 100%;
-  height: 190px;
-  fill: none;
-  opacity: 0.5;
-  clip-path: inset(0 100% 0 0);
-  animation: medhub-ecg-sweep 9s linear infinite;
-}
-
-.app-ecg-path {
-  stroke: #f0b429;
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  vector-effect: non-scaling-stroke;
-  filter: drop-shadow(0 0 4px rgba(240, 180, 41, 0.9)) drop-shadow(0 0 14px rgba(240, 180, 41, 0.45));
-}
-
+/* —— Traçado de ECG só no hero (faixa inferior) —— */
 body.app-page > header.app-header:not(.landing-header):not(.home-hero) {
   z-index: 3;
 }
@@ -9750,7 +9721,6 @@ body.app-page .app-shell {
   z-index: 1;
 }
 
-/* O ECG do fundo só faz sentido sobre a área vazia: o conteúdo fica por cima */
 body.app-page .app-content {
   position: relative;
 }
@@ -9788,7 +9758,6 @@ body.app-page .app-content {
   filter: drop-shadow(0 0 4px rgba(247, 194, 70, 0.95)) drop-shadow(0 0 12px rgba(240, 180, 41, 0.5));
 }
 
-/* Varredura do monitor: escreve da esquerda para a direita e depois apaga na mesma direção */
 @keyframes medhub-ecg-sweep {
   0% {
     clip-path: inset(0 100% 0 0);
@@ -9802,7 +9771,6 @@ body.app-page .app-content {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .app-ecg-svg,
   .home-hero-ecg-svg {
     animation: none;
     clip-path: none;
