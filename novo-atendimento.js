@@ -26,7 +26,9 @@ function novoAtendimentoElements () {
     tratamentoResumo: document.getElementById('novo-atendimento-tratamento-resumo'),
     txUnidade: document.getElementById('novo-atendimento-tx-unidade'),
     txCasa: document.getElementById('novo-atendimento-tx-casa'),
-    voltarQueixas: document.getElementById('novo-atendimento-voltar-queixas')
+    voltarQueixas: document.getElementById('novo-atendimento-voltar-queixas'),
+    irTratamento: document.getElementById('novo-atendimento-ir-tratamento'),
+    novoPaciente: document.getElementById('novo-atendimento-novo-paciente')
   };
 }
 
@@ -104,11 +106,22 @@ function novoAtendimentoShowStep (step) {
 
   if (showingQueixas) window.setTimeout(() => queixaInput?.focus(), 50);
 
-  if (showingTratamento && tratamentoResumo) {
+  if (showingTratamento) {
     const data = novoAtendimentoReadDraft();
-    const queixas = data?.queixas?.length ? data.queixas.join(' · ') : 'sem queixas';
-    const nome = data?.nome || 'paciente';
-    tratamentoResumo.textContent = `${nome} · ${queixas}. Escolha o local do tratamento.`;
+    if (tratamentoResumo) {
+      const queixas = data?.queixas?.length ? data.queixas.join(' · ') : 'sem queixas';
+      const nome = data?.nome || 'paciente';
+      tratamentoResumo.textContent = `${nome} · ${queixas}. Escolha o local do tratamento.`;
+    }
+
+    const { irTratamento } = novoAtendimentoElements();
+    if (irTratamento) {
+      const aberto = data?.lastTreatment;
+      irTratamento.hidden = !aberto;
+      irTratamento.textContent = aberto === 'receituario'
+        ? 'Voltar ao tratamento para casa →'
+        : 'Voltar ao tratamento na unidade →';
+    }
   }
 }
 
@@ -253,6 +266,11 @@ function novoAtendimentoOpenTreatment (sectionId) {
   const queixas = data?.queixas?.length ? data.queixas : [];
   const queryText = queixas.join('; ');
 
+  if (data) {
+    data.lastTreatment = sectionId;
+    sessionStorage.setItem(MEDHUB_NEW_ENCOUNTER_DRAFT, JSON.stringify(data));
+  }
+
   if (typeof showSection === 'function') showSection(sectionId);
 
   window.setTimeout(() => {
@@ -319,7 +337,9 @@ function initNovoAtendimento () {
     voltarIdentificacao,
     txUnidade,
     txCasa,
-    voltarQueixas
+    voltarQueixas,
+    irTratamento,
+    novoPaciente
   } = novoAtendimentoElements();
   if (!form || form.dataset.bound) return;
   form.dataset.bound = '1';
@@ -332,6 +352,11 @@ function initNovoAtendimento () {
   voltarQueixas?.addEventListener('click', () => novoAtendimentoShowStep('queixas'));
   txUnidade?.addEventListener('click', () => novoAtendimentoOpenTreatment('tratamento-hospitalar'));
   txCasa?.addEventListener('click', () => novoAtendimentoOpenTreatment('receituario'));
+  irTratamento?.addEventListener('click', () => {
+    const data = novoAtendimentoReadDraft();
+    novoAtendimentoOpenTreatment(data?.lastTreatment || 'tratamento-hospitalar');
+  });
+  novoPaciente?.addEventListener('click', novoAtendimentoClear);
   document.querySelectorAll('input[name="novo-atendimento-alergia"]').forEach(input => {
     input.addEventListener('change', novoAtendimentoUpdateAllergyField);
   });
@@ -341,7 +366,21 @@ function initNovoAtendimento () {
 
 function novoAtendimentoOnSectionShow () {
   initNovoAtendimento();
+  novoAtendimentoResumeStep();
+
   const { nome, queixasPanel, tratamentoPanel } = novoAtendimentoElements();
   const onIdentificacao = queixasPanel?.hidden && tratamentoPanel?.hidden;
   if (onIdentificacao && nome && !nome.value) window.setTimeout(() => nome.focus(), 50);
+}
+
+/** Ao voltar para a aba, retoma o passo onde o atendimento parou */
+function novoAtendimentoResumeStep () {
+  const data = novoAtendimentoReadDraft();
+  if (!data) return;
+
+  if (data.step === 'tratamento' && (data.queixas || []).length) {
+    novoAtendimentoShowStep('tratamento');
+  } else if (data.step === 'queixas') {
+    novoAtendimentoShowStep('queixas');
+  }
 }

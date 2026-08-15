@@ -39,7 +39,7 @@
   <script defer src="ventilacao-mecanica.js?v=vm-calc-v2"></script>
   <script defer src="tratamento-hospitalar-content-1.js?v=th-select-v2"></script>
   <script defer src="tratamento-hospitalar-content-2.js?v=th-select-v1"></script>
-  <script defer src="tratamento-hospitalar.js?v=th-auto-v8"></script>
+  <script defer src="tratamento-hospitalar.js?v=th-auto-v9"></script>
   <script defer src="pronto-socorro-content-1.js?v=ps-etiology-v4"></script>
   <script defer src="pronto-socorro-content-2.js?v=ps-etiology-v4"></script>
   <script defer src="pronto-socorro-content-3.js?v=ps-etiology-v4"></script>
@@ -93,7 +93,7 @@
   <script defer src="auth-cloud.js?v=cloud-v21"></script>
   <script defer src="app-search.js?v=search-v3"></script>
   <script defer src="medhub-site-config.js?v=site-ui-v3"></script>
-  <script defer src="novo-atendimento.js?v=encounter-v4"></script>
+  <script defer src="novo-atendimento.js?v=encounter-v5"></script>
   <script defer src="app.js?v=encounter-v1"></script>
   <script defer src="auth.js?v=compliance-v1"></script>
   <script defer src="pwa-install.js?v=pwa-v4"></script>
@@ -365,6 +365,8 @@
 
             <div class="novo-atendimento-actions">
               <button type="button" class="btn btn-secondary" id="novo-atendimento-voltar-queixas">← Voltar às queixas</button>
+              <button type="button" class="btn btn-secondary" id="novo-atendimento-ir-tratamento" hidden>Voltar ao tratamento aberto →</button>
+              <button type="button" class="btn btn-secondary" id="novo-atendimento-novo-paciente">Iniciar novo atendimento</button>
             </div>
           </section>
         </article>
@@ -524,6 +526,7 @@
           </div>
           <div id="th-condition-view" hidden>
             <button type="button" class="btn-back" id="th-back">← Voltar à lista</button>
+            <button type="button" class="btn-back" id="th-back-encounter" hidden>← Voltar ao atendimento</button>
             <h2 id="th-condition-title"></h2>
             <p class="muted th-detail-hint">Marque as medicações desejadas. Itens bloqueados por alergia ficam ocultos.</p>
             <div id="th-condition-content" class="emerg-content"></div>

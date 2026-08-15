@@ -1,6 +1,6 @@
 /* Tratamento hospitalar — condições com medicação IM/EV e navegação */
 
-const MEDHUB_TH_BUILD = 'th-auto-v8';
+const MEDHUB_TH_BUILD = 'th-auto-v9';
 
 const TH_CONTENT = Object.assign(
   {},
@@ -522,6 +522,41 @@ function initTratamentoHospitalar () {
   thEnsurePrescriptionButton();
 }
 
+function thHasEncounterDraft () {
+  try {
+    const draft = JSON.parse(sessionStorage.getItem('medhub-new-encounter-draft') || 'null');
+    return !!(draft && draft.nome);
+  } catch {
+    return false;
+  }
+}
+
+/** Atalho de volta ao atendimento em curso, ao lado do "voltar à lista" */
+function thEnsureEncounterBackButton () {
+  const backBtn = document.getElementById('th-back');
+  if (!backBtn) return null;
+
+  let btn = document.getElementById('th-back-encounter');
+  if (!btn) {
+    btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'btn-back';
+    btn.id = 'th-back-encounter';
+    btn.textContent = '← Voltar ao atendimento';
+    backBtn.after(btn);
+  }
+
+  if (!btn.dataset.bound) {
+    btn.dataset.bound = '1';
+    btn.addEventListener('click', () => {
+      if (typeof showSection === 'function') showSection('novo-atendimento');
+    });
+  }
+
+  btn.hidden = !thHasEncounterDraft();
+  return btn;
+}
+
 /** Cria o botão se o app.html em cache ainda for o antigo, sem ele */
 function thEnsurePrescriptionButton () {
   const actions = document.querySelector('#th-selection-bar .rx-selection-actions');
@@ -713,6 +748,7 @@ async function showTratamentoHospitalarConditions (conditionIds, opts) {
   currentThConditionId = conditions.map(c => c.id).join(',');
   document.getElementById('th-list-view').hidden = true;
   document.getElementById('th-condition-view').hidden = false;
+  thEnsureEncounterBackButton();
   document.getElementById('th-condition-title').textContent = conditions.length > 1
     ? `💊 ${conditions.length} tratamentos · ${conditions.map(c => c.name).join(' · ')}`
     : `${conditions[0].icon} ${conditions[0].name}`;
@@ -936,12 +972,37 @@ function thGetPrescriptionMeds () {
   return meds;
 }
 
+/** Paciente vem do atendimento em curso, da anamnese ou do rascunho, o que existir */
+function thGetPatientInfo () {
+  let draft = null;
+  try {
+    draft = JSON.parse(sessionStorage.getItem('medhub-new-encounter-draft') || 'null');
+  } catch {
+    draft = null;
+  }
+
+  const nome = sessionStorage.getItem('medhub-active-paciente') ||
+    document.getElementById('anam-paciente')?.value.trim() ||
+    draft?.nome || '';
+
+  const idadeRaw = sessionStorage.getItem('medhub-active-idade') ||
+    document.getElementById('anam-idade')?.value.trim() ||
+    draft?.idade || '';
+
+  const idade = idadeRaw && /\d/.test(idadeRaw) && !/anos?/i.test(idadeRaw)
+    ? `${idadeRaw} anos`
+    : idadeRaw;
+
+  return { nome: nome.trim(), idade: String(idade).trim() };
+}
+
 function thGeneratePrescription () {
   const meds = thGetPrescriptionMeds();
   if (!meds.length) return;
 
-  const paciente = sessionStorage.getItem('medhub-active-paciente') || '________________________________';
-  const idade = sessionStorage.getItem('medhub-active-idade') || '';
+  const patient = thGetPatientInfo();
+  const paciente = patient.nome || '________________________________';
+  const idade = patient.idade;
   const doctor = typeof rxGetDoctorName === 'function'
     ? rxGetDoctorName()
     : (typeof medhubGetRxDoctorName === 'function' ? medhubGetRxDoctorName() : '');
@@ -960,7 +1021,7 @@ function thGeneratePrescription () {
     return;
   }
 
-  const medRows = meds.map((med, index) => `
+  const medRows = meds.map(med => `
     <li>
       <div class="med-name">${thEscapeHtml(med.text)}</div>
       ${med.route ? `<div class="med-route">Via selecionada: <strong>${thEscapeHtml(med.route)}</strong></div>` : ''}
@@ -1009,7 +1070,7 @@ function thGeneratePrescription () {
       <section class="meta">
         <p><strong>Paciente:</strong> ${thEscapeHtml(paciente)}</p>
         <p><strong>Data:</strong> ${thEscapeHtml(date)}</p>
-        ${idade ? `<p><strong>Idade:</strong> ${thEscapeHtml(idade)} anos</p>` : ''}
+        ${idade ? `<p><strong>Idade:</strong> ${thEscapeHtml(idade)}</p>` : ''}
         ${conditions.length ? `<p class="conditions"><strong>Condições:</strong> ${thEscapeHtml(conditions.join(' · '))}</p>` : ''}
       </section>
       <h2>Medicações selecionadas</h2>
