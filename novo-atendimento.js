@@ -21,7 +21,12 @@ function novoAtendimentoElements () {
     queixasEmpty: document.getElementById('novo-atendimento-queixas-empty'),
     queixasStatus: document.getElementById('novo-atendimento-queixas-status'),
     salvarQueixas: document.getElementById('novo-atendimento-salvar-queixas'),
-    voltarIdentificacao: document.getElementById('novo-atendimento-voltar-identificacao')
+    voltarIdentificacao: document.getElementById('novo-atendimento-voltar-identificacao'),
+    tratamentoPanel: document.getElementById('novo-atendimento-tratamento-panel'),
+    tratamentoResumo: document.getElementById('novo-atendimento-tratamento-resumo'),
+    txUnidade: document.getElementById('novo-atendimento-tx-unidade'),
+    txCasa: document.getElementById('novo-atendimento-tx-casa'),
+    voltarQueixas: document.getElementById('novo-atendimento-voltar-queixas')
   };
 }
 
@@ -70,13 +75,41 @@ function novoAtendimentoReadDraft () {
   }
 }
 
+function novoAtendimentoEscape (text) {
+  return String(text || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
 function novoAtendimentoShowStep (step) {
-  const { form, identificacaoHeader, queixasPanel, queixaInput } = novoAtendimentoElements();
+  const {
+    form,
+    identificacaoHeader,
+    queixasPanel,
+    queixaInput,
+    tratamentoPanel,
+    tratamentoResumo
+  } = novoAtendimentoElements();
+
+  const showingIdentificacao = step === 'identificacao';
   const showingQueixas = step === 'queixas';
-  if (identificacaoHeader) identificacaoHeader.hidden = showingQueixas;
-  if (form) form.hidden = showingQueixas;
+  const showingTratamento = step === 'tratamento';
+
+  if (identificacaoHeader) identificacaoHeader.hidden = !showingIdentificacao;
+  if (form) form.hidden = !showingIdentificacao;
   if (queixasPanel) queixasPanel.hidden = !showingQueixas;
+  if (tratamentoPanel) tratamentoPanel.hidden = !showingTratamento;
+
   if (showingQueixas) window.setTimeout(() => queixaInput?.focus(), 50);
+
+  if (showingTratamento && tratamentoResumo) {
+    const data = novoAtendimentoReadDraft();
+    const queixas = data?.queixas?.length ? data.queixas.join(' · ') : 'sem queixas';
+    const nome = data?.nome || 'paciente';
+    tratamentoResumo.textContent = `${nome} · ${queixas}. Escolha o local do tratamento.`;
+  }
 }
 
 function novoAtendimentoRenderQueixas () {
@@ -85,8 +118,8 @@ function novoAtendimentoRenderQueixas () {
 
   queixasList.innerHTML = novoAtendimentoQueixas.map((queixa, index) => `
     <span class="novo-atendimento-complaint-chip">
-      <span>${String(queixa).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</span>
-      <button type="button" data-remove-queixa="${index}" aria-label="Remover ${String(queixa).replace(/"/g, '&quot;')}">×</button>
+      <span>${novoAtendimentoEscape(queixa)}</span>
+      <button type="button" data-remove-queixa="${index}" aria-label="Remover ${novoAtendimentoEscape(queixa)}">×</button>
     </span>
   `).join('');
   if (queixasEmpty) queixasEmpty.hidden = novoAtendimentoQueixas.length > 0;
@@ -133,6 +166,7 @@ function novoAtendimentoSave (event) {
     idade: String(idade.value).trim(),
     alergias: allergyChoice === 'sim' ? detalhe.value.trim() : 'Nega alergias',
     queixas: previous?.queixas || novoAtendimentoQueixas,
+    step: 'queixas',
     startedAt: previous?.startedAt || new Date().toISOString()
   };
 
@@ -189,7 +223,36 @@ function novoAtendimentoRestore () {
   novoAtendimentoQueixas = Array.isArray(data.queixas) ? data.queixas.filter(Boolean) : [];
   novoAtendimentoUpdateAllergyField();
   novoAtendimentoRenderQueixas();
-  novoAtendimentoShowStep('queixas');
+
+  if (data.step === 'tratamento' && novoAtendimentoQueixas.length) {
+    novoAtendimentoShowStep('tratamento');
+  } else if (novoAtendimentoQueixas.length || data.step === 'queixas') {
+    novoAtendimentoShowStep('queixas');
+  } else {
+    novoAtendimentoShowStep('identificacao');
+  }
+}
+
+function novoAtendimentoPrefillSearch (sectionId, query) {
+  const map = {
+    'tratamento-hospitalar': 'th-search',
+    receituario: 'rx-search'
+  };
+  const inputId = map[sectionId];
+  if (!inputId || !query) return;
+  window.setTimeout(() => {
+    const input = document.getElementById(inputId);
+    if (!input) return;
+    input.value = query;
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+  }, 80);
+}
+
+function novoAtendimentoOpenTreatment (sectionId) {
+  const data = novoAtendimentoReadDraft();
+  const query = data?.queixas?.[0] || '';
+  if (typeof showSection === 'function') showSection(sectionId);
+  novoAtendimentoPrefillSearch(sectionId, query);
 }
 
 function novoAtendimentoSaveQueixas () {
@@ -217,16 +280,14 @@ function novoAtendimentoSaveQueixas () {
   }
 
   data.queixas = [...novoAtendimentoQueixas];
+  data.step = 'tratamento';
   sessionStorage.setItem(MEDHUB_NEW_ENCOUNTER_DRAFT, JSON.stringify(data));
   sessionStorage.setItem('medhub-active-queixa', data.queixas.join('; '));
   novoAtendimentoSyncAnamnese(data);
   if (typeof rxSyncFromAnamnese === 'function') rxSyncFromAnamnese();
 
-  novoAtendimentoSetStatus(
-    `${data.queixas.length} queixa(s) salva(s): ${data.queixas.join(' · ')}`,
-    'ok',
-    queixasStatus
-  );
+  novoAtendimentoSetStatus('', '', queixasStatus);
+  novoAtendimentoShowStep('tratamento');
 }
 
 function initNovoAtendimento () {
@@ -235,7 +296,10 @@ function initNovoAtendimento () {
     limpar,
     queixaForm,
     salvarQueixas,
-    voltarIdentificacao
+    voltarIdentificacao,
+    txUnidade,
+    txCasa,
+    voltarQueixas
   } = novoAtendimentoElements();
   if (!form || form.dataset.bound) return;
   form.dataset.bound = '1';
@@ -245,6 +309,9 @@ function initNovoAtendimento () {
   queixaForm?.addEventListener('submit', novoAtendimentoAddQueixa);
   salvarQueixas?.addEventListener('click', novoAtendimentoSaveQueixas);
   voltarIdentificacao?.addEventListener('click', () => novoAtendimentoShowStep('identificacao'));
+  voltarQueixas?.addEventListener('click', () => novoAtendimentoShowStep('queixas'));
+  txUnidade?.addEventListener('click', () => novoAtendimentoOpenTreatment('tratamento-hospitalar'));
+  txCasa?.addEventListener('click', () => novoAtendimentoOpenTreatment('receituario'));
   document.querySelectorAll('input[name="novo-atendimento-alergia"]').forEach(input => {
     input.addEventListener('change', novoAtendimentoUpdateAllergyField);
   });
@@ -254,6 +321,7 @@ function initNovoAtendimento () {
 
 function novoAtendimentoOnSectionShow () {
   initNovoAtendimento();
-  const { nome, queixasPanel } = novoAtendimentoElements();
-  if (queixasPanel?.hidden && nome && !nome.value) window.setTimeout(() => nome.focus(), 50);
+  const { nome, queixasPanel, tratamentoPanel } = novoAtendimentoElements();
+  const onIdentificacao = queixasPanel?.hidden && tratamentoPanel?.hidden;
+  if (onIdentificacao && nome && !nome.value) window.setTimeout(() => nome.focus(), 50);
 }

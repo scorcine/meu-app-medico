@@ -16,7 +16,7 @@
   <meta name="apple-mobile-web-app-title" content="MedHub">
   <link rel="apple-touch-icon" href="/assets/icons/icon-192.png?v=icon-v2">
   <script src="theme.js?v=2"></script>
-  <link rel="stylesheet" href="style.css?v=encounter-v2">
+  <link rel="stylesheet" href="style.css?v=encounter-v3">
   <link rel="stylesheet" href="app-mobile.css?v=pwa-header-v1">
   <script defer src="calculators-risco.js"></script>
   <script defer src="calculators-cardio.js"></script>
@@ -93,7 +93,7 @@
   <script defer src="auth-cloud.js?v=cloud-v21"></script>
   <script defer src="app-search.js?v=search-v3"></script>
   <script defer src="medhub-site-config.js?v=site-ui-v3"></script>
-  <script defer src="novo-atendimento.js?v=encounter-v2"></script>
+  <script defer src="novo-atendimento.js?v=encounter-v3"></script>
   <script defer src="app.js?v=encounter-v1"></script>
   <script defer src="auth.js?v=compliance-v1"></script>
   <script defer src="pwa-install.js?v=pwa-v4"></script>
@@ -330,10 +330,42 @@
             </div>
 
             <div class="novo-atendimento-actions">
-              <button type="button" class="btn" id="novo-atendimento-salvar-queixas">Salvar queixas</button>
+              <button type="button" class="btn" id="novo-atendimento-salvar-queixas">Continuar para tratamento</button>
               <button type="button" class="btn btn-secondary" id="novo-atendimento-voltar-identificacao">← Voltar aos dados</button>
             </div>
             <p id="novo-atendimento-queixas-status" class="novo-atendimento-status" hidden role="status"></p>
+          </section>
+
+          <section id="novo-atendimento-tratamento-panel" class="novo-atendimento-tratamento-panel" hidden>
+            <header class="novo-atendimento-header">
+              <span class="novo-atendimento-icon" aria-hidden="true">💊</span>
+              <div>
+                <p class="novo-atendimento-step">Novo atendimento · Tratamento</p>
+                <h2>Onde será o tratamento?</h2>
+                <p class="muted" id="novo-atendimento-tratamento-resumo">Escolha o local do tratamento com base nas queixas informadas.</p>
+              </div>
+            </header>
+
+            <div class="novo-atendimento-treatment-grid">
+              <button type="button" class="novo-atendimento-treatment-card novo-atendimento-treatment-card--unidade" id="novo-atendimento-tx-unidade">
+                <span class="novo-atendimento-treatment-icon" aria-hidden="true">🏥</span>
+                <span class="novo-atendimento-treatment-body">
+                  <span class="novo-atendimento-treatment-name">Tratamento na unidade</span>
+                  <span class="novo-atendimento-treatment-desc">IM/EV · plantão, observação ou internação</span>
+                </span>
+              </button>
+              <button type="button" class="novo-atendimento-treatment-card novo-atendimento-treatment-card--casa" id="novo-atendimento-tx-casa">
+                <span class="novo-atendimento-treatment-icon" aria-hidden="true">🏠</span>
+                <span class="novo-atendimento-treatment-body">
+                  <span class="novo-atendimento-treatment-name">Tratamento para casa</span>
+                  <span class="novo-atendimento-treatment-desc">VO · receita ambulatorial / alta</span>
+                </span>
+              </button>
+            </div>
+
+            <div class="novo-atendimento-actions">
+              <button type="button" class="btn btn-secondary" id="novo-atendimento-voltar-queixas">← Voltar às queixas</button>
+            </div>
           </section>
         </article>
       </section>
