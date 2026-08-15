@@ -1,6 +1,6 @@
 /* Tratamento hospitalar — condições com medicação IM/EV e navegação */
 
-const MEDHUB_TH_BUILD = 'th-auto-v6';
+const MEDHUB_TH_BUILD = 'th-auto-v7';
 
 const TH_CONTENT = Object.assign(
   {},
@@ -518,6 +518,12 @@ function initTratamentoHospitalar () {
     copyBtn.dataset.bound = '1';
     copyBtn.addEventListener('click', thCopySelection);
   }
+
+  const prescriptionBtn = document.getElementById('th-generate-prescription');
+  if (prescriptionBtn && !prescriptionBtn.dataset.bound) {
+    prescriptionBtn.dataset.bound = '1';
+    prescriptionBtn.addEventListener('click', thGeneratePrescription);
+  }
 }
 
 function renderThGrid (items) {
@@ -870,6 +876,7 @@ function thUpdateSelectionBar () {
   const count = document.getElementById('th-selection-count');
   const clearBtn = document.getElementById('th-clear-selection');
   const copyBtn = document.getElementById('th-copy-selection');
+  const prescriptionBtn = document.getElementById('th-generate-prescription');
   if (!bar) return;
 
   const n = thSelectedMedKeys.size;
@@ -877,6 +884,127 @@ function thUpdateSelectionBar () {
   if (count) count.textContent = n ? `${n} medicação(ões) selecionada(s)` : 'Nenhuma medicação selecionada';
   if (clearBtn) clearBtn.disabled = n === 0;
   if (copyBtn) copyBtn.disabled = n === 0;
+  if (prescriptionBtn) prescriptionBtn.disabled = n === 0;
+}
+
+function thEscapeHtml (value) {
+  return String(value ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+function thGetPrescriptionMeds () {
+  const meds = [];
+  const seenDrugs = new Set();
+
+  document.querySelectorAll('#th-condition-content [data-th-med]:checked').forEach(input => {
+    if (input.disabled) return;
+    const drug = input.dataset.thDrug;
+    if (drug && seenDrugs.has(drug)) return;
+    if (drug) seenDrugs.add(drug);
+
+    const route = thSelectedRoutes.get(input.dataset.thKey);
+    meds.push({
+      text: input.dataset.thLabel || input.closest('.th-med-option')?.textContent?.trim() || '',
+      route: route ? (TH_ROUTE_LABELS[route] || route.toUpperCase()) : ''
+    });
+  });
+
+  return meds;
+}
+
+function thGeneratePrescription () {
+  const meds = thGetPrescriptionMeds();
+  if (!meds.length) return;
+
+  const paciente = sessionStorage.getItem('medhub-active-paciente') || '________________________________';
+  const idade = sessionStorage.getItem('medhub-active-idade') || '';
+  const doctor = typeof rxGetDoctorName === 'function'
+    ? rxGetDoctorName()
+    : (typeof medhubGetRxDoctorName === 'function' ? medhubGetRxDoctorName() : '');
+  const crm = typeof rxGetStoredCrmDisplay === 'function'
+    ? rxGetStoredCrmDisplay()
+    : (typeof medhubGetRxCrmFormatted === 'function' ? medhubGetRxCrmFormatted() : 'CRM ____________');
+  const date = new Date().toLocaleDateString('pt-BR');
+  const conditions = String(currentThConditionId || '')
+    .split(',')
+    .map(id => TH_CONDITIONS.find(c => c.id === id)?.name)
+    .filter(Boolean);
+
+  const win = window.open('', '_blank', 'width=850,height=950');
+  if (!win) {
+    alert('Permita pop-ups para gerar a prescrição.');
+    return;
+  }
+
+  const medRows = meds.map((med, index) => `
+    <li>
+      <div class="med-name">${thEscapeHtml(med.text)}</div>
+      ${med.route ? `<div class="med-route">Via selecionada: <strong>${thEscapeHtml(med.route)}</strong></div>` : ''}
+    </li>
+  `).join('');
+
+  win.document.write(`<!doctype html>
+  <html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <title>Prescrição médica — ${thEscapeHtml(paciente)}</title>
+    <style>
+      * { box-sizing: border-box; }
+      body { margin: 0; background: #e5e7eb; color: #111827; font-family: Arial, sans-serif; }
+      .toolbar { position: sticky; top: 0; display: flex; justify-content: flex-end; gap: 8px; padding: 12px; background: #111827; }
+      button { border: 0; border-radius: 7px; padding: 10px 16px; font-weight: 700; cursor: pointer; }
+      .print { background: #1677ff; color: #fff; }
+      .sheet { width: 210mm; min-height: 297mm; margin: 18px auto; padding: 22mm 20mm; background: #fff; box-shadow: 0 4px 22px #0002; }
+      h1 { margin: 0 0 28px; text-align: center; font-size: 20px; letter-spacing: .08em; }
+      .meta { display: grid; grid-template-columns: 1fr auto; gap: 8px 24px; padding-bottom: 18px; border-bottom: 1px solid #cbd5e1; }
+      .meta p { margin: 0; }
+      .conditions { grid-column: 1 / -1; }
+      h2 { margin: 26px 0 14px; font-size: 16px; }
+      ol { margin: 0; padding-left: 24px; }
+      li { margin-bottom: 18px; padding-left: 7px; line-height: 1.45; }
+      .med-route { margin-top: 4px; color: #334155; }
+      .signature { margin-top: 75px; text-align: center; }
+      .signature-line { width: 320px; margin: 0 auto 10px; border-top: 1px solid #111827; }
+      .signature p { margin: 4px 0; }
+      .note { margin-top: 40px; padding-top: 12px; border-top: 1px solid #e5e7eb; color: #64748b; font-size: 11px; }
+      @media print {
+        body { background: #fff; }
+        .toolbar { display: none; }
+        .sheet { width: auto; min-height: auto; margin: 0; box-shadow: none; }
+        @page { size: A4; margin: 0; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="toolbar">
+      <button onclick="window.close()">Fechar</button>
+      <button class="print" onclick="window.print()">Imprimir / salvar PDF</button>
+    </div>
+    <main class="sheet">
+      <h1>PRESCRIÇÃO MÉDICA</h1>
+      <section class="meta">
+        <p><strong>Paciente:</strong> ${thEscapeHtml(paciente)}</p>
+        <p><strong>Data:</strong> ${thEscapeHtml(date)}</p>
+        ${idade ? `<p><strong>Idade:</strong> ${thEscapeHtml(idade)} anos</p>` : ''}
+        ${conditions.length ? `<p class="conditions"><strong>Condições:</strong> ${thEscapeHtml(conditions.join(' · '))}</p>` : ''}
+      </section>
+      <h2>Medicações selecionadas</h2>
+      <ol>${medRows}</ol>
+      <section class="signature">
+        <div class="signature-line"></div>
+        <p><strong>Dr(a). ${thEscapeHtml(doctor || '________________________')}</strong></p>
+        <p>${thEscapeHtml(crm)}</p>
+      </section>
+      <p class="note">Revise medicação, dose, via, intervalo, alergias e contraindicações antes de assinar.</p>
+    </main>
+  </body>
+  </html>`);
+  win.document.close();
+  win.focus();
 }
 
 function thCopySelection () {
