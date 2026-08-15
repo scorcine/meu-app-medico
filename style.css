@@ -9590,36 +9590,51 @@ body.app-page .sidebar-link {
   color: #cbd5e1;
 }
 
-body.app-page .sidebar-link:hover {
-  background: rgba(56, 189, 248, 0.1);
-  color: #e0f2fe;
-  border-left-color: rgba(56, 189, 248, 0.55);
+body.app-page .sidebar-link:hover,
+body.app-page .sidebar-link:focus-visible {
+  background: transparent;
+  color: #fbe3a6;
+  border-left-color: #f0b429;
+  box-shadow:
+    inset 0 0 0 1px rgba(240, 180, 41, 0.5),
+    0 0 16px rgba(240, 180, 41, 0.16);
+  text-shadow: 0 0 12px rgba(240, 180, 41, 0.35);
+  outline: none;
 }
 
 body.app-page .sidebar-link.active {
-  background: linear-gradient(90deg, rgba(56, 189, 248, 0.2) 0%, rgba(56, 189, 248, 0.02) 100%);
-  color: #f8fafc;
+  background: rgba(240, 180, 41, 0.06);
+  color: #fde3a7;
   border-left-color: #f0b429;
+  box-shadow: inset 0 0 0 1px rgba(240, 180, 41, 0.42);
 }
 
-body.app-page .sidebar-link--primary {
-  margin: 0.35rem 0.9rem 0.5rem;
+/* Ação principal: contorno dourado, sem preenchimento */
+body.app-page .sidebar-link--primary,
+body.app-page .sidebar-link[data-section="novo-atendimento"] {
+  margin: 0.35rem 0.85rem 0.55rem;
   padding: 0.7rem 0.9rem;
-  width: auto;
-  border: 1px solid rgba(240, 180, 41, 0.6);
+  width: calc(100% - 1.7rem);
+  border: 1px solid rgba(240, 180, 41, 0.7);
+  border-left: 1px solid rgba(240, 180, 41, 0.7);
   border-radius: 10px;
-  background: linear-gradient(135deg, #f0b429 0%, #d98e04 100%);
-  color: #0b1f45;
+  background: transparent;
+  color: #f2c464;
   font-weight: 700;
-  box-shadow: 0 6px 18px rgba(240, 180, 41, 0.22);
+  box-shadow: none;
 }
 
 body.app-page .sidebar-link--primary:hover,
-body.app-page .sidebar-link--primary.active {
-  background: linear-gradient(135deg, #f7c246 0%, #e39b0b 100%);
-  color: #0b1f45;
-  border-left-color: rgba(240, 180, 41, 0.6);
-  box-shadow: 0 8px 22px rgba(240, 180, 41, 0.32);
+body.app-page .sidebar-link--primary.active,
+body.app-page .sidebar-link[data-section="novo-atendimento"]:hover,
+body.app-page .sidebar-link[data-section="novo-atendimento"]:focus-visible,
+body.app-page .sidebar-link[data-section="novo-atendimento"].active {
+  background: rgba(240, 180, 41, 0.1);
+  color: #fde3a7;
+  border-color: #f0b429;
+  box-shadow:
+    0 0 18px rgba(240, 180, 41, 0.28),
+    inset 0 0 14px rgba(240, 180, 41, 0.08);
 }
 
 body.app-page .sidebar-build {
@@ -9638,19 +9653,23 @@ body.app-page .app-content {
   background-attachment: fixed;
 }
 
-/* —— CTA principal em dourado, alinhado às peças da marca —— */
+/* —— CTA principal: só contorno dourado com brilho —— */
 .home-novo-paciente-btn {
-  border-color: rgba(255, 226, 158, 0.65);
-  background: linear-gradient(135deg, #f7c246 0%, #e3a112 55%, #c9820a 100%);
-  color: #0b1f45;
+  border: 1.5px solid rgba(240, 180, 41, 0.75);
+  background: rgba(240, 180, 41, 0.07);
+  color: #f2c464;
   box-shadow:
-    0 0 0 4px rgba(240, 180, 41, 0.16),
-    0 14px 32px rgba(2, 33, 71, 0.55);
+    0 0 20px rgba(240, 180, 41, 0.16),
+    inset 0 0 20px rgba(240, 180, 41, 0.05);
 }
 
 .home-novo-paciente-btn:hover,
 .home-novo-paciente-btn:focus-visible {
+  background: rgba(240, 180, 41, 0.14);
+  border-color: #f7c246;
+  color: #fde3a7;
+  filter: none;
   box-shadow:
-    0 0 0 5px rgba(240, 180, 41, 0.24),
-    0 18px 38px rgba(2, 33, 71, 0.6);
+    0 0 28px rgba(240, 180, 41, 0.3),
+    inset 0 0 22px rgba(240, 180, 41, 0.08);
 }
