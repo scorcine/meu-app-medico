@@ -1,6 +1,6 @@
 /* Tratamento hospitalar — condições com medicação IM/EV e navegação */
 
-const MEDHUB_TH_BUILD = 'th-auto-v5';
+const MEDHUB_TH_BUILD = 'th-auto-v6';
 
 const TH_CONTENT = Object.assign(
   {},
@@ -209,6 +209,25 @@ function thSplitMedChoices (liText) {
   };
 }
 
+/* Palavras que antecedem o fármaco no texto do protocolo e não fazem parte do nome */
+const TH_NAME_STOPWORDS = new Set([
+  'amp', 'ampola', 'ampolas', 'linha', 'dose', 'doses', 'mais', 'associacao', 'associada', 'associado',
+  'considerar', 'repetir', 'evitar', 'trocar', 'manter', 'manutencao', 'iniciar', 'titular', 'usar',
+  'adicionar', 'avaliar', 'solicitar', 'acionar', 'monitorizar', 'diferenciar', 'todos', 'todas',
+  'depois', 'apos', 'nao', 'sim', 'alternativa', 'preferir', 'preferencia', 'opcao', 'via', 'uso',
+  'apenas', 'somente', 'conforme', 'geralmente', 'idealmente', 'imediata', 'imediato'
+]);
+
+/* Nomes compostos que precisam das duas palavras para não virar outro fármaco */
+const TH_COMPOUND_NAMES = new Set([
+  'acido valproico', 'acido acetilsalicilico', 'sulfato magnesio', 'gluconato calcio', 'ringer lactato',
+  'insulina regular', 'insulina nph', 'soro antirrabico', 'soro antitetanico', 'vacina antirrabica',
+  'vacina antitetanica', 'vacina dtpa', 'sulfametoxazol trimetoprima', 'amoxicilina clavulanato',
+  'piperacilina tazobactam', 'ampicilina sulbactam', 'artemeter lumefantrina', 'atovaquona proguanil',
+  'quinina hcl', 'iodeto potassio', 'sulfadiazina prata', 'carvao ativado', 'nitroprussiato sodio',
+  'solucao lugol', 'penicilina cristalina', 'bicarbonato sodio', 'imunoglobulina humana'
+]);
+
 /** Identidade do fármaco para reaproveitar a marcação entre condições */
 function thMedIdentity (label) {
   const raw = String(label || '');
@@ -216,8 +235,11 @@ function thMedIdentity (label) {
   const beforeDose = afterPrefix.split(/\d/)[0];
   const words = thNormText(beforeDose)
     .split(' ')
-    .filter(w => w.length >= 3 && !['amp', 'ampola', 'linha', 'dose', 'mais'].includes(w));
-  return words.slice(0, 2).join(' ');
+    .filter(w => w.length >= 3 && !TH_NAME_STOPWORDS.has(w));
+
+  if (!words.length) return '';
+  const pair = words.slice(0, 2).join(' ');
+  return TH_COMPOUND_NAMES.has(pair) ? pair : words[0];
 }
 
 const TH_ROUTE_LABELS = {
@@ -232,64 +254,175 @@ const TH_ROUTE_LABELS = {
   nasal: 'Intranasal'
 };
 
-/* Vias possíveis por fármaco — impede oferecer via inexistente ou proscrita
-   (ex.: diclofenaco e tenoxicam não podem ser EV) */
+/* Vias realmente disponíveis por fármaco no Brasil — a lista do protocolo cita só a via
+   preferida naquele cenário, então a tabela é que define o que pode ser oferecido.
+   Exceções relevantes: diclofenaco não é EV; prometazina não é EV (lesão tecidual). */
 const TH_DRUG_ROUTES = {
+  // Analgésicos e anti-inflamatórios
   dipirona: ['ev', 'im', 'vo'],
+  paracetamol: ['ev', 'vo'],
   diclofenaco: ['im', 'vo'],
-  tenoxicam: ['im', 'vo'],
   cetoprofeno: ['ev', 'im', 'vo'],
-  ketorolaco: ['ev', 'im', 'vo'],
+  ketorolaco: ['ev', 'im', 'vo', 'sl'],
+  tenoxicam: ['ev', 'im', 'vo'],
   ibuprofeno: ['vo'],
   nimesulida: ['vo'],
-  paracetamol: ['ev', 'vo'],
-  tramadol: ['ev', 'im', 'vo'],
-  morfina: ['ev', 'im', 'sc', 'vo'],
-  fentanil: ['ev'],
-  meperidina: ['ev', 'im'],
+  colchicina: ['vo'],
+  tramadol: ['ev', 'im', 'sc', 'vo'],
   codeina: ['vo'],
+  morfina: ['ev', 'im', 'sc', 'vo'],
+  meperidina: ['ev', 'im'],
+  fentanil: ['ev', 'im'],
+  naloxona: ['ev', 'im', 'sc'],
+
+  // Corticoides
   dexametasona: ['ev', 'im', 'vo'],
   metilprednisolona: ['ev', 'im'],
   hidrocortisona: ['ev', 'im'],
   prednisona: ['vo'],
+  prednisolona: ['vo'],
+
+  // Náusea, cólica e trato digestivo
   metoclopramida: ['ev', 'im', 'vo'],
-  ondansetrona: ['ev', 'im', 'vo'],
   bromoprida: ['ev', 'im', 'vo'],
+  ondansetrona: ['ev', 'im', 'vo'],
   dimenidrinato: ['ev', 'im', 'vo'],
+  meclizina: ['vo'],
   escopolamina: ['ev', 'im', 'vo'],
   hioscina: ['ev', 'im', 'vo'],
+  buscopan: ['ev', 'im', 'vo'],
   omeprazol: ['ev', 'vo'],
   pantoprazol: ['ev', 'vo'],
+  esomeprazol: ['ev', 'vo'],
   ranitidina: ['ev', 'im', 'vo'],
+  octreotide: ['ev', 'sc'],
+  terlipressina: ['ev'],
+
+  // Neuro e psiquiatria
   diazepam: ['ev', 'im', 'vo', 'ir'],
   midazolam: ['ev', 'im', 'nasal'],
+  lorazepam: ['ev', 'vo', 'sl'],
+  clonazepam: ['ev', 'im', 'vo', 'sl'],
+  alprazolam: ['vo'],
   haloperidol: ['ev', 'im', 'vo'],
+  droperidol: ['ev', 'im'],
   prometazina: ['im', 'vo'],
   clorpromazina: ['im', 'vo'],
+  tiapride: ['ev', 'im', 'vo'],
+  quetiapina: ['vo'],
+  risperidona: ['vo', 'sl'],
+  amitriptilina: ['vo'],
+  pregabalina: ['vo'],
   ciclobenzaprina: ['vo'],
-  epinefrina: ['ev', 'im'],
-  adrenalina: ['ev', 'im'],
-  hidroxizina: ['vo'],
+  fenitoina: ['ev', 'vo'],
+  fenobarbital: ['ev', 'im', 'vo'],
+  'acido valproico': ['ev', 'vo'],
+  tiopental: ['ev'],
+  propofol: ['ev'],
+  flumazenil: ['ev'],
+  tiamina: ['ev', 'im', 'vo'],
+  folato: ['vo'],
+
+  // Cardiovascular e hidroeletrolítico
+  adrenalina: ['ev', 'im', 'sc'],
+  epinefrina: ['ev', 'im', 'sc'],
+  noradrenalina: ['ev'],
+  dobutamina: ['ev'],
+  vasopressina: ['ev'],
+  atropina: ['ev', 'im'],
+  nitroglicerina: ['ev', 'sl'],
+  isossorbida: ['sl', 'vo'],
+  'nitroprussiato sodio': ['ev'],
+  hidralazina: ['ev', 'im', 'vo'],
+  labetalol: ['ev', 'vo'],
+  esmolol: ['ev'],
+  metoprolol: ['ev', 'vo'],
+  propranolol: ['vo'],
+  clonidina: ['ev', 'vo'],
+  captopril: ['vo'],
+  anlodipino: ['vo'],
+  nifedipino: ['vo'],
+  metildopa: ['vo'],
+  furosemida: ['ev', 'im', 'vo'],
+  manitol: ['ev'],
+  nicardipina: ['ev'],
+  'sulfato magnesio': ['ev', 'im'],
+  magnesio: ['ev', 'im'],
+  bicarbonato: ['ev'],
+  'gluconato calcio': ['ev'],
+  'bicarbonato sodio': ['ev'],
+  kcl: ['ev', 'vo'],
+  nacl: ['ev'],
+  glicose: ['ev', 'vo'],
+  'ringer lactato': ['ev'],
+  aas: ['vo'],
+  clopidogrel: ['vo'],
+  'insulina regular': ['ev', 'im', 'sc'],
+  'insulina nph': ['sc'],
+  glucagon: ['ev', 'im', 'sc'],
+
+  // Respiratório
+  salbutamol: ['neb', 'inal', 'ev'],
+  fenoterol: ['neb'],
+  ipratropio: ['neb'],
+  budesonida: ['neb', 'inal'],
+  aminofilina: ['ev'],
+  acetilcisteina: ['ev', 'vo', 'neb'],
+
+  // Anti-infecciosos
   ceftriaxona: ['ev', 'im'],
   cefazolina: ['ev', 'im'],
+  cefotaxima: ['ev', 'im'],
   cefepime: ['ev'],
   oxacilina: ['ev'],
   ampicilina: ['ev', 'im'],
+  'ampicilina sulbactam': ['ev', 'im'],
   amoxicilina: ['vo'],
+  'amoxicilina clavulanato': ['ev', 'vo'],
+  'piperacilina tazobactam': ['ev'],
+  meropenem: ['ev'],
+  ertapenem: ['ev', 'im'],
+  aztreonam: ['ev'],
+  'penicilina cristalina': ['ev'],
   clindamicina: ['ev', 'im', 'vo'],
-  vancomicina: ['ev'],
+  vancomicina: ['ev', 'vo'],
+  linezolida: ['ev', 'vo'],
   gentamicina: ['ev', 'im'],
   azitromicina: ['ev', 'vo'],
   claritromicina: ['ev', 'vo'],
+  doxiciclina: ['ev', 'vo'],
   metronidazol: ['ev', 'vo'],
   ciprofloxacino: ['ev', 'vo'],
   levofloxacino: ['ev', 'vo'],
   moxifloxacino: ['ev', 'vo'],
+  'sulfametoxazol trimetoprima': ['ev', 'vo'],
   aciclovir: ['ev', 'vo'],
+  valaciclovir: ['vo'],
+  famciclovir: ['vo'],
+  ganciclovir: ['ev'],
   oseltamivir: ['vo'],
-  salbutamol: ['neb', 'inal'],
-  ipratropio: ['neb', 'inal'],
-  budesonida: ['neb', 'inal']
+  artesunato: ['ev', 'im'],
+  'artemeter lumefantrina': ['vo'],
+  'quinina hcl': ['ev', 'vo'],
+  'atovaquona proguanil': ['vo'],
+
+  // Endócrino, alergia e diversos
+  tiamazol: ['vo'],
+  'iodeto potassio': ['vo'],
+  'solucao lugol': ['vo'],
+  hidroxizina: ['im', 'vo'],
+  difenidramina: ['ev', 'im'],
+  'carvao ativado': ['vo'],
+  pralidoxima: ['ev', 'im'],
+  'soro antirrabico': ['im'],
+  'soro antitetanico': ['ev', 'im'],
+  'imunoglobulina humana': ['ev', 'im'],
+  vacina: ['im'],
+  'vacina antirrabica': ['im'],
+  'vacina antitetanica': ['im'],
+  'vacina dtpa': ['im'],
+  antirrabica: ['im'],
+  antitetanica: ['im']
 };
 
 /** Vias citadas no próprio texto do protocolo, na ordem em que aparecem */
@@ -315,12 +448,11 @@ function thExtractRoutesFromText (text) {
 function thRoutesForMed (text, drug) {
   const allowed = TH_DRUG_ROUTES[drug];
   const fromText = thExtractRoutesFromText(text);
-
   if (!allowed) return fromText;
-  if (!fromText.length) return allowed;
 
-  const intersection = fromText.filter(r => allowed.includes(r));
-  return intersection.length ? intersection : allowed;
+  // A via citada no protocolo vem primeiro e vira o padrão; as demais seguem disponíveis
+  const cited = fromText.filter(r => allowed.includes(r));
+  return [...new Set([...cited, ...allowed])];
 }
 
 function thIsMedBlocked (label) {

@@ -12,7 +12,7 @@ const TH_CONTENT_1 = {
       <li><strong>Enxaqueca moderada-grave:</strong> metoclopramida 1 amp (10 mg/2 mL) IM ou EV lento + dipirona 1 amp · ou ondansetrona 1 amp + analgésico</li>
       <li><strong>Refractário:</strong> tramadol 1 amp IM ou EV lento + hidratação SF 0,9% 500 mL EV · morfina 2–4 mg EV lento titulada se dor intensa (monitorizado)</li>
     </ul>
-    <p class="emerg-note">Diclofenaco e tenoxicam: não EV. Ketorolaco: máx. 5 dias · cautela DRC/úlcera. Dipirona EV: infundir 15–30 min se diluída. Conteúdo educacional.</p>`,
+    <p class="emerg-note">Diclofenaco: não EV (apenas IM ou VO). Ketorolaco: máx. 5 dias · cautela DRC/úlcera. Dipirona EV: infundir 15–30 min se diluída. Conteúdo educacional.</p>`,
 
   'dor-abdominal': `
     <p class="muted">Dor abdominal aguda — analgesia após avaliação cirúrgica quando indicada; evitar mascarar abdome agudo cirúrgico.</p>
