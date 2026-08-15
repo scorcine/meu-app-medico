@@ -35,6 +35,19 @@ function buildUi () {
   dom.window.Element.prototype.scrollIntoView = function () {};
   dom.window.showSection = function () {};
   dom.window.novoAtendimentoShowStep = function () {};
+  dom.window.__printedDocuments = [];
+  dom.window.open = function () {
+    const printed = { html: '', printCalled: false };
+    dom.window.__printedDocuments.push(printed);
+    return {
+      document: {
+        write: html => { printed.html += html; },
+        close: () => {}
+      },
+      focus: () => {},
+      print: () => { printed.printCalled = true; }
+    };
+  };
 
   const sources = [
     'calculators-cardio.js',
@@ -316,6 +329,19 @@ function testClosureSummary () {
 function testStemiReperfusionBeforeFinalize () {
   const ui = buildUi();
   const result = ui.run(`(() => {
+    window.medhubLoadUserProfile = () => ({
+      rxDisplayName: 'Dra. Ana Médica',
+      crmUf: 'SP',
+      crmNumber: '123456'
+    });
+    sessionStorage.setItem('medhub-new-encounter-draft', JSON.stringify({
+      nome: 'Paciente PDF',
+      idade: '58',
+      sexo: 'Masculino',
+      alergias: 'Nega alergias',
+      queixas: ['Dor torácica'],
+      startedAt: '2026-08-15T20:00:00-03:00'
+    }));
     showEmergenciaTopic('sca');
     showEmergenciaProtocol('stemi');
     const content = document.getElementById('emerg-topic-content');
@@ -340,7 +366,9 @@ function testStemiReperfusionBeforeFinalize () {
       finalized: !reperfusion.querySelector('[data-emerg-finalized-status]').hidden,
       summary: content.querySelector('[data-emerg-summary-out]').textContent,
       printAfter: !content.querySelector('.emerg-summary-actions').classList.contains('is-pending'),
-      hasUnexpectedNext: !content.querySelector('.emerg-protocol-next').hidden
+      hasUnexpectedNext: !content.querySelector('.emerg-protocol-next').hidden,
+      pdfCount: window.__printedDocuments.length,
+      pdf: window.__printedDocuments[0] || null
     };
   })()`);
 
@@ -361,6 +389,15 @@ function testStemiReperfusionBeforeFinalize () {
     pass('STEMI termina após reperfusão sem desviar para modelos de ECG');
   } else {
     fail('STEMI ainda oferece desvio indevido ao finalizar');
+  }
+  if (result.pdfCount === 1 && result.pdf?.printCalled &&
+      result.pdf.html.includes('Paciente PDF') &&
+      result.pdf.html.includes('Dra. Ana Médica') &&
+      result.pdf.html.includes('CRM-SP 123456') &&
+      result.pdf.html.includes('Data do atendimento')) {
+    pass('Finalizar STEMI abre PDF com paciente, médico, CRM e data do atendimento');
+  } else {
+    fail('PDF automático incompleto: ' + JSON.stringify(result.pdf));
   }
 }
 

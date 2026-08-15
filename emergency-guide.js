@@ -3299,15 +3299,53 @@ const EMERG_CLOSING_CONFIRMATIONS = [
   { id: 'reavaliacao', label: 'Monitorização e reavaliação definidas', hint: 'Monitor, exames seriados e horário da reavaliação' }
 ];
 
-function emergSummaryPatientLine () {
+function emergSummaryEscape (value) {
+  return String(value || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+function emergSummaryContext () {
+  let draft = null;
   try {
-    const draft = JSON.parse(sessionStorage.getItem('medhub-new-encounter-draft') || 'null');
-    if (!draft?.nome) return '';
-    return [draft.nome, draft.idade, draft.sexo, (draft.queixas || []).join(' · ')]
-      .filter(Boolean).join(' · ');
-  } catch {
-    return '';
+    draft = JSON.parse(sessionStorage.getItem('medhub-new-encounter-draft') || 'null');
+  } catch { /* atendimento sem rascunho */ }
+
+  let profile = null;
+  try {
+    if (typeof medhubLoadUserProfile === 'function') profile = medhubLoadUserProfile();
+  } catch { /* perfil local indisponível */ }
+
+  const crmNumber = String(profile?.crmNumber || '').replace(/\D/g, '');
+  let crm = crmNumber
+    ? `CRM-${String(profile?.crmUf || 'SP').toUpperCase()} ${crmNumber}`
+    : '';
+  if (!crm && typeof rxGetStoredCrmDisplay === 'function') {
+    try { crm = rxGetStoredCrmDisplay(); } catch { /* sem CRM legado */ }
   }
+
+  const started = draft?.startedAt ? new Date(draft.startedAt) : null;
+  const startedLabel = started && !Number.isNaN(started.getTime())
+    ? started.toLocaleString('pt-BR')
+    : new Date().toLocaleString('pt-BR');
+
+  return {
+    patient: [
+      draft?.nome,
+      draft?.idade
+        ? (/\banos?\b/i.test(String(draft.idade)) ? draft.idade : `${draft.idade} anos`)
+        : '',
+      draft?.sexo,
+      (draft?.queixas || []).join(' · ')
+    ].filter(Boolean).map(emergSummaryEscape).join(' · '),
+    allergies: emergSummaryEscape(draft?.alergias || 'Não informadas'),
+    doctor: emergSummaryEscape(profile?.rxDisplayName || 'Médico(a) responsável'),
+    crm: emergSummaryEscape(crm || 'CRM não informado'),
+    startedAt: emergSummaryEscape(startedLabel),
+    finishedAt: emergSummaryEscape(new Date().toLocaleString('pt-BR'))
+  };
 }
 
 function emergPrintSummary (title, html) {
@@ -3563,7 +3601,7 @@ function initEmergProtocolExperience (root, topicId, protocol) {
   }
 
   function buildSummaryHtml () {
-    const paciente = emergSummaryPatientLine();
+    const context = emergSummaryContext();
     const condutas = collectChecked(sequenceActions);
     const opcoes = collectChecked(optionActions);
     const seletores = [...root.querySelectorAll('.emerg-picker.is-answered .emerg-picker-summary')]
@@ -3592,11 +3630,12 @@ function initEmergProtocolExperience (root, topicId, protocol) {
       .map(item => item.label);
 
     const pendentes = sequenceActions.length - condutas.length;
-    const agora = new Date().toLocaleString('pt-BR');
-
     return `
       <h1>${protocol.name} — resumo do atendimento</h1>
-      <p class="meta">${[paciente, `Fechado em ${agora}`].filter(Boolean).join(' · ')}</p>
+      <p class="meta"><strong>Paciente:</strong> ${context.patient || 'Não informado'}</p>
+      <p class="meta"><strong>Alergias:</strong> ${context.allergies}</p>
+      <p class="meta"><strong>Médico(a):</strong> ${context.doctor} · <strong>${context.crm}</strong></p>
+      <p class="meta"><strong>Data do atendimento:</strong> ${context.startedAt} · <strong>Finalizado:</strong> ${context.finishedAt}</p>
       ${summaryBlock('Condutas realizadas', condutas)}
       ${summaryBlock('Opções escolhidas', opcoes)}
       ${summaryBlock('Definições do fluxo', seletores)}
@@ -3631,6 +3670,7 @@ function initEmergProtocolExperience (root, topicId, protocol) {
     });
     if (reperfusionSection) reperfusionSection.hidden = false;
     summaryOut.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    return html;
   }
 
   if (reperfusionSection) {
@@ -3678,8 +3718,10 @@ function initEmergProtocolExperience (root, topicId, protocol) {
       state.picks['stemi-finalized'] = true;
       emergSaveProtocolProgress(topicId, protocol.id, state);
       applyReperfusion();
-      renderSummary();
+      const html = renderSummary();
       finalizedStatus.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      /* Clique do usuário permite abrir a janela sem bloqueio do navegador */
+      emergPrintSummary(`${protocol.name} — resumo do atendimento`, html);
     });
 
     applyReperfusion();
