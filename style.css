@@ -9485,3 +9485,172 @@ body.auth-body.admin-page {
     gap: 0.2rem;
   }
 }
+
+/* ==========================================================================
+   Shell tecnológico do app (barra superior, lateral e fundo)
+   Paleta: azul-marinho profundo + circuito ciano + acentos dourados.
+   Seletores longos: precisam vencer `body > header:not(...)` e o tema remoto.
+   ========================================================================== */
+
+body.app-page > header.app-header:not(.landing-header):not(.home-hero) {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(85% 240% at 100% 0%, rgba(240, 180, 41, 0.2) 0%, transparent 52%),
+    radial-gradient(85% 220% at 4% 100%, rgba(56, 189, 248, 0.16) 0%, transparent 55%),
+    linear-gradient(112deg, #0a1a3a 0%, #08152c 55%, #060f20 100%);
+  box-shadow: 0 4px 22px rgba(2, 10, 26, 0.45);
+  border-bottom: 0;
+}
+
+body.app-page > header.app-header::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.55;
+  background-image:
+    linear-gradient(rgba(240, 180, 41, 0.12) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(56, 189, 248, 0.12) 1px, transparent 1px);
+  background-size: 34px 34px;
+  mask-image: linear-gradient(90deg, transparent 0%, #000 12%, #000 88%, transparent 100%);
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 12%, #000 88%, transparent 100%);
+}
+
+body.app-page > header.app-header::after {
+  height: 2px;
+  background: linear-gradient(90deg, #f0b429 0%, #e0a021 26%, rgba(56, 189, 248, 0.75) 62%, transparent 100%);
+  opacity: 1;
+}
+
+body.app-page > header.app-header > * {
+  position: relative;
+  z-index: 1;
+}
+
+body.app-page > header.app-header .app-header-search-input {
+  background: rgba(7, 19, 40, 0.72);
+  border: 1px solid rgba(56, 189, 248, 0.32);
+  color: #e2e8f0;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+body.app-page > header.app-header .app-header-search-input::placeholder {
+  color: rgba(148, 163, 184, 0.85);
+}
+
+body.app-page > header.app-header .app-header-search-input:focus {
+  border-color: #38bdf8;
+  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.22);
+}
+
+body.app-page > header.app-header .user-menu-btn {
+  border: 1px solid rgba(240, 180, 41, 0.5);
+  background: rgba(240, 180, 41, 0.12);
+  color: #fbe3a6;
+}
+
+body.app-page > header.app-header .user-menu-btn:hover {
+  background: rgba(240, 180, 41, 0.2);
+  color: #fff3d6;
+}
+
+body.app-page > header.app-header .header-actions .btn-outline {
+  border: 1px solid rgba(148, 163, 184, 0.5);
+  color: #e2e8f0;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+body.app-page > header.app-header .header-actions .btn-outline:hover {
+  border-color: rgba(56, 189, 248, 0.7);
+  background: rgba(56, 189, 248, 0.14);
+}
+
+/* —— Barra lateral —— */
+body.app-page .sidebar {
+  border-right: 1px solid rgba(56, 189, 248, 0.16);
+  box-shadow: inset -1px 0 0 rgba(240, 180, 41, 0.16), 4px 0 22px rgba(2, 10, 26, 0.3);
+  color: #cbd5e1;
+  background-color: #081326;
+  background-image:
+    radial-gradient(120% 45% at 0% 0%, rgba(56, 189, 248, 0.16) 0%, transparent 60%),
+    radial-gradient(120% 40% at 100% 100%, rgba(240, 180, 41, 0.12) 0%, transparent 65%),
+    linear-gradient(rgba(56, 189, 248, 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(56, 189, 248, 0.07) 1px, transparent 1px),
+    linear-gradient(180deg, #0a1a3a 0%, #081326 58%, #060f20 100%);
+  background-size: auto, auto, 38px 38px, 38px 38px, auto;
+}
+
+body.app-page .sidebar-title,
+body.app-page .sidebar-group {
+  color: rgba(125, 211, 252, 0.72);
+}
+
+body.app-page .sidebar-link {
+  color: #cbd5e1;
+}
+
+body.app-page .sidebar-link:hover {
+  background: rgba(56, 189, 248, 0.1);
+  color: #e0f2fe;
+  border-left-color: rgba(56, 189, 248, 0.55);
+}
+
+body.app-page .sidebar-link.active {
+  background: linear-gradient(90deg, rgba(56, 189, 248, 0.2) 0%, rgba(56, 189, 248, 0.02) 100%);
+  color: #f8fafc;
+  border-left-color: #f0b429;
+}
+
+body.app-page .sidebar-link--primary {
+  margin: 0.35rem 0.9rem 0.5rem;
+  padding: 0.7rem 0.9rem;
+  width: auto;
+  border: 1px solid rgba(240, 180, 41, 0.6);
+  border-radius: 10px;
+  background: linear-gradient(135deg, #f0b429 0%, #d98e04 100%);
+  color: #0b1f45;
+  font-weight: 700;
+  box-shadow: 0 6px 18px rgba(240, 180, 41, 0.22);
+}
+
+body.app-page .sidebar-link--primary:hover,
+body.app-page .sidebar-link--primary.active {
+  background: linear-gradient(135deg, #f7c246 0%, #e39b0b 100%);
+  color: #0b1f45;
+  border-left-color: rgba(240, 180, 41, 0.6);
+  box-shadow: 0 8px 22px rgba(240, 180, 41, 0.32);
+}
+
+body.app-page .sidebar-build {
+  color: rgba(148, 163, 184, 0.8);
+  border-top-color: rgba(148, 163, 184, 0.2);
+}
+
+/* —— Fundo da área de conteúdo —— */
+body.app-page .app-content {
+  background-image:
+    radial-gradient(60% 40% at 100% 0%, rgba(240, 180, 41, 0.07) 0%, transparent 60%),
+    radial-gradient(70% 45% at 0% 100%, rgba(56, 189, 248, 0.08) 0%, transparent 62%),
+    linear-gradient(rgba(56, 189, 248, 0.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(56, 189, 248, 0.055) 1px, transparent 1px);
+  background-size: auto, auto, 46px 46px, 46px 46px;
+  background-attachment: fixed;
+}
+
+/* —— CTA principal em dourado, alinhado às peças da marca —— */
+.home-novo-paciente-btn {
+  border-color: rgba(255, 226, 158, 0.65);
+  background: linear-gradient(135deg, #f7c246 0%, #e3a112 55%, #c9820a 100%);
+  color: #0b1f45;
+  box-shadow:
+    0 0 0 4px rgba(240, 180, 41, 0.16),
+    0 14px 32px rgba(2, 33, 71, 0.55);
+}
+
+.home-novo-paciente-btn:hover,
+.home-novo-paciente-btn:focus-visible {
+  box-shadow:
+    0 0 0 5px rgba(240, 180, 41, 0.24),
+    0 18px 38px rgba(2, 33, 71, 0.6);
+}
