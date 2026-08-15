@@ -28,6 +28,9 @@ async function initPricingPage () {
   document.getElementById('btn-plan-monthly-pix')?.addEventListener('click', () => {
     medhubOpenCheckout('monthly', checkoutEmail, 'pix');
   });
+  document.getElementById('btn-plan-monthly-elo')?.addEventListener('click', () => {
+    medhubOpenEloCheckout(checkoutEmail);
+  });
   document.getElementById('btn-plan-annual')?.addEventListener('click', () => {
     medhubOpenCheckout('annual', checkoutEmail, 'card');
   });
@@ -85,10 +88,78 @@ function medhubApplyPlatformGate (config) {
   document.querySelectorAll('#btn-plan-monthly, #btn-plan-monthly-pix, #btn-plan-annual, #btn-plan-annual-pix').forEach(function (btn) {
     btn.disabled = !checkoutReady;
   });
+  const eloButton = document.getElementById('btn-plan-monthly-elo');
+  if (eloButton) {
+    eloButton.disabled = !config.eloCheckoutEnabled;
+    eloButton.title = config.eloCheckoutEnabled
+      ? 'Assinatura mensal recorrente processada pelo Mercado Pago'
+      : 'Pagamento Elo em configuração';
+  }
 
   if (typeof medhubMetaTrackPlanosView === 'function') {
     medhubMetaTrackPlanosView();
   }
+}
+
+async function medhubLoadMercadoPagoSuccess (titleEl, bodyEl, emailEl, registerLink, loginLink) {
+  const params = new URLSearchParams(window.location.search);
+  let id = params.get('preapproval_id') || params.get('subscription_id') || '';
+  let fallbackEmail = '';
+  try {
+    id = id || localStorage.getItem('medhub-mercadopago-preapproval') || '';
+    fallbackEmail = localStorage.getItem('medhub-mercadopago-email') || '';
+  } catch { /* ignore */ }
+
+  if (!id) {
+    if (titleEl) titleEl.textContent = 'Validação pendente';
+    if (bodyEl) bodyEl.textContent = 'Não foi possível localizar a assinatura. Entre com o mesmo e-mail usado no Mercado Pago ou contate o suporte.';
+    return;
+  }
+
+  for (let attempt = 0; attempt < 5; attempt++) {
+    try {
+      const res = await fetch('/api/mercadopago-subscription?id=' + encodeURIComponent(id), {
+        cache: 'no-store'
+      });
+      const data = await res.json();
+
+      if (res.ok && data.active) {
+        const email = data.email || fallbackEmail;
+        if (titleEl) titleEl.textContent = 'Assinatura Elo confirmada';
+        if (bodyEl) bodyEl.textContent = 'Pagamento mensal autorizado pelo Mercado Pago. A renovação será automática no cartão Elo.';
+        if (emailEl && email) {
+          emailEl.hidden = false;
+          emailEl.textContent = 'E-mail da assinatura: ' + email;
+        }
+        if (registerLink && email) {
+          registerLink.href = 'register.html?email=' + encodeURIComponent(email);
+          registerLink.textContent = 'Criar conta agora';
+        }
+        if (loginLink && email) loginLink.href = 'login.html?email=' + encodeURIComponent(email);
+        if (typeof medhubMetaTrackPurchase === 'function') {
+          medhubMetaTrackPurchase('monthly_elo');
+        }
+        try {
+          localStorage.removeItem('medhub-mercadopago-preapproval');
+          localStorage.removeItem('medhub-mercadopago-email');
+        } catch { /* ignore */ }
+        return;
+      }
+
+      if (!res.ok && res.status !== 404) {
+        if (bodyEl) bodyEl.textContent = data.error || 'Não foi possível validar a assinatura Elo.';
+        return;
+      }
+    } catch { /* tenta novamente */ }
+
+    if (attempt < 4) {
+      if (bodyEl) bodyEl.textContent = 'Confirmando a assinatura Elo…';
+      await new Promise(resolve => window.setTimeout(resolve, 1800));
+    }
+  }
+
+  if (titleEl) titleEl.textContent = 'Pagamento em processamento';
+  if (bodyEl) bodyEl.textContent = 'A autorização ainda está sendo confirmada pelo Mercado Pago. Atualize esta página em instantes.';
 }
 
 async function initSubscribeSuccessPage () {
@@ -99,6 +170,11 @@ async function initSubscribeSuccessPage () {
   const emailEl = document.getElementById('success-email');
   const registerLink = document.getElementById('success-register');
   const loginLink = document.getElementById('success-login');
+
+  if (params.get('provider') === 'mercadopago') {
+    await medhubLoadMercadoPagoSuccess(titleEl, bodyEl, emailEl, registerLink, loginLink);
+    return;
+  }
 
   if (!sessionId) {
     if (titleEl) titleEl.textContent = 'Assinatura';

@@ -254,6 +254,46 @@ async function medhubOpenCheckout (plan, email, method) {
   }
 }
 
+async function medhubOpenEloCheckout (email) {
+  let norm = String(email || '').trim().toLowerCase();
+  if (!norm) {
+    norm = String(window.prompt(
+      'Informe o e-mail que será usado no pagamento e no acesso ao MedHub:'
+    ) || '').trim().toLowerCase();
+  }
+  if (!norm) return;
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(norm)) {
+    alert('Informe um e-mail válido.');
+    return;
+  }
+
+  try {
+    if (typeof medhubMetaTrackCheckoutStart === 'function') {
+      medhubMetaTrackCheckoutStart('monthly_elo');
+    }
+
+    const res = await fetch('/api/create-elo-subscription', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: norm })
+    });
+    const data = await res.json();
+    if (!res.ok || !data.url || !data.id) {
+      alert(data.error || 'Não foi possível iniciar a assinatura com cartão Elo.');
+      return;
+    }
+
+    try {
+      localStorage.setItem('medhub-mercadopago-preapproval', data.id);
+      localStorage.setItem('medhub-mercadopago-email', norm);
+    } catch { /* segue para o checkout */ }
+
+    window.location.href = data.url;
+  } catch {
+    alert('Erro de conexão. Verifique a internet e tente novamente.');
+  }
+}
+
 async function medhubOpenBillingPortal () {
   const token = medhubGetAuthToken();
   if (!token) return alert('Faça login para gerenciar sua assinatura.');
@@ -269,6 +309,28 @@ async function medhubOpenBillingPortal () {
       return;
     }
     alert(data.error || 'Não foi possível abrir o portal de cobrança.');
+  } catch {
+    alert('Erro de conexão. Tente novamente.');
+  }
+}
+
+async function medhubCancelEloSubscription () {
+  if (!window.confirm(
+    'Cancelar a renovação automática no cartão Elo? O acesso continua até o fim do período já pago.'
+  )) return;
+
+  try {
+    const res = await fetch('/api/cancel-elo-subscription', {
+      method: 'POST',
+      headers: medhubAuthHeaders()
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      alert(data.error || 'Não foi possível cancelar a assinatura Elo.');
+      return;
+    }
+    alert(data.message || 'Renovação Elo cancelada.');
+    window.location.reload();
   } catch {
     alert('Erro de conexão. Tente novamente.');
   }
@@ -299,10 +361,28 @@ async function initBillingPanel (user) {
         ? ' Você já usa o MedHub no plantão — assine para manter protocolos, receituário e calculadoras.'
         : ' Experimente Prescrições de PS e Receituário antes da cortesia acabar.') + ' Conta: ' + user.email + '.';
     } else {
+      const isElo = String(status.plan || '') === 'monthly_elo' ||
+        String(status.source || '').startsWith('mercadopago');
+      const eloCanceled = isElo && (
+        status.source === 'mercadopago_canceled' ||
+        String(status.status || '').toLowerCase() === 'cancelled'
+      );
+      const isPix = String(status.plan || '').endsWith('_pix') || status.source === 'pix';
       const planLabel = status.plan === 'annual' ? 'anual' : 'mensal';
-      statusEl.textContent = 'Assinatura ativa (' + planLabel + ') para ' + user.email + '. Renovação automática no cartão.';
+      statusEl.textContent = isElo
+        ? eloCanceled
+          ? 'Renovação Elo cancelada. O acesso permanece ativo até o fim do período pago.'
+          : 'Assinatura mensal Elo ativa para ' + user.email + ' via Mercado Pago.'
+        : isPix
+          ? 'Acesso pré-pago via Pix ativo para ' + user.email + '.'
+          : 'Assinatura ativa (' + planLabel + ') para ' + user.email + '. Renovação automática no cartão.';
+      if (portalBtn && isElo && !eloCanceled) {
+        portalBtn.textContent = 'Cancelar renovação Elo';
+        portalBtn.dataset.billingProvider = 'mercadopago';
+      }
+      if (portalBtn && eloCanceled) portalBtn.dataset.billingHidden = '1';
     }
-    if (portalBtn) portalBtn.hidden = false;
+    if (portalBtn) portalBtn.hidden = portalBtn.dataset.billingHidden === '1';
     if (subscribeBtn) subscribeBtn.hidden = true;
   } else {
     statusEl.textContent = 'Nenhuma assinatura ativa vinculada a ' + user.email + '. Assine para continuar usando o MedHub.';
@@ -313,6 +393,12 @@ async function initBillingPanel (user) {
   subscribeBtn?.addEventListener('click', () => {
     window.location.href = 'index.html?email=' + encodeURIComponent(user.email) + '#planos';
   });
-  portalBtn?.addEventListener('click', () => medhubOpenBillingPortal());
+  portalBtn?.addEventListener('click', () => {
+    if (portalBtn.dataset.billingProvider === 'mercadopago') {
+      medhubCancelEloSubscription();
+      return;
+    }
+    medhubOpenBillingPortal();
+  });
   panel.dataset.billingBound = '1';
 }

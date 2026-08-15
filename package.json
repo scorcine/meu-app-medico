@@ -7,6 +7,7 @@
     "test:modules": "node scripts/test-modules.js",
     "test:production": "node scripts/test-production-e2e.js",
     "test:sync": "node scripts/test-clinical-sync.js",
+    "test:mercadopago": "node scripts/test-mercadopago.js",
     "audit:functions": "node scripts/audit-vercel-functions.js",
     "audit": "node scripts/audit-prelaunch.js",
     "audit:med": "node scripts/audit-medicacoes-gaps.js",

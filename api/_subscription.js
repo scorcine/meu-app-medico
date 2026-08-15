@@ -13,6 +13,11 @@ const {
   saveCustomerBilling,
   snapshotFromSubscription
 } = require('./_billing-kv');
+const {
+  mercadoPagoEnabled,
+  getMercadoPagoSubscription,
+  mercadoPagoSubscriptionSnapshot
+} = require('./_mercadopago');
 
 function statusFromSnapshot (snapshot, email) {
   if (!snapshot) return null;
@@ -73,10 +78,11 @@ function isOwnerEmail (email) {
 
 async function resolveCustomerId (email, options = {}) {
   const stripe = getStripe();
+  const mappedCustomerId = await getCustomerIdByEmail(email);
   const candidates = [
+    mappedCustomerId,
     options.customerId,
-    options.user?.stripeCustomerId,
-    await getCustomerIdByEmail(email)
+    options.user?.stripeCustomerId
   ].filter(Boolean);
 
   for (const id of candidates) {
@@ -124,17 +130,47 @@ async function getSubscriptionStatus (email, options = {}) {
   }
 
   const cached = await getCustomerBilling(customerId);
-  const cachedStatus = statusFromSnapshot(cached, norm);
+  let effectiveCached = cached;
 
-  if (billingGrantStillValid(cached)) {
+  if (
+    mercadoPagoEnabled() &&
+    (cached?.source === 'mercadopago' || String(customerId).startsWith('manual_mp_'))
+  ) {
+    const mercadoPagoId =
+      cached?.subscriptionId ||
+      String(customerId).replace(/^manual_mp_/, '');
+    try {
+      const subscription = await getMercadoPagoSubscription(mercadoPagoId);
+      const refreshed = mercadoPagoSubscriptionSnapshot(subscription);
+      if (refreshed.email && refreshed.email !== norm) {
+        return { active: false, email: norm, reason: 'email_mismatch' };
+      }
+      const paidUntil = cached?.currentPeriodEnd
+        ? new Date(cached.currentPeriodEnd).getTime()
+        : 0;
+      if (!refreshed.active && Number.isFinite(paidUntil) && paidUntil > Date.now()) {
+        refreshed.active = true;
+        refreshed.currentPeriodEnd = cached.currentPeriodEnd;
+        refreshed.source = 'mercadopago_canceled';
+      }
+      effectiveCached = await saveCustomerBilling(refreshed);
+    } catch {
+      // Indisponibilidade temporária não derruba um período já validado.
+      effectiveCached = cached;
+    }
+  }
+
+  const cachedStatus = statusFromSnapshot(effectiveCached, norm);
+
+  if (billingGrantStillValid(effectiveCached)) {
     return cachedStatus;
   }
 
-  if (prepaidAccessStillValid(cached)) {
-    return { ...cachedStatus, source: cached.source || 'pix' };
+  if (prepaidAccessStillValid(effectiveCached)) {
+    return { ...cachedStatus, source: effectiveCached.source || 'pix' };
   }
 
-  if (isPrepaidSnapshot(cached)) {
+  if (isPrepaidSnapshot(effectiveCached)) {
     return {
       ...(cachedStatus || { email: norm, customerId }),
       active: false,
@@ -142,7 +178,8 @@ async function getSubscriptionStatus (email, options = {}) {
     };
   }
 
-  const cacheMissingCourtesy = cachedStatus?.active && cached && cached.courtesyEndsAt == null && cached.isCourtesy == null;
+  const cacheMissingCourtesy = cachedStatus?.active && effectiveCached &&
+    effectiveCached.courtesyEndsAt == null && effectiveCached.isCourtesy == null;
   if (cachedStatus?.active && !cacheMissingCourtesy) {
     return cachedStatus;
   }

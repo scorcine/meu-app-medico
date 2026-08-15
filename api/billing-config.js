@@ -2,6 +2,7 @@ const { billingEnabled, json } = require('./_stripe');
 const { getPlatformStatus } = require('./_platform');
 const { getSiteMarketing } = require('./_admin-meta');
 const { getSiteConfig } = require('./_site-config');
+const { mercadoPagoEnabled } = require('./_mercadopago');
 
 module.exports = async (req, res) => {
   if (req.method !== 'GET') {
@@ -32,6 +33,7 @@ module.exports = async (req, res) => {
   json(res, 200, {
     enabled: billingEnabled(),
     checkoutEnabled: billingEnabled(),
+    eloCheckoutEnabled: mercadoPagoEnabled(),
     production: platform.production,
     ready: platform.ready,
     misconfigured: platform.misconfigured,
