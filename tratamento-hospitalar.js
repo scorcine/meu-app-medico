@@ -507,7 +507,10 @@ function initTratamentoHospitalar () {
       document.querySelectorAll('#th-condition-content .th-med-routes').forEach(row => {
         row.hidden = true;
         row.classList.remove('th-med-routes-locked');
-        row.querySelectorAll('input[data-th-route]').forEach(radio => { radio.disabled = false; });
+        row.querySelectorAll('input[data-th-route]').forEach(radio => {
+          radio.checked = false;
+          radio.disabled = false;
+        });
       });
       thUpdateSelectionBar();
     });
@@ -689,7 +692,7 @@ function thPickRoute (key, drug, routes) {
   if (stored && routes.includes(stored)) return stored;
   const preferred = drug ? thDrugRoutePref.get(drug) : null;
   if (preferred && routes.includes(preferred)) return preferred;
-  return routes[0];
+  return '';
 }
 
 function thBuildRouteRow (key, drug, routes, checked, locked) {
@@ -699,7 +702,8 @@ function thBuildRouteRow (key, drug, routes, checked, locked) {
   row.dataset.thRouteFor = key;
 
   const chosen = thPickRoute(key, drug, routes);
-  if (checked) thSelectedRoutes.set(key, chosen);
+  if (checked && routes.length === 1) thSelectedRoutes.set(key, routes[0]);
+  else if (checked && chosen) thSelectedRoutes.set(key, chosen);
 
   const caption = document.createElement('span');
   caption.className = 'th-med-routes-label';
@@ -733,6 +737,20 @@ function thBuildSelectableMeds (condition, wrap) {
     const items = [...ul.querySelectorAll(':scope > li')];
     const box = document.createElement('div');
     box.className = 'th-med-options';
+
+    const step = ul.closest('.emerg-steps > li');
+    const stepHeading = step?.querySelector(':scope > strong')?.textContent
+      .replace(/[:—-]\s*$/, '')
+      .trim() || 'Opções terapêuticas';
+    const heading = document.createElement('p');
+    heading.className = 'th-med-step-title';
+    heading.textContent = stepHeading;
+    box.appendChild(heading);
+
+    const hint = document.createElement('p');
+    hint.className = 'th-med-choice-hint';
+    hint.textContent = 'Escolha o medicamento e, quando houver mais de uma via, marque a que está disponível na sua unidade.';
+    box.appendChild(hint);
 
     items.forEach((li, liIdx) => {
       const { prefix, choices } = thSplitMedChoices(li.textContent);
@@ -894,6 +912,7 @@ async function showTratamentoHospitalarConditions (conditionIds, opts) {
           if (mirror) thSyncRouteRow(row, drug);
         });
       }
+      thUpdateSelectionBar();
     });
   });
 
@@ -955,11 +974,14 @@ function thSyncRouteRow (row, drug) {
 
   const preferred = drug ? thDrugRoutePref.get(drug) : null;
   const target = radios.find(r => r.dataset.thRoute === preferred) ||
-    radios.find(r => r.checked) ||
-    radios[0];
+    radios.find(r => r.checked);
 
-  target.checked = true;
-  thSelectedRoutes.set(key, target.dataset.thRoute);
+  if (target) {
+    target.checked = true;
+    thSelectedRoutes.set(key, target.dataset.thRoute);
+  } else {
+    thSelectedRoutes.delete(key);
+  }
 }
 
 function thOpenFromQueixas (queixas, opts) {
@@ -978,6 +1000,20 @@ function thOpenFromQueixas (queixas, opts) {
   return true;
 }
 
+function thMissingRoutesCount () {
+  let missing = 0;
+  document.querySelectorAll('#th-condition-content [data-th-med]:checked').forEach(input => {
+    if (input.disabled) return;
+    const row = document.querySelector(
+      `#th-condition-content .th-med-routes[data-th-route-for="${input.dataset.thKey}"]`
+    );
+    if (!row) return;
+    const radios = [...row.querySelectorAll('input[data-th-route]')];
+    if (radios.length > 1 && !radios.some(radio => radio.checked)) missing += 1;
+  });
+  return missing;
+}
+
 function thUpdateSelectionBar () {
   const bar = document.getElementById('th-selection-bar');
   const count = document.getElementById('th-selection-count');
@@ -987,13 +1023,21 @@ function thUpdateSelectionBar () {
   if (!bar) return;
 
   const n = thSelectedMedKeys.size;
+  const missingRoutes = thMissingRoutesCount();
+  const ready = n > 0 && missingRoutes === 0;
   bar.hidden = !currentThConditionId;
   if (bar.hidden) thHideNextStep();
   else thShowNextStep();
-  if (count) count.textContent = n ? `${n} medicação(ões) selecionada(s)` : 'Nenhuma medicação selecionada';
+  if (count) {
+    count.textContent = !n
+      ? 'Nenhuma medicação selecionada'
+      : missingRoutes
+        ? `${n} medicação(ões) · escolha a via de ${missingRoutes}`
+        : `${n} medicação(ões) selecionada(s)`;
+  }
   if (clearBtn) clearBtn.disabled = n === 0;
-  if (copyBtn) copyBtn.disabled = n === 0;
-  if (prescriptionBtn) prescriptionBtn.disabled = n === 0;
+  if (copyBtn) copyBtn.disabled = !ready;
+  if (prescriptionBtn) prescriptionBtn.disabled = !ready;
 }
 
 function thEscapeHtml (value) {

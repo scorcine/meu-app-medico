@@ -2507,7 +2507,7 @@ function showEmergenciaTopic (topicId) {
     return;
   }
 
-  const expectedProtocols = { 'parada-cardio': 6, 'sca': 4, 'avc': 4, 'sepse': 3, 'trauma': 4, 'via-aerea': 4, 'reacoes-metabolicas': 4, 'obstetricia': 3, 'pediatrica': 3, 'toxicologia': 4, 'pressao-arritmias': 2, 'procedimentos': 3 };
+  const expectedProtocols = { 'parada-cardio': 6, 'sca': 4, 'avc': 4, 'sepse': 3, 'trauma': 5, 'via-aerea': 4, 'reacoes-metabolicas': 4, 'obstetricia': 3, 'pediatrica': 3, 'toxicologia': 4, 'pressao-arritmias': 2, 'procedimentos': 3 };
   if (expectedProtocols[topicId]) {
     contentEl.innerHTML = `
       <p class="coming-soon"><strong>Arquivo desatualizado no navegador.</strong> Os protocolos de <em>${topic.name}</em> já existem no projeto, mas o navegador carregou uma versão antiga de <code>emergency-guide.js</code>.</p>
@@ -2709,49 +2709,112 @@ function initEmergProtocolPickers (root, state, persist) {
   return () => clearAll.forEach(clear => clear());
 }
 
+/**
+ * Marca blocos de opções (grids explícitos e listas 1ª linha/alternativa).
+ * Continuam clicáveis, mas entram como “opções disponíveis”, não como
+ * checklist sequencial de condutas do fluxo.
+ */
+function initEmergOptionGroups (root) {
+  const candidates = [...root.querySelectorAll('.emerg-choice-grid, ul, ol')];
+
+  candidates.forEach((container, index) => {
+    const children = [...container.children].filter(node =>
+      node.matches?.('.emerg-flow-step, li')
+    );
+    if (children.length < 2) return;
+
+    const isChoiceGrid = container.classList.contains('emerg-choice-grid');
+    const optionPattern = /^(1ª|1a|primeira|2ª|2a|segunda)\s+linha\b|^alternativa\b|^al[eé]rgic|^refrat|^opç[aã]o\b/i;
+    const optionLike = children.filter(node =>
+      optionPattern.test(node.textContent.replace(/\s+/g, ' ').trim())
+    );
+    if (!isChoiceGrid && optionLike.length < 2) return;
+
+    container.classList.add('emerg-option-group');
+    container.setAttribute('role', 'group');
+    container.setAttribute('aria-label', 'Opções disponíveis desta etapa');
+    children.forEach(node => {
+      node.dataset.emergOption = `${index}`;
+      node.classList.add('emerg-option-choice');
+    });
+
+    if (container.previousElementSibling?.classList.contains('emerg-option-hint')) return;
+    const hint = document.createElement('p');
+    hint.className = 'emerg-option-hint';
+    hint.textContent = 'Opções desta etapa — marque o que está disponível ou foi realizado. Nada é escolhido automaticamente.';
+    container.before(hint);
+  });
+}
+
+function emergBindOptionToggle (action, key, state, topicId, protocolId, onChange) {
+  action.dataset.emergAction = key;
+  action.classList.add('emerg-action');
+  if (action.dataset.emergOption != null) action.classList.add('emerg-option-choice');
+  action.setAttribute('role', 'checkbox');
+  action.setAttribute('tabindex', '0');
+
+  const marker = document.createElement('span');
+  marker.className = 'emerg-action-marker';
+  marker.setAttribute('aria-hidden', 'true');
+  action.prepend(marker);
+
+  const applyChecked = checked => {
+    action.classList.toggle('is-checked', checked);
+    action.setAttribute('aria-checked', checked ? 'true' : 'false');
+    marker.textContent = checked ? '✓' : '';
+  };
+  applyChecked(state.checked[key] === true);
+
+  const toggle = event => {
+    if (event.type === 'keydown' && event.key !== 'Enter' && event.key !== ' ') return;
+    const closestAction = event.target.closest?.('[data-emerg-action]');
+    if (closestAction && closestAction !== action) return;
+    if (event.type === 'keydown') event.preventDefault();
+    const checked = action.getAttribute('aria-checked') !== 'true';
+    state.checked[key] = checked;
+    state.finished = false;
+    applyChecked(checked);
+    onChange();
+    emergSaveProtocolProgress(topicId, protocolId, state);
+  };
+  action.addEventListener('click', toggle);
+  action.addEventListener('keydown', toggle);
+
+  return () => applyChecked(false);
+}
+
 function initEmergProtocolExperience (root, topicId, protocol) {
   if (!root || root.dataset.emergInteractive === '1') return;
   root.dataset.emergInteractive = '1';
 
   const state = emergReadProtocolProgress(topicId, protocol.id);
-  const actions = [...root.querySelectorAll(
-    '.emerg-flow-step:not([data-emerg-picker]), .emerg-steps > li:not([data-emerg-picker])'
+  initEmergOptionGroups(root);
+
+  /* Sequência do fluxo (A → B → C), sem grids/listas de alternativas */
+  const sequenceActions = [...root.querySelectorAll(
+    '.emerg-flow-step:not([data-emerg-picker]):not([data-emerg-option]), .emerg-steps > li:not([data-emerg-picker]):not([data-emerg-option])'
   )];
-  const actionByKey = new Map();
+  /* Opções disponíveis (1ª linha / alternativa / choice-grid) — clicáveis, fora da sequência */
+  const optionActions = [...root.querySelectorAll('[data-emerg-option]:not([data-emerg-picker])')];
+  const resetHandlers = [];
+  let updateStatus = () => {};
 
-  actions.forEach((action, index) => {
-    const key = emergActionKey(action.textContent.trim(), index);
-    actionByKey.set(key, action);
-    action.dataset.emergAction = key;
-    action.classList.add('emerg-action');
-    action.setAttribute('role', 'checkbox');
-    action.setAttribute('tabindex', '0');
-
-    const marker = document.createElement('span');
-    marker.className = 'emerg-action-marker';
-    marker.setAttribute('aria-hidden', 'true');
-    action.prepend(marker);
-
-    const applyChecked = checked => {
-      action.classList.toggle('is-checked', checked);
-      action.setAttribute('aria-checked', checked ? 'true' : 'false');
-      marker.textContent = checked ? '✓' : '';
-    };
-    applyChecked(state.checked[key] === true);
-
-    const toggle = event => {
-      if (event.type === 'keydown' && event.key !== 'Enter' && event.key !== ' ') return;
-      if (event.type === 'keydown') event.preventDefault();
-      const checked = action.getAttribute('aria-checked') !== 'true';
-      state.checked[key] = checked;
-      state.finished = false;
-      applyChecked(checked);
-      updateStatus();
-      emergSaveProtocolProgress(topicId, protocol.id, state);
-    };
-    action.addEventListener('click', toggle);
-    action.addEventListener('keydown', toggle);
-  });
+  const bindAll = (nodes, keyPrefix) => {
+    nodes.forEach((action, index) => {
+      const key = emergActionKey(`${keyPrefix}:${action.textContent.trim()}`, index);
+      resetHandlers.push(emergBindOptionToggle(
+        action,
+        key,
+        state,
+        topicId,
+        protocol.id,
+        () => updateStatus()
+      ));
+    });
+  };
+  bindAll(sequenceActions, 'step');
+  bindAll(optionActions, 'opt');
+  const actions = [...sequenceActions, ...optionActions];
 
   const originalNodes = [...root.children];
   const preamble = [];
@@ -2783,11 +2846,14 @@ function initEmergProtocolExperience (root, topicId, protocol) {
 
   const toolbar = document.createElement('div');
   toolbar.className = 'emerg-protocol-toolbar';
+  const hasOptions = optionActions.length > 0;
   toolbar.innerHTML = `
     <div>
       <strong>${actions.length ? 'Checklist do atendimento' : 'Protocolo por etapas'}</strong>
       <p>${actions.length
-        ? 'Marque apenas o que foi realizado ou está disponível. Itens desmarcados não impedem avançar.'
+        ? (hasOptions
+          ? 'Marque as condutas do fluxo e, nas alternativas, só o que está disponível. Nada vem pré-selecionado; itens desmarcados não impedem avançar.'
+          : 'Marque apenas o que foi realizado ou está disponível. Itens desmarcados não impedem avançar.')
         : 'Avance pelas etapas para consultar todo o conteúdo deste protocolo.'}</p>
     </div>
     ${actions.length
@@ -2823,18 +2889,23 @@ function initEmergProtocolExperience (root, topicId, protocol) {
   const nextButton = controls.querySelector('.emerg-page-next');
   const resetButton = toolbar.querySelector('.emerg-progress-reset');
 
-  function checkedCount () {
-    return Object.values(state.checked).filter(Boolean).length;
+  function countChecked (nodes) {
+    return nodes.reduce((n, node) =>
+      n + (node.getAttribute('aria-checked') === 'true' ? 1 : 0), 0);
   }
 
-  function updateStatus () {
-    const marked = checkedCount();
-    const suffix = actions.length
-      ? ` · ${marked} de ${actions.length} condutas marcadas`
-      : '';
+  updateStatus = () => {
+    const parts = [];
+    if (sequenceActions.length) {
+      parts.push(`${countChecked(sequenceActions)} de ${sequenceActions.length} condutas`);
+    }
+    if (optionActions.length) {
+      parts.push(`${countChecked(optionActions)} de ${optionActions.length} opções`);
+    }
+    const suffix = parts.length ? ` · ${parts.join(' · ')}` : '';
     pageStatus.textContent = `Etapa ${state.page + 1} de ${groups.length}: ${groups[state.page].title}${suffix}`;
     pager.classList.toggle('is-finished', state.finished);
-  }
+  };
 
   function showPage (index, scroll) {
     state.page = Math.max(0, Math.min(index, groups.length - 1));
@@ -2873,12 +2944,7 @@ function initEmergProtocolExperience (root, topicId, protocol) {
       state.checked = {};
       state.picks = {};
       state.finished = false;
-      actionByKey.forEach(action => {
-        action.classList.remove('is-checked');
-        action.setAttribute('aria-checked', 'false');
-        const marker = action.querySelector('.emerg-action-marker');
-        if (marker) marker.textContent = '';
-      });
+      resetHandlers.forEach(reset => reset());
       clearPickers();
       showPage(0, false);
     });

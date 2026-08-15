@@ -220,14 +220,6 @@ function rxRemoveMedsForOption (conditionId, optionId) {
   });
 }
 
-function rxAutoSelectMedsForOption (conditionId, option, groupLabel) {
-  rxGetOptionMeds(option, groupLabel).forEach(m => {
-    if (m.exclusiveGroup) return;
-    if (typeof clinicalIsDrugBlocked === 'function' && clinicalIsDrugBlocked(m)) return;
-    rxSelectedMedKeys.add(rxMedKey(conditionId, m.id));
-  });
-}
-
 function rxUpdateQueixaHint () {
   const hint = document.getElementById('anam-queixa-hint');
   if (!hint) return;
@@ -635,7 +627,7 @@ function rxOpenMedsModal (conditionId, optionId) {
   if (body) {
     body.innerHTML = `
       ${allergyBanner}
-      <p class="muted rx-meds-hint">Onde houver alternativas (OU), marque <strong>apenas uma</strong> opção.</p>
+      <p class="muted rx-meds-hint"><strong>Nenhum medicamento vem pré-marcado.</strong> Escolha o que está disponível. Onde houver alternativas (OU), marque apenas uma.</p>
       ${rxBuildMedsPickerHtml(conditionId, option, groupLabel)}
     `;
     rxBindMedsPickerInputs(body);
@@ -824,7 +816,6 @@ function rxToggleOption (conditionId, optId) {
   const key = rxOptKey(conditionId, optId);
   if (!rxSelectedOptionKeys.has(key)) {
     rxSelectedOptionKeys.add(key);
-    rxAutoSelectMedsForOption(conditionId, option, groupLabel);
   }
 
   rxSyncOptionCards();

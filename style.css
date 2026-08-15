@@ -2922,6 +2922,21 @@ body.app-page {
   gap: 0.6rem;
 }
 
+.emerg-option-hint {
+  margin: 0.45rem 0 0.65rem;
+  padding: 0.5rem 0.65rem;
+  border-left: 3px solid color-mix(in srgb, var(--accent) 70%, transparent);
+  border-radius: 0 7px 7px 0;
+  background: color-mix(in srgb, var(--accent) 7%, transparent);
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  line-height: 1.4;
+}
+
+.emerg-option-choice {
+  cursor: pointer;
+}
+
 .emerg-flow-step.is-foco-match {
   border-color: var(--accent);
   box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 35%, transparent);
@@ -5852,6 +5867,20 @@ label.novo-atendimento-prefilled {
   margin: 0.75rem 0 1rem;
 }
 
+.th-med-step-title {
+  margin: 0;
+  color: var(--text-primary);
+  font-size: 0.95rem;
+  font-weight: 750;
+}
+
+.th-med-choice-hint {
+  margin: -0.35rem 0 0;
+  color: var(--text-muted, #64748b);
+  font-size: 0.78rem;
+  line-height: 1.4;
+}
+
 .th-med-group {
   display: flex;
   flex-direction: column;
@@ -5874,6 +5903,10 @@ label.novo-atendimento-prefilled {
 .th-med-option input {
   margin-top: 0.2rem;
   flex-shrink: 0;
+  width: 1.05rem;
+  height: 1.05rem;
+  accent-color: var(--accent);
+  cursor: pointer;
 }
 
 .th-med-option.th-med-mirror {
@@ -5948,6 +5981,11 @@ label.novo-atendimento-prefilled {
   font-size: 0.8rem;
   font-weight: 600;
   background: rgba(148, 163, 184, 0.18);
+}
+
+.th-med-routes:not(.th-med-routes-locked):has(input[data-th-route]):not(:has(input[data-th-route]:checked)) {
+  border-left: 2px solid rgba(240, 180, 41, 0.7);
+  padding-left: 0.5rem;
 }
 
 .th-med-group-title {
