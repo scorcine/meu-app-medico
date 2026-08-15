@@ -9653,6 +9653,64 @@ body.app-page .app-content {
   background-attachment: fixed;
 }
 
+/* —— Anel orbital com ponto dourado, atrás de todo o conteúdo —— */
+.app-orbit {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.app-orbit-ring {
+  position: relative;
+  width: 128vmin;
+  height: 128vmin;
+  border: 1px solid rgba(240, 180, 41, 0.14);
+  border-radius: 50%;
+  animation: medhub-orbit-spin 32s linear infinite;
+}
+
+.app-orbit-arc {
+  position: absolute;
+  inset: -1px;
+  border: 1px solid transparent;
+  border-top-color: rgba(240, 180, 41, 0.4);
+  border-right-color: rgba(240, 180, 41, 0.16);
+  border-radius: 50%;
+}
+
+.app-orbit-dot {
+  position: absolute;
+  top: -5px;
+  left: 50%;
+  width: 10px;
+  height: 10px;
+  margin-left: -5px;
+  border-radius: 50%;
+  background: #f7c246;
+  box-shadow:
+    0 0 10px 2px rgba(247, 194, 70, 0.7),
+    0 0 28px 6px rgba(240, 180, 41, 0.3);
+}
+
+@keyframes medhub-orbit-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app-orbit-ring {
+    animation: none;
+  }
+}
+
 /* —— Traçado de ECG em movimento no fundo do app —— */
 .app-ecg {
   position: fixed;
