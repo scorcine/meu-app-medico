@@ -337,7 +337,11 @@ const SCA_PROTOCOLS = [
           <div class="emerg-flow-v">
             <span class="emerg-flow-step">Confirmar STEMI + acionar equipe / hemodinâmica</span>
             <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
-            <span class="emerg-flow-step">AAS 150–300 mg + P2Y12 (clopidogrel / ticagrelor / prasugrel)</span>
+            <button type="button" class="emerg-stemi-trigger" data-emerg-picker data-stemi-open="p2y12-pci">
+              <strong>AAS 150–300 mg + escolher P2Y12</strong>
+              <small>Toque para escolher a droga e ver a dose</small>
+            </button>
+            <div class="emerg-stemi-panel" data-stemi-panel="p2y12-pci" hidden></div>
             <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
             <span class="emerg-flow-step">Anticoagulante (heparina ou enoxaparina)</span>
             <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
@@ -350,11 +354,23 @@ const SCA_PROTOCOLS = [
         <div class="emerg-flow-col emerg-flow-col-noshock">
           <h4>Fibrinólise (se ICP indisponível)</h4>
           <div class="emerg-flow-v">
-            <span class="emerg-flow-step">Sem contraindicações + sintomas &lt; 12 h</span>
+            <button type="button" class="emerg-stemi-trigger emerg-stemi-trigger-critical" data-emerg-picker data-stemi-open="contra">
+              <strong>1. Confirmar janela &lt;12 h e ausência de contraindicações</strong>
+              <small>Revisão obrigatória antes de liberar a fibrinólise</small>
+            </button>
+            <div class="emerg-stemi-panel" data-stemi-panel="contra" hidden></div>
             <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
-            <span class="emerg-flow-step">AAS + heparina + P2Y12 conforme protocolo</span>
+            <button type="button" class="emerg-stemi-trigger" data-emerg-picker data-stemi-open="p2y12-lysis">
+              <strong>2. AAS + anticoagulante + escolher P2Y12</strong>
+              <small>Toque para ver a opção indicada e a dose</small>
+            </button>
+            <div class="emerg-stemi-panel" data-stemi-panel="p2y12-lysis" hidden></div>
             <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
-            <span class="emerg-flow-step">Alteplase / tenecteplase / reteplase / estreptoquinase</span>
+            <button type="button" class="emerg-stemi-trigger" data-emerg-picker data-stemi-open="fibrinolytic" aria-disabled="true">
+              <strong>3. Escolher fibrinolítico disponível</strong>
+              <small>Calcula automaticamente dose, preparo e administração</small>
+            </button>
+            <div class="emerg-stemi-panel" data-stemi-panel="fibrinolytic" hidden></div>
             <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
             <span class="emerg-flow-step emerg-flow-shock">Transferir para ICP após lise (estratégia farmaco-invasiva)</span>
             <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
@@ -362,14 +378,6 @@ const SCA_PROTOCOLS = [
           </div>
         </div>
       </div>
-
-      <h4>Contraindicações absolutas à fibrinólise</h4>
-      <ul>
-        <li>AVC hemorrágico ou isquêmico &lt; 3 meses</li>
-        <li>Neoplasia / MAV cerebral, dissecção aórtica</li>
-        <li>Sangramento ativo, cirurgia maior &lt; 3 semanas</li>
-        <li>Trauma craniano grave recente</li>
-      </ul>
       <p class="emerg-note">Porta-balão = tempo da chegada ao hospital até inflação do balão. Porta-agulha = chegada até início da fibrinólise.</p>
     `
   },
@@ -2957,6 +2965,291 @@ function emergBindOptionToggle (action, key, state, topicId, protocolId, onChang
   return () => applyChecked(false);
 }
 
+const EMERG_STEMI_ABSOLUTE_CONTRAINDICATIONS = [
+  'Hemorragia intracraniana prévia, em qualquer momento',
+  'Lesão vascular cerebral estrutural conhecida (ex.: MAV)',
+  'Neoplasia intracraniana maligna conhecida',
+  'AVC isquêmico nos últimos 3 meses (exceto AVC isquêmico agudo dentro da janela específica)',
+  'Suspeita de dissecção aguda de aorta',
+  'Sangramento ativo ou diátese hemorrágica (exceto menstruação)',
+  'Trauma craniano ou facial fechado significativo nos últimos 3 meses',
+  'Cirurgia intracraniana ou intraespinal nos últimos 2 meses',
+  'PA >180/110 mmHg persistente, sem resposta ao tratamento de emergência'
+];
+
+function emergStemiPatientAge () {
+  try {
+    const draft = JSON.parse(sessionStorage.getItem('medhub-new-encounter-draft') || 'null');
+    const age = parseInt(String(draft?.idade || '').replace(/\D/g, ''), 10);
+    return Number.isFinite(age) ? age : null;
+  } catch {
+    return null;
+  }
+}
+
+function emergStemiP2y12Dose (drug, strategy, age) {
+  if (strategy === 'lysis') {
+    return {
+      title: 'Clopidogrel — fibrinólise',
+      dose: age !== null && age >= 75
+        ? '75 mg VO agora, sem dose de ataque; depois 75 mg VO 1×/dia.'
+        : '300 mg VO de ataque; depois 75 mg VO 1×/dia.',
+      prep: 'Comprimidos por via oral — não diluir.',
+      warning: 'Na fibrinólise, clopidogrel é o P2Y12 indicado. Não substituir por ticagrelor ou prasugrel no momento da lise.'
+    };
+  }
+
+  const options = {
+    clopidogrel: {
+      title: 'Clopidogrel — ICP primária',
+      dose: '600 mg VO de ataque; depois 75 mg VO 1×/dia.',
+      prep: 'Comprimidos por via oral — não diluir.',
+      warning: 'Alternativa quando ticagrelor/prasugrel não estão disponíveis ou são contraindicados.'
+    },
+    ticagrelor: {
+      title: 'Ticagrelor — ICP primária',
+      dose: '180 mg VO de ataque; depois 90 mg VO a cada 12 h.',
+      prep: 'Comprimidos por via oral — não diluir.',
+      warning: 'Evitar em sangramento ativo ou antecedente de hemorragia intracraniana; pode causar dispneia e bradicardia.'
+    },
+    prasugrel: {
+      title: 'Prasugrel — ICP primária',
+      dose: '60 mg VO de ataque; manutenção usual 10 mg VO 1×/dia.',
+      prep: 'Comprimidos por via oral — não diluir.',
+      warning: 'Somente com anatomia coronariana conhecida e ICP definida. Contraindicado após AVC/AIT; em ≥75 anos geralmente evitar; se peso <60 kg, manutenção 5 mg/dia.'
+    }
+  };
+  return options[drug];
+}
+
+function emergStemiFibrinolyticDose (drug, weight, age) {
+  if (drug === 'streptokinase') {
+    return {
+      title: 'Estreptoquinase',
+      dose: '1.500.000 UI EV em 60 minutos.',
+      prep: 'Reconstituir sem agitar e diluir em 100 mL de SF 0,9% ou SG 5%; infundir em bomba.',
+      warning: 'Não reutilizar se exposição prévia recente ou alergia. Preferir fibrinolítico fibrinoespecífico quando disponível.'
+    };
+  }
+  if (drug === 'reteplase') {
+    return {
+      title: 'Reteplase',
+      dose: '10 U EV em 2 minutos; repetir 10 U EV após 30 minutos.',
+      prep: 'Reconstituir cada frasco de 10 U com o diluente do fabricante (volume final usual 10 mL). Não misturar com heparina na mesma via.',
+      warning: 'Administrar em dois bolus; confirmar permeabilidade da via antes de cada dose.'
+    };
+  }
+  if (!Number.isFinite(weight) || weight < 30 || weight > 250) return null;
+
+  if (drug === 'tenecteplase') {
+    let fullDose;
+    if (weight < 60) fullDose = 30;
+    else if (weight < 70) fullDose = 35;
+    else if (weight < 80) fullDose = 40;
+    else if (weight < 90) fullDose = 45;
+    else fullDose = 50;
+    const dose = age !== null && age >= 75 ? fullDose / 2 : fullDose;
+    return {
+      title: 'Tenecteplase',
+      dose: `${dose} mg (${dose / 5} mL) EV em bolus único de 5–10 segundos.`,
+      prep: 'Reconstituir com o diluente do kit para concentração final de 5 mg/mL; aspirar o volume calculado. Não usar solução glicosada na mesma via.',
+      warning: age !== null && age >= 75
+        ? `Paciente ≥75 anos: aplicada meia dose (dose integral pelo peso seria ${fullDose} mg). Confirmar protocolo institucional.`
+        : 'Dose definida pela faixa de peso. Associar antitrombóticos conforme protocolo.'
+    };
+  }
+
+  if (drug === 'alteplase') {
+    const second = Math.min(50, 0.75 * weight);
+    const third = Math.min(35, 0.5 * weight);
+    const total = 15 + second + third;
+    return {
+      title: 'Alteplase — esquema acelerado',
+      dose: `15 mg EV em bolus; depois ${second.toFixed(1)} mg em 30 min; depois ${third.toFixed(1)} mg em 60 min. Total: ${total.toFixed(1)} mg.`,
+      prep: 'Reconstituir para 1 mg/mL. Separar 15 mL para o bolus e programar os volumes restantes em bomba; dose total máxima 100 mg.',
+      warning: weight >= 67
+        ? 'Para peso ≥67 kg: esquema máximo 15 + 50 + 35 mg.'
+        : 'Dose das infusões ajustada ao peso informado.'
+    };
+  }
+  return null;
+}
+
+function initEmergStemiWorkflow (root, state, persist) {
+  if (!root?.querySelector('[data-stemi-open]')) return () => {};
+  const age = emergStemiPatientAge();
+  const triggers = [...root.querySelectorAll('[data-stemi-open]')];
+  const panels = [...root.querySelectorAll('[data-stemi-panel]')];
+
+  const closePanels = except => {
+    panels.forEach(panel => {
+      if (panel !== except) panel.hidden = true;
+    });
+  };
+
+  const resultCard = result => `
+    <div class="emerg-stemi-dose" role="status" aria-live="polite">
+      <strong>${result.title}</strong>
+      <p class="emerg-stemi-dose-main">${result.dose}</p>
+      <p><strong>Preparo:</strong> ${result.prep}</p>
+      <p class="emerg-stemi-warning">${result.warning}</p>
+    </div>`;
+
+  function renderContra (panel) {
+    const status = state.picks['stemi-contra'] || '';
+    panel.innerHTML = `
+      <div class="emerg-stemi-panel-head">
+        <strong>Confirmar elegibilidade para fibrinólise</strong>
+        <button type="button" data-stemi-close aria-label="Fechar">×</button>
+      </div>
+      <p>Indicação usual: sintomas há <strong>menos de 12 horas</strong>. Revise a lista; se qualquer item estiver presente, <strong>não fibrinolise</strong> e priorize transferência para ICP.</p>
+      <ul class="emerg-stemi-contra-list">
+        ${EMERG_STEMI_ABSOLUTE_CONTRAINDICATIONS.map(item => `<li>${item}</li>`).join('')}
+      </ul>
+      <div class="emerg-stemi-confirm-actions">
+        <button type="button" class="emerg-stemi-safe" data-stemi-contra="clear">✓ Sintomas &lt;12 h e nenhuma contraindicação</button>
+        <button type="button" class="emerg-stemi-block" data-stemi-contra="present">Há contraindicação — não fibrinolisar</button>
+      </div>
+      <p class="emerg-stemi-inline-status ${status ? `is-${status}` : ''}" aria-live="polite">
+        ${status === 'clear' ? 'Fibrinólise liberada para escolha da droga.' : ''}
+        ${status === 'present' ? 'Fibrinólise bloqueada. Acione transferência para ICP.' : ''}
+      </p>`;
+  }
+
+  function renderP2y12 (panel, strategy) {
+    const drugs = strategy === 'lysis'
+      ? [{ id: 'clopidogrel', label: 'Clopidogrel', note: age !== null && age >= 75 ? 'Sem ataque (≥75 anos)' : 'Ataque 300 mg' }]
+      : [
+          { id: 'clopidogrel', label: 'Clopidogrel', note: 'Ataque 600 mg' },
+          { id: 'ticagrelor', label: 'Ticagrelor', note: 'Ataque 180 mg' },
+          { id: 'prasugrel', label: 'Prasugrel', note: 'Ataque 60 mg' }
+        ];
+    panel.innerHTML = `
+      <div class="emerg-stemi-panel-head">
+        <strong>Escolha o P2Y12 disponível</strong>
+        <button type="button" data-stemi-close aria-label="Fechar">×</button>
+      </div>
+      ${age !== null ? `<p class="emerg-stemi-patient">Idade considerada: <strong>${age} anos</strong></p>` : ''}
+      <div class="emerg-stemi-drug-grid">
+        ${drugs.map(drug => `
+          <button type="button" data-stemi-p2="${drug.id}" data-stemi-strategy="${strategy}">
+            <strong>${drug.label}</strong><span>${drug.note}</span>
+          </button>`).join('')}
+      </div>
+      <div data-stemi-result></div>`;
+  }
+
+  function renderFibrinolytic (panel) {
+    const weight = Number(state.picks['stemi-weight']) || '';
+    panel.innerHTML = `
+      <div class="emerg-stemi-panel-head">
+        <strong>Escolha o fibrinolítico disponível</strong>
+        <button type="button" data-stemi-close aria-label="Fechar">×</button>
+      </div>
+      <label class="emerg-stemi-weight">
+        Peso para cálculo automático (kg)
+        <input type="number" min="30" max="250" step="0.1" inputmode="decimal" data-stemi-weight value="${weight}" placeholder="Ex.: 70">
+      </label>
+      ${age !== null ? `<p class="emerg-stemi-patient">Idade considerada: <strong>${age} anos</strong>${age >= 75 ? ' — meia dose de tenecteplase' : ''}</p>` : ''}
+      <div class="emerg-stemi-drug-grid">
+        <button type="button" data-stemi-fibrinolytic="tenecteplase"><strong>Tenecteplase</strong><span>Bolus único · por peso</span></button>
+        <button type="button" data-stemi-fibrinolytic="alteplase"><strong>Alteplase</strong><span>Infusão acelerada · por peso</span></button>
+        <button type="button" data-stemi-fibrinolytic="reteplase"><strong>Reteplase</strong><span>2 bolus · dose fixa</span></button>
+        <button type="button" data-stemi-fibrinolytic="streptokinase"><strong>Estreptoquinase</strong><span>Infusão · dose fixa</span></button>
+      </div>
+      <div data-stemi-result></div>`;
+  }
+
+  function refreshContraState () {
+    const clear = state.picks['stemi-contra'] === 'clear';
+    const fibrinolyticTrigger = root.querySelector('[data-stemi-open="fibrinolytic"]');
+    fibrinolyticTrigger?.setAttribute('aria-disabled', clear ? 'false' : 'true');
+    fibrinolyticTrigger?.classList.toggle('is-locked', !clear);
+  }
+
+  triggers.forEach(trigger => {
+    trigger.addEventListener('click', () => {
+      const id = trigger.dataset.stemiOpen;
+      if (id === 'fibrinolytic' && state.picks['stemi-contra'] !== 'clear') {
+        const contraPanel = root.querySelector('[data-stemi-panel="contra"]');
+        renderContra(contraPanel);
+        closePanels(contraPanel);
+        contraPanel.hidden = false;
+        contraPanel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        return;
+      }
+      const panel = root.querySelector(`[data-stemi-panel="${id}"]`);
+      if (!panel) return;
+      if (id === 'contra') renderContra(panel);
+      if (id === 'p2y12-pci') renderP2y12(panel, 'pci');
+      if (id === 'p2y12-lysis') renderP2y12(panel, 'lysis');
+      if (id === 'fibrinolytic') renderFibrinolytic(panel);
+      closePanels(panel);
+      panel.hidden = false;
+      panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    });
+  });
+
+  root.addEventListener('click', event => {
+    const close = event.target.closest('[data-stemi-close]');
+    if (close) {
+      close.closest('[data-stemi-panel]').hidden = true;
+      return;
+    }
+
+    const contra = event.target.closest('[data-stemi-contra]');
+    if (contra) {
+      state.picks['stemi-contra'] = contra.dataset.stemiContra;
+      persist();
+      renderContra(contra.closest('[data-stemi-panel]'));
+      refreshContraState();
+      return;
+    }
+
+    const p2 = event.target.closest('[data-stemi-p2]');
+    if (p2) {
+      const result = emergStemiP2y12Dose(p2.dataset.stemiP2, p2.dataset.stemiStrategy, age);
+      state.picks[`stemi-p2-${p2.dataset.stemiStrategy}`] = p2.dataset.stemiP2;
+      persist();
+      p2.closest('[data-stemi-panel]').querySelector('[data-stemi-result]').innerHTML = resultCard(result);
+      return;
+    }
+
+    const fibrinolytic = event.target.closest('[data-stemi-fibrinolytic]');
+    if (fibrinolytic) {
+      const panel = fibrinolytic.closest('[data-stemi-panel]');
+      const input = panel.querySelector('[data-stemi-weight]');
+      const weight = Number(input.value);
+      const result = emergStemiFibrinolyticDose(fibrinolytic.dataset.stemiFibrinolytic, weight, age);
+      if (!result) {
+        input.setCustomValidity('Informe o peso entre 30 e 250 kg para calcular esta dose.');
+        input.reportValidity();
+        input.focus();
+        return;
+      }
+      input.setCustomValidity('');
+      state.picks['stemi-weight'] = weight || '';
+      state.picks['stemi-fibrinolytic'] = fibrinolytic.dataset.stemiFibrinolytic;
+      persist();
+      panel.querySelector('[data-stemi-result]').innerHTML = resultCard(result);
+    }
+  });
+
+  refreshContraState();
+  return () => {
+    delete state.picks['stemi-contra'];
+    delete state.picks['stemi-p2-pci'];
+    delete state.picks['stemi-p2-lysis'];
+    delete state.picks['stemi-weight'];
+    delete state.picks['stemi-fibrinolytic'];
+    panels.forEach(panel => {
+      panel.hidden = true;
+      panel.innerHTML = '';
+    });
+    refreshContraState();
+  };
+}
+
 function initEmergProtocolExperience (root, topicId, protocol) {
   if (!root || root.dataset.emergInteractive === '1') return;
   root.dataset.emergInteractive = '1';
@@ -3172,6 +3465,11 @@ function initEmergProtocolExperience (root, topicId, protocol) {
     state,
     () => emergSaveProtocolProgress(topicId, protocol.id, state)
   );
+  const clearStemiWorkflow = initEmergStemiWorkflow(
+    root,
+    state,
+    () => emergSaveProtocolProgress(topicId, protocol.id, state)
+  );
 
   if (resetButton) {
     resetButton.addEventListener('click', () => {
@@ -3180,6 +3478,7 @@ function initEmergProtocolExperience (root, topicId, protocol) {
       state.finished = false;
       resetHandlers.forEach(reset => reset());
       clearPickers();
+      clearStemiWorkflow();
       showPage(0, false);
     });
   }

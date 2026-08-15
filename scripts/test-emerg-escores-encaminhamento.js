@@ -167,6 +167,63 @@ function testNoInventedStemiTimi () {
   }
 }
 
+function testStemiGuidedMedicationFlow () {
+  const ui = buildUi();
+  const result = ui.run(`(() => {
+    sessionStorage.setItem('medhub-new-encounter-draft', JSON.stringify({
+      nome: 'Paciente teste', idade: '78 anos', queixas: ['Dor torácica']
+    }));
+    showEmergenciaTopic('sca');
+    showEmergenciaProtocol('stemi');
+
+    document.querySelector('[data-stemi-open="contra"]').click();
+    const contraItems = document.querySelectorAll('.emerg-stemi-contra-list li').length;
+    document.querySelector('[data-stemi-contra="clear"]').click();
+    const fibrinolyticTrigger = document.querySelector('[data-stemi-open="fibrinolytic"]');
+    const unlocked = fibrinolyticTrigger.getAttribute('aria-disabled') === 'false';
+
+    fibrinolyticTrigger.click();
+    const fibrinolyticPanel = document.querySelector('[data-stemi-panel="fibrinolytic"]');
+    fibrinolyticPanel.querySelector('[data-stemi-weight]').value = '72';
+    fibrinolyticPanel.querySelector('[data-stemi-fibrinolytic="tenecteplase"]').click();
+    const tenecteplase = fibrinolyticPanel.querySelector('[data-stemi-result]').textContent;
+
+    document.querySelector('[data-stemi-open="p2y12-pci"]').click();
+    const pciPanel = document.querySelector('[data-stemi-panel="p2y12-pci"]');
+    pciPanel.querySelector('[data-stemi-p2="ticagrelor"]').click();
+    const ticagrelor = pciPanel.querySelector('[data-stemi-result]').textContent;
+
+    document.querySelector('[data-stemi-open="p2y12-lysis"]').click();
+    const lysisPanel = document.querySelector('[data-stemi-panel="p2y12-lysis"]');
+    const lysisChoices = lysisPanel.querySelectorAll('[data-stemi-p2]').length;
+    lysisPanel.querySelector('[data-stemi-p2="clopidogrel"]').click();
+    const clopidogrel = lysisPanel.querySelector('[data-stemi-result]').textContent;
+
+    return { contraItems, unlocked, tenecteplase, ticagrelor, lysisChoices, clopidogrel };
+  })()`);
+
+  if (result.contraItems >= 8 && result.unlocked) {
+    pass('STEMI exige revisão das contraindicações antes de liberar o fibrinolítico');
+  } else {
+    fail('Gate de contraindicações do STEMI falhou: ' + JSON.stringify(result));
+  }
+  if (/20 mg \(4 mL\)/i.test(result.tenecteplase) && /meia dose/i.test(result.tenecteplase)) {
+    pass('Tenecteplase calcula dose e volume automaticamente por peso e idade');
+  } else {
+    fail('Cálculo da tenecteplase incorreto: ' + JSON.stringify(result.tenecteplase));
+  }
+  if (/180 mg/i.test(result.ticagrelor) && /não diluir/i.test(result.ticagrelor)) {
+    pass('Escolha do P2Y12 para ICP mostra dose e preparo imediatamente');
+  } else {
+    fail('Dose do P2Y12 para ICP ausente: ' + JSON.stringify(result.ticagrelor));
+  }
+  if (result.lysisChoices === 1 && /75 mg VO agora, sem dose de ataque/i.test(result.clopidogrel)) {
+    pass('Fibrinólise limita P2Y12 ao clopidogrel e ajusta a dose para >75 anos');
+  } else {
+    fail('P2Y12 da fibrinólise incorreto: ' + JSON.stringify(result));
+  }
+}
+
 function testBranchingHandoff () {
   const ui = buildUi();
   ui.run(`showEmergenciaTopic('sca'); showEmergenciaProtocol('dor-inicial');`);
@@ -269,6 +326,7 @@ console.log('=== MedHub — escores prioritários e encaminhamento clínico ===\
 testScorePriorityChest();
 testScoreEarlyNstemiSepse();
 testNoInventedStemiTimi();
+testStemiGuidedMedicationFlow();
 testBranchingHandoff();
 testNoArrayFallbackAutoOpen();
 testNoInventedScoresOnBls();

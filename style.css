@@ -2837,6 +2837,235 @@ body.app-page {
   font-size: 0.9rem;
 }
 
+.emerg-stemi-trigger {
+  width: 100%;
+  padding: 0.58rem 0.7rem;
+  background: var(--bg-surface-active);
+  border: 1px solid var(--accent);
+  border-radius: 8px;
+  color: var(--text-primary);
+  text-align: left;
+  cursor: pointer;
+}
+
+.emerg-stemi-trigger strong,
+.emerg-stemi-trigger small {
+  display: block;
+}
+
+.emerg-stemi-trigger strong {
+  font-size: 0.8rem;
+}
+
+.emerg-stemi-trigger small {
+  margin-top: 0.18rem;
+  color: var(--text-muted);
+  font-size: 0.7rem;
+  line-height: 1.35;
+}
+
+.emerg-stemi-trigger:hover,
+.emerg-stemi-trigger:focus-visible {
+  background: color-mix(in srgb, var(--accent) 12%, var(--bg-surface-active));
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 25%, transparent);
+}
+
+.emerg-stemi-trigger-critical {
+  border-color: #f59e0b;
+}
+
+.emerg-stemi-trigger[aria-disabled="true"] {
+  border-style: dashed;
+}
+
+.emerg-stemi-trigger[aria-disabled="true"] small::before {
+  content: "🔒 ";
+}
+
+.emerg-stemi-panel {
+  margin: 0.35rem 0;
+  padding: 0.75rem;
+  background: var(--bg-surface);
+  border: 1px solid color-mix(in srgb, var(--accent) 45%, var(--border));
+  border-radius: 9px;
+  box-shadow: 0 8px 24px rgb(0 0 0 / 16%);
+}
+
+.emerg-stemi-panel[hidden] {
+  display: none !important;
+}
+
+.emerg-stemi-panel-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.emerg-stemi-panel-head > strong {
+  color: var(--text-primary);
+  font-size: 0.88rem;
+}
+
+.emerg-stemi-panel-head [data-stemi-close] {
+  flex: 0 0 auto;
+  padding: 0 0.35rem;
+  background: transparent;
+  border: 0;
+  color: var(--text-muted);
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
+.emerg-stemi-panel > p {
+  margin: 0.35rem 0 0.6rem;
+  color: var(--text-muted);
+  font-size: 0.74rem;
+  line-height: 1.45;
+}
+
+.emerg-stemi-contra-list {
+  margin: 0.55rem 0;
+  padding: 0;
+  list-style: none;
+}
+
+.emerg-stemi-contra-list li {
+  position: relative;
+  margin: 0.3rem 0;
+  padding: 0.38rem 0.45rem 0.38rem 1.65rem;
+  background: color-mix(in srgb, #dc2626 7%, var(--bg-surface-alt));
+  border-left: 3px solid #dc2626;
+  border-radius: 5px;
+  color: var(--text-primary);
+  font-size: 0.73rem;
+  line-height: 1.35;
+}
+
+.emerg-stemi-contra-list li::before {
+  content: "!";
+  position: absolute;
+  left: 0.55rem;
+  color: #ef4444;
+  font-weight: 900;
+}
+
+.emerg-stemi-confirm-actions,
+.emerg-stemi-drug-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.45rem;
+  margin-top: 0.65rem;
+}
+
+.emerg-stemi-confirm-actions button,
+.emerg-stemi-drug-grid button {
+  min-height: 48px;
+  padding: 0.5rem 0.6rem;
+  border-radius: 7px;
+  text-align: left;
+}
+
+.emerg-stemi-confirm-actions .emerg-stemi-safe {
+  background: color-mix(in srgb, #16a34a 16%, var(--bg-surface-active));
+  border: 1px solid #16a34a;
+  color: var(--text-primary);
+}
+
+.emerg-stemi-confirm-actions .emerg-stemi-block {
+  background: color-mix(in srgb, #dc2626 13%, var(--bg-surface-active));
+  border: 1px solid #dc2626;
+  color: var(--text-primary);
+}
+
+.emerg-stemi-drug-grid button {
+  background: var(--bg-surface-active);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+}
+
+.emerg-stemi-drug-grid button:hover,
+.emerg-stemi-drug-grid button:focus-visible {
+  border-color: var(--accent);
+}
+
+.emerg-stemi-drug-grid strong,
+.emerg-stemi-drug-grid span {
+  display: block;
+}
+
+.emerg-stemi-drug-grid strong {
+  font-size: 0.78rem;
+}
+
+.emerg-stemi-drug-grid span {
+  margin-top: 0.12rem;
+  color: var(--text-muted);
+  font-size: 0.68rem;
+}
+
+.emerg-stemi-weight {
+  display: block;
+  margin: 0.5rem 0;
+  color: var(--text-primary);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.emerg-stemi-weight input {
+  width: 100%;
+  margin-top: 0.25rem;
+  padding: 0.55rem;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  color: var(--text-primary);
+  font-size: 1rem;
+}
+
+.emerg-stemi-dose {
+  margin-top: 0.65rem;
+  padding: 0.65rem;
+  background: color-mix(in srgb, var(--accent) 10%, var(--bg-surface-alt));
+  border-left: 4px solid var(--accent);
+  border-radius: 7px;
+}
+
+.emerg-stemi-dose > strong {
+  color: var(--text-accent);
+  font-size: 0.85rem;
+}
+
+.emerg-stemi-dose p {
+  margin: 0.3rem 0 0;
+  color: var(--text-primary);
+  font-size: 0.73rem;
+  line-height: 1.4;
+}
+
+.emerg-stemi-dose .emerg-stemi-dose-main {
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.emerg-stemi-dose .emerg-stemi-warning {
+  color: #f59e0b;
+}
+
+.emerg-stemi-inline-status {
+  min-height: 1rem;
+  font-weight: 700;
+}
+
+.emerg-stemi-inline-status.is-clear {
+  color: #16a34a;
+}
+
+.emerg-stemi-inline-status.is-present {
+  color: #ef4444;
+}
+
 .emerg-rhythm-grid-2 {
   grid-template-columns: 1fr 1fr;
 }
@@ -3172,7 +3401,9 @@ body.app-page {
   }
 
   .emerg-choice-grid,
-  .emerg-picker-grid {
+  .emerg-picker-grid,
+  .emerg-stemi-confirm-actions,
+  .emerg-stemi-drug-grid {
     grid-template-columns: 1fr;
   }
 
