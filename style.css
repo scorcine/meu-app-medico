@@ -1924,6 +1924,17 @@ body.app-page {
 .ps-rx-med-check {
   margin-top: 0.2rem;
   flex-shrink: 0;
+  width: 1.05rem;
+  height: 1.05rem;
+  accent-color: var(--text-accent);
+  cursor: pointer;
+}
+
+.ps-rx-group-hint {
+  margin: 0 0 0.55rem;
+  color: var(--text-muted);
+  font-size: 0.76rem;
+  line-height: 1.35;
 }
 
 .ps-rx-med-body {

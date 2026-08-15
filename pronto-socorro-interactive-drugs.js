@@ -384,22 +384,92 @@ function psParseTier (text) {
   return { tier, label };
 }
 
-function psParseMedOptionsFromHtml (conditionId, html) {
+function psStepLabelFor (li) {
+  const step = li.closest('.emerg-steps > li');
+  const heading = step && step.querySelector(':scope > strong');
+  if (!heading) return '';
+  return heading.textContent.replace(/[:—-]\s*$/, '').trim();
+}
+
+/**
+ * Lê as opções do protocolo mantendo a etapa de origem (broncodilatador, corticoide…),
+ * para que cada etapa apresente suas alternativas em vez de uma lista única.
+ */
+function psParseMedStructureFromHtml (conditionId, html) {
   const div = document.createElement('div');
   div.innerHTML = html;
-  const items = [];
+  const medications = [];
+  const groups = [];
+  const groupById = new Map();
+
   div.querySelectorAll('.ps-med-options li').forEach((li, idx) => {
     const text = li.textContent.replace(/\s+/g, ' ').trim();
     if (!text) return;
     const { tier, label } = psParseTier(text);
-    items.push({
+    const med = {
       id: `${conditionId}-opt-${idx}`,
       tier,
       label: label.length > 240 ? label.slice(0, 237) + '…' : label,
       drugs: psExtractDrugsFromText(text).map(id => ({ id }))
-    });
+    };
+    medications.push(med);
+
+    const stepLabel = psStepLabelFor(li) || 'Opções terapêuticas do protocolo';
+    const groupId = 'etapa-' + psNormText(stepLabel).replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+    let group = groupById.get(groupId);
+    if (!group) {
+      group = {
+        id: groupId,
+        label: stepLabel,
+        autoStep: true,
+        hint: 'Escolha a opção disponível na sua unidade — pode trocar quando quiser.',
+        medications: []
+      };
+      groupById.set(groupId, group);
+      groups.push(group);
+    }
+    group.medications.push(med);
   });
-  return items;
+
+  return { medications, groups };
+}
+
+function psParseMedOptionsFromHtml (conditionId, html) {
+  return psParseMedStructureFromHtml(conditionId, html).medications;
+}
+
+const PS_TIER_GROUP_ORDER = [
+  '1ª linha', '2ª linha', 'Alternativa', 'Alérgico', 'Adjuvante',
+  'Sintomático', 'Analgesia', 'ATB', 'Profilaxia', 'Refractário', 'Opção', 'Evitar'
+];
+
+/** Condutas curadas sem etapas: agrupa por linha para escolher a alternativa disponível */
+function psGroupMedsByTier (medications) {
+  const groups = [];
+  const byTier = new Map();
+
+  medications.forEach(med => {
+    const tier = med.tier || 'Opção';
+    let group = byTier.get(tier);
+    if (!group) {
+      group = {
+        id: 'linha-' + psNormText(tier).replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''),
+        label: tier,
+        tierGroup: true,
+        hint: 'Escolha a opção disponível na sua unidade — pode trocar quando quiser.',
+        medications: []
+      };
+      byTier.set(tier, group);
+      groups.push(group);
+    }
+    group.medications.push(med);
+  });
+
+  return groups.sort((a, b) => {
+    const ia = PS_TIER_GROUP_ORDER.indexOf(a.label);
+    const ib = PS_TIER_GROUP_ORDER.indexOf(b.label);
+    return (ia === -1 ? 90 : ia) - (ib === -1 ? 90 : ib);
+  });
 }
 
 function psStandardContextFields (conditionId) {
@@ -439,7 +509,7 @@ function psGenericInteractiveRules () {
           return med && !/1ª linha/i.test(med.tier || '');
         });
         if (onlyAlt && selectedMedIds.length === 1) {
-          return { severity: 'warning', text: 'Nenhuma opção de 1ª linha selecionada — confirme se há contraindicação ou resistência.' };
+          return { severity: 'warning', text: 'Nenhuma opção de 1ª linha selecionada — confirme se há indisponibilidade, contraindicação ou resistência.' };
         }
         if (hasFirst && selectedMedIds.length === 1) {
           return { severity: 'ok', text: 'Inclui medicação de 1ª linha do protocolo.' };
@@ -448,14 +518,24 @@ function psGenericInteractiveRules () {
       }
     },
     {
-      check: ({ selectedMedIds }) => {
-        if (selectedMedIds.length >= 3) {
-          return {
-            severity: 'warning',
-            text: 'Três ou mais opções marcadas — confirme se não está combinando linhas alternativas do protocolo.'
-          };
+      /* Uma opção por etapa é o esperado; o excesso é contado dentro da etapa, não no protocolo todo */
+      check: ({ selectedMedIds, config }) => {
+        const steps = (config.groups || []).filter(group => (group.medications || []).length);
+        if (!steps.length) {
+          return selectedMedIds.length >= 4
+            ? { severity: 'warning', text: 'Quatro ou mais opções marcadas — confirme se não está combinando linhas alternativas do protocolo.' }
+            : null;
         }
-        return null;
+
+        const cheias = steps.filter(group => {
+          const ids = group.medications.map(m => m.id);
+          return selectedMedIds.filter(id => ids.includes(id)).length >= 3;
+        });
+        if (!cheias.length) return null;
+        return {
+          severity: 'warning',
+          text: `${cheias.map(g => g.label).join(' · ')}: três ou mais opções marcadas na mesma etapa — confirme se não está somando linhas alternativas.`
+        };
       }
     }
   ];
@@ -635,7 +715,9 @@ const PS_ETIOLOGY_ORDER = {
 };
 
 function psHasEtiologyConfig (config) {
-  return !!(config?.groups?.length && config.contextFields?.some(f => f.id === 'subtype'));
+  /* Etapas e linhas do protocolo não são etiologias: sem numeração nem ordem por incidência */
+  const groups = (config?.groups || []).filter(group => !group.autoStep && !group.tierGroup);
+  return !!(groups.length && config.contextFields?.some(f => f.id === 'subtype'));
 }
 
 function psSortByEtiologyOrder (conditionId, items, idKey) {
@@ -673,6 +755,9 @@ function psGetInteractiveConfig (conditionId) {
   if (hasCustomRx) {
     return {
       ...custom,
+      groups: (custom.groups && custom.groups.length)
+        ? custom.groups
+        : psGroupMedsByTier(custom.medications || []),
       contextFields: psMergeContextFields(custom.contextFields, psStandardContextFields(conditionId)),
       rules: [...(custom.rules || []), ...psGenericInteractiveRules()]
     };
@@ -680,14 +765,15 @@ function psGetInteractiveConfig (conditionId) {
 
   if (!html) return custom || null;
 
-  const autoMeds = psParseMedOptionsFromHtml(conditionId, html);
+  const autoStructure = psParseMedStructureFromHtml(conditionId, html);
+  const autoMeds = autoStructure.medications;
   if (!autoMeds.length) return custom || null;
 
   return {
     auto: true,
     contextFields: psMergeContextFields(custom && custom.contextFields, psStandardContextFields(conditionId)),
     medications: autoMeds,
-    groups: custom && custom.groups,
+    groups: (custom && custom.groups) || autoStructure.groups,
     idealFor: custom && custom.idealFor,
     acceptableFor: custom && custom.acceptableFor,
     subtypeLabels: custom && custom.subtypeLabels,

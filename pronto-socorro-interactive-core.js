@@ -170,23 +170,38 @@ function psCheckAntibioticInteractions (drugs, meds) {
   return messages;
 }
 
-function psCheckTherapyTierExclusivity (meds) {
+/**
+ * Mapa id da opção → etapa do protocolo. Só etapas contam: em grupos por linha
+ * (1ª linha, alternativa) o alerta de misturar linhas precisa continuar valendo.
+ */
+function psMedStepLabels (config) {
+  const map = new Map();
+  (config?.groups || []).filter(group => group.autoStep).forEach(group => {
+    (group.medications || []).forEach(med => map.set(med.id, group.label || ''));
+  });
+  return map;
+}
+
+function psCheckTherapyTierExclusivity (meds, config) {
   const messages = [];
   if (meds.length < 2) return messages;
 
-  const byType = {};
+  const steps = psMedStepLabels(config);
+  const buckets = new Map();
   meds.forEach(m => {
     const type = psMedTherapyType(m);
-    if (!byType[type]) byType[type] = [];
-    byType[type].push(m);
+    const step = steps.get(m.id) || '';
+    const key = `${step}||${type}`;
+    if (!buckets.has(key)) buckets.set(key, { type, step, meds: [] });
+    buckets.get(key).meds.push(m);
   });
 
-  Object.entries(byType).forEach(([type, typeMeds]) => {
-    if (typeMeds.length < 2) return;
+  buckets.forEach(({ type, step, meds: bucketMeds }) => {
+    if (bucketMeds.length < 2) return;
 
     const tierKeys = new Set();
     const tierLabels = [];
-    typeMeds.forEach(m => {
+    bucketMeds.forEach(m => {
       psGetExclusiveTierKeys(m).forEach(key => {
         if (!tierKeys.has(key)) {
           tierKeys.add(key);
@@ -197,14 +212,35 @@ function psCheckTherapyTierExclusivity (meds) {
     });
 
     if (tierKeys.size >= 2) {
+      const alvo = step || PS_THERAPY_TYPE_LABELS[type] || type;
       messages.push({
-        severity: 'error',
-        text: `Selecionou opções de ${PS_THERAPY_TYPE_LABELS[type] || type} de linhas diferentes do protocolo (${tierLabels.join(', ')}) — escolha apenas UMA linha por vez (1ª linha OU alternativa OU alérgico/refractário).`
+        severity: 'warning',
+        text: `${alvo}: marcou ${tierLabels.join(' e ')} ao mesmo tempo — em geral usa-se uma linha por vez; mantenha a que estiver disponível na sua unidade.`
       });
     }
   });
 
   return messages;
+}
+
+/** Mesma droga em duas opções marcadas (ex.: salbutamol isolado e associado) */
+function psCheckDuplicateDrugs (drugs) {
+  const byDrug = new Map();
+  drugs.forEach(d => {
+    const set = byDrug.get(d.id) || new Set();
+    set.add(d.medId);
+    byDrug.set(d.id, set);
+  });
+
+  const repetidas = [...byDrug.entries()]
+    .filter(([, medIds]) => medIds.size > 1)
+    .map(([id]) => (PS_DRUG_META[id] && PS_DRUG_META[id].name) || id);
+
+  if (!repetidas.length) return [];
+  return [{
+    severity: 'warning',
+    text: `${repetidas.join(', ')} aparece em mais de uma opção marcada — mantenha só a que vai administrar para não dobrar a dose.`
+  }];
 }
 
 function psCheckPainAnalgesiaStack (drugs, meds) {
@@ -340,7 +376,8 @@ function psValidatePrescription (conditionId, config, selectedMedIds, context, s
     }
   });
 
-  psCheckTherapyTierExclusivity(meds).forEach(m => messages.push(m));
+  psCheckTherapyTierExclusivity(meds, config).forEach(m => messages.push(m));
+  psCheckDuplicateDrugs(drugs).forEach(m => messages.push(m));
   psCheckAntibioticInteractions(drugs, meds).forEach(m => messages.push(m));
   psCheckPainAnalgesiaStack(drugs, meds).forEach(m => messages.push(m));
 
@@ -522,7 +559,9 @@ function psRenderInteractiveRx (conditionId, container) {
       : baseGroups;
     const groups = ordered
       .filter(g => psGroupVisible(g, context))
-      .map(g => ({ ...g, medications: filterMeds(g.medications, context) }));
+      .map(g => ({ ...g, medications: filterMeds(g.medications, context) }))
+      /* Grupo sem opção no contexto atual (alergia, subtipo) sai da tela em vez de virar aviso */
+      .filter(g => (!g.autoStep && !g.tierGroup) || g.medications.length);
 
     const selectedBefore = new Set(getSelected());
 
@@ -545,9 +584,11 @@ function psRenderInteractiveRx (conditionId, container) {
           <p class="muted">Nenhuma opção disponível — ocultada por alergia ou contexto clínico.</p>
         </fieldset>`;
       }
+      const highlight = rank === 0 && !g.autoStep && !g.tierGroup ? ' ps-rx-fieldset--primary' : '';
       return `
-      <fieldset class="ps-rx-fieldset ps-rx-fieldset--etiology${rank === 0 ? ' ps-rx-fieldset--primary' : ''}" data-group="${g.id}">
+      <fieldset class="ps-rx-fieldset ps-rx-fieldset--etiology${highlight}" data-group="${g.id}">
         <legend>${legend}</legend>
+        ${g.hint ? `<p class="ps-rx-group-hint">${g.hint}</p>` : ''}
         <div class="ps-rx-med-list">
           ${g.medications.map(m => psRenderMedOption(m, selectedBefore.has(m.id))).join('')}
         </div>
