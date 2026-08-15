@@ -424,3 +424,20 @@ function novoAtendimentoOpenEncounter () {
   if (typeof showSection === 'function') showSection('novo-atendimento');
   novoAtendimentoResumeStep();
 }
+
+/** Continua o mesmo atendimento no receituário para casa */
+function novoAtendimentoContinueHomePrescription () {
+  if (!novoAtendimentoReadDraft()) return;
+  novoAtendimentoOpenTreatment('receituario');
+}
+
+/** Encerra o paciente atual e prepara a identificação do próximo */
+function novoAtendimentoFinishPatient () {
+  const data = novoAtendimentoReadDraft();
+  const nome = data?.nome ? ` de ${data.nome}` : '';
+  if (!window.confirm(`Finalizar o atendimento${nome}?`)) return false;
+
+  novoAtendimentoClear();
+  if (typeof showSection === 'function') showSection('novo-atendimento');
+  return true;
+}

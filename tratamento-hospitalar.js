@@ -582,6 +582,56 @@ function thEnsurePrescriptionButton () {
   return btn;
 }
 
+/** Próximo passo do atendimento, exibido no app após gerar a prescrição */
+function thEnsureNextStepPanel () {
+  const bar = document.getElementById('th-selection-bar');
+  if (!bar) return null;
+
+  let panel = document.getElementById('th-next-step');
+  if (!panel) {
+    panel = document.createElement('div');
+    panel.id = 'th-next-step';
+    panel.className = 'th-next-step';
+    panel.hidden = true;
+    panel.innerHTML = `
+      <p class="th-next-step-title">Prescrição gerada. Qual o próximo passo?</p>
+      <div class="th-next-step-actions">
+        <button type="button" class="btn" id="th-next-step-home">Fazer prescrição para casa →</button>
+        <button type="button" class="btn btn-secondary" id="th-next-step-finish">Finalizar paciente</button>
+      </div>
+    `;
+    bar.after(panel);
+
+    panel.querySelector('#th-next-step-home')?.addEventListener('click', () => {
+      if (typeof novoAtendimentoContinueHomePrescription === 'function') {
+        novoAtendimentoContinueHomePrescription();
+      } else if (typeof showSection === 'function') {
+        showSection('receituario');
+      }
+    });
+
+    panel.querySelector('#th-next-step-finish')?.addEventListener('click', () => {
+      if (typeof novoAtendimentoFinishPatient === 'function') novoAtendimentoFinishPatient();
+      else if (typeof showSection === 'function') showSection('novo-atendimento');
+    });
+  }
+
+  return panel;
+}
+
+function thShowNextStep () {
+  const panel = thEnsureNextStepPanel();
+  if (!panel) return;
+  panel.hidden = false;
+  const home = document.getElementById('th-next-step-home');
+  if (home) home.hidden = !thHasEncounterDraft();
+}
+
+function thHideNextStep () {
+  const panel = document.getElementById('th-next-step');
+  if (panel) panel.hidden = true;
+}
+
 function renderThGrid (items) {
   const grid = document.getElementById('th-condition-grid');
   const empty = document.getElementById('th-empty');
@@ -938,6 +988,7 @@ function thUpdateSelectionBar () {
 
   const n = thSelectedMedKeys.size;
   bar.hidden = !currentThConditionId;
+  if (!n || bar.hidden) thHideNextStep();
   if (count) count.textContent = n ? `${n} medicação(ões) selecionada(s)` : 'Nenhuma medicação selecionada';
   if (clearBtn) clearBtn.disabled = n === 0;
   if (copyBtn) copyBtn.disabled = n === 0;
@@ -1016,6 +1067,8 @@ function thGeneratePrescription () {
     .map(id => TH_CONDITIONS.find(c => c.id === id)?.name)
     .filter(Boolean);
 
+  thShowNextStep();
+
   const win = window.open('', '_blank', 'width=850,height=950');
   if (!win) {
     alert('Permita pop-ups para gerar a prescrição.');
@@ -1040,6 +1093,12 @@ function thGeneratePrescription () {
       .toolbar { position: sticky; top: 0; display: flex; justify-content: flex-end; gap: 8px; padding: 12px; background: #111827; }
       button { border: 0; border-radius: 7px; padding: 10px 16px; font-weight: 700; cursor: pointer; }
       .print { background: #1677ff; color: #fff; }
+      .next-step { width: 210mm; margin: 18px auto 0; padding: 18px 20px; border-radius: 10px; background: #fff; box-shadow: 0 4px 22px #0002; }
+      .next-step h2 { margin: 0 0 6px; font-size: 18px; }
+      .next-step p { margin: 0 0 14px; color: #475569; }
+      .next-step-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+      .home-rx { background: #1677ff; color: #fff; }
+      .finish { border: 1px solid #cbd5e1; background: #f8fafc; color: #334155; }
       .sheet { width: 210mm; min-height: 297mm; margin: 18px auto; padding: 22mm 20mm; background: #fff; box-shadow: 0 4px 22px #0002; }
       h1 { margin: 0 0 28px; text-align: center; font-size: 20px; letter-spacing: .08em; }
       .meta { display: grid; grid-template-columns: 1fr auto; gap: 8px 24px; padding-bottom: 18px; border-bottom: 1px solid #cbd5e1; }
@@ -1055,7 +1114,7 @@ function thGeneratePrescription () {
       .note { margin-top: 40px; padding-top: 12px; border-top: 1px solid #e5e7eb; color: #64748b; font-size: 11px; }
       @media print {
         body { background: #fff; }
-        .toolbar { display: none; }
+        .toolbar, .next-step { display: none; }
         .sheet { width: auto; min-height: auto; margin: 0; box-shadow: none; }
         @page { size: A4; margin: 0; }
       }
@@ -1066,6 +1125,14 @@ function thGeneratePrescription () {
       <button onclick="window.close()">Fechar</button>
       <button class="print" onclick="window.print()">Imprimir / salvar PDF</button>
     </div>
+    <section class="next-step">
+      <h2>Após a prescrição hospitalar</h2>
+      <p>Escolha o próximo passo para este paciente.</p>
+      <div class="next-step-actions">
+        <button class="home-rx" onclick="continueEncounter('home')">Fazer prescrição para casa →</button>
+        <button class="finish" onclick="continueEncounter('finish')">Finalizar paciente</button>
+      </div>
+    </section>
     <main class="sheet">
       <h1>PRESCRIÇÃO MÉDICA</h1>
       <section class="meta">
@@ -1083,6 +1150,22 @@ function thGeneratePrescription () {
       </section>
       <p class="note">Revise medicação, dose, via, intervalo, alergias e contraindicações antes de assinar.</p>
     </main>
+    <script>
+      function continueEncounter(action) {
+        if (!window.opener || window.opener.closed) {
+          alert('A janela principal do MedHub não está disponível.');
+          return;
+        }
+        if (action === 'home' && typeof window.opener.novoAtendimentoContinueHomePrescription === 'function') {
+          window.opener.novoAtendimentoContinueHomePrescription();
+          window.close();
+          return;
+        }
+        if (action === 'finish' && typeof window.opener.novoAtendimentoFinishPatient === 'function') {
+          if (window.opener.novoAtendimentoFinishPatient()) window.close();
+        }
+      }
+    <\/script>
   </body>
   </html>`);
   win.document.close();

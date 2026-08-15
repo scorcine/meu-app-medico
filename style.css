@@ -4499,6 +4499,25 @@ textarea {
   margin-top: 0.25rem;
 }
 
+.th-next-step {
+  margin-top: 0.9rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid rgba(59, 130, 246, 0.45);
+  border-radius: 10px;
+  background: rgba(59, 130, 246, 0.1);
+}
+
+.th-next-step-title {
+  margin: 0 0 0.7rem;
+  font-weight: 600;
+}
+
+.th-next-step-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+}
+
 .novo-atendimento-resume {
   display: flex;
   flex-wrap: wrap;
