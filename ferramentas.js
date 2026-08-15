@@ -45,7 +45,7 @@ function initFerramentas () {
 
   const items = typeof medhubGetHomeCards === 'function'
     ? medhubGetHomeCards()
-    : FERRAMENTAS_ITEMS;
+    : FERRAMENTAS_ITEMS.filter(item => typeof medhubIsSectionRetired !== 'function' || !medhubIsSectionRetired(item.section));
 
   grid.innerHTML = items.map(item => {
     const style = typeof medhubHomeCardStyle === 'function' ? medhubHomeCardStyle(item) : '';

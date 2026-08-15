@@ -71,8 +71,18 @@ function medhubApplySiteTheme (theme) {
   }
 }
 
+/* Módulos suspensos: só voltam ao menu se o MedHub for usado dentro de um hospital.
+   Basta remover o id desta lista para reativar o módulo. */
+const MEDHUB_RETIRED_SECTIONS = ['pacientes', 'anamnese', 'consultas'];
+
+function medhubIsSectionRetired (section) {
+  return MEDHUB_RETIRED_SECTIONS.indexOf(String(section || '')) !== -1;
+}
+
 function medhubIsSidebarItemLive (entry) {
   if (entry.type !== 'item') return false;
+  if (medhubIsSectionRetired(entry.id)) return false;
+  if (typeof medhubCanAccessSection === 'function' && !medhubCanAccessSection(entry.id)) return false;
   if (entry.visible === false) return false;
   if (entry.comingSoon && entry.enabled !== true) return false;
   if (entry.enabled === false) return false;
@@ -80,6 +90,8 @@ function medhubIsSidebarItemLive (entry) {
 }
 
 function medhubIsHomeCardLive (card) {
+  if (medhubIsSectionRetired(card.section)) return false;
+  if (typeof medhubCanAccessSection === 'function' && !medhubCanAccessSection(card.section)) return false;
   if (card.visible === false) return false;
   if (card.comingSoon && card.enabled !== true) return false;
   if (card.enabled === false) return false;
@@ -153,6 +165,17 @@ function medhubBindSidebarLinks () {
   });
 }
 
+function medhubApplyUserAccessToStaticLinks () {
+  if (typeof medhubCanAccessSection !== 'function') return;
+  document.querySelectorAll('[data-section]').forEach(element => {
+    const section = element.dataset.section;
+    if (!section || element.classList.contains('sidebar-link')) return;
+    const allowed = medhubCanAccessSection(section);
+    element.hidden = !allowed;
+    element.style.display = allowed ? '' : 'none';
+  });
+}
+
 function medhubRenderAppSidebar (sidebar, activeSection) {
   const nav = document.getElementById('app-sidebar-nav');
   if (!nav) return;
@@ -170,7 +193,8 @@ function medhubGetHomeCards () {
   if (Array.isArray(cards) && cards.length) {
     return cards.filter(medhubIsHomeCardLive);
   }
-  return typeof FERRAMENTAS_ITEMS !== 'undefined' ? FERRAMENTAS_ITEMS : [];
+  if (typeof FERRAMENTAS_ITEMS === 'undefined') return [];
+  return FERRAMENTAS_ITEMS.filter(item => !medhubIsSectionRetired(item.section));
 }
 
 function medhubHomeCardStyle (card) {
@@ -197,6 +221,7 @@ async function medhubInitSiteConfig (activeSection) {
   } else {
     medhubBindSidebarLinks();
   }
+  medhubApplyUserAccessToStaticLinks();
 
   return config;
 }
