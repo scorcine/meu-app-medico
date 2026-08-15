@@ -649,6 +649,57 @@ function rxSyncOptionCards () {
   });
 }
 
+function rxHasEncounterDraft () {
+  try {
+    return !!JSON.parse(sessionStorage.getItem('medhub-new-encounter-draft') || 'null')?.nome;
+  } catch {
+    return false;
+  }
+}
+
+/** Encerramento do atendimento, sempre visível quando há paciente em curso */
+function rxEnsureNextStepPanel () {
+  const bar = document.getElementById('rx-selection-bar');
+  if (!bar) return null;
+
+  let panel = document.getElementById('rx-next-step');
+  if (!panel) {
+    panel = document.createElement('div');
+    panel.id = 'rx-next-step';
+    panel.className = 'th-next-step';
+    panel.hidden = true;
+    panel.innerHTML = `
+      <p class="th-next-step-title">Próximo passo do atendimento</p>
+      <div class="th-next-step-actions">
+        <button type="button" class="btn btn-secondary" id="rx-next-step-unidade">Ver tratamento na unidade →</button>
+        <button type="button" class="btn" id="rx-next-step-finish">Finalizar paciente</button>
+      </div>
+    `;
+    bar.after(panel);
+
+    panel.querySelector('#rx-next-step-unidade')?.addEventListener('click', () => {
+      if (typeof novoAtendimentoOpenTreatment === 'function') {
+        novoAtendimentoOpenTreatment('tratamento-hospitalar');
+      } else if (typeof showSection === 'function') {
+        showSection('tratamento-hospitalar');
+      }
+    });
+
+    panel.querySelector('#rx-next-step-finish')?.addEventListener('click', () => {
+      if (typeof novoAtendimentoFinishPatient === 'function') novoAtendimentoFinishPatient();
+      else if (typeof showSection === 'function') showSection('novo-atendimento');
+    });
+  }
+
+  return panel;
+}
+
+function rxUpdateNextStepPanel () {
+  const panel = rxEnsureNextStepPanel();
+  if (!panel) return;
+  panel.hidden = !rxHasEncounterDraft();
+}
+
 function rxGetValidationState () {
   const conditions = rxGetActiveConditions();
   if (!conditions.length || !rxSelectedOptionKeys.size) {
@@ -729,6 +780,7 @@ function rxUpdateSelectionBar () {
   if (generateBtn) generateBtn.disabled = !canGenerate;
   if (clearBtn) clearBtn.disabled = rxSelectedOptionKeys.size === 0;
   if (bar) bar.hidden = false;
+  rxUpdateNextStepPanel();
 }
 
 function rxToggleOption (conditionId, optId) {
@@ -830,6 +882,8 @@ function rxGenerateBlankReceitaCore () {
   if (selectionBar) selectionBar.hidden = true;
   if (validation) { validation.hidden = true; validation.innerHTML = ''; }
   if (sourceBanner) { sourceBanner.hidden = true; sourceBanner.innerHTML = ''; }
+  const nextStep = document.getElementById('rx-next-step');
+  if (nextStep) nextStep.hidden = true;
 
   const crm = rxGetStoredCrmDisplay();
   const date = new Date().toLocaleDateString('pt-BR');

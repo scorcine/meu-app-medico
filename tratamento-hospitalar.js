@@ -582,7 +582,7 @@ function thEnsurePrescriptionButton () {
   return btn;
 }
 
-/** Próximo passo do atendimento, exibido no app após gerar a prescrição */
+/** Próximo passo do atendimento, sempre visível enquanto uma condição estiver aberta */
 function thEnsureNextStepPanel () {
   const bar = document.getElementById('th-selection-bar');
   if (!bar) return null;
@@ -594,7 +594,7 @@ function thEnsureNextStepPanel () {
     panel.className = 'th-next-step';
     panel.hidden = true;
     panel.innerHTML = `
-      <p class="th-next-step-title">Prescrição gerada. Qual o próximo passo?</p>
+      <p class="th-next-step-title">Próximo passo do atendimento</p>
       <div class="th-next-step-actions">
         <button type="button" class="btn" id="th-next-step-home">Fazer prescrição para casa →</button>
         <button type="button" class="btn btn-secondary" id="th-next-step-finish">Finalizar paciente</button>
@@ -988,7 +988,8 @@ function thUpdateSelectionBar () {
 
   const n = thSelectedMedKeys.size;
   bar.hidden = !currentThConditionId;
-  if (!n || bar.hidden) thHideNextStep();
+  if (bar.hidden) thHideNextStep();
+  else thShowNextStep();
   if (count) count.textContent = n ? `${n} medicação(ões) selecionada(s)` : 'Nenhuma medicação selecionada';
   if (clearBtn) clearBtn.disabled = n === 0;
   if (copyBtn) copyBtn.disabled = n === 0;
