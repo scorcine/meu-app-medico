@@ -4707,6 +4707,165 @@ textarea {
   gap: 0.55rem;
 }
 
+.novo-atendimento-protocolo {
+  overflow: hidden;
+  border: 1px solid rgba(240, 180, 41, 0.48);
+  border-radius: 14px;
+  background:
+    linear-gradient(rgba(240, 180, 41, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(240, 180, 41, 0.035) 1px, transparent 1px),
+    var(--bg-surface-alt);
+  background-size: 22px 22px, 22px 22px, auto;
+  box-shadow: 0 10px 30px rgba(2, 10, 26, 0.14);
+}
+
+.novo-atendimento-protocolo[hidden] {
+  display: none;
+}
+
+.novo-atendimento-protocolo-alert {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.9rem 1rem;
+  color: #3b2700;
+  background: linear-gradient(90deg, #f7c246, #e7a918);
+}
+
+.novo-atendimento-protocolo-alert-icon {
+  display: grid;
+  place-items: center;
+  width: 2.2rem;
+  height: 2.2rem;
+  flex: 0 0 2.2rem;
+  border-radius: 50%;
+  background: rgba(11, 31, 69, 0.13);
+  font-size: 1.15rem;
+}
+
+.novo-atendimento-protocolo-alert strong,
+.novo-atendimento-protocolo-alert span {
+  display: block;
+}
+
+.novo-atendimento-protocolo-alert strong {
+  font-size: 0.95rem;
+  line-height: 1.35;
+}
+
+.novo-atendimento-protocolo-alert span {
+  margin-top: 0.12rem;
+  font-size: 0.78rem;
+  line-height: 1.35;
+}
+
+.novo-atendimento-protocolo-body {
+  padding: 1rem;
+}
+
+.novo-atendimento-protocolo-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.novo-atendimento-protocolo-heading h3 {
+  margin: 0.25rem 0 0;
+  color: var(--text-primary);
+  font-size: 1.12rem;
+}
+
+.novo-atendimento-protocolo-steps {
+  display: grid;
+  gap: 0.45rem;
+  margin: 1rem 0;
+  padding-left: 1.25rem;
+  color: var(--text-secondary);
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+
+.novo-atendimento-protocolo-steps strong {
+  color: var(--text-primary);
+}
+
+.novo-atendimento-protocolo-scores {
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--border);
+}
+
+.novo-atendimento-protocolo-scores > div:first-child strong,
+.novo-atendimento-protocolo-scores > div:first-child span {
+  display: block;
+}
+
+.novo-atendimento-protocolo-scores > div:first-child span {
+  margin-top: 0.15rem;
+  color: var(--text-muted);
+  font-size: 0.78rem;
+}
+
+.novo-atendimento-protocolo-score-buttons {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.55rem;
+  margin-top: 0.7rem;
+}
+
+.novo-atendimento-protocolo-score-buttons button {
+  min-height: 4rem;
+  padding: 0.65rem 0.7rem;
+  border: 1px solid rgba(240, 180, 41, 0.42);
+  border-radius: 10px;
+  color: var(--text-primary);
+  background: transparent;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+
+.novo-atendimento-protocolo-score-buttons button:hover,
+.novo-atendimento-protocolo-score-buttons button:focus-visible {
+  border-color: #f0b429;
+  background: rgba(240, 180, 41, 0.08);
+  box-shadow: 0 0 16px rgba(240, 180, 41, 0.16);
+  outline: none;
+}
+
+.novo-atendimento-protocolo-score-buttons strong,
+.novo-atendimento-protocolo-score-buttons span {
+  display: block;
+}
+
+.novo-atendimento-protocolo-score-buttons strong {
+  color: #d89b14;
+  font-size: 0.82rem;
+}
+
+[data-theme="dark"] .novo-atendimento-protocolo-score-buttons strong {
+  color: #f2c464;
+}
+
+.novo-atendimento-protocolo-score-buttons span {
+  margin-top: 0.2rem;
+  color: var(--text-muted);
+  font-size: 0.7rem;
+  line-height: 1.3;
+}
+
+@media (max-width: 760px) {
+  .novo-atendimento-protocolo-heading {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .novo-atendimento-protocolo-score-buttons {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 .novo-atendimento-complaint-chip {
   display: inline-flex;
   align-items: center;

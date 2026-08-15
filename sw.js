@@ -1,5 +1,5 @@
 /* MedHub PWA — cache leve só do shell (CSS, logo, tema). Conteúdo clínico sempre via rede. */
-var SHELL_CACHE = 'medhub-shell-v35';
+var SHELL_CACHE = 'medhub-shell-v36';
 var SHELL_URLS = [
   '/manifest.webmanifest',
   '/theme.js',

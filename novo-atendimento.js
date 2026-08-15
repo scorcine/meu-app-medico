@@ -19,6 +19,7 @@ function novoAtendimentoElements () {
     queixaInput: document.getElementById('novo-atendimento-queixa-input'),
     queixasList: document.getElementById('novo-atendimento-queixas-list'),
     queixasEmpty: document.getElementById('novo-atendimento-queixas-empty'),
+    protocolo: document.getElementById('novo-atendimento-protocolo'),
     queixasStatus: document.getElementById('novo-atendimento-queixas-status'),
     salvarQueixas: document.getElementById('novo-atendimento-salvar-queixas'),
     voltarIdentificacao: document.getElementById('novo-atendimento-voltar-identificacao'),
@@ -88,6 +89,96 @@ function novoAtendimentoEscape (text) {
     .replace(/"/g, '&quot;');
 }
 
+function novoAtendimentoNormalize (text) {
+  return String(text || '')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, ' ')
+    .trim();
+}
+
+function novoAtendimentoHasChestPain () {
+  return novoAtendimentoQueixas.some(queixa => {
+    const value = novoAtendimentoNormalize(queixa);
+    return /\b(dor toracica|dor no peito|precordialgia|angina|sca|infarto|iam)\b/.test(value);
+  });
+}
+
+function novoAtendimentoOpenChestProtocol () {
+  if (typeof showSection === 'function') showSection('guia-emergencia');
+  window.setTimeout(() => {
+    if (typeof initGuiaEmergencia === 'function') initGuiaEmergencia();
+    if (typeof showEmergenciaTopic === 'function') showEmergenciaTopic('sca');
+    if (typeof showEmergenciaProtocol === 'function') showEmergenciaProtocol('dor-inicial');
+  }, 80);
+}
+
+function novoAtendimentoOpenScore (scoreId) {
+  if (typeof showSection === 'function') showSection('calc-essenciais');
+  window.setTimeout(() => {
+    if (typeof initCalcEssenciais === 'function') initCalcEssenciais();
+    if (typeof showCalcArea === 'function') showCalcArea('cardiologia');
+    if (typeof showCalcTool === 'function') showCalcTool(scoreId);
+  }, 80);
+}
+
+function novoAtendimentoRenderProtocol () {
+  const { protocolo } = novoAtendimentoElements();
+  if (!protocolo) return;
+
+  if (!novoAtendimentoHasChestPain()) {
+    protocolo.hidden = true;
+    protocolo.innerHTML = '';
+    return;
+  }
+
+  protocolo.hidden = false;
+  protocolo.innerHTML = `
+    <div class="novo-atendimento-protocolo-alert" role="alert">
+      <span class="novo-atendimento-protocolo-alert-icon" aria-hidden="true">⚡</span>
+      <div>
+        <strong>Dor torácica: realizar ECG de 12 derivações em até 10 minutos</strong>
+        <span>Não aguarde escores ou troponina se houver instabilidade ou suspeita de IAM com supra.</span>
+      </div>
+    </div>
+    <div class="novo-atendimento-protocolo-body">
+      <div class="novo-atendimento-protocolo-heading">
+        <div>
+          <p class="novo-atendimento-step">Protocolo sugerido automaticamente</p>
+          <h3>Suspeita de síndrome coronariana aguda</h3>
+        </div>
+        <button type="button" class="btn btn-secondary" data-open-chest-protocol>
+          Abrir protocolo completo →
+        </button>
+      </div>
+      <ol class="novo-atendimento-protocolo-steps">
+        <li><strong>Avaliar estabilidade:</strong> ABC, pressão arterial, frequência, SpO₂, ritmo e sinais de choque.</li>
+        <li><strong>ECG em ≤ 10 min:</strong> repetir se a dor persistir ou houver mudança clínica.</li>
+        <li><strong>Monitorização e exames:</strong> acesso venoso, troponina seriada, eletrólitos e função renal.</li>
+        <li><strong>Classificar:</strong> IAM com supra, IAM sem supra, angina instável ou diagnóstico alternativo grave.</li>
+      </ol>
+      <div class="novo-atendimento-protocolo-scores">
+        <div>
+          <strong>Escores úteis</strong>
+          <span>Use conforme o momento clínico; eles não devem atrasar ECG nem reperfusão.</span>
+        </div>
+        <div class="novo-atendimento-protocolo-score-buttons">
+          <button type="button" data-open-score="heart"><strong>HEART</strong><span>Dor torácica indiferenciada</span></button>
+          <button type="button" data-open-score="grace"><strong>GRACE</strong><span>SCA sem supra / prognóstico</span></button>
+          <button type="button" data-open-score="timi-ua"><strong>TIMI UA/NSTEMI</strong><span>Risco isquêmico</span></button>
+          <button type="button" data-open-score="killip"><strong>Killip</strong><span>Insuficiência cardíaca no IAM</span></button>
+        </div>
+      </div>
+    </div>`;
+
+  protocolo.querySelector('[data-open-chest-protocol]')
+    ?.addEventListener('click', novoAtendimentoOpenChestProtocol);
+  protocolo.querySelectorAll('[data-open-score]').forEach(button => {
+    button.addEventListener('click', () => novoAtendimentoOpenScore(button.dataset.openScore));
+  });
+}
+
 function novoAtendimentoShowStep (step) {
   const {
     form,
@@ -146,6 +237,7 @@ function novoAtendimentoRenderQueixas () {
     </span>
   `).join('');
   if (queixasEmpty) queixasEmpty.hidden = novoAtendimentoQueixas.length > 0;
+  novoAtendimentoRenderProtocol();
 
   queixasList.querySelectorAll('[data-remove-queixa]').forEach(button => {
     button.addEventListener('click', () => {
