@@ -16,7 +16,7 @@
   <meta name="apple-mobile-web-app-title" content="MedHub">
   <link rel="apple-touch-icon" href="/assets/icons/icon-192.png?v=icon-v2">
   <script src="theme.js?v=2"></script>
-  <link rel="stylesheet" href="style.css?v=encounter-v8">
+  <link rel="stylesheet" href="style.css?v=encounter-v9">
   <link rel="stylesheet" href="app-mobile.css?v=pwa-header-v1">
   <script defer src="calculators-risco.js"></script>
   <script defer src="calculators-cardio.js"></script>
@@ -93,7 +93,7 @@
   <script defer src="auth-cloud.js?v=cloud-v21"></script>
   <script defer src="app-search.js?v=search-v3"></script>
   <script defer src="medhub-site-config.js?v=site-ui-v3"></script>
-  <script defer src="novo-atendimento.js?v=encounter-v5"></script>
+  <script defer src="novo-atendimento.js?v=encounter-v6"></script>
   <script defer src="app.js?v=encounter-v1"></script>
   <script defer src="auth.js?v=compliance-v1"></script>
   <script defer src="pwa-install.js?v=pwa-v4"></script>
@@ -233,6 +233,11 @@
               <p class="muted">Preencha os dados abaixo para iniciar. As informações serão usadas durante este atendimento.</p>
             </div>
           </header>
+
+          <div id="novo-atendimento-resume" class="novo-atendimento-resume" hidden>
+            <span id="novo-atendimento-resume-text"></span>
+            <button type="button" class="btn btn-secondary" id="novo-atendimento-resume-btn">Continuar atendimento →</button>
+          </div>
 
           <form id="novo-atendimento-form" class="novo-atendimento-form">
             <label class="novo-atendimento-field novo-atendimento-field--wide" for="novo-atendimento-nome">

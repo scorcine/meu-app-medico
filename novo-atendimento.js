@@ -28,7 +28,10 @@ function novoAtendimentoElements () {
     txCasa: document.getElementById('novo-atendimento-tx-casa'),
     voltarQueixas: document.getElementById('novo-atendimento-voltar-queixas'),
     irTratamento: document.getElementById('novo-atendimento-ir-tratamento'),
-    novoPaciente: document.getElementById('novo-atendimento-novo-paciente')
+    novoPaciente: document.getElementById('novo-atendimento-novo-paciente'),
+    resume: document.getElementById('novo-atendimento-resume'),
+    resumeText: document.getElementById('novo-atendimento-resume-text'),
+    resumeBtn: document.getElementById('novo-atendimento-resume-btn')
   };
 }
 
@@ -104,6 +107,13 @@ function novoAtendimentoShowStep (step) {
   if (queixasPanel) queixasPanel.hidden = !showingQueixas;
   if (tratamentoPanel) tratamentoPanel.hidden = !showingTratamento;
 
+  if (showingIdentificacao) {
+    novoAtendimentoRenderResume();
+  } else {
+    const { resume } = novoAtendimentoElements();
+    if (resume) resume.hidden = true;
+  }
+
   if (showingQueixas) window.setTimeout(() => queixaInput?.focus(), 50);
 
   if (showingTratamento) {
@@ -173,14 +183,20 @@ function novoAtendimentoSave (event) {
   novoAtendimentoUpdateAllergyField();
   if (!form?.reportValidity()) return;
 
+  // Paciente diferente começa um atendimento do zero, sem herdar queixas do anterior
+  const nomeAtual = nome.value.trim();
+  const mesmoPaciente = !!previous && previous.nome === nomeAtual;
+  if (!mesmoPaciente) novoAtendimentoQueixas = [];
+
   const data = {
-    nome: nome.value.trim(),
+    nome: nomeAtual,
     sexo: sexo.value,
     idade: String(idade.value).trim(),
     alergias: allergyChoice === 'sim' ? detalhe.value.trim() : 'Nega alergias',
-    queixas: previous?.queixas || novoAtendimentoQueixas,
+    queixas: mesmoPaciente ? (previous.queixas || novoAtendimentoQueixas) : novoAtendimentoQueixas,
     step: 'queixas',
-    startedAt: previous?.startedAt || new Date().toISOString()
+    startedAt: mesmoPaciente ? previous.startedAt : new Date().toISOString(),
+    lastTreatment: mesmoPaciente ? previous.lastTreatment : null
   };
 
   sessionStorage.setItem(MEDHUB_NEW_ENCOUNTER_DRAFT, JSON.stringify(data));
@@ -357,6 +373,7 @@ function initNovoAtendimento () {
     novoAtendimentoOpenTreatment(data?.lastTreatment || 'tratamento-hospitalar');
   });
   novoPaciente?.addEventListener('click', novoAtendimentoClear);
+  novoAtendimentoElements().resumeBtn?.addEventListener('click', novoAtendimentoResumeStep);
   document.querySelectorAll('input[name="novo-atendimento-alergia"]').forEach(input => {
     input.addEventListener('change', novoAtendimentoUpdateAllergyField);
   });
@@ -364,23 +381,46 @@ function initNovoAtendimento () {
   novoAtendimentoRestore();
 }
 
+/* A aba do menu sempre abre um atendimento novo; o anterior continua acessível pelo aviso */
 function novoAtendimentoOnSectionShow () {
   initNovoAtendimento();
-  novoAtendimentoResumeStep();
+  novoAtendimentoPrepareNew();
+  novoAtendimentoShowStep('identificacao');
 
-  const { nome, queixasPanel, tratamentoPanel } = novoAtendimentoElements();
-  const onIdentificacao = queixasPanel?.hidden && tratamentoPanel?.hidden;
-  if (onIdentificacao && nome && !nome.value) window.setTimeout(() => nome.focus(), 50);
+  const { nome } = novoAtendimentoElements();
+  if (nome && !nome.value) window.setTimeout(() => nome.focus(), 50);
 }
 
-/** Ao voltar para a aba, retoma o passo onde o atendimento parou */
-function novoAtendimentoResumeStep () {
-  const data = novoAtendimentoReadDraft();
-  if (!data) return;
+/* Formulário limpo para o próximo paciente — o rascunho anterior segue no aviso de retomada */
+function novoAtendimentoPrepareNew () {
+  const { form } = novoAtendimentoElements();
+  form?.reset();
+  novoAtendimentoQueixas = [];
+  novoAtendimentoUpdateAllergyField();
+  novoAtendimentoRenderQueixas();
+  novoAtendimentoSetStatus('');
+}
 
-  if (data.step === 'tratamento' && (data.queixas || []).length) {
-    novoAtendimentoShowStep('tratamento');
-  } else if (data.step === 'queixas') {
-    novoAtendimentoShowStep('queixas');
+function novoAtendimentoRenderResume () {
+  const { resume, resumeText } = novoAtendimentoElements();
+  if (!resume) return;
+
+  const data = novoAtendimentoReadDraft();
+  const emAndamento = !!(data && data.nome && data.step && data.step !== 'identificacao');
+  resume.hidden = !emAndamento;
+  if (emAndamento && resumeText) {
+    resumeText.textContent = `Atendimento em andamento: ${data.nome}`;
   }
+}
+
+/** Retoma o atendimento anterior com os campos, as queixas e o passo onde parou */
+function novoAtendimentoResumeStep () {
+  if (!novoAtendimentoReadDraft()) return;
+  novoAtendimentoRestore();
+}
+
+/** Volta para o atendimento a partir das telas de tratamento */
+function novoAtendimentoOpenEncounter () {
+  if (typeof showSection === 'function') showSection('novo-atendimento');
+  novoAtendimentoResumeStep();
 }

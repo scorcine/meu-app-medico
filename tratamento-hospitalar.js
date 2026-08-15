@@ -549,7 +549,8 @@ function thEnsureEncounterBackButton () {
   if (!btn.dataset.bound) {
     btn.dataset.bound = '1';
     btn.addEventListener('click', () => {
-      if (typeof showSection === 'function') showSection('novo-atendimento');
+      if (typeof novoAtendimentoOpenEncounter === 'function') novoAtendimentoOpenEncounter();
+      else if (typeof showSection === 'function') showSection('novo-atendimento');
     });
   }
 
