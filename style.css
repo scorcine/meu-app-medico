@@ -9666,20 +9666,27 @@ body.app-page .app-content {
 
 .app-orbit-ring {
   position: relative;
-  width: 128vmin;
-  height: 128vmin;
-  border: 1px solid rgba(240, 180, 41, 0.14);
+  width: 150vmin;
+  height: 150vmin;
+  border: 1px solid rgba(240, 180, 41, 0.16);
   border-radius: 50%;
   animation: medhub-orbit-spin 32s linear infinite;
 }
 
+/* Rastro do ponto: anel de espessura constante que desvanece ao longo da volta */
 .app-orbit-arc {
   position: absolute;
   inset: -1px;
-  border: 1px solid transparent;
-  border-top-color: rgba(240, 180, 41, 0.4);
-  border-right-color: rgba(240, 180, 41, 0.16);
   border-radius: 50%;
+  background: conic-gradient(
+    from 0deg,
+    rgba(240, 180, 41, 0) 0deg,
+    rgba(240, 180, 41, 0) 235deg,
+    rgba(240, 180, 41, 0.18) 305deg,
+    rgba(240, 180, 41, 0.5) 360deg
+  );
+  mask: radial-gradient(closest-side, transparent calc(100% - 2px), #000 calc(100% - 1px));
+  -webkit-mask: radial-gradient(closest-side, transparent calc(100% - 2px), #000 calc(100% - 1px));
 }
 
 .app-orbit-dot {
