@@ -175,12 +175,34 @@ function rxGetActiveQueixa () {
     document.getElementById('anam-queixa')?.value.trim() || '';
 }
 
+function rxReadEncounterDraft () {
+  try {
+    return JSON.parse(sessionStorage.getItem('medhub-new-encounter-draft') || 'null');
+  } catch {
+    return null;
+  }
+}
+
+/** Idade sempre com um único sufixo "anos", venha ela de onde vier */
+function rxFormatIdade (value) {
+  const raw = String(value || '').trim();
+  if (!raw) return '';
+  if (!/\d/.test(raw)) return raw;
+  return /anos?/i.test(raw) ? raw : `${raw} anos`;
+}
+
 function rxGetPatientContext () {
+  const draft = rxReadEncounterDraft();
+
   return {
     paciente: sessionStorage.getItem(MEDHUB_ACTIVE_PACIENTE) ||
-      document.getElementById('anam-paciente')?.value.trim() || '',
-    idade: sessionStorage.getItem(MEDHUB_ACTIVE_IDADE) ||
-      document.getElementById('anam-idade')?.value.trim() || '',
+      document.getElementById('anam-paciente')?.value.trim() ||
+      draft?.nome || '',
+    idade: rxFormatIdade(
+      sessionStorage.getItem(MEDHUB_ACTIVE_IDADE) ||
+      document.getElementById('anam-idade')?.value.trim() ||
+      draft?.idade || ''
+    ),
     queixa: rxGetActiveQueixa()
   };
 }
@@ -266,7 +288,7 @@ function rxFormatReceitaPrint (conditions, medEntries, orientacoesList, validati
   const crm = rxGetStoredCrmDisplay();
   const date = new Date().toLocaleDateString('pt-BR');
   const paciente = ctx.paciente || '________________________________';
-  const idade = ctx.idade ? ctx.idade + ' anos' : '________';
+  const idade = ctx.idade || '________';
 
   const lines = [
     '                         RECEITUÁRIO SIMPLES',
@@ -365,7 +387,7 @@ function rxRenderPrintPreview (conditions, medEntries, orientacoesList) {
         <div class="rx-print-meta">
           <p><strong>Paciente:</strong> ${ctx.paciente || '________________________________'}</p>
           <p><strong>Data:</strong> ${date}</p>
-          <p><strong>Idade:</strong> ${ctx.idade ? ctx.idade + ' anos' : '________'}</p>
+          <p><strong>Idade:</strong> ${ctx.idade || '________'}</p>
           ${queixasLine}
         </div>
         ${routeBlock('Uso oral:', byRoute.vo)}
