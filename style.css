@@ -3548,8 +3548,161 @@ body.app-page {
   color: var(--state-done);
 }
 
+.emerg-summary-actions.is-pending {
+  display: none;
+}
+
+.emerg-summary-pending {
+  margin: 0.75rem 0 0;
+  padding: 0.55rem;
+  background: color-mix(in srgb, var(--state-wait) 10%, var(--bg-surface-active));
+  border-left: 3px solid var(--state-wait);
+  color: var(--text-muted);
+  font-size: 0.74rem;
+}
+
+.emerg-reperfusion {
+  margin-top: 0.8rem;
+  padding-top: 0.8rem;
+  border-top: 1px solid var(--border);
+}
+
+.emerg-reperfusion[hidden],
+.emerg-reperfusion-panel[hidden],
+.emerg-finalize-protocol[hidden],
+.emerg-finalized-status[hidden] {
+  display: none !important;
+}
+
+.emerg-reperfusion-open,
+.emerg-finalize-protocol {
+  width: 100%;
+  min-height: 46px;
+  font-weight: 700;
+}
+
+.emerg-reperfusion-open {
+  background: var(--state-wait);
+  border: 1px solid var(--state-wait);
+  color: #1a1205;
+}
+
+.emerg-reperfusion-open.is-done {
+  background: color-mix(in srgb, var(--state-done) 16%, var(--bg-surface-active));
+  border-color: var(--state-done);
+  color: var(--text-primary);
+}
+
+.emerg-reperfusion-panel {
+  margin: 0.65rem 0;
+  padding: 0.75rem;
+  background: color-mix(in srgb, var(--state-wait) 7%, var(--bg-surface));
+  border: 1px solid var(--state-wait);
+  border-radius: 8px;
+}
+
+.emerg-reperfusion-panel > strong {
+  color: var(--text-primary);
+  font-size: 0.88rem;
+}
+
+.emerg-reperfusion-criteria {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.6rem;
+  margin-top: 0.6rem;
+}
+
+.emerg-reperfusion-criteria > div {
+  padding: 0.6rem;
+  background: var(--bg-surface-active);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+}
+
+.emerg-reperfusion-criteria strong {
+  color: var(--text-primary);
+  font-size: 0.75rem;
+}
+
+.emerg-reperfusion-criteria ul {
+  margin: 0.35rem 0 0 1rem;
+  padding: 0;
+}
+
+.emerg-reperfusion-criteria li {
+  margin: 0.22rem 0;
+  color: var(--text-muted);
+  font-size: 0.7rem;
+  line-height: 1.4;
+}
+
+.emerg-reperfusion-choices {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+  margin-top: 0.65rem;
+}
+
+.emerg-reperfusion-choices button {
+  min-height: 46px;
+  padding: 0.5rem;
+  background: var(--bg-surface-active);
+  color: var(--text-primary);
+  font-weight: 700;
+}
+
+.emerg-reperfusion-choices [data-emerg-reperfusion-value="success"] {
+  border: 1px solid var(--state-done);
+}
+
+.emerg-reperfusion-choices [data-emerg-reperfusion-value="failure"] {
+  border: 1px solid var(--state-blocked);
+}
+
+.emerg-reperfusion-choices [data-emerg-reperfusion-value="success"].is-selected {
+  background: color-mix(in srgb, var(--state-done) 18%, var(--bg-surface-active));
+}
+
+.emerg-reperfusion-choices [data-emerg-reperfusion-value="failure"].is-selected {
+  background: color-mix(in srgb, var(--state-blocked) 18%, var(--bg-surface-active));
+}
+
+.emerg-reperfusion-status {
+  margin: 0.55rem 0 0;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.emerg-reperfusion-status.is-success {
+  color: var(--state-done);
+}
+
+.emerg-reperfusion-status.is-failure {
+  color: var(--state-blocked);
+}
+
+.emerg-finalize-protocol {
+  background: var(--state-done);
+  border: 1px solid var(--state-done);
+  color: #04220f;
+}
+
+.emerg-finalized-status {
+  margin: 0.65rem 0 0;
+  padding: 0.65rem;
+  background: color-mix(in srgb, var(--state-done) 14%, var(--bg-surface-active));
+  border: 1px solid var(--state-done);
+  border-radius: 7px;
+  color: var(--state-done);
+  font-weight: 700;
+  text-align: center;
+}
+
 @media (max-width: 600px) {
-  .emerg-summary-actions {
+  .emerg-summary-actions,
+  .emerg-reperfusion-criteria,
+  .emerg-reperfusion-choices {
     grid-template-columns: 1fr;
   }
 }

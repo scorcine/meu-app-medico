@@ -2515,7 +2515,6 @@ const EMERG_NEXT_PROTOCOLS = {
     { id: 'nstemi-ua', label: 'Sem supra + SCA provável → abrir NSTEMI / Angina instável' },
     { action: 'nao-sca', label: 'Baixo risco / causa não cardíaca → voltar às queixas (sem protocolo de IAM)' }
   ],
-  'sca:stemi': [{ id: 'ecg-modelos', label: 'Revisar o padrão eletrocardiográfico → modelos de ECG na SCA' }],
   'sca:nstemi-ua': [{ id: 'ecg-modelos', label: 'Revisar o padrão eletrocardiográfico → modelos de ECG na SCA' }],
   'avc:fast': [
     { id: 'trombolise', label: 'Isquêmico elegível → abrir protocolo de trombólise' },
@@ -3492,9 +3491,51 @@ function initEmergProtocolExperience (root, topicId, protocol) {
         </button>`).join('')}
     </div>
     <div class="emerg-closure-actions">
-      <button type="button" data-emerg-summary>Fechar protocolo e gerar resumo</button>
+      <button type="button" data-emerg-summary>
+        ${topicId === 'sca' && protocol.id === 'stemi'
+          ? 'Gerar resumo das condutas'
+          : 'Fechar protocolo e gerar resumo'}
+      </button>
     </div>
-    <div class="emerg-summary" data-emerg-summary-out hidden></div>`;
+    <div class="emerg-summary" data-emerg-summary-out hidden></div>
+    ${topicId === 'sca' && protocol.id === 'stemi' ? `
+      <section class="emerg-reperfusion" data-emerg-reperfusion hidden>
+        <button type="button" class="emerg-reperfusion-open" data-emerg-reperfusion-open>
+          Avaliar critérios de reperfusão
+        </button>
+        <div class="emerg-reperfusion-panel" data-emerg-reperfusion-panel hidden>
+          <strong>Confirmar resultado da reperfusão</strong>
+          <div class="emerg-reperfusion-criteria">
+            <div>
+              <strong>Após fibrinólise — repetir ECG em 60–90 min</strong>
+              <ul>
+                <li>Sucesso: redução ≥50% do supra de ST na derivação com maior elevação</li>
+                <li>Achados de apoio: alívio da dor e arritmia de reperfusão</li>
+                <li>Falha: redução &lt;50%, dor persistente/recorrente ou instabilidade → ICP de resgate imediata</li>
+              </ul>
+            </div>
+            <div>
+              <strong>Após ICP primária</strong>
+              <ul>
+                <li>Fluxo coronariano final TIMI 3 e redução do supra de ST</li>
+                <li>Estabilidade clínica e ausência de isquemia recorrente</li>
+                <li>Falha/recorrência → reavaliação hemodinâmica imediata</li>
+              </ul>
+            </div>
+          </div>
+          <div class="emerg-reperfusion-choices">
+            <button type="button" data-emerg-reperfusion-value="success">✓ Reperfusão satisfatória</button>
+            <button type="button" data-emerg-reperfusion-value="failure">Falha ou suspeita de falha</button>
+          </div>
+          <p class="emerg-reperfusion-status" data-emerg-reperfusion-status></p>
+        </div>
+        <button type="button" class="emerg-finalize-protocol" data-emerg-finalize hidden>
+          Finalizar protocolo
+        </button>
+        <p class="emerg-finalized-status" data-emerg-finalized-status hidden>
+          Protocolo STEMI finalizado e documentado ✓
+        </p>
+      </section>` : ''}`;
 
   root.append(toolbar, pager, pages, controls, closurePanel, nextPanel);
 
@@ -3502,6 +3543,7 @@ function initEmergProtocolExperience (root, topicId, protocol) {
   const nextButton = controls.querySelector('.emerg-page-next');
   const resetButton = toolbar.querySelector('.emerg-progress-reset');
   const summaryOut = closurePanel.querySelector('[data-emerg-summary-out]');
+  const reperfusionSection = closurePanel.querySelector('[data-emerg-reperfusion]');
 
   function countChecked (nodes) {
     return nodes.reduce((n, node) =>
@@ -3535,6 +3577,12 @@ function initEmergProtocolExperience (root, topicId, protocol) {
     if (state.picks['stemi-contra'] === 'present') {
       decisoes.push('Fibrinólise contraindicada — priorizada transferência para ICP.');
     }
+    if (state.picks['stemi-reperfusion'] === 'success') {
+      decisoes.push('Reperfusão satisfatória confirmada pelos critérios clínicos/eletrocardiográficos.');
+    }
+    if (state.picks['stemi-reperfusion'] === 'failure') {
+      decisoes.push('Falha ou suspeita de falha de reperfusão — indicada ICP de resgate/reavaliação hemodinâmica imediata.');
+    }
     Object.keys(state.picks)
       .filter(key => key.startsWith('stemi-dose-'))
       .forEach(key => decisoes.push(state.picks[key]));
@@ -3562,9 +3610,14 @@ function initEmergProtocolExperience (root, topicId, protocol) {
   function renderSummary () {
     const html = buildSummaryHtml();
     summaryOut.hidden = false;
+    const stemiNeedsFinalize = topicId === 'sca' && protocol.id === 'stemi' &&
+      state.picks['stemi-finalized'] !== true;
     summaryOut.innerHTML = `
       <div class="emerg-summary-body">${html}</div>
-      <div class="emerg-summary-actions">
+      ${stemiNeedsFinalize
+        ? '<p class="emerg-summary-pending">Avalie os critérios de reperfusão e finalize o protocolo para liberar a impressão.</p>'
+        : ''}
+      <div class="emerg-summary-actions${stemiNeedsFinalize ? ' is-pending' : ''}">
         <button type="button" data-emerg-print>Imprimir / salvar PDF</button>
         <button type="button" class="secondary" data-emerg-copy>Copiar texto</button>
       </div>`;
@@ -3576,7 +3629,60 @@ function initEmergProtocolExperience (root, topicId, protocol) {
       navigator.clipboard?.writeText((body.innerText || body.textContent).trim());
       event.currentTarget.textContent = 'Texto copiado ✓';
     });
+    if (reperfusionSection) reperfusionSection.hidden = false;
     summaryOut.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  if (reperfusionSection) {
+    const openButton = reperfusionSection.querySelector('[data-emerg-reperfusion-open]');
+    const panel = reperfusionSection.querySelector('[data-emerg-reperfusion-panel]');
+    const status = reperfusionSection.querySelector('[data-emerg-reperfusion-status]');
+    const finalizeButton = reperfusionSection.querySelector('[data-emerg-finalize]');
+    const finalizedStatus = reperfusionSection.querySelector('[data-emerg-finalized-status]');
+    const choiceButtons = [...reperfusionSection.querySelectorAll('[data-emerg-reperfusion-value]')];
+
+    const applyReperfusion = () => {
+      const value = state.picks['stemi-reperfusion'] || '';
+      choiceButtons.forEach(button => {
+        const selected = button.dataset.emergReperfusionValue === value;
+        button.classList.toggle('is-selected', selected);
+        button.setAttribute('aria-pressed', selected ? 'true' : 'false');
+      });
+      status.className = `emerg-reperfusion-status${value ? ` is-${value}` : ''}`;
+      status.textContent = value === 'success'
+        ? 'Reperfusão satisfatória registrada.'
+        : (value === 'failure'
+            ? 'Falha registrada — acionar ICP de resgate/reavaliação hemodinâmica.'
+            : '');
+      finalizeButton.hidden = !value || state.picks['stemi-finalized'] === true;
+      finalizedStatus.hidden = state.picks['stemi-finalized'] !== true;
+      openButton.classList.toggle('is-done', !!value);
+    };
+
+    openButton.addEventListener('click', () => {
+      panel.hidden = !panel.hidden;
+      if (!panel.hidden) panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    });
+
+    choiceButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        state.picks['stemi-reperfusion'] = button.dataset.emergReperfusionValue;
+        state.picks['stemi-finalized'] = false;
+        emergSaveProtocolProgress(topicId, protocol.id, state);
+        applyReperfusion();
+        if (!summaryOut.hidden) renderSummary();
+      });
+    });
+
+    finalizeButton.addEventListener('click', () => {
+      state.picks['stemi-finalized'] = true;
+      emergSaveProtocolProgress(topicId, protocol.id, state);
+      applyReperfusion();
+      renderSummary();
+      finalizedStatus.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    });
+
+    applyReperfusion();
   }
 
   closurePanel.querySelectorAll('[data-emerg-closure]').forEach(button => {
@@ -3661,6 +3767,7 @@ function initEmergProtocolExperience (root, topicId, protocol) {
       clearStemiWorkflow();
       summaryOut.hidden = true;
       summaryOut.innerHTML = '';
+      if (reperfusionSection) reperfusionSection.hidden = true;
       closurePanel.querySelectorAll('[data-emerg-closure]').forEach(button => {
         button.setAttribute('aria-pressed', 'false');
         button.classList.remove('is-confirmed');

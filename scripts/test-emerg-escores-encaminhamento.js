@@ -313,6 +313,57 @@ function testClosureSummary () {
   }
 }
 
+function testStemiReperfusionBeforeFinalize () {
+  const ui = buildUi();
+  const result = ui.run(`(() => {
+    showEmergenciaTopic('sca');
+    showEmergenciaProtocol('stemi');
+    const content = document.getElementById('emerg-topic-content');
+    const next = content.querySelector('.emerg-page-next');
+    const pages = content.querySelectorAll('.emerg-protocol-page').length;
+    for (let i = 0; i < pages; i++) next.click();
+
+    content.querySelector('[data-emerg-summary]').click();
+    const reperfusion = content.querySelector('[data-emerg-reperfusion]');
+    const printBefore = !content.querySelector('.emerg-summary-actions').classList.contains('is-pending');
+    reperfusion.querySelector('[data-emerg-reperfusion-open]').click();
+    const criteria = reperfusion.querySelector('[data-emerg-reperfusion-panel]').textContent;
+    reperfusion.querySelector('[data-emerg-reperfusion-value="failure"]').click();
+    const finalizeVisible = !reperfusion.querySelector('[data-emerg-finalize]').hidden;
+    reperfusion.querySelector('[data-emerg-finalize]').click();
+
+    return {
+      reperfusionVisible: !reperfusion.hidden,
+      printBefore,
+      criteria,
+      finalizeVisible,
+      finalized: !reperfusion.querySelector('[data-emerg-finalized-status]').hidden,
+      summary: content.querySelector('[data-emerg-summary-out]').textContent,
+      printAfter: !content.querySelector('.emerg-summary-actions').classList.contains('is-pending'),
+      hasUnexpectedNext: !content.querySelector('.emerg-protocol-next').hidden
+    };
+  })()`);
+
+  if (result.reperfusionVisible && !result.printBefore &&
+      /redução ≥50%|reducao ≥50%/i.test(result.criteria) &&
+      /ICP de resgate/i.test(result.criteria)) {
+    pass('STEMI exige critérios de reperfusão antes de liberar impressão/finalização');
+  } else {
+    fail('Etapa de reperfusão incompleta: ' + JSON.stringify(result));
+  }
+  if (result.finalizeVisible && result.finalized && result.printAfter &&
+      /Falha ou suspeita de falha de reperfusão/i.test(result.summary)) {
+    pass('Resultado da reperfusão entra no resumo e libera Finalizar protocolo');
+  } else {
+    fail('Finalização após reperfusão falhou: ' + JSON.stringify(result));
+  }
+  if (!result.hasUnexpectedNext) {
+    pass('STEMI termina após reperfusão sem desviar para modelos de ECG');
+  } else {
+    fail('STEMI ainda oferece desvio indevido ao finalizar');
+  }
+}
+
 function testBranchingHandoff () {
   const ui = buildUi();
   ui.run(`showEmergenciaTopic('sca'); showEmergenciaProtocol('dor-inicial');`);
@@ -418,6 +469,7 @@ testNoInventedStemiTimi();
 testStemiGuidedMedicationFlow();
 testGraceStaysEarly();
 testClosureSummary();
+testStemiReperfusionBeforeFinalize();
 testBranchingHandoff();
 testNoArrayFallbackAutoOpen();
 testNoInventedScoresOnBls();
