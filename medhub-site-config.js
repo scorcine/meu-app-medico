@@ -73,7 +73,7 @@ function medhubApplySiteTheme (theme) {
 
 /* Módulos suspensos: só voltam ao menu se o MedHub for usado dentro de um hospital.
    Basta remover o id desta lista para reativar o módulo. */
-const MEDHUB_RETIRED_SECTIONS = ['pacientes', 'anamnese', 'consultas'];
+const MEDHUB_RETIRED_SECTIONS = ['pacientes', 'anamnese'];
 
 function medhubIsSectionRetired (section) {
   return MEDHUB_RETIRED_SECTIONS.indexOf(String(section || '')) !== -1;

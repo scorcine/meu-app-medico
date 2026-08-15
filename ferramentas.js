@@ -12,7 +12,7 @@ const FERRAMENTAS_ITEMS = [
   { section: 'interpretacao-exame', icon: '📊', name: 'Interpretação do exame', desc: 'Guia rápido de labs e imagem.' },
   { section: 'pacientes', icon: '👤', name: 'Cadastro do paciente', desc: 'Cadastro local opcional (alergias, medicações) para anamnese e histórico.' },
   { section: 'anamnese', icon: '📝', name: 'Anamnese', desc: 'Guia clínico local para queixa → protocolo → prescrição.' },
-  { section: 'consultas', icon: '📅', name: 'Histórico de atendimentos', desc: 'Registro local e PDF educacional.' },
+  { section: 'consultas', icon: '📅', name: 'Atendimentos realizados', desc: 'Pacientes finalizados com resumo, PDF e sincronização criptografada.' },
   {
     section: 'calc-pediatrica',
     icon: '👶',

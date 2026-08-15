@@ -80,8 +80,12 @@ async function run () {
 
   const appHtml = fs.readFileSync(path.join(ROOT, 'app.html'), 'utf8');
   const css = fs.readFileSync(path.join(ROOT, 'style.css'), 'utf8');
+  const siteConfig = fs.readFileSync(path.join(ROOT, 'medhub-site-config.js'), 'utf8');
+  const retiredMatch = siteConfig.match(/MEDHUB_RETIRED_SECTIONS\s*=\s*\[([^\]]*)\]/);
+  const retiredList = retiredMatch ? retiredMatch[1] : '';
   if (/data-section="consultas">Atendimentos realizados/.test(appHtml) &&
-      /completed-encounters[\s\S]*overflow-y:\s*auto/.test(css)) {
+      /completed-encounters[\s\S]*overflow-y:\s*auto/.test(css) &&
+      !/'consultas'|"consultas"/.test(retiredList)) {
     pass('Menu lateral expõe Atendimentos realizados com caixa de rolagem');
   } else {
     fail('Menu ou rolagem do histórico ausente');

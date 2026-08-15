@@ -22,10 +22,10 @@ function defaultSidebar () {
     { type: 'item', id: 'inicio', label: 'Início', visible: true, enabled: true, icon: '🏠', color: '' },
     { type: 'group', label: 'Atendimento' },
     { type: 'item', id: 'novo-atendimento', label: 'Novo paciente', visible: true, enabled: true, icon: '➕', color: '#0d6efd' },
+    { type: 'item', id: 'consultas', label: 'Atendimentos realizados', visible: true, enabled: true, icon: '📅', color: '#a855f7' },
     { type: 'group', label: 'Registros do paciente' },
     { type: 'item', id: 'pacientes', label: 'Cadastro do paciente', visible: true, enabled: true, icon: '👤', color: '#6366f1' },
     { type: 'item', id: 'anamnese', label: 'Anamnese', visible: true, enabled: true, icon: '📝', color: '#8b5cf6' },
-    { type: 'item', id: 'consultas', label: 'Histórico de atendimentos', visible: true, enabled: true, icon: '📅', color: '#a855f7' },
     { type: 'group', label: 'Prescrição & exames' },
     { type: 'item', id: 'receituario', label: 'Tratamento para casa', visible: true, enabled: true, icon: '🏠', color: '#0d6efd' },
     { type: 'item', id: 'medicacoes', label: 'Medicações', visible: true, enabled: true, icon: '💊', color: '#2563eb' },
@@ -61,7 +61,7 @@ function defaultActiveHomeCards () {
     { section: 'interpretacao-exame', icon: '📊', name: 'Interpretação do exame', desc: 'Guia rápido de labs e imagem.', visible: true, enabled: true, comingSoon: false, pediatricAux: false, color: '#0e7490', colorBg: '#ecfeff' },
     { section: 'pacientes', icon: '👤', name: 'Cadastro do paciente', desc: 'Cadastro local opcional para anamnese e histórico.', visible: true, enabled: true, comingSoon: false, pediatricAux: false, color: '#6366f1', colorBg: '#eef2ff' },
     { section: 'anamnese', icon: '📝', name: 'Anamnese', desc: 'Guia clínico: queixa → protocolo → prescrição.', visible: true, enabled: true, comingSoon: false, pediatricAux: false, color: '#8b5cf6', colorBg: '#f5f3ff' },
-    { section: 'consultas', icon: '📅', name: 'Histórico de atendimentos', desc: 'Registro local e PDF educacional.', visible: true, enabled: true, comingSoon: false, pediatricAux: false, color: '#a855f7', colorBg: '#faf5ff' },
+    { section: 'consultas', icon: '📅', name: 'Atendimentos realizados', desc: 'Pacientes finalizados com resumo, PDF e sincronização criptografada.', visible: true, enabled: true, comingSoon: false, pediatricAux: false, color: '#a855f7', colorBg: '#faf5ff' },
     { section: 'calc-pediatrica', icon: '👶', name: 'Calculadora pediátrica', desc: 'Complemento por peso/idade — adulto é o foco.', visible: true, enabled: true, comingSoon: false, pediatricAux: true, color: '#14b8a6', colorBg: '#f0fdfa' },
     { section: 'flashcards', icon: '🃏', name: 'Flashcards', desc: 'Cardiologia em 7 subtemas (150) + 10 baralhos de emergência, PS e exames.', visible: true, enabled: true, comingSoon: false, pediatricAux: false, color: '#db2777', colorBg: '#fdf2f8' }
   ];
