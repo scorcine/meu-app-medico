@@ -250,9 +250,29 @@ function novoAtendimentoPrefillSearch (sectionId, query) {
 
 function novoAtendimentoOpenTreatment (sectionId) {
   const data = novoAtendimentoReadDraft();
-  const query = data?.queixas?.[0] || '';
+  const queixas = data?.queixas?.length ? data.queixas : [];
+  const queryText = queixas.join('; ');
+
   if (typeof showSection === 'function') showSection(sectionId);
-  novoAtendimentoPrefillSearch(sectionId, query);
+
+  window.setTimeout(() => {
+    if (sectionId === 'tratamento-hospitalar' && typeof thOpenFromQueixas === 'function') {
+      const opened = thOpenFromQueixas(queixas, { skipGate: true });
+      if (!opened) novoAtendimentoPrefillSearch(sectionId, queixas[0] || queryText);
+      return;
+    }
+
+    if (sectionId === 'receituario') {
+      const matches = typeof rxMatchConditions === 'function'
+        ? rxMatchConditions(queryText)
+        : [];
+      if (matches.length && typeof rxShowCombinedConditions === 'function') {
+        rxShowCombinedConditions(matches.map(c => c.id), { skipGate: true });
+        return;
+      }
+      novoAtendimentoPrefillSearch(sectionId, queixas[0] || queryText);
+    }
+  }, 120);
 }
 
 function novoAtendimentoSaveQueixas () {

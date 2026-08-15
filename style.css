@@ -5230,6 +5230,20 @@ textarea {
   margin: 0.35rem 0 0.75rem;
 }
 
+.th-multi-block {
+  margin: 0 0 1.25rem;
+  padding: 0.85rem 0.95rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--bg-surface-alt);
+}
+
+.th-multi-title {
+  margin: 0 0 0.75rem;
+  color: var(--text-accent);
+  font-size: 1.05rem;
+}
+
 .home-tool-card {
   min-height: 5.5rem;
   padding: 0.85rem 0.9rem;

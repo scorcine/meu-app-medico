@@ -76,9 +76,9 @@ function clinicalRefreshAllergyUi () {
     rxClearSelection();
   }
   if (typeof currentThConditionId !== 'undefined' && currentThConditionId &&
-      typeof showTratamentoHospitalarCondition === 'function' &&
+      typeof showTratamentoHospitalarConditions === 'function' &&
       document.getElementById('section-tratamento-hospitalar')?.classList.contains('active')) {
-    showTratamentoHospitalarCondition(currentThConditionId, { skipGate: true });
+    showTratamentoHospitalarConditions(String(currentThConditionId).split(','), { skipGate: true });
   }
 }
 
