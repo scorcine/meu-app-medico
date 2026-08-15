@@ -700,7 +700,22 @@ const SEPSE_PROTOCOLS = [
         <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
         <span class="emerg-flow-step emerg-flow-shock"><strong>3. Antibiótico de amplo espectro</strong> — <strong>≤ 1 h</strong> do reconhecimento</span>
         <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
-        <span class="emerg-flow-step">Ajustar ao foco (pulmonar, urinário, abdominal, pele, neutropenia febril)</span>
+        <div class="emerg-flow-step" data-emerg-picker="foco-sepse"
+          data-picker-label="Ajustar o antibiótico ao foco"
+          data-picker-hint="Escolha o foco suspeito para destacar o esquema empírico correspondente."
+          data-picker-prefix="Foco"
+          data-picker-empty="Foco ainda não escolhido — o restante do bundle não depende desta escolha.">
+          <ul>
+            <li data-picker-value="pulmonar"><strong>Pulmonar</strong> — tosse, dispneia, hipoxemia ou achado em imagem</li>
+            <li data-picker-value="urinario"><strong>Urinário</strong> — disúria, dor lombar ou urina alterada</li>
+            <li data-picker-value="abdominal"><strong>Abdominal</strong> — dor, peritonismo, cirurgia recente</li>
+            <li data-picker-value="pele"><strong>Pele e partes moles</strong> — celulite, ferida, úlcera, pé diabético</li>
+            <li data-picker-value="neutropenia"><strong>Neutropenia febril</strong> — quimioterapia recente, neutrófilos baixos</li>
+            <li data-picker-value="snc"><strong>Sistema nervoso central</strong> — meningismo ou alteração neurológica</li>
+            <li data-picker-value="cateter"><strong>Cateter / endovascular</strong> — acesso, prótese, sinais embólicos</li>
+            <li data-picker-value="investigacao"><strong>Ainda em investigação</strong> — foco não definido neste momento</li>
+          </ul>
+        </div>
         <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
         <span class="emerg-flow-step emerg-flow-shock"><strong>4. Cristaloides</strong> — <strong>30 ml/kg</strong> IV</span>
         <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
@@ -737,12 +752,14 @@ const SEPSE_PROTOCOLS = [
       <h4>Antibiótico empírico inicial por foco</h4>
       <p>Iniciar em até 1 hora quando indicado, após culturas se isso não atrasar o tratamento. Ajustar a função renal, alergias, epidemiologia e protocolo institucional.</p>
       <div class="emerg-choice-grid">
-        <span class="emerg-flow-step"><strong>Pulmonar comunitário:</strong> ceftriaxona 1 g EV 12/12 h + azitromicina 500 mg EV 24/24 h</span>
-        <span class="emerg-flow-step"><strong>Urinário:</strong> ceftriaxona 1 g EV 24/24 h; ampliar se risco de resistência ou choque</span>
-        <span class="emerg-flow-step"><strong>Abdominal:</strong> piperacilina-tazobactam 4,5 g EV 6/6 h; considerar meropenem conforme risco</span>
-        <span class="emerg-flow-step"><strong>Pele / partes moles:</strong> cobrir estreptococo e S. aureus; incluir MRSA e avaliação cirúrgica quando indicado</span>
-        <span class="emerg-flow-step"><strong>SNC:</strong> seguir protocolo específico de meningite/encefalite sem atrasar terapia</span>
-        <span class="emerg-flow-step"><strong>Choque ou foco indefinido:</strong> cobertura ampla conforme flora local e fatores de risco, com descalonamento após culturas</span>
+        <span class="emerg-flow-step" data-foco="pulmonar"><strong>Pulmonar comunitário:</strong> ceftriaxona 1 g EV 12/12 h + azitromicina 500 mg EV 24/24 h</span>
+        <span class="emerg-flow-step" data-foco="urinario"><strong>Urinário:</strong> ceftriaxona 1 g EV 24/24 h; ampliar se risco de resistência ou choque</span>
+        <span class="emerg-flow-step" data-foco="abdominal"><strong>Abdominal:</strong> piperacilina-tazobactam 4,5 g EV 6/6 h; considerar meropenem conforme risco</span>
+        <span class="emerg-flow-step" data-foco="pele"><strong>Pele / partes moles:</strong> cobrir estreptococo e S. aureus; incluir MRSA e avaliação cirúrgica quando indicado</span>
+        <span class="emerg-flow-step" data-foco="neutropenia"><strong>Neutropenia febril:</strong> monoterapia antipseudomonas (piperacilina-tazobactam ou meropenem); associar vancomicina conforme risco</span>
+        <span class="emerg-flow-step" data-foco="cateter"><strong>Cateter / endovascular:</strong> cobrir S. aureus (incluindo MRSA) e considerar remoção do dispositivo</span>
+        <span class="emerg-flow-step" data-foco="snc"><strong>SNC:</strong> seguir protocolo específico de meningite/encefalite sem atrasar terapia</span>
+        <span class="emerg-flow-step" data-foco="investigacao"><strong>Choque ou foco indefinido:</strong> cobertura ampla conforme flora local e fatores de risco, com descalonamento após culturas</span>
       </div>
       <p class="emerg-note"><strong>Atenção:</strong> os esquemas são referências educacionais. Validar dose, diluição, alergias, função renal/hepática, peso, gestação e antibiograma institucional antes de prescrever.</p>
 
@@ -2526,11 +2543,12 @@ function emergReadProtocolProgress (topicId, protocolId) {
     const saved = JSON.parse(sessionStorage.getItem(emergProtocolProgressKey(topicId, protocolId)) || '{}');
     return {
       checked: saved.checked && typeof saved.checked === 'object' ? saved.checked : {},
+      picks: saved.picks && typeof saved.picks === 'object' ? saved.picks : {},
       page: Number.isInteger(saved.page) ? saved.page : 0,
       finished: saved.finished === true
     };
   } catch {
-    return { checked: {}, page: 0, finished: false };
+    return { checked: {}, picks: {}, page: 0, finished: false };
   }
 }
 
@@ -2549,12 +2567,109 @@ function emergActionKey (text, index) {
   return `${index}-${(hash >>> 0).toString(36)}`;
 }
 
+function initEmergProtocolPickers (root, state, persist) {
+  const clearAll = [];
+
+  root.querySelectorAll('[data-emerg-picker]').forEach(picker => {
+    const pickerId = picker.dataset.emergPicker;
+    const options = [...picker.querySelectorAll('[data-picker-value]')].map(node => ({
+      value: node.dataset.pickerValue,
+      label: node.innerHTML.trim(),
+      text: node.textContent.trim()
+    }));
+    if (!options.length) return;
+
+    picker.classList.add('emerg-picker');
+    picker.innerHTML = `
+      <div class="emerg-picker-head">
+        <div class="emerg-picker-info">
+          <strong>${picker.dataset.pickerLabel || 'Escolher opção'}</strong>
+          <p class="emerg-picker-hint">${picker.dataset.pickerHint || ''}</p>
+          <p class="emerg-picker-summary" aria-live="polite"></p>
+        </div>
+        <button type="button" class="emerg-picker-toggle" aria-expanded="false"></button>
+      </div>
+      <div class="emerg-picker-panel" hidden>
+        <div class="emerg-picker-grid" role="radiogroup">
+          ${options.map(option => `
+            <button type="button" class="emerg-picker-option" role="radio" aria-checked="false" data-picker-value="${option.value}">
+              ${option.label}
+            </button>`).join('')}
+        </div>
+        <button type="button" class="emerg-picker-clear">Limpar escolha</button>
+      </div>`;
+
+    const summary = picker.querySelector('.emerg-picker-summary');
+    const toggle = picker.querySelector('.emerg-picker-toggle');
+    const panel = picker.querySelector('.emerg-picker-panel');
+    const buttons = [...picker.querySelectorAll('.emerg-picker-option')];
+    const emptyLabel = picker.dataset.pickerEmpty || 'Nenhuma opção escolhida ainda.';
+
+    function setPanel (open) {
+      panel.hidden = !open;
+      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+      toggle.textContent = open
+        ? 'Fechar opções'
+        : (state.picks[pickerId] ? 'Trocar escolha' : 'Escolher');
+    }
+
+    function applyPick (value) {
+      const option = options.find(entry => entry.value === value);
+      picker.classList.toggle('is-answered', !!option);
+      summary.textContent = option
+        ? `${picker.dataset.pickerPrefix || 'Selecionado'}: ${option.text}`
+        : emptyLabel;
+
+      buttons.forEach(button => {
+        const selected = !!option && button.dataset.pickerValue === option.value;
+        button.classList.toggle('is-selected', selected);
+        button.setAttribute('aria-checked', selected ? 'true' : 'false');
+      });
+
+      root.querySelectorAll('[data-foco]').forEach(target => {
+        const tags = target.dataset.foco.split(/\s+/);
+        target.classList.toggle('is-foco-match', !!option && tags.includes(option.value));
+      });
+    }
+
+    toggle.addEventListener('click', () => setPanel(panel.hidden));
+
+    buttons.forEach(button => {
+      button.addEventListener('click', () => {
+        state.picks[pickerId] = button.dataset.pickerValue;
+        applyPick(state.picks[pickerId]);
+        setPanel(false);
+        persist();
+      });
+    });
+
+    picker.querySelector('.emerg-picker-clear').addEventListener('click', () => {
+      delete state.picks[pickerId];
+      applyPick(null);
+      setPanel(true);
+      persist();
+    });
+
+    clearAll.push(() => {
+      applyPick(null);
+      setPanel(false);
+    });
+
+    applyPick(state.picks[pickerId]);
+    setPanel(false);
+  });
+
+  return () => clearAll.forEach(clear => clear());
+}
+
 function initEmergProtocolExperience (root, topicId, protocol) {
   if (!root || root.dataset.emergInteractive === '1') return;
   root.dataset.emergInteractive = '1';
 
   const state = emergReadProtocolProgress(topicId, protocol.id);
-  const actions = [...root.querySelectorAll('.emerg-flow-step, .emerg-steps > li')];
+  const actions = [...root.querySelectorAll(
+    '.emerg-flow-step:not([data-emerg-picker]), .emerg-steps > li:not([data-emerg-picker])'
+  )];
   const actionByKey = new Map();
 
   actions.forEach((action, index) => {
@@ -2700,9 +2815,16 @@ function initEmergProtocolExperience (root, topicId, protocol) {
     state.finished = true;
     showPage(state.page, false);
   });
+  const clearPickers = initEmergProtocolPickers(
+    root,
+    state,
+    () => emergSaveProtocolProgress(topicId, protocol.id, state)
+  );
+
   if (resetButton) {
     resetButton.addEventListener('click', () => {
       state.checked = {};
+      state.picks = {};
       state.finished = false;
       actionByKey.forEach(action => {
         action.classList.remove('is-checked');
@@ -2710,6 +2832,7 @@ function initEmergProtocolExperience (root, topicId, protocol) {
         const marker = action.querySelector('.emerg-action-marker');
         if (marker) marker.textContent = '';
       });
+      clearPickers();
       showPage(0, false);
     });
   }
