@@ -9675,8 +9675,11 @@ body.app-page .app-content {
 /* Linha com o mesmo brilho em toda a volta: só o ponto se destaca */
 .app-orbit-ring {
   position: relative;
-  width: min(94vh, 92vw);
-  height: min(94vh, 92vw);
+  /* Largo o bastante para os arcos cruzarem as laterais; topo e base saem do
+     enquadramento de propósito, é isso que dá o desenho tecnológico. */
+  width: max(97%, 124vh);
+  aspect-ratio: 1 / 1;
+  height: auto;
   border: 1px solid rgba(240, 180, 41, 0.32);
   border-radius: 50%;
   animation: medhub-orbit-spin 32s linear infinite;
