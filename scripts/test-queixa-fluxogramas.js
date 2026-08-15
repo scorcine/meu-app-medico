@@ -60,6 +60,7 @@ const dom = new JSDOM(`<!doctype html><html><body>
   <div id="novo-atendimento-queixas-list"></div>
   <p id="novo-atendimento-queixas-empty"></p>
   <section id="novo-atendimento-protocolo" hidden></section>
+  <div id="calc-area-content"></div>
 </body></html>`, { url: 'https://www.medhub.ia.br/app.html' });
 
 const context = vm.createContext(dom.window);
@@ -270,6 +271,54 @@ const chestLiberado = evalIn(`(() => {
 })()`);
 if (chestLiberado) pass('Classificação baixo risco/não cardíaca libera o caminho do tratamento');
 else fail('Classificação não liberou o gate');
+
+/* 11. A calculadora aberta pelo atendimento devolve o usuário ao fluxo */
+const calcSaida = evalIn(`(() => {
+  sessionStorage.removeItem('medhub-chest-classification');
+  sessionStorage.setItem('medhub-new-encounter-draft', JSON.stringify({
+    nome: 'Teste', idade: '44 anos', sexo: 'Masculino', queixas: ['Dor torácica'], step: 'queixas'
+  }));
+  const host = document.getElementById('calc-area-content');
+  host.innerHTML = '<div class="calc-block"><form class="calc-form"></form><div class="calc-result"></div></div>';
+  novoAtendimentoMountChestNextSteps(host);
+  const painel = host.querySelector('#novo-atendimento-chest-next');
+  const botoes = painel ? [...painel.querySelectorAll('[data-chest-step]')].map(b => b.dataset.chestStep) : [];
+
+  window.aberturas = [];
+  window.showSection = id => window.aberturas.push('section:' + id);
+  painel?.querySelector('[data-chest-step="nao-sca"]')?.click();
+
+  return {
+    botoes,
+    classificacao: sessionStorage.getItem('medhub-chest-classification'),
+    aberturas: window.aberturas.slice(),
+    liberado: !novoAtendimentoRequiresChestGate(['Dor torácica'])
+  };
+})()`);
+
+if (calcSaida.botoes.join(',') === 'stemi,nstemi-ua,nao-sca') {
+  pass('Tela do escore oferece as três saídas da classificação');
+} else {
+  fail('Escore sem saída para o fluxo: ' + JSON.stringify(calcSaida));
+}
+if (calcSaida.classificacao === 'nao-sca' && calcSaida.liberado &&
+    calcSaida.aberturas.includes('section:novo-atendimento')) {
+  pass('Escolher não cardíaca na calculadora volta ao atendimento e libera o tratamento');
+} else {
+  fail('Saída da calculadora não retomou o fluxo: ' + JSON.stringify(calcSaida));
+}
+
+const calcSemDor = evalIn(`(() => {
+  sessionStorage.setItem('medhub-new-encounter-draft', JSON.stringify({
+    nome: 'Teste', queixas: ['Cefaleia'], step: 'queixas'
+  }));
+  const host = document.getElementById('calc-area-content');
+  host.innerHTML = '<div class="calc-block"></div>';
+  novoAtendimentoMountChestNextSteps(host);
+  return !!host.querySelector('#novo-atendimento-chest-next');
+})()`);
+if (!calcSemDor) pass('Queixa sem dor torácica não recebe painel de classificação');
+else fail('Painel de dor torácica apareceu fora de contexto');
 
 console.log('\n' + (failures ? `FALHAS: ${failures}` : 'TODOS OS TESTES PASSARAM'));
 process.exit(failures ? 1 : 0);

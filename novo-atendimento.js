@@ -623,10 +623,72 @@ function novoAtendimentoHasChestComplaint (queixas = novoAtendimentoQueixas) {
   return novoAtendimentoEmergencyMatches(queixas).some(route => route.chest);
 }
 
+function novoAtendimentoDraftQueixas () {
+  const data = novoAtendimentoReadDraft();
+  if (data?.queixas?.length) return data.queixas;
+  return novoAtendimentoQueixas;
+}
+
 function novoAtendimentoRequiresChestGate (queixas = novoAtendimentoQueixas) {
   if (!novoAtendimentoHasChestComplaint(queixas)) return false;
   const chosen = novoAtendimentoChestClassification();
   return !chosen || chosen === 'dor-inicial';
+}
+
+function novoAtendimentoSetChestClassification (value) {
+  try {
+    sessionStorage.setItem('medhub-chest-classification', value);
+  } catch { /* sessão indisponível */ }
+}
+
+const NOVO_ATENDIMENTO_CHEST_STEPS = [
+  { value: 'stemi', protocol: 'stemi', label: 'Supra de ST ou BRE novo', hint: 'Abrir STEMI — reperfusão imediata' },
+  { value: 'nstemi-ua', protocol: 'nstemi-ua', label: 'Sem supra, SCA provável', hint: 'Abrir NSTEMI / Angina instável' },
+  { value: 'nao-sca', label: 'Baixo risco / causa não cardíaca', hint: 'Seguir para o tratamento do atendimento' }
+];
+
+/* A calculadora aberta pelo atendimento precisa devolver o usuário ao fluxo */
+function novoAtendimentoMountChestNextSteps (container) {
+  container?.querySelector('#novo-atendimento-chest-next')?.remove();
+  if (!container) return;
+  if (!novoAtendimentoHasChestComplaint(novoAtendimentoDraftQueixas())) return;
+
+  container.insertAdjacentHTML('beforeend', `
+    <section id="novo-atendimento-chest-next" class="novo-atendimento-chest-next">
+      <div>
+        <strong>Concluir a classificação da dor torácica</strong>
+        <span>Use o resultado do escore junto ao ECG e à troponina. O tratamento só libera depois desta escolha.</span>
+      </div>
+      <div class="novo-atendimento-protocolo-score-buttons">
+        ${NOVO_ATENDIMENTO_CHEST_STEPS.map(step => `
+          <button type="button" data-chest-step="${step.value}">
+            <strong>${novoAtendimentoEscape(step.label)}</strong>
+            <span>${novoAtendimentoEscape(step.hint)}</span>
+          </button>
+        `).join('')}
+      </div>
+    </section>`);
+
+  container.querySelectorAll('[data-chest-step]').forEach(button => {
+    button.addEventListener('click', () => {
+      const step = NOVO_ATENDIMENTO_CHEST_STEPS.find(item => item.value === button.dataset.chestStep);
+      if (!step) return;
+      novoAtendimentoSetChestClassification(step.value);
+
+      if (step.protocol) {
+        novoAtendimentoOpenEmergencyProtocol('sca', step.protocol);
+        return;
+      }
+
+      const data = novoAtendimentoReadDraft();
+      if (data) {
+        data.step = 'tratamento';
+        sessionStorage.setItem(MEDHUB_NEW_ENCOUNTER_DRAFT, JSON.stringify(data));
+      }
+      if (typeof showSection === 'function') showSection('novo-atendimento');
+      window.setTimeout(() => novoAtendimentoShowStep('tratamento'), 80);
+    });
+  });
 }
 
 function novoAtendimentoOpenScore (scoreId) {
@@ -639,6 +701,7 @@ function novoAtendimentoOpenScore (scoreId) {
     const content = document.getElementById('calc-area-content');
     novoAtendimentoMountContexto(content);
     novoAtendimentoPrefillCalc(content?.querySelector('form.calc-form'));
+    novoAtendimentoMountChestNextSteps(content);
   }, 80);
 }
 
