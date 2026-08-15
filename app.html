@@ -16,7 +16,7 @@
   <meta name="apple-mobile-web-app-title" content="MedHub">
   <link rel="apple-touch-icon" href="/assets/icons/icon-192.png?v=icon-v2">
   <script src="theme.js?v=2"></script>
-  <link rel="stylesheet" href="style.css?v=encounter-v1">
+  <link rel="stylesheet" href="style.css?v=encounter-v2">
   <link rel="stylesheet" href="app-mobile.css?v=pwa-header-v1">
   <script defer src="calculators-risco.js"></script>
   <script defer src="calculators-cardio.js"></script>
@@ -93,7 +93,7 @@
   <script defer src="auth-cloud.js?v=cloud-v21"></script>
   <script defer src="app-search.js?v=search-v3"></script>
   <script defer src="medhub-site-config.js?v=site-ui-v3"></script>
-  <script defer src="novo-atendimento.js?v=encounter-v1"></script>
+  <script defer src="novo-atendimento.js?v=encounter-v2"></script>
   <script defer src="app.js?v=encounter-v1"></script>
   <script defer src="auth.js?v=compliance-v1"></script>
   <script defer src="pwa-install.js?v=pwa-v4"></script>
@@ -225,7 +225,7 @@
 
       <section id="section-novo-atendimento" class="content-panel">
         <article class="card dashboard-card novo-atendimento-card">
-          <header class="novo-atendimento-header">
+          <header class="novo-atendimento-header" id="novo-atendimento-identificacao-header">
             <span class="novo-atendimento-icon" aria-hidden="true">🩺</span>
             <div>
               <p class="novo-atendimento-step">Novo atendimento · Dados iniciais</p>
@@ -283,11 +283,58 @@
             </fieldset>
 
             <div class="novo-atendimento-actions">
-              <button type="submit" class="btn">Salvar dados do paciente</button>
+              <button type="submit" class="btn">Salvar e informar queixas</button>
               <button type="button" class="btn btn-secondary" id="novo-atendimento-limpar">Limpar</button>
             </div>
             <p id="novo-atendimento-status" class="novo-atendimento-status" hidden role="status"></p>
           </form>
+
+          <section id="novo-atendimento-queixas-panel" class="novo-atendimento-queixas-panel" hidden>
+            <header class="novo-atendimento-header">
+              <span class="novo-atendimento-icon" aria-hidden="true">💬</span>
+              <div>
+                <p class="novo-atendimento-step">Novo atendimento · Queixa(s)</p>
+                <h2>O que o paciente está sentindo?</h2>
+                <p class="muted">Adicione uma queixa por vez. Elas podem estar relacionadas ou ser problemas distintos.</p>
+              </div>
+            </header>
+
+            <form id="novo-atendimento-queixa-form" class="novo-atendimento-complaint-form">
+              <label class="novo-atendimento-field" for="novo-atendimento-queixa-input">
+                <span>Queixa <strong aria-hidden="true">*</strong></span>
+                <div class="novo-atendimento-complaint-entry">
+                  <input id="novo-atendimento-queixa-input" class="anamnese-input" type="text"
+                    list="novo-atendimento-queixas-comuns"
+                    placeholder="Ex.: cefaleia" autocomplete="off">
+                  <button type="submit" class="btn btn-secondary">+ Adicionar</button>
+                </div>
+              </label>
+              <datalist id="novo-atendimento-queixas-comuns">
+                <option value="Cefaleia"></option>
+                <option value="Náuseas"></option>
+                <option value="Vômitos"></option>
+                <option value="Dor abdominal"></option>
+                <option value="Dor torácica"></option>
+                <option value="Dispneia"></option>
+                <option value="Febre"></option>
+                <option value="Tontura"></option>
+                <option value="Diarreia"></option>
+                <option value="Tosse"></option>
+              </datalist>
+            </form>
+
+            <div class="novo-atendimento-complaints">
+              <p class="novo-atendimento-complaints-label">Queixas adicionadas</p>
+              <p id="novo-atendimento-queixas-empty" class="muted">Nenhuma queixa adicionada.</p>
+              <div id="novo-atendimento-queixas-list" class="novo-atendimento-complaints-list" aria-live="polite"></div>
+            </div>
+
+            <div class="novo-atendimento-actions">
+              <button type="button" class="btn" id="novo-atendimento-salvar-queixas">Salvar queixas</button>
+              <button type="button" class="btn btn-secondary" id="novo-atendimento-voltar-identificacao">← Voltar aos dados</button>
+            </div>
+            <p id="novo-atendimento-queixas-status" class="novo-atendimento-status" hidden role="status"></p>
+          </section>
         </article>
       </section>
 
