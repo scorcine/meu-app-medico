@@ -16,7 +16,7 @@
   <meta name="apple-mobile-web-app-title" content="MedHub">
   <link rel="apple-touch-icon" href="/assets/icons/icon-192.png?v=icon-v2">
   <script src="theme.js?v=2"></script>
-  <link rel="stylesheet" href="style.css?v=home-cta-v1">
+  <link rel="stylesheet" href="style.css?v=home-tech-v1">
   <link rel="stylesheet" href="app-mobile.css?v=pwa-header-v1">
   <script defer src="calculators-risco.js"></script>
   <script defer src="calculators-cardio.js"></script>
@@ -186,17 +186,26 @@
     <main class="app-content">
       <section id="section-inicio" class="content-panel active">
         <article class="card dashboard-card home-card">
-          <header class="home-hero">
-            <p class="home-emoji" aria-hidden="true">👋</p>
-            <h2>Seja bem-vindo ao MedHub</h2>
-            <p id="user-greeting" class="home-greeting"></p>
-            <p id="home-courtesy-countdown" class="home-courtesy-countdown" hidden role="status"></p>
-            <p class="home-tagline">Apoio clínico no plantão — protocolos, prescrição e calculadoras para <strong>clínica médica do adulto</strong>.</p>
+          <header class="home-hero home-hero--tech">
+            <span class="home-hero-grid" aria-hidden="true"></span>
+            <span class="home-hero-glow" aria-hidden="true"></span>
 
-            <div class="home-hero-cta">
-              <button type="button" class="home-novo-paciente-btn" data-section="novo-atendimento" id="home-novo-paciente">
-                Novo paciente
-              </button>
+            <div class="home-hero-inner">
+              <p class="home-hero-badge" aria-hidden="true">
+                <span class="home-hero-badge-dot"></span>
+                Apoio clínico inteligente
+              </p>
+              <h2>Seja bem-vindo ao <span class="home-hero-brand">MedHub</span></h2>
+              <p id="user-greeting" class="home-greeting"></p>
+              <p id="home-courtesy-countdown" class="home-courtesy-countdown" hidden role="status"></p>
+              <p class="home-tagline">Apoio clínico no plantão — protocolos, prescrição e calculadoras para <strong>clínica médica do adulto</strong>.</p>
+
+              <div class="home-hero-cta">
+                <button type="button" class="home-novo-paciente-btn" data-section="novo-atendimento" id="home-novo-paciente">
+                  <span class="home-novo-paciente-icon" aria-hidden="true">＋</span>
+                  Novo paciente
+                </button>
+              </div>
             </div>
           </header>
 

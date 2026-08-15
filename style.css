@@ -201,6 +201,26 @@ body > header:not(.landing-header):not(.landing-section-head):not(.home-hero) {
   flex-wrap: wrap;
 }
 
+/* Barra superior do app: mesmo tom escuro/tecnológico do hero */
+header.app-header {
+  position: relative;
+  background:
+    radial-gradient(90% 200% at 12% 0%, rgba(56, 189, 248, 0.16) 0%, transparent 60%),
+    linear-gradient(120deg, #0b1f45 0%, #0a1730 60%, #071022 100%);
+  box-shadow: 0 2px 16px rgba(2, 12, 30, 0.35);
+}
+
+header.app-header::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #f0b429 0%, #38bdf8 45%, transparent 85%);
+  opacity: 0.85;
+}
+
 header.app-header h1,
 body > header:not(.landing-header):not(.landing-section-head):not(.home-hero) h1 {
   font-size: 1.5rem;
@@ -5026,38 +5046,143 @@ textarea {
   margin-top: 0;
 }
 
+/* —— Home tech: painel escuro com circuito, brilho ciano e detalhe dourado —— */
+.home-hero--tech {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  padding: 2.4rem 1.5rem 2.2rem;
+  border-bottom: 2px solid transparent;
+  background:
+    radial-gradient(120% 90% at 50% -20%, rgba(56, 189, 248, 0.22) 0%, rgba(56, 189, 248, 0) 60%),
+    linear-gradient(135deg, #0b1f45 0%, #0a1730 55%, #071022 100%);
+  border-image: linear-gradient(90deg, transparent, #f0b429 35%, #38bdf8 65%, transparent) 1;
+  color: #e2e8f0;
+}
+
+.home-hero-grid {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.5;
+  background-image:
+    linear-gradient(rgba(56, 189, 248, 0.13) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(56, 189, 248, 0.13) 1px, transparent 1px);
+  background-size: 46px 46px;
+  mask-image: radial-gradient(120% 80% at 50% 20%, #000 35%, transparent 78%);
+  -webkit-mask-image: radial-gradient(120% 80% at 50% 20%, #000 35%, transparent 78%);
+}
+
+.home-hero-glow {
+  position: absolute;
+  inset: auto -10% -55% -10%;
+  height: 70%;
+  pointer-events: none;
+  background: radial-gradient(60% 100% at 50% 100%, rgba(13, 110, 253, 0.5) 0%, transparent 70%);
+  filter: blur(6px);
+}
+
+.home-hero-inner {
+  position: relative;
+  z-index: 1;
+}
+
+.home-hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin: 0 0 0.9rem;
+  padding: 0.32rem 0.85rem;
+  border-radius: 999px;
+  border: 1px solid rgba(56, 189, 248, 0.45);
+  background: rgba(8, 47, 92, 0.55);
+  color: #7dd3fc;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.home-hero-badge-dot {
+  width: 0.42rem;
+  height: 0.42rem;
+  border-radius: 50%;
+  background: #38bdf8;
+  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.25);
+}
+
+.home-hero--tech h2 {
+  font-size: 1.85rem;
+  color: #f8fafc;
+  text-shadow: 0 2px 18px rgba(8, 47, 92, 0.75);
+}
+
+.home-hero-brand {
+  background: linear-gradient(90deg, #38bdf8 0%, #60a5fa 55%, #f0b429 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.home-hero--tech .home-greeting,
+.home-hero--tech .home-tagline,
+.home-card .card p.home-hero--tech .home-tagline {
+  color: rgba(226, 232, 240, 0.88);
+}
+
+.home-hero--tech .home-tagline strong {
+  color: #f8fafc;
+}
+
 .home-hero-cta {
   display: flex;
   justify-content: center;
-  margin-top: 1.35rem;
+  margin-top: 1.5rem;
 }
 
 .home-novo-paciente-btn {
   appearance: none;
-  border: 0;
   cursor: pointer;
-  min-width: min(100%, 280px);
-  padding: 1rem 1.75rem;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  min-width: min(100%, 300px);
+  padding: 1.05rem 2rem;
+  border: 1px solid rgba(125, 211, 252, 0.55);
   border-radius: 999px;
-  background: #ffffff;
-  color: #0f172a;
-  font-size: 1.12rem;
+  background: linear-gradient(135deg, #1d4ed8 0%, #0ea5e9 100%);
+  color: #f8fafc;
+  font-size: 1.14rem;
   font-weight: 800;
-  letter-spacing: 0.01em;
-  box-shadow: 0 10px 28px rgba(15, 23, 42, 0.22);
-  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+  letter-spacing: 0.02em;
+  box-shadow:
+    0 0 0 4px rgba(56, 189, 248, 0.12),
+    0 14px 32px rgba(2, 33, 71, 0.55);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+}
+
+.home-novo-paciente-icon {
+  font-size: 1.15rem;
+  line-height: 1;
+  opacity: 0.9;
 }
 
 .home-novo-paciente-btn:hover,
 .home-novo-paciente-btn:focus-visible {
   transform: translateY(-2px);
-  box-shadow: 0 14px 32px rgba(15, 23, 42, 0.28);
+  filter: brightness(1.06);
+  box-shadow:
+    0 0 0 5px rgba(56, 189, 248, 0.2),
+    0 18px 38px rgba(2, 33, 71, 0.6);
   outline: none;
 }
 
-[data-theme="dark"] .home-novo-paciente-btn {
-  background: #f8fafc;
-  color: #0f172a;
+@media (prefers-reduced-motion: reduce) {
+  .home-novo-paciente-btn {
+    transition: none;
+  }
 }
 
 .clinical-allergy-panel {
@@ -5372,6 +5497,61 @@ textarea {
 
 .home-tool-card--themed .calc-category-name {
   color: var(--home-card-accent, var(--text-heading, #0d6efd));
+}
+
+/* Cards de ferramentas no mesmo idioma visual do hero tecnológico */
+.home-ferramentas-grid .home-tool-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+}
+
+.home-ferramentas-grid .home-tool-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--home-card-accent, var(--accent)), transparent 70%);
+  opacity: 0.85;
+}
+
+.home-ferramentas-grid .home-tool-card::after {
+  content: "";
+  position: absolute;
+  inset: -40% -55% auto auto;
+  width: 9rem;
+  height: 9rem;
+  border-radius: 50%;
+  pointer-events: none;
+  background: radial-gradient(circle, color-mix(in srgb, var(--home-card-accent, var(--accent)) 22%, transparent) 0%, transparent 70%);
+}
+
+.home-ferramentas-grid .home-tool-card:hover {
+  transform: translateY(-2px);
+  border-color: color-mix(in srgb, var(--home-card-accent, var(--accent)) 65%, transparent);
+  box-shadow: 0 10px 26px rgba(2, 33, 71, 0.18);
+}
+
+[data-theme="dark"] .home-ferramentas-grid .home-tool-card {
+  background: linear-gradient(160deg, rgba(15, 33, 66, 0.92) 0%, rgba(10, 21, 43, 0.92) 100%);
+  border-color: rgba(56, 189, 248, 0.22);
+}
+
+[data-theme="dark"] .home-ferramentas-grid .home-tool-card:hover {
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
+}
+
+.home-main-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.home-main-title::after {
+  content: "";
+  flex: 1 1 auto;
+  height: 1px;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--accent) 55%, transparent), transparent);
 }
 
 .sidebar-link {
