@@ -16,7 +16,7 @@
   <meta name="apple-mobile-web-app-title" content="MedHub">
   <link rel="apple-touch-icon" href="/assets/icons/icon-192.png?v=icon-v2">
   <script src="theme.js?v=2"></script>
-  <link rel="stylesheet" href="style.css?v=encounter-v11">
+  <link rel="stylesheet" href="style.css?v=encounter-v12">
   <link rel="stylesheet" href="app-mobile.css?v=pwa-header-v1">
   <script defer src="calculators-risco.js"></script>
   <script defer src="calculators-cardio.js"></script>
@@ -96,7 +96,7 @@
   <script defer src="novo-atendimento.js?v=encounter-v7"></script>
   <script defer src="app.js?v=encounter-v1"></script>
   <script defer src="auth.js?v=compliance-v1"></script>
-  <script defer src="pwa-install.js?v=pwa-v4"></script>
+  <script defer src="pwa-install.js?v=pwa-v5"></script>
 </head>
 <body class="app-page" onload="initApp()">
   <header class="app-header">
@@ -155,10 +155,13 @@
         <button type="button" class="sidebar-link active" data-section="inicio">Início</button>
         <p class="sidebar-group">Atendimento</p>
         <button type="button" class="sidebar-link sidebar-link--primary" data-section="novo-atendimento">➕ Novo atendimento</button>
-        <p class="sidebar-group">Registros do paciente</p>
-        <button type="button" class="sidebar-link" data-section="pacientes">Cadastro do paciente</button>
-        <button type="button" class="sidebar-link" data-section="anamnese">Anamnese</button>
-        <button type="button" class="sidebar-link" data-section="consultas">Histórico de atendimentos</button>
+        <!-- Registros do paciente: oculto por enquanto (uso futuro em ambiente hospitalar) -->
+        <div id="sidebar-registros-paciente" hidden>
+          <p class="sidebar-group">Registros do paciente</p>
+          <button type="button" class="sidebar-link" data-section="pacientes">Cadastro do paciente</button>
+          <button type="button" class="sidebar-link" data-section="anamnese">Anamnese</button>
+          <button type="button" class="sidebar-link" data-section="consultas">Histórico de atendimentos</button>
+        </div>
         <p class="sidebar-group">Prescrição &amp; exames</p>
         <button type="button" class="sidebar-link" data-section="receituario">Tratamento para casa</button>
         <button type="button" class="sidebar-link" data-section="medicacoes">Medicações</button>
