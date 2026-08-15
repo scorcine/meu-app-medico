@@ -9653,6 +9653,97 @@ body.app-page .app-content {
   background-attachment: fixed;
 }
 
+/* —— Traçado de ECG em movimento no fundo do app —— */
+.app-ecg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.app-ecg-svg {
+  position: absolute;
+  left: 0;
+  top: 58%;
+  width: 200%;
+  height: 170px;
+  fill: none;
+  opacity: 0.55;
+  animation: medhub-ecg-scroll 11s linear infinite;
+}
+
+.app-ecg-path {
+  stroke: rgba(56, 189, 248, 0.55);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+  filter: drop-shadow(0 0 6px rgba(56, 189, 248, 0.55));
+}
+
+body.app-page > header.app-header:not(.landing-header):not(.home-hero) {
+  z-index: 3;
+}
+
+body.app-page .app-shell {
+  position: relative;
+  z-index: 1;
+}
+
+/* O ECG do fundo só faz sentido sobre a área vazia: o conteúdo fica por cima */
+body.app-page .app-content {
+  position: relative;
+}
+
+.home-hero-ecg {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 46%;
+  overflow: hidden;
+  pointer-events: none;
+  mask-image: linear-gradient(90deg, transparent 0%, #000 18%, #000 82%, transparent 100%);
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 18%, #000 82%, transparent 100%);
+}
+
+.home-hero-ecg-svg {
+  position: absolute;
+  left: 0;
+  bottom: 2%;
+  width: 200%;
+  height: 62%;
+  fill: none;
+  opacity: 0.45;
+  animation: medhub-ecg-scroll 7s linear infinite;
+}
+
+.home-hero-ecg-path {
+  stroke: rgba(125, 211, 252, 0.75);
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+  filter: drop-shadow(0 0 7px rgba(56, 189, 248, 0.6));
+}
+
+@keyframes medhub-ecg-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app-ecg-svg,
+  .home-hero-ecg-svg {
+    animation: none;
+  }
+}
+
 /* —— CTA principal: só contorno dourado com brilho —— */
 .home-novo-paciente-btn {
   border: 1.5px solid rgba(240, 180, 41, 0.75);

@@ -16,7 +16,7 @@
   <meta name="apple-mobile-web-app-title" content="MedHub">
   <link rel="apple-touch-icon" href="/assets/icons/icon-192.png?v=icon-v2">
   <script src="theme.js?v=2"></script>
-  <link rel="stylesheet" href="style.css?v=home-tech-v3">
+  <link rel="stylesheet" href="style.css?v=home-tech-v4">
   <link rel="stylesheet" href="app-mobile.css?v=pwa-header-v1">
   <script defer src="calculators-risco.js"></script>
   <script defer src="calculators-cardio.js"></script>
@@ -133,6 +133,13 @@
       <button type="button" class="btn-outline" onclick="logout()">Sair</button>
     </div>
   </header>
+
+  <div class="app-ecg" aria-hidden="true">
+    <svg class="app-ecg-svg" viewBox="0 0 960 100" preserveAspectRatio="none" focusable="false">
+      <path class="app-ecg-path" d="M0,50 h30 q6,-12 12,0 h13 l4,8 l5,-40 l5,46 l4,-14 h20 q12,-16 24,0 h43 h30 q6,-12 12,0 h13 l4,8 l5,-40 l5,46 l4,-14 h20 q12,-16 24,0 h43 h30 q6,-12 12,0 h13 l4,8 l5,-40 l5,46 l4,-14 h20 q12,-16 24,0 h43 h30 q6,-12 12,0 h13 l4,8 l5,-40 l5,46 l4,-14 h20 q12,-16 24,0 h43 h30 q6,-12 12,0 h13 l4,8 l5,-40 l5,46 l4,-14 h20 q12,-16 24,0 h43 h30 q6,-12 12,0 h13 l4,8 l5,-40 l5,46 l4,-14 h20 q12,-16 24,0 h43"/>
+    </svg>
+  </div>
+
   <button type="button" class="app-mobile-nav-backdrop" id="app-mobile-nav-backdrop" hidden aria-label="Fechar menu"></button>
 
   <div id="retention-banner" class="retention-banner" hidden role="alert">
@@ -189,6 +196,11 @@
           <header class="home-hero home-hero--tech">
             <span class="home-hero-grid" aria-hidden="true"></span>
             <span class="home-hero-glow" aria-hidden="true"></span>
+            <span class="home-hero-ecg" aria-hidden="true">
+              <svg class="home-hero-ecg-svg" viewBox="0 0 960 100" preserveAspectRatio="none" focusable="false">
+                <path class="home-hero-ecg-path" d="M0,50 h30 q6,-12 12,0 h13 l4,8 l5,-40 l5,46 l4,-14 h20 q12,-16 24,0 h43 h30 q6,-12 12,0 h13 l4,8 l5,-40 l5,46 l4,-14 h20 q12,-16 24,0 h43 h30 q6,-12 12,0 h13 l4,8 l5,-40 l5,46 l4,-14 h20 q12,-16 24,0 h43 h30 q6,-12 12,0 h13 l4,8 l5,-40 l5,46 l4,-14 h20 q12,-16 24,0 h43 h30 q6,-12 12,0 h13 l4,8 l5,-40 l5,46 l4,-14 h20 q12,-16 24,0 h43 h30 q6,-12 12,0 h13 l4,8 l5,-40 l5,46 l4,-14 h20 q12,-16 24,0 h43"/>
+              </svg>
+            </span>
 
             <div class="home-hero-inner">
               <p class="home-hero-badge" aria-hidden="true">
