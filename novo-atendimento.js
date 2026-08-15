@@ -105,12 +105,86 @@ function novoAtendimentoHasChestPain () {
   });
 }
 
+function novoAtendimentoContexto () {
+  const data = novoAtendimentoReadDraft();
+  return data?.nome ? data : null;
+}
+
+function novoAtendimentoIdadeNumero (data) {
+  const idade = parseInt(String(data?.idade || '').replace(/\D/g, ''), 10);
+  return Number.isFinite(idade) ? idade : null;
+}
+
+function novoAtendimentoMountContexto (container) {
+  container?.querySelector('#novo-atendimento-contexto')?.remove();
+  const data = novoAtendimentoContexto();
+  if (!container || !data) return;
+
+  const idade = novoAtendimentoIdadeNumero(data);
+  const resumo = [
+    idade !== null ? `${idade} anos` : '',
+    data.sexo || '',
+    (data.queixas || []).join(' · ')
+  ].filter(Boolean).map(novoAtendimentoEscape).join(' · ');
+
+  container.insertAdjacentHTML('afterbegin', `
+    <aside id="novo-atendimento-contexto" class="novo-atendimento-contexto">
+      <div>
+        <p class="novo-atendimento-step">Atendimento em andamento</p>
+        <strong>${novoAtendimentoEscape(data.nome)}</strong>
+        <span>${resumo}</span>
+      </div>
+      <span class="novo-atendimento-contexto-alergia">
+        Alergias: ${novoAtendimentoEscape(data.alergias || 'não informadas')}
+      </span>
+    </aside>`);
+}
+
+function novoAtendimentoMarkPrefilled (field) {
+  field.classList.add('novo-atendimento-prefilled');
+  field.title = 'Preenchido com os dados do atendimento';
+}
+
+function novoAtendimentoPrefillCalc (form) {
+  const data = novoAtendimentoContexto();
+  if (!form || !data) return;
+
+  const idade = novoAtendimentoIdadeNumero(data);
+
+  const idadeField = form.querySelector('input[name="idade"]');
+  if (idadeField && idade !== null && !idadeField.value) {
+    idadeField.value = idade;
+    novoAtendimentoMarkPrefilled(idadeField);
+  }
+
+  const sexoField = form.querySelector('select[name="sexo"]');
+  const sexo = novoAtendimentoNormalize(data.sexo).charAt(0);
+  if (sexoField && (sexo === 'f' || sexo === 'm')) {
+    const opcao = Array.from(sexoField.options).find(option =>
+      novoAtendimentoNormalize(option.value).charAt(0) === sexo ||
+      novoAtendimentoNormalize(option.textContent).charAt(0) === sexo
+    );
+    if (opcao) {
+      sexoField.value = opcao.value;
+      novoAtendimentoMarkPrefilled(sexoField);
+    }
+  }
+
+  // TIMI UA/NSTEMI não tem campo de idade: o primeiro item já é "idade ≥ 65 anos"
+  const idadeCheck = form.querySelector('input[name="t1"]');
+  if (idadeCheck && idade !== null && idade >= 65) {
+    idadeCheck.checked = true;
+    novoAtendimentoMarkPrefilled(idadeCheck.closest('label') || idadeCheck);
+  }
+}
+
 function novoAtendimentoOpenChestProtocol () {
   if (typeof showSection === 'function') showSection('guia-emergencia');
   window.setTimeout(() => {
     if (typeof initGuiaEmergencia === 'function') initGuiaEmergencia();
     if (typeof showEmergenciaTopic === 'function') showEmergenciaTopic('sca');
     if (typeof showEmergenciaProtocol === 'function') showEmergenciaProtocol('dor-inicial');
+    novoAtendimentoMountContexto(document.getElementById('emerg-topic-content'));
   }, 80);
 }
 
@@ -120,6 +194,10 @@ function novoAtendimentoOpenScore (scoreId) {
     if (typeof initCalcEssenciais === 'function') initCalcEssenciais();
     if (typeof showCalcArea === 'function') showCalcArea('cardiologia');
     if (typeof showCalcTool === 'function') showCalcTool(scoreId);
+
+    const content = document.getElementById('calc-area-content');
+    novoAtendimentoMountContexto(content);
+    novoAtendimentoPrefillCalc(content?.querySelector('form.calc-form'));
   }, 80);
 }
 

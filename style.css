@@ -4866,6 +4866,48 @@ textarea {
   }
 }
 
+.novo-atendimento-contexto {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid rgba(240, 180, 41, 0.45);
+  border-radius: 12px;
+  background: rgba(240, 180, 41, 0.06);
+}
+
+.novo-atendimento-contexto strong {
+  display: block;
+  color: var(--text-primary);
+  font-size: 1rem;
+}
+
+.novo-atendimento-contexto span {
+  color: var(--text-muted);
+  font-size: 0.82rem;
+}
+
+.novo-atendimento-contexto-alergia {
+  padding: 0.35rem 0.7rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--bg-surface);
+}
+
+.novo-atendimento-prefilled {
+  border-color: rgba(240, 180, 41, 0.7) !important;
+  box-shadow: 0 0 0 2px rgba(240, 180, 41, 0.12);
+}
+
+label.novo-atendimento-prefilled {
+  box-shadow: none;
+  color: #d99b12;
+  font-weight: 600;
+}
+
 .novo-atendimento-complaint-chip {
   display: inline-flex;
   align-items: center;
