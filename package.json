@@ -10,6 +10,7 @@
     "test:queixas": "node scripts/test-queixa-fluxogramas.js",
     "test:opcoes": "node scripts/test-ps-opcoes-protocolo.js",
     "test:opcoes:todas": "node scripts/test-opcoes-todas-telas.js",
+    "test:emerg": "node scripts/test-emerg-escores-encaminhamento.js",
     "test:mercadopago": "node scripts/test-mercadopago.js",
     "audit:functions": "node scripts/audit-vercel-functions.js",
     "audit": "node scripts/audit-prelaunch.js",

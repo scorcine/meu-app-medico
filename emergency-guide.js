@@ -2435,6 +2435,122 @@ function initEmergCalcForms (container) {
   });
 }
 
+/* Escores citados no texto do protocolo → calculadora correspondente */
+const EMERG_SCORE_LIBRARY = [
+  { id: 'heart', pattern: /\bHEART\b/i, label: 'HEART Score — probabilidade de SCA na dor torácica' },
+  { id: 'grace', pattern: /\bGRACE\b/i, label: 'GRACE — risco e tempo da estratégia invasiva' },
+  { id: 'timi-ua', pattern: /TIMI\s*(UA|NSTEMI|\/)/i, label: 'TIMI UA/NSTEMI — risco de eventos em 14 dias' },
+  { id: 'timi-stemi', pattern: /TIMI\s*STEMI/i, label: 'TIMI STEMI — mortalidade em 30 dias' },
+  { id: 'wells', pattern: /Wells.*(TEP|embolia)|(TEP|embolia).*Wells/i, label: 'Wells (TEP)' },
+  { id: 'wells-tvp', pattern: /Wells.*TVP|TVP.*Wells/i, label: 'Wells TVP' },
+  { id: 'perc', pattern: /\bPERC\b/i, label: 'PERC — regra de exclusão de TEP' },
+  { id: 'qsofa', pattern: /\bqSOFA\b/i, label: 'qSOFA' },
+  { id: 'sofa', pattern: /\bSOFA\b/i, label: 'SOFA completo' },
+  { id: 'news2', pattern: /\bNEWS ?2?\b/i, label: 'NEWS2 — deterioração clínica' },
+  { id: 'curb65', pattern: /CURB[- ]?65/i, label: 'CURB-65 — gravidade da pneumonia' },
+  { id: 'psi', pattern: /\bPSI\b|\bPORT\b/i, label: 'PSI/PORT — gravidade da pneumonia' },
+  { id: 'abcd2', pattern: /ABCD²|ABCD2/i, label: 'ABCD² — risco pós-AIT' },
+  { id: 'chads-vasc', pattern: /CHA₂DS₂|CHADS/i, label: 'CHA₂DS₂-VASc' },
+  { id: 'has-bled', pattern: /HAS[- ]?BLED/i, label: 'HAS-BLED' },
+  { id: 'alvarado-air', pattern: /Alvarado|\bAIR\b/i, label: 'Alvarado & AIR — apendicite' },
+  { id: 'ottawa', pattern: /Ottawa/i, label: 'Ottawa — tornozelo e joelho' },
+  { id: 'child-pugh', pattern: /Child[- ]?Pugh/i, label: 'Child-Pugh' },
+  { id: 'meld', pattern: /\bMELD\b/i, label: 'MELD-Na / MELD 3.0' }
+];
+
+/* Escores obrigatórios por protocolo, mesmo quando o texto não os cita */
+const EMERG_PROTOCOL_SCORES = {
+  'sca:dor-inicial': ['heart', 'grace'],
+  'sca:nstemi-ua': ['grace', 'timi-ua'],
+  'sca:stemi': ['timi-stemi'],
+  'sepse:bundle-hora1': ['qsofa', 'sofa']
+};
+
+/* Próximo protocolo depois de concluir (ramos clínicos, não sequência cega) */
+const EMERG_NEXT_PROTOCOLS = {
+  'sca:dor-inicial': [
+    { id: 'stemi', label: 'Supra de ST (ou BRE novo) → abrir STEMI' },
+    { id: 'nstemi-ua', label: 'Sem supra de ST → abrir NSTEMI / Angina instável' }
+  ],
+  'sca:stemi': [{ id: 'ecg-modelos', label: 'Revisar o padrão eletrocardiográfico → modelos de ECG na SCA' }],
+  'sca:nstemi-ua': [{ id: 'ecg-modelos', label: 'Revisar o padrão eletrocardiográfico → modelos de ECG na SCA' }],
+  'avc:fast': [
+    { id: 'trombolise', label: 'Isquêmico elegível → abrir protocolo de trombólise' },
+    { id: 'nihss', label: 'Quantificar o déficit → abrir NIHSS' }
+  ],
+  'sepse:bundle-hora1': [
+    { id: 'norepi-map', label: 'Hipotensão após volume → titular noradrenalina' },
+    { id: 'lactato-reavaliacao', label: 'Lactato alto → reavaliação de lactato' }
+  ],
+  'parada-cardio:acls-adulto': [{ id: 'rosc', label: 'Retorno da circulação → cuidados pós-PCR' }]
+};
+
+function emergProtocolScoreIds (topicId, protocol) {
+  const ids = [...(EMERG_PROTOCOL_SCORES[`${topicId}:${protocol.id}`] || [])];
+  const html = protocol.html || '';
+  const text = html.replace(/<[^>]*>/g, ' ');
+
+  EMERG_SCORE_LIBRARY.forEach(score => {
+    if (!ids.includes(score.id) && score.pattern.test(text)) ids.push(score.id);
+  });
+
+  return ids.filter(id => {
+    /* Só oferece o que existe na biblioteca de calculadoras e não está embutido no protocolo */
+    if (typeof CALC_FORMS === 'undefined' || !CALC_FORMS[id]) return false;
+    return !html.includes(`data-emerg-calc="${id}"`);
+  });
+}
+
+function emergProtocolScoresHtml (topicId, protocol) {
+  const ids = emergProtocolScoreIds(topicId, protocol);
+  if (!ids.length) return '';
+
+  const blocks = ids.map(id => {
+    const calc = CALC_FORMS[id];
+    const hint = EMERG_SCORE_LIBRARY.find(score => score.id === id)?.label || calc.title;
+    return `
+      <div class="calc-block calc-block-single emerg-calc-block emerg-calc-wide emerg-score-block">
+        <p class="emerg-score-title"><strong>${calc.title}</strong> — ${hint}</p>
+        <form class="calc-form" data-emerg-calc="${id}" data-emerg-calc-inject="1">
+          <button type="submit">Calcular ${calc.title}</button>
+        </form>
+        <div class="calc-result" hidden></div>
+      </div>`;
+  }).join('');
+
+  return `
+    <h4>Escores de decisão</h4>
+    <p class="muted">Calcule aqui mesmo para classificar o risco e definir a conduta — nenhum resultado é assumido automaticamente.</p>
+    ${blocks}`;
+}
+
+function emergProtocolNextOptions (topicId, protocolId) {
+  const topic = EMERGENCY_TOPICS.find(t => t.id === topicId);
+  const protocols = topic?.protocols || [];
+  const curated = EMERG_NEXT_PROTOCOLS[`${topicId}:${protocolId}`];
+
+  const resolve = entry => {
+    const targetTopicId = entry.topic || topicId;
+    const targetTopic = EMERGENCY_TOPICS.find(t => t.id === targetTopicId);
+    const target = (targetTopic?.protocols || []).find(p => p.id === entry.id);
+    if (!target) return null;
+    return {
+      topicId: targetTopicId,
+      id: target.id,
+      icon: target.icon,
+      label: entry.label || `Abrir: ${target.name}`
+    };
+  };
+
+  if (curated) return curated.map(resolve).filter(Boolean);
+
+  const index = protocols.findIndex(p => p.id === protocolId);
+  const next = index >= 0 ? protocols[index + 1] : null;
+  return next
+    ? [{ topicId, id: next.id, icon: next.icon, label: `Seguir para: ${next.name}` }]
+    : [];
+}
+
 function initGuiaEmergencia () {
   if (typeof medhubRegisterVentilacaoEmergProtocol === 'function') {
     medhubRegisterVentilacaoEmergProtocol();
@@ -2883,7 +2999,33 @@ function initEmergProtocolExperience (root, topicId, protocol) {
     <button type="button" class="secondary emerg-page-prev">← Anterior</button>
     <button type="button" class="emerg-page-next"></button>`;
 
-  root.append(toolbar, pager, pages, controls);
+  const nextOptions = emergProtocolNextOptions(topicId, protocol.id);
+  const nextPanel = document.createElement('div');
+  nextPanel.className = 'emerg-protocol-next';
+  nextPanel.hidden = true;
+  if (nextOptions.length) {
+    nextPanel.innerHTML = `
+      <strong>Protocolo concluído — continuar em:</strong>
+      <div class="emerg-next-grid">
+        ${nextOptions.map((option, index) => `
+          <button type="button" class="emerg-next-btn" data-emerg-next="${index}">
+            <span aria-hidden="true">${option.icon || '➡️'}</span> ${option.label}
+          </button>
+        `).join('')}
+      </div>`;
+    nextPanel.querySelectorAll('[data-emerg-next]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const option = nextOptions[Number(btn.dataset.emergNext)];
+        if (!option) return;
+        if (option.topicId !== topicId) {
+          showEmergenciaTopic(option.topicId);
+        }
+        showEmergenciaProtocol(option.id);
+      });
+    });
+  }
+
+  root.append(toolbar, pager, pages, controls, nextPanel);
 
   const prevButton = controls.querySelector('.emerg-page-prev');
   const nextButton = controls.querySelector('.emerg-page-next');
@@ -2914,10 +3056,14 @@ function initEmergProtocolExperience (root, topicId, protocol) {
     });
     prevButton.hidden = state.page === 0;
     const isLast = state.page === groups.length - 1;
+    const single = nextOptions.length === 1 ? nextOptions[0] : null;
     nextButton.textContent = isLast
-      ? (state.finished ? 'Protocolo revisado ✓' : 'Concluir protocolo')
+      ? (state.finished
+        ? (single ? single.label : 'Protocolo revisado ✓')
+        : (single ? `Concluir e ${single.label.toLowerCase()}` : 'Concluir protocolo'))
       : `Próximo: ${groups[state.page + 1].title} →`;
     nextButton.classList.toggle('is-finished', isLast && state.finished);
+    nextPanel.hidden = !(isLast && state.finished && nextOptions.length > 1);
     updateStatus();
     emergSaveProtocolProgress(topicId, protocol.id, state);
     if (scroll) toolbar.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -2932,6 +3078,17 @@ function initEmergProtocolExperience (root, topicId, protocol) {
     }
     state.finished = true;
     showPage(state.page, false);
+
+    /* Um único caminho possível → abre direto; vários ramos → o usuário escolhe */
+    if (nextOptions.length === 1) {
+      const option = nextOptions[0];
+      if (option.topicId !== topicId) showEmergenciaTopic(option.topicId);
+      showEmergenciaProtocol(option.id);
+      return;
+    }
+    if (nextOptions.length > 1) {
+      nextPanel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
   });
   const clearPickers = initEmergProtocolPickers(
     root,
@@ -2971,6 +3128,7 @@ function showEmergenciaProtocol (protocolId) {
   contentEl.innerHTML = `
     <div class="emerg-algo-block emerg-algo-single">
       ${protocol.html}
+      ${emergProtocolScoresHtml(currentEmergTopicId, protocol)}
     </div>`;
   initEmergProtocolExperience(
     contentEl.querySelector('.emerg-algo-block'),

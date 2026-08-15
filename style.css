@@ -3119,6 +3119,40 @@ body.app-page {
   border-color: #15803d;
 }
 
+.emerg-score-block {
+  margin: 0.75rem 0 1rem;
+}
+
+.emerg-score-title {
+  margin: 0 0 0.5rem;
+  color: var(--text-muted);
+  font-size: 0.82rem;
+}
+
+.emerg-score-title strong {
+  color: var(--text-primary);
+}
+
+.emerg-protocol-next {
+  margin-top: 1rem;
+  padding: 0.85rem;
+  border: 1px solid color-mix(in srgb, var(--accent) 45%, var(--border));
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--accent) 8%, transparent);
+}
+
+.emerg-next-grid {
+  display: grid;
+  gap: 0.5rem;
+  margin-top: 0.6rem;
+}
+
+.emerg-next-btn {
+  width: 100%;
+  min-height: 44px;
+  text-align: left;
+}
+
 @media (max-width: 600px) {
   .emerg-protocol-toolbar {
     position: static;
