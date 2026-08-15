@@ -275,12 +275,30 @@ const SCA_PROTOCOLS = [
         <span class="emerg-flow-step"><strong>ECG 12 derivações em ≤ 10 min</strong></span>
         <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
         <span class="emerg-flow-step">Acesso venoso + troponina (serial) + eletrólitos + função renal</span>
-        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+      </div>
+
+      <h4>Classificar antes da conduta específica</h4>
+      <p>Se o ECG mostrar supra de ST ou equivalente, <strong>não aguarde o HEART</strong>: siga imediatamente para STEMI. Sem supra, use o HEART na dor torácica ainda indiferenciada.</p>
+      <div class="calc-block calc-block-single emerg-calc-block emerg-calc-wide emerg-score-block">
+        <p class="emerg-score-title"><strong>HEART Score</strong> — estima risco de evento cardíaco; não confirma sozinho IAM nem diagnostica dor muscular.</p>
+        <form class="calc-form" data-emerg-calc="heart" data-emerg-calc-inject="1">
+          <button type="submit">Calcular HEART Score</button>
+        </form>
+        <div class="calc-result" hidden></div>
+      </div>
+      <ul class="emerg-steps">
+        <li><strong>HEART 0–3</strong> + ECG sem isquemia + troponinas seriadas negativas → baixo risco; considerar causas não cardíacas e protocolo institucional de alta/seguimento.</li>
+        <li><strong>HEART 4–6</strong> → risco intermediário; observação, troponina seriada e avaliação cardiológica.</li>
+        <li><strong>HEART 7–10</strong>, troponina positiva ou alteração isquêmica → alto risco; tratar como SCA e definir o ramo abaixo.</li>
+      </ul>
+
+      <h4>Conduta após a classificação</h4>
+      <div class="emerg-flow-v">
         <span class="emerg-flow-step">Monitor contínuo + oxigênio se SpO₂ &lt; 90%</span>
         <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
-        <span class="emerg-flow-step">Ácido acetilsalicílico 150–300 mg VO (mastigar) — se não contraindicado</span>
+        <span class="emerg-flow-step">Se SCA provável: ácido acetilsalicílico 150–300 mg VO (mastigar) — se não contraindicado</span>
         <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
-        <span class="emerg-flow-step emerg-flow-decision">Classificar: STEMI · NSTEMI · Angina instável</span>
+        <span class="emerg-flow-step emerg-flow-decision">Classificar pelo ECG/troponina: STEMI · NSTEMI · angina instável · baixo risco/não cardíaca</span>
       </div>
 
       <h4>Sinais de alerta — instabilidade</h4>
@@ -367,15 +385,7 @@ const SCA_PROTOCOLS = [
         <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
         <span class="emerg-flow-step">Troponina elevada (NSTEMI) ou normal com alta suspeita (AI)</span>
         <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
-        <span class="emerg-flow-step">AAS + P2Y12 + anticoagulação</span>
-        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
-        <span class="emerg-flow-step emerg-flow-decision">Calcular escore GRACE</span>
-        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
-        <span class="emerg-flow-step emerg-flow-shock"><strong>GRACE ≥ 140</strong> → estratégia invasiva &lt; <strong>24 h</strong></span>
-        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
-        <span class="emerg-flow-step">GRACE 109–139 → invasiva &lt; 72 h (alto risco)</span>
-        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
-        <span class="emerg-flow-step">GRACE &lt; 109 → avaliar estratégia conservadora / invasiva eletiva</span>
+        <span class="emerg-flow-step emerg-flow-decision">Calcular escore GRACE antes de definir o tempo da invasão</span>
       </div>
 
       <table class="emerg-table">
@@ -392,7 +402,18 @@ const SCA_PROTOCOLS = [
         <li>Complicações mecânicas (IAM com choque, MR aguda, VSR)</li>
         <li>Arritmias ventriculares recorrentes</li>
       </ul>
-      <p class="emerg-note">Use a calculadora GRACE nas Calculadoras essenciais (Cardiologia) para estratificação precisa.</p>
+
+      <h4>Conduta após a estratificação</h4>
+      <div class="emerg-flow-v">
+        <span class="emerg-flow-step">AAS + P2Y12 + anticoagulação</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step emerg-flow-shock"><strong>GRACE ≥ 140</strong> → estratégia invasiva &lt; <strong>24 h</strong></span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">GRACE 109–139 → invasiva &lt; 72 h (alto risco)</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">GRACE &lt; 109 → avaliar estratégia conservadora / invasiva eletiva</span>
+      </div>
+      <p class="emerg-note">Use o GRACE nesta tela para estratificação. Adaptar ao protocolo institucional e contra-indicações.</p>
     `
   },
   {
@@ -527,15 +548,7 @@ const AVC_PROTOCOLS = [
         <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
         <span class="emerg-flow-step">Confirmar AVC isquêmico + janela ≤ 4 h 30</span>
         <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
-        <span class="emerg-flow-step">NIHSS + revisar contraindicações ABS/REL</span>
-        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
-        <span class="emerg-flow-step">PA &lt; 185/110 mmHg (tratar se necessário antes da lise)</span>
-        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
-        <span class="emerg-flow-step emerg-flow-shock">Alteplase <strong>0,9 mg/kg</strong> IV (máx. 90 mg)</span>
-        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
-        <span class="emerg-flow-step">10% em bolus · 90% em infusão contínua <strong>60 min</strong></span>
-        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
-        <span class="emerg-flow-step">Internação UTI/AVC — neurochecks seriados</span>
+        <span class="emerg-flow-step emerg-flow-decision">NIHSS + revisar contraindicações ABS/REL antes da dose</span>
       </div>
 
       <table class="emerg-table">
@@ -576,7 +589,16 @@ const AVC_PROTOCOLS = [
         <li>História prévia de <strong>AVC + diabetes mellitus</strong></li>
       </ul>
 
-      <h4>Pós-trombólise — monitorização</h4>
+      <h4>Dose e monitorização (só se elegível)</h4>
+      <div class="emerg-flow-v">
+        <span class="emerg-flow-step">PA &lt; 185/110 mmHg (tratar se necessário antes da lise)</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step emerg-flow-shock">Alteplase <strong>0,9 mg/kg</strong> IV (máx. 90 mg)</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">10% em bolus · 90% em infusão contínua <strong>60 min</strong></span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">Internação UTI/AVC — neurochecks seriados</span>
+      </div>
       <ul>
         <li>Neurochecks: <strong>q 15 min</strong> durante infusão; q 30 min × 6 h; depois q 1 h × 16 h</li>
         <li>PA alvo geral: &lt; 180/105 mmHg nas primeiras 24 h</li>
@@ -689,6 +711,15 @@ const SEPSE_PROTOCOLS = [
     html: `
       <p>Conjunto de medidas a iniciar na <strong>1ª hora</strong> após reconhecer sepse ou choque séptico. Meta: reperfusão tecidual precoce e ATB empírico adequado.</p>
 
+      <h4>Reconhecer antes do bundle (Sepsis-3)</h4>
+      <ul>
+        <li>Infecção suspeita/confirmada + disfunção orgânica (ΔSOFA ≥ 2; qSOFA é ferramenta de alerta, não critério diagnóstico isolado)</li>
+        <li>Choque séptico: necessidade de vasopressor para PAM ≥ 65 + lactato &gt; 2 mmol/L apesar de volume adequado</li>
+        <li>Não atrasar antibiótico em choque ou alta probabilidade de sepse; colher culturas antes quando possível sem atraso relevante</li>
+      </ul>
+      <p class="emerg-note">Calcule qSOFA/SOFA nesta etapa. Surviving Sepsis Campaign 2021 · Sepsis-3.</p>
+
+      <h4>Bundle Hora-1</h4>
       <div class="emerg-flow-v">
         <span class="emerg-flow-step emerg-flow-shock"><strong>1. Lactato sérico</strong> — dosar na admissão</span>
         <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
@@ -775,14 +806,6 @@ const SEPSE_PROTOCOLS = [
         <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
         <span class="emerg-flow-step emerg-flow-loop">Definir internação/UTI e manter monitorização conforme gravidade</span>
       </div>
-
-      <h4>Critérios e alertas (Sepsis-3)</h4>
-      <ul>
-        <li>Infecção suspeita/confirmada + disfunção orgânica (ΔSOFA ≥ 2; qSOFA é ferramenta de alerta, não critério diagnóstico isolado)</li>
-        <li>Choque séptico: necessidade de vasopressor para PAM ≥ 65 + lactato &gt; 2 mmol/L apesar de volume adequado</li>
-        <li>Não atrasar antibiótico em choque ou alta probabilidade de sepse; colher culturas antes quando possível sem atraso relevante</li>
-      </ul>
-      <p class="emerg-note">Surviving Sepsis Campaign 2021 · Sepsis-3. Use calculadoras <strong>qSOFA</strong> e <strong>SOFA</strong> em Calculadoras essenciais. Adaptar ATB ao protocolo institucional e foco infeccioso.</p>
     `
   },
   {
@@ -984,6 +1007,16 @@ const TRAUMA_PROTOCOLS = [
     html: `
       <p>Protocolo de transfusão maciça no trauma hemorrágico — proporção balanceada <strong>1:1:1</strong> (CH : PFC : plaquetas) + <strong>ácido tranexâmico (TXA)</strong> ≤ 3 h do trauma.</p>
 
+      <h4>Quando acionar MTP</h4>
+      <ul>
+        <li>PAS &lt; 90 + lactato ↑ ou BE &lt; −6</li>
+        <li>SBC score ≥ 2 ou ABC score ≥ 2</li>
+        <li>Sangramento visível maciço / pelve instável / tórax/abdome com instabilidade</li>
+        <li>≥ 4 CH em 1 h ou ≥ 10 CH em 24 h</li>
+      </ul>
+      <p class="emerg-note">Só inicie TXA/MTP se o critério de ativação estiver presente. Adaptar ao protocolo do banco de sangue local.</p>
+
+      <h4>Conduta após acionar</h4>
       <div class="emerg-flow-v">
         <span class="emerg-flow-step">Reconhecer choque hemorrágico / sangramento maciço</span>
         <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
@@ -1006,14 +1039,6 @@ const TRAUMA_PROTOCOLS = [
         <tr><td><strong>TXA</strong></td><td>1 g bolus + 1 g/8 h se ≤ <strong>3 h</strong> do trauma</td></tr>
         <tr><td>Crioprecipitado</td><td>Se fibrinogênio &lt; 1,5 g/L (ou &lt; 2 com sangramento ativo)</td></tr>
       </table>
-
-      <h4>Quando acionar MTP (exemplos)</h4>
-      <ul>
-        <li>PAS &lt; 90 + lactato ↑ ou BE &lt; −6</li>
-        <li>SBC score ≥ 2 ou ABC score ≥ 2</li>
-        <li>Sangramento visível maciço / pelve instável / tórax/abdome com instabilidade</li>
-        <li>≥ 4 CH em 1 h ou ≥ 10 CH em 24 h</li>
-      </ul>
 
       <h4>Adjuntos essenciais</h4>
       <ul>
@@ -1494,6 +1519,20 @@ const REACOES_METABOLICAS_PROTOCOLS = [
       <div class="emerg-flow-v">
         <span class="emerg-flow-step">ABC · glicemia · gasometria · eletrólitos · cetonas (β-hidroxibutirato) · osmolaridade</span>
         <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step emerg-flow-decision">Classificar DKA vs HHS antes de definir o ritmo da insulina</span>
+      </div>
+
+      <h4>Cetoacidose diabética vs estado hiperglicêmico hiperosmolar</h4>
+      <table class="emerg-table">
+        <tr><th></th><th>Cetoacidose diabética</th><th>Estado hiperglicêmico hiperosmolar</th></tr>
+        <tr><td>Glicemia</td><td>≥ 250 mg/dL (geralmente)</td><td>≥ 600 mg/dL frequentemente</td></tr>
+        <tr><td>pH / HCO₃</td><td>&lt; 7,3 / &lt; 18</td><td>&gt; 7,3 / &gt; 18</td></tr>
+        <tr><td>Cetonas</td><td>Presentes</td><td>Ausentes ou leves</td></tr>
+        <tr><td>Osmolaridade</td><td>Variável</td><td>&gt; 320 mOsm/kg</td></tr>
+      </table>
+
+      <h4>Conduta após a classificação</h4>
+      <div class="emerg-flow-v">
         <span class="emerg-flow-step emerg-flow-shock"><strong>1. Fluidos</strong> — SF 0,9% 15–20 mL/kg na 1ª hora (1–1,5 L/h adulto se choque)</span>
         <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
         <span class="emerg-flow-step">Reavaliar Na+ · trocar para SF 0,45% se hipernatremia · manter SF se choque</span>
@@ -1518,21 +1557,12 @@ const REACOES_METABOLICAS_PROTOCOLS = [
         <tr><td><strong>&gt; 5,2</strong></td><td>Insulina sem K+ inicial · monitorar q2–4 h</td></tr>
       </table>
 
-      <h4>Cetoacidose diabética vs estado hiperglicêmico hiperosmolar</h4>
-      <table class="emerg-table">
-        <tr><th></th><th>Cetoacidose diabética</th><th>Estado hiperglicêmico hiperosmolar</th></tr>
-        <tr><td>Glicemia</td><td>≥ 250 mg/dL (geralmente)</td><td>≥ 600 mg/dL frequentemente</td></tr>
-        <tr><td>pH / HCO₃</td><td>&lt; 7,3 / &lt; 18</td><td>&gt; 7,3 / &gt; 18</td></tr>
-        <tr><td>Cetonas</td><td>Presentes</td><td>Ausentes ou leves</td></tr>
-        <tr><td>Osmolaridade</td><td>Variável</td><td>&gt; 320 mOsm/kg</td></tr>
-      </table>
-
       <h4>Resolução da cetoacidose diabética</h4>
       <ul>
         <li>pH &gt; 7,3 · HCO₃ &gt; 15 · glicemia &lt; 200 · cetonas negativas/traço</li>
         <li>Buscar infecção, IAM, suspensão de insulina, SGLT2 (cetoacidose euglicêmica)</li>
       </ul>
-      <p class="emerg-note">ADA 2024 · calculadora de cetoacidose em Calculadoras essenciais → Endocrinologia. Estado hiperosmolar: hidratação mais prolongada; insulina em dose menor se indicada.</p>
+      <p class="emerg-note">ADA 2024 · use a calculadora de cetoacidose nesta tela quando disponível. Estado hiperosmolar: hidratação mais prolongada; insulina em dose menor se indicada.</p>
     `
   }
 ];
@@ -2458,19 +2488,25 @@ const EMERG_SCORE_LIBRARY = [
   { id: 'meld', pattern: /\bMELD\b/i, label: 'MELD-Na / MELD 3.0' }
 ];
 
-/* Escores obrigatórios por protocolo, mesmo quando o texto não os cita */
+/* Escores citados no protocolo — nunca inventar associação */
 const EMERG_PROTOCOL_SCORES = {
-  'sca:dor-inicial': ['heart', 'grace'],
-  'sca:nstemi-ua': ['grace', 'timi-ua'],
-  'sca:stemi': ['timi-stemi'],
-  'sepse:bundle-hora1': ['qsofa', 'sofa']
+  'sca:dor-inicial': ['heart'],
+  'sca:nstemi-ua': ['grace'],
+  'sca:ecg-modelos': ['grace'],
+  'sepse:bundle-hora1': ['qsofa', 'sofa'],
+  'trauma:atls-abcde': ['gcs', 'rts', 'iss'],
+  'avc:trombolise': ['nihss'],
+  'avc:trombectomia': ['nihss'],
+  'reacoes-metabolicas:dka-hhs': ['dka'],
+  'obstetricia:preeclampsia-eclampsia': ['hellp']
 };
 
 /* Próximo protocolo depois de concluir (ramos clínicos, não sequência cega) */
 const EMERG_NEXT_PROTOCOLS = {
   'sca:dor-inicial': [
     { id: 'stemi', label: 'Supra de ST (ou BRE novo) → abrir STEMI' },
-    { id: 'nstemi-ua', label: 'Sem supra de ST → abrir NSTEMI / Angina instável' }
+    { id: 'nstemi-ua', label: 'Sem supra + SCA provável → abrir NSTEMI / Angina instável' },
+    { action: 'nao-sca', label: 'Baixo risco / causa não cardíaca → voltar às queixas (sem protocolo de IAM)' }
   ],
   'sca:stemi': [{ id: 'ecg-modelos', label: 'Revisar o padrão eletrocardiográfico → modelos de ECG na SCA' }],
   'sca:nstemi-ua': [{ id: 'ecg-modelos', label: 'Revisar o padrão eletrocardiográfico → modelos de ECG na SCA' }],
@@ -2519,17 +2555,35 @@ function emergProtocolScoresHtml (topicId, protocol) {
   }).join('');
 
   return `
-    <h4>Escores de decisão</h4>
-    <p class="muted">Calcule aqui mesmo para classificar o risco e definir a conduta — nenhum resultado é assumido automaticamente.</p>
+    <h4>Classificar com escores</h4>
+    <p class="muted">Calcule antes da conduta específica. Nenhum resultado é assumido automaticamente.</p>
     ${blocks}`;
 }
 
+/* Escores entram antes do 1º h4 de conduta — nunca como última página */
+function emergMergeProtocolWithScores (topicId, protocol) {
+  const scores = emergProtocolScoresHtml(topicId, protocol);
+  const html = protocol.html || '';
+  if (!scores) return html;
+  if (html.includes('data-emerg-calc="heart"') && emergProtocolScoreIds(topicId, protocol).length === 0) {
+    return html;
+  }
+  const h4 = html.search(/<h4[\s>]/i);
+  if (h4 >= 0) return html.slice(0, h4) + scores + html.slice(h4);
+  return html + scores;
+}
+
 function emergProtocolNextOptions (topicId, protocolId) {
-  const topic = EMERGENCY_TOPICS.find(t => t.id === topicId);
-  const protocols = topic?.protocols || [];
   const curated = EMERG_NEXT_PROTOCOLS[`${topicId}:${protocolId}`];
 
   const resolve = entry => {
+    if (entry.action === 'nao-sca') {
+      return {
+        action: 'nao-sca',
+        icon: '🩺',
+        label: entry.label
+      };
+    }
     const targetTopicId = entry.topic || topicId;
     const targetTopic = EMERGENCY_TOPICS.find(t => t.id === targetTopicId);
     const target = (targetTopic?.protocols || []).find(p => p.id === entry.id);
@@ -2542,13 +2596,17 @@ function emergProtocolNextOptions (topicId, protocolId) {
     };
   };
 
-  if (curated) return curated.map(resolve).filter(Boolean);
+  /*
+   * Nunca deduzir o próximo protocolo pela ordem do catálogo. A sequência do
+   * array organiza a tela, não representa uma decisão clínica.
+   */
+  return curated ? curated.map(resolve).filter(Boolean) : [];
+}
 
-  const index = protocols.findIndex(p => p.id === protocolId);
-  const next = index >= 0 ? protocols[index + 1] : null;
-  return next
-    ? [{ topicId, id: next.id, icon: next.icon, label: `Seguir para: ${next.name}` }]
-    : [];
+function emergRememberChestClassification (value) {
+  try {
+    sessionStorage.setItem('medhub-chest-classification', value);
+  } catch { /* sessão indisponível */ }
 }
 
 function initGuiaEmergencia () {
@@ -3017,6 +3075,17 @@ function initEmergProtocolExperience (root, topicId, protocol) {
       btn.addEventListener('click', () => {
         const option = nextOptions[Number(btn.dataset.emergNext)];
         if (!option) return;
+        if (option.action === 'nao-sca') {
+          emergRememberChestClassification('nao-sca');
+          if (typeof showSection === 'function') showSection('novo-atendimento');
+          if (typeof novoAtendimentoShowStep === 'function') {
+            window.setTimeout(() => novoAtendimentoShowStep('tratamento'), 80);
+          }
+          return;
+        }
+        if (topicId === 'sca' && protocol.id === 'dor-inicial') {
+          emergRememberChestClassification(option.id);
+        }
         if (option.topicId !== topicId) {
           showEmergenciaTopic(option.topicId);
         }
@@ -3082,6 +3151,14 @@ function initEmergProtocolExperience (root, topicId, protocol) {
     /* Um único caminho possível → abre direto; vários ramos → o usuário escolhe */
     if (nextOptions.length === 1) {
       const option = nextOptions[0];
+      if (option.action === 'nao-sca') {
+        emergRememberChestClassification('nao-sca');
+        if (typeof showSection === 'function') showSection('novo-atendimento');
+        return;
+      }
+      if (topicId === 'sca' && protocol.id === 'dor-inicial') {
+        emergRememberChestClassification(option.id);
+      }
       if (option.topicId !== topicId) showEmergenciaTopic(option.topicId);
       showEmergenciaProtocol(option.id);
       return;
@@ -3127,8 +3204,7 @@ function showEmergenciaProtocol (protocolId) {
   const contentEl = document.getElementById('emerg-topic-content');
   contentEl.innerHTML = `
     <div class="emerg-algo-block emerg-algo-single">
-      ${protocol.html}
-      ${emergProtocolScoresHtml(currentEmergTopicId, protocol)}
+      ${emergMergeProtocolWithScores(currentEmergTopicId, protocol)}
     </div>`;
   initEmergProtocolExperience(
     contentEl.querySelector('.emerg-algo-block'),

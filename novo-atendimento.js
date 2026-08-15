@@ -611,6 +611,24 @@ function novoAtendimentoOpenChestProtocol () {
   novoAtendimentoOpenEmergencyProtocol('sca', 'dor-inicial');
 }
 
+function novoAtendimentoChestClassification () {
+  try {
+    return sessionStorage.getItem('medhub-chest-classification') || '';
+  } catch {
+    return '';
+  }
+}
+
+function novoAtendimentoHasChestComplaint (queixas = novoAtendimentoQueixas) {
+  return novoAtendimentoEmergencyMatches(queixas).some(route => route.chest);
+}
+
+function novoAtendimentoRequiresChestGate (queixas = novoAtendimentoQueixas) {
+  if (!novoAtendimentoHasChestComplaint(queixas)) return false;
+  const chosen = novoAtendimentoChestClassification();
+  return !chosen || chosen === 'dor-inicial';
+}
+
 function novoAtendimentoOpenScore (scoreId) {
   if (typeof showSection === 'function') showSection('calc-essenciais');
   window.setTimeout(() => {
@@ -680,6 +698,16 @@ function novoAtendimentoRenderProtocol () {
           <h3>${matches.length + psMatches.length} condutas sugeridas automaticamente</h3>
         </div>
       </div>
+      ${hasChest ? `
+        <div class="novo-atendimento-protocolo-scores novo-atendimento-protocolo-scores-priority">
+          <div>
+            <strong>Primeiro: classificar a dor torácica</strong>
+            <span>O HEART estima risco de evento cardíaco; não confirma sozinho IAM nem dor muscular. ECG em até 10 minutos e troponina seriada continuam prioritários.</span>
+          </div>
+          <div class="novo-atendimento-protocolo-score-buttons">
+            <button type="button" data-open-score="heart"><strong>HEART</strong><span>Dor torácica indiferenciada</span></button>
+          </div>
+        </div>` : ''}
       ${matches.length ? `
         <p class="novo-atendimento-protocolo-group">Guia de emergência</p>
         <div class="novo-atendimento-emergency-routes">
@@ -717,19 +745,6 @@ function novoAtendimentoRenderProtocol () {
               </button>
             </article>`).join('')}
         </div>` : ''}
-      ${hasChest ? `
-        <div class="novo-atendimento-protocolo-scores">
-          <div>
-            <strong>Escores úteis para dor torácica</strong>
-            <span>Não devem atrasar ECG nem reperfusão.</span>
-          </div>
-          <div class="novo-atendimento-protocolo-score-buttons">
-            <button type="button" data-open-score="heart"><strong>HEART</strong><span>Dor torácica indiferenciada</span></button>
-            <button type="button" data-open-score="grace"><strong>GRACE</strong><span>SCA sem supra / prognóstico</span></button>
-            <button type="button" data-open-score="timi-ua"><strong>TIMI UA/NSTEMI</strong><span>Risco isquêmico</span></button>
-            <button type="button" data-open-score="killip"><strong>Killip</strong><span>Insuficiência cardíaca no IAM</span></button>
-          </div>
-        </div>` : ''}
     </div>`;
 
   protocolo.querySelectorAll('[data-open-emergency-protocol]').forEach(button => {
@@ -741,11 +756,29 @@ function novoAtendimentoRenderProtocol () {
     });
   });
   protocolo.querySelectorAll('[data-open-ps-condition]').forEach(button => {
-    button.addEventListener('click', () => novoAtendimentoOpenPsCondition(button.dataset.openPsCondition));
+    button.addEventListener('click', () => {
+      if (button.dataset.openPsCondition === 'sca-iam' && novoAtendimentoRequiresChestGate()) {
+        novoAtendimentoSetStatus(
+          'Classifique a dor torácica no Guia de emergência (HEART + ECG) antes de abrir a conduta de IAM.',
+          'error',
+          novoAtendimentoElements().queixasStatus
+        );
+        novoAtendimentoOpenChestProtocol();
+        return;
+      }
+      novoAtendimentoOpenPsCondition(button.dataset.openPsCondition);
+    });
   });
   protocolo.querySelectorAll('[data-open-score]').forEach(button => {
     button.addEventListener('click', () => novoAtendimentoOpenScore(button.dataset.openScore));
   });
+
+  const salvar = novoAtendimentoElements().salvarQueixas;
+  if (salvar) {
+    salvar.textContent = hasChest && novoAtendimentoRequiresChestGate()
+      ? 'Classificar dor torácica →'
+      : 'Continuar para tratamento';
+  }
 }
 
 function novoAtendimentoShowStep (step) {
@@ -952,6 +985,19 @@ function novoAtendimentoPrefillSearch (sectionId, query) {
 function novoAtendimentoOpenTreatment (sectionId) {
   const data = novoAtendimentoReadDraft();
   const queixas = data?.queixas?.length ? data.queixas : [];
+  if (novoAtendimentoRequiresChestGate(queixas)) {
+    const status = novoAtendimentoElements().queixasStatus;
+    if (status) {
+      novoAtendimentoSetStatus(
+        'Antes do tratamento de dor torácica: abra o protocolo, calcule o HEART e escolha STEMI, NSTEMI/AI ou baixo risco/não cardíaca.',
+        'error',
+        status
+      );
+    }
+    novoAtendimentoShowStep('queixas');
+    novoAtendimentoOpenChestProtocol();
+    return;
+  }
   /* Sintomas como "dispneia" não existem nos catálogos de tratamento:
      junta os diagnósticos ligados à queixa para a busca encontrar a conduta */
   const relacionados = novoAtendimentoPsMatches(queixas).map(condition => condition.name);
@@ -1010,12 +1056,25 @@ function novoAtendimentoSaveQueixas () {
   }
 
   data.queixas = [...novoAtendimentoQueixas];
-  data.step = 'tratamento';
   sessionStorage.setItem(MEDHUB_NEW_ENCOUNTER_DRAFT, JSON.stringify(data));
   sessionStorage.setItem('medhub-active-queixa', data.queixas.join('; '));
   novoAtendimentoSyncAnamnese(data);
   if (typeof rxSyncFromAnamnese === 'function') rxSyncFromAnamnese();
 
+  if (novoAtendimentoRequiresChestGate()) {
+    data.step = 'queixas';
+    sessionStorage.setItem(MEDHUB_NEW_ENCOUNTER_DRAFT, JSON.stringify(data));
+    novoAtendimentoSetStatus(
+      'Dor torácica: classifique com HEART/ECG no Guia de emergência antes do tratamento. Escolha STEMI, NSTEMI/AI ou baixo risco/não cardíaca.',
+      'error',
+      queixasStatus
+    );
+    novoAtendimentoOpenChestProtocol();
+    return;
+  }
+
+  data.step = 'tratamento';
+  sessionStorage.setItem(MEDHUB_NEW_ENCOUNTER_DRAFT, JSON.stringify(data));
   novoAtendimentoSetStatus('', '', queixasStatus);
   novoAtendimentoShowStep('tratamento');
 }

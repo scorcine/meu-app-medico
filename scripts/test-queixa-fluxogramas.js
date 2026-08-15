@@ -241,5 +241,35 @@ if (tratamento.th.includes('asma-broncoespasmo') || tratamento.th.includes('pneu
   fail(`tratamento na unidade não casou com Dispneia: ${JSON.stringify(tratamento)}`);
 }
 
+/* 10. Dor torácica exige classificação antes do tratamento */
+console.log('\nGate de dor torácica:\n');
+const chestGate = evalIn(`(() => {
+  sessionStorage.removeItem('medhub-chest-classification');
+  novoAtendimentoQueixas = ['Dor torácica'];
+  sessionStorage.setItem('medhub-new-encounter-draft', JSON.stringify({ nome: 'Teste', queixas: ['Dor torácica'], step: 'queixas' }));
+  const precisa = novoAtendimentoRequiresChestGate();
+  window.aberturas = [];
+  window.showSection = id => window.aberturas.push('section:' + id);
+  window.showEmergenciaTopic = id => window.aberturas.push('topic:' + id);
+  window.showEmergenciaProtocol = id => window.aberturas.push('protocol:' + id);
+  novoAtendimentoSaveQueixas();
+  const draft = JSON.parse(sessionStorage.getItem('medhub-new-encounter-draft') || '{}');
+  return { precisa, step: draft.step, aberturas: window.aberturas.slice() };
+})()`);
+
+if (chestGate.precisa && chestGate.step === 'queixas' &&
+    chestGate.aberturas.includes('section:guia-emergencia')) {
+  pass('Dor torácica bloqueia tratamento e manda classificar no Guia de emergência');
+} else {
+  fail('Gate de dor torácica falhou: ' + JSON.stringify(chestGate));
+}
+
+const chestLiberado = evalIn(`(() => {
+  sessionStorage.setItem('medhub-chest-classification', 'nao-sca');
+  return !novoAtendimentoRequiresChestGate(['Dor torácica']);
+})()`);
+if (chestLiberado) pass('Classificação baixo risco/não cardíaca libera o caminho do tratamento');
+else fail('Classificação não liberou o gate');
+
 console.log('\n' + (failures ? `FALHAS: ${failures}` : 'TODOS OS TESTES PASSARAM'));
 process.exit(failures ? 1 : 0);

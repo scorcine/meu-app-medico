@@ -5133,6 +5133,18 @@ textarea {
   border-top: 1px solid var(--border);
 }
 
+.novo-atendimento-protocolo-scores-priority {
+  margin: 0.8rem 0 1rem;
+  padding: 0.85rem;
+  border: 1px solid rgba(240, 180, 41, 0.5);
+  border-radius: 10px;
+  background: rgba(240, 180, 41, 0.08);
+}
+
+.novo-atendimento-protocolo-scores-priority .novo-atendimento-protocolo-score-buttons {
+  grid-template-columns: minmax(0, 22rem);
+}
+
 .novo-atendimento-protocolo-scores > div:first-child strong,
 .novo-atendimento-protocolo-scores > div:first-child span {
   display: block;
