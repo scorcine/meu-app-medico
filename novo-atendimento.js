@@ -98,11 +98,128 @@ function novoAtendimentoNormalize (text) {
     .trim();
 }
 
-function novoAtendimentoHasChestPain () {
-  return novoAtendimentoQueixas.some(queixa => {
+const NOVO_ATENDIMENTO_EMERGENCY_ROUTES = [
+  {
+    topic: 'parada-cardio', protocol: 'acls-adulto', icon: '⚡',
+    aliases: ['parada cardiorrespiratoria', 'parada cardiaca', 'pcr', 'aesp', 'assistolia', 'fibrilacao ventricular', 'fv', 'tv sem pulso'],
+    alert: 'Parada cardiorrespiratória: acione ajuda, inicie RCP de alta qualidade e conecte o desfibrilador.'
+  },
+  { topic: 'parada-cardio', protocol: 'bls-adulto', icon: '🫀', aliases: ['bls', 'suporte basico de vida'] },
+  { topic: 'parada-cardio', protocol: 'pals-ped', icon: '👶', aliases: ['pals', 'parada pediatrica', 'pcr pediatrica'] },
+  { topic: 'parada-cardio', protocol: 'bradicardia', icon: '🐢', aliases: ['bradicardia', 'pulso lento', 'ritmo lento'] },
+  { topic: 'parada-cardio', protocol: 'taquicardia', icon: '⚡', aliases: ['taquicardia instavel', 'taquiarritmia instavel', 'tv com pulso', 'torsades'] },
+  { topic: 'parada-cardio', protocol: 'rosc', icon: '✅', aliases: ['rosc', 'pos pcr', 'retorno da circulacao espontanea'] },
+
+  {
+    topic: 'sca', protocol: 'dor-inicial', icon: '❤️‍🔥', chest: true,
+    aliases: ['dor toracica', 'dor no peito', 'precordialgia', 'angina', 'sindrome coronariana aguda', 'sca', 'infarto', 'iam'],
+    alert: 'Dor torácica: realizar ECG de 12 derivações em até 10 minutos.'
+  },
+  { topic: 'sca', protocol: 'stemi', icon: '🚨', aliases: ['stemi', 'iam com supra', 'infarto com supra', 'iamcsst'] },
+  { topic: 'sca', protocol: 'nstemi-ua', icon: '❤️', aliases: ['nstemi', 'iam sem supra', 'infarto sem supra', 'iamsst', 'angina instavel'] },
+  { topic: 'sca', protocol: 'ecg-modelos', icon: '📈', aliases: ['modelos de ecg', 'padroes de ecg', 'ecg sca'] },
+
+  {
+    topic: 'avc', protocol: 'fast', icon: '🧠',
+    aliases: ['avc', 'ave', 'derrame', 'deficit neurologico focal', 'hemiparesia', 'hemiplegia', 'paralisia facial', 'desvio de rima', 'afasia'],
+    alert: 'Suspeita de AVC: registrar o último momento bem e ativar avaliação neurológica imediatamente.'
+  },
+  { topic: 'avc', protocol: 'trombolise', icon: '💉', aliases: ['trombolise avc', 'alteplase avc', 'tenecteplase avc'] },
+  { topic: 'avc', protocol: 'trombectomia', icon: '🧠', aliases: ['trombectomia', 'oclusao de grande vaso'] },
+  { topic: 'avc', protocol: 'nihss', icon: '📋', aliases: ['nihss', 'escala nihss'] },
+
+  {
+    topic: 'sepse', protocol: 'bundle-hora1', icon: '🩸',
+    aliases: ['sepse', 'choque septico', 'septicemia', 'infeccao com disfuncao organica'],
+    alert: 'Suspeita de sepse: avaliar disfunção orgânica e iniciar o Bundle Hora-1 sem atraso.'
+  },
+  { topic: 'sepse', protocol: 'norepi-map', icon: '💉', aliases: ['noradrenalina', 'norepinefrina', 'choque refratario'] },
+  { topic: 'sepse', protocol: 'lactato-reavaliacao', icon: '🧪', aliases: ['lactato elevado', 'reavaliacao de lactato'] },
+
+  {
+    topic: 'trauma', protocol: 'atls-abcde', icon: '🆘',
+    aliases: ['trauma', 'politrauma', 'atropelamento', 'acidente automobilistico', 'acidente de moto', 'ferimento por arma de fogo', 'ferimento por arma branca'],
+    alert: 'Trauma: priorizar avaliação primária ABCDE e tratar ameaças imediatas à vida.'
+  },
+  { topic: 'trauma', protocol: 'via-aerea-vortex', icon: '🌪️', aliases: ['via aerea dificil', 'intubacao dificil', 'nao intuba nao ventila'] },
+  { topic: 'trauma', protocol: 'mtp-transfusao', icon: '🩸', aliases: ['hemorragia macica', 'transfusao macica', 'choque hemorragico'] },
+  { topic: 'trauma', protocol: 'pecarn-tce', icon: '👶', aliases: ['tce pediatrico', 'trauma craniano pediatrico', 'queda crianca'] },
+  { topic: 'trauma', protocol: 'queda-propria-altura-tc', icon: '🧓', aliases: ['queda da propria altura', 'queda em idoso', 'queda idoso'] },
+
+  { topic: 'via-aerea', protocol: 'rsi-7-passos', icon: '🌬️', aliases: ['sequencia rapida de intubacao', 'intubacao orotraqueal', 'iot', 'rsi'] },
+  { topic: 'via-aerea', protocol: 'ventilacao-mecanica', icon: '🫁', aliases: ['ventilacao mecanica', 'ajuste ventilatorio'] },
+  { topic: 'via-aerea', protocol: 'dope-pos-iot', icon: '🚨', aliases: ['hipoxemia pos iot', 'dessaturacao pos intubacao', 'dope'] },
+  { topic: 'via-aerea', protocol: 'desmame-ventilatorio', icon: '🫁', aliases: ['desmame ventilatorio', 'extubacao'] },
+
+  {
+    topic: 'reacoes-metabolicas', protocol: 'anafilaxia', icon: '💉',
+    aliases: ['anafilaxia', 'choque anafilatico', 'reacao alergica grave', 'edema de glote'],
+    alert: 'Anafilaxia: administrar adrenalina IM imediatamente; não aguardar acesso venoso.'
+  },
+  {
+    topic: 'reacoes-metabolicas', protocol: 'hipoglicemia-grave', icon: '🍬',
+    aliases: ['hipoglicemia', 'glicemia baixa', 'coma hipoglicemico'],
+    alert: 'Hipoglicemia: confirmar glicemia e corrigir imediatamente se houver alteração de consciência.'
+  },
+  {
+    topic: 'reacoes-metabolicas', protocol: 'hipercalemia', icon: '⚡',
+    aliases: ['hipercalemia', 'potassio alto', 'hiperpotassemia'],
+    alert: 'Hipercalemia grave ou com alteração no ECG: estabilizar membrana e iniciar medidas de redução do potássio.'
+  },
+  {
+    topic: 'reacoes-metabolicas', protocol: 'dka-hhs', icon: '🧪',
+    aliases: ['cetoacidose diabetica', 'cad', 'estado hiperosmolar', 'ehh', 'coma hiperosmolar'],
+    alert: 'Crise hiperglicêmica: avaliar volume, potássio, cetonas, gasometria e osmolaridade antes da insulina.'
+  },
+
+  { topic: 'obstetricia', protocol: 'preeclampsia-eclampsia', icon: '🤰', aliases: ['pre eclampsia', 'preeclampsia', 'eclampsia', 'convulsao na gestante', 'hipertensao gestacional'] },
+  { topic: 'obstetricia', protocol: 'hemorragia-pos-parto', icon: '🩸', aliases: ['hemorragia pos parto', 'sangramento pos parto', 'atonia uterina'] },
+  { topic: 'obstetricia', protocol: 'prolapso-cordao', icon: '🚨', aliases: ['prolapso de cordao', 'cordao prolapsado'] },
+
+  { topic: 'pediatrica', protocol: 'pcr-pediatrico', icon: '👶', aliases: ['parada cardiorrespiratoria pediatrica', 'pcr infantil'] },
+  { topic: 'pediatrica', protocol: 'bronquiolite', icon: '👶', aliases: ['bronquiolite', 'vsl', 'virus sincicial respiratorio'] },
+  { topic: 'pediatrica', protocol: 'broselow-doses', icon: '📏', aliases: ['broselow', 'doses pediatricas de emergencia'] },
+
+  { topic: 'toxicologia', protocol: 'overdose-opioide', icon: '☠️', aliases: ['overdose de opioide', 'intoxicacao por opioide', 'morfina overdose', 'fentanil overdose', 'heroina overdose'] },
+  { topic: 'toxicologia', protocol: 'paracetamol-rumack', icon: '💊', aliases: ['intoxicacao por paracetamol', 'overdose de paracetamol', 'acetaminofeno overdose'] },
+  { topic: 'toxicologia', protocol: 'hipertermia-maligna-calor', icon: '🔥', aliases: ['hipertermia maligna', 'golpe de calor', 'insolacao grave'] },
+  { topic: 'toxicologia', protocol: 'hipotermia-swiss', icon: '❄️', aliases: ['hipotermia', 'exposicao ao frio'] },
+
+  { topic: 'pressao-arritmias', protocol: 'crise-hipertensiva', icon: '🔺', aliases: ['crise hipertensiva', 'emergencia hipertensiva', 'hipertensao grave', 'pressao muito alta'] },
+  { topic: 'pressao-arritmias', protocol: 'wpw-instavel', icon: '⚡', aliases: ['wolff parkinson white', 'wpw', 'pre excitacao instavel'] },
+
+  { topic: 'procedimentos', protocol: 'sedasia', icon: '💤', aliases: ['sedacao', 'sedacao para procedimento', 'sedasia'] },
+  { topic: 'procedimentos', protocol: 'puncao-lombar', icon: '🛠️', aliases: ['puncao lombar', 'coleta de liquor'] },
+  { topic: 'procedimentos', protocol: 'iot-covid-safe', icon: '😷', aliases: ['intubacao covid', 'iot covid'] }
+];
+
+function novoAtendimentoAliasMatches (value, alias) {
+  const normalizedAlias = novoAtendimentoNormalize(alias);
+  return (` ${value} `).includes(` ${normalizedAlias} `);
+}
+
+function novoAtendimentoEmergencyMatches () {
+  const matches = [];
+
+  novoAtendimentoQueixas.forEach(queixa => {
     const value = novoAtendimentoNormalize(queixa);
-    return /\b(dor toracica|dor no peito|precordialgia|angina|sca|infarto|iam)\b/.test(value);
+    NOVO_ATENDIMENTO_EMERGENCY_ROUTES.forEach(route => {
+      if (!route.aliases.some(alias => novoAtendimentoAliasMatches(value, alias))) return;
+      const key = `${route.topic}:${route.protocol}`;
+      if (!matches.some(item => item.key === key)) matches.push({ ...route, key, queixa });
+    });
   });
+
+  return matches;
+}
+
+function novoAtendimentoEmergencyProtocolMeta (route) {
+  if (typeof EMERGENCY_TOPICS !== 'undefined') {
+    const topic = EMERGENCY_TOPICS.find(item => item.id === route.topic);
+    const protocol = topic?.protocols?.find(item => item.id === route.protocol);
+    if (topic && protocol) return { topic: topic.name, name: protocol.name, icon: protocol.icon || route.icon };
+  }
+  return { topic: 'Guia de emergência', name: route.protocol, icon: route.icon || '🚨' };
 }
 
 function novoAtendimentoContexto () {
@@ -178,14 +295,18 @@ function novoAtendimentoPrefillCalc (form) {
   }
 }
 
-function novoAtendimentoOpenChestProtocol () {
+function novoAtendimentoOpenEmergencyProtocol (topicId, protocolId) {
   if (typeof showSection === 'function') showSection('guia-emergencia');
   window.setTimeout(() => {
     if (typeof initGuiaEmergencia === 'function') initGuiaEmergencia();
-    if (typeof showEmergenciaTopic === 'function') showEmergenciaTopic('sca');
-    if (typeof showEmergenciaProtocol === 'function') showEmergenciaProtocol('dor-inicial');
+    if (typeof showEmergenciaTopic === 'function') showEmergenciaTopic(topicId);
+    if (typeof showEmergenciaProtocol === 'function') showEmergenciaProtocol(protocolId);
     novoAtendimentoMountContexto(document.getElementById('emerg-topic-content'));
   }, 80);
+}
+
+function novoAtendimentoOpenChestProtocol () {
+  novoAtendimentoOpenEmergencyProtocol('sca', 'dor-inicial');
 }
 
 function novoAtendimentoOpenScore (scoreId) {
@@ -205,53 +326,75 @@ function novoAtendimentoRenderProtocol () {
   const { protocolo } = novoAtendimentoElements();
   if (!protocolo) return;
 
-  if (!novoAtendimentoHasChestPain()) {
+  const matches = novoAtendimentoEmergencyMatches();
+  if (!matches.length) {
     protocolo.hidden = true;
     protocolo.innerHTML = '';
     return;
   }
 
   protocolo.hidden = false;
+  const alerts = matches.filter(route => route.alert);
+  const hasChest = matches.some(route => route.chest);
+
   protocolo.innerHTML = `
-    <div class="novo-atendimento-protocolo-alert" role="alert">
-      <span class="novo-atendimento-protocolo-alert-icon" aria-hidden="true">⚡</span>
-      <div>
-        <strong>Dor torácica: realizar ECG de 12 derivações em até 10 minutos</strong>
-        <span>Não aguarde escores ou troponina se houver instabilidade ou suspeita de IAM com supra.</span>
-      </div>
-    </div>
+    ${alerts.map(route => `
+      <div class="novo-atendimento-protocolo-alert" role="alert">
+        <span class="novo-atendimento-protocolo-alert-icon" aria-hidden="true">${route.icon || '⚡'}</span>
+        <div>
+          <strong>${novoAtendimentoEscape(route.alert)}</strong>
+          <span>Protocolo identificado pela queixa “${novoAtendimentoEscape(route.queixa)}”. Confirmar compatibilidade com o quadro clínico.</span>
+        </div>
+      </div>`).join('')}
     <div class="novo-atendimento-protocolo-body">
       <div class="novo-atendimento-protocolo-heading">
         <div>
-          <p class="novo-atendimento-step">Protocolo sugerido automaticamente</p>
-          <h3>Suspeita de síndrome coronariana aguda</h3>
-        </div>
-        <button type="button" class="btn btn-secondary" data-open-chest-protocol>
-          Abrir protocolo completo →
-        </button>
-      </div>
-      <ol class="novo-atendimento-protocolo-steps">
-        <li><strong>Avaliar estabilidade:</strong> ABC, pressão arterial, frequência, SpO₂, ritmo e sinais de choque.</li>
-        <li><strong>ECG em ≤ 10 min:</strong> repetir se a dor persistir ou houver mudança clínica.</li>
-        <li><strong>Monitorização e exames:</strong> acesso venoso, troponina seriada, eletrólitos e função renal.</li>
-        <li><strong>Classificar:</strong> IAM com supra, IAM sem supra, angina instável ou diagnóstico alternativo grave.</li>
-      </ol>
-      <div class="novo-atendimento-protocolo-scores">
-        <div>
-          <strong>Escores úteis</strong>
-          <span>Use conforme o momento clínico; eles não devem atrasar ECG nem reperfusão.</span>
-        </div>
-        <div class="novo-atendimento-protocolo-score-buttons">
-          <button type="button" data-open-score="heart"><strong>HEART</strong><span>Dor torácica indiferenciada</span></button>
-          <button type="button" data-open-score="grace"><strong>GRACE</strong><span>SCA sem supra / prognóstico</span></button>
-          <button type="button" data-open-score="timi-ua"><strong>TIMI UA/NSTEMI</strong><span>Risco isquêmico</span></button>
-          <button type="button" data-open-score="killip"><strong>Killip</strong><span>Insuficiência cardíaca no IAM</span></button>
+          <p class="novo-atendimento-step">${matches.length > 1 ? 'Protocolos sugeridos automaticamente' : 'Protocolo sugerido automaticamente'}</p>
+          <h3>${matches.length > 1 ? `${matches.length} protocolos relacionados às queixas` : 'Acesso direto à conduta de emergência'}</h3>
         </div>
       </div>
+      <div class="novo-atendimento-emergency-routes">
+        ${matches.map(route => {
+          const meta = novoAtendimentoEmergencyProtocolMeta(route);
+          return `
+            <article class="novo-atendimento-emergency-route">
+              <span class="novo-atendimento-emergency-route-icon" aria-hidden="true">${meta.icon}</span>
+              <div>
+                <small>${novoAtendimentoEscape(meta.topic)}</small>
+                <strong>${novoAtendimentoEscape(meta.name)}</strong>
+                <span>Relacionado a: ${novoAtendimentoEscape(route.queixa)}</span>
+              </div>
+              <button type="button" class="btn btn-secondary"
+                data-open-emergency-topic="${novoAtendimentoEscape(route.topic)}"
+                data-open-emergency-protocol="${novoAtendimentoEscape(route.protocol)}">
+                Abrir agora →
+              </button>
+            </article>`;
+        }).join('')}
+      </div>
+      ${hasChest ? `
+        <div class="novo-atendimento-protocolo-scores">
+          <div>
+            <strong>Escores úteis para dor torácica</strong>
+            <span>Não devem atrasar ECG nem reperfusão.</span>
+          </div>
+          <div class="novo-atendimento-protocolo-score-buttons">
+            <button type="button" data-open-score="heart"><strong>HEART</strong><span>Dor torácica indiferenciada</span></button>
+            <button type="button" data-open-score="grace"><strong>GRACE</strong><span>SCA sem supra / prognóstico</span></button>
+            <button type="button" data-open-score="timi-ua"><strong>TIMI UA/NSTEMI</strong><span>Risco isquêmico</span></button>
+            <button type="button" data-open-score="killip"><strong>Killip</strong><span>Insuficiência cardíaca no IAM</span></button>
+          </div>
+        </div>` : ''}
     </div>`;
 
-  protocolo.querySelector('[data-open-chest-protocol]')
-    ?.addEventListener('click', novoAtendimentoOpenChestProtocol);
+  protocolo.querySelectorAll('[data-open-emergency-protocol]').forEach(button => {
+    button.addEventListener('click', () => {
+      novoAtendimentoOpenEmergencyProtocol(
+        button.dataset.openEmergencyTopic,
+        button.dataset.openEmergencyProtocol
+      );
+    });
+  });
   protocolo.querySelectorAll('[data-open-score]').forEach(button => {
     button.addEventListener('click', () => novoAtendimentoOpenScore(button.dataset.openScore));
   });
@@ -304,6 +447,13 @@ function novoAtendimentoShowStep (step) {
   }
 }
 
+function novoAtendimentoSyncQueixasDraft () {
+  const data = novoAtendimentoReadDraft();
+  if (!data) return;
+  data.queixas = [...novoAtendimentoQueixas];
+  sessionStorage.setItem(MEDHUB_NEW_ENCOUNTER_DRAFT, JSON.stringify(data));
+}
+
 function novoAtendimentoRenderQueixas () {
   const { queixasList, queixasEmpty } = novoAtendimentoElements();
   if (!queixasList) return;
@@ -315,6 +465,7 @@ function novoAtendimentoRenderQueixas () {
     </span>
   `).join('');
   if (queixasEmpty) queixasEmpty.hidden = novoAtendimentoQueixas.length > 0;
+  novoAtendimentoSyncQueixasDraft();
   novoAtendimentoRenderProtocol();
 
   queixasList.querySelectorAll('[data-remove-queixa]').forEach(button => {

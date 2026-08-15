@@ -4879,6 +4879,57 @@ textarea {
   background: rgba(240, 180, 41, 0.06);
 }
 
+.novo-atendimento-emergency-routes {
+  display: grid;
+  gap: 0.7rem;
+}
+
+.novo-atendimento-emergency-route {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.8rem;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--bg-surface);
+}
+
+.novo-atendimento-emergency-route-icon {
+  display: grid;
+  place-items: center;
+  width: 2.4rem;
+  height: 2.4rem;
+  border: 1px solid rgba(240, 180, 41, 0.38);
+  border-radius: 10px;
+  background: rgba(240, 180, 41, 0.08);
+  font-size: 1.2rem;
+}
+
+.novo-atendimento-emergency-route small,
+.novo-atendimento-emergency-route strong,
+.novo-atendimento-emergency-route div > span {
+  display: block;
+}
+
+.novo-atendimento-emergency-route small {
+  color: var(--text-muted);
+  font-size: 0.68rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.novo-atendimento-emergency-route strong {
+  margin-top: 0.1rem;
+  color: var(--text-primary);
+}
+
+.novo-atendimento-emergency-route div > span {
+  margin-top: 0.15rem;
+  color: var(--text-muted);
+  font-size: 0.76rem;
+}
+
 .novo-atendimento-contexto strong {
   display: block;
   color: var(--text-primary);
@@ -4906,6 +4957,17 @@ label.novo-atendimento-prefilled {
   box-shadow: none;
   color: #d99b12;
   font-weight: 600;
+}
+
+@media (max-width: 680px) {
+  .novo-atendimento-emergency-route {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .novo-atendimento-emergency-route .btn {
+    grid-column: 1 / -1;
+    width: 100%;
+  }
 }
 
 .novo-atendimento-complaint-chip {
