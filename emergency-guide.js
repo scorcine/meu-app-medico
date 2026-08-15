@@ -3163,11 +3163,29 @@ function initEmergStemiWorkflow (root, state, persist) {
       <div data-stemi-result></div>`;
   }
 
+  /* Cores do fluxo: verde feito · amarelo aguardando · vermelho impedido */
   function refreshContraState () {
-    const clear = state.picks['stemi-contra'] === 'clear';
+    const status = state.picks['stemi-contra'];
+    const clear = status === 'clear';
+    const contraTrigger = root.querySelector('[data-stemi-open="contra"]');
+    contraTrigger?.classList.toggle('is-done', clear);
+    contraTrigger?.classList.toggle('is-blocked', status === 'present');
+
     const fibrinolyticTrigger = root.querySelector('[data-stemi-open="fibrinolytic"]');
     fibrinolyticTrigger?.setAttribute('aria-disabled', clear ? 'false' : 'true');
     fibrinolyticTrigger?.classList.toggle('is-locked', !clear);
+    fibrinolyticTrigger?.classList.toggle('is-done', clear && !!state.picks['stemi-fibrinolytic']);
+
+    ['pci', 'lysis'].forEach(strategy => {
+      root.querySelector(`[data-stemi-open="p2y12-${strategy}"]`)
+        ?.classList.toggle('is-done', !!state.picks[`stemi-p2-${strategy}`]);
+    });
+  }
+
+  function markChosen (panel, selector, value) {
+    panel.querySelectorAll(selector).forEach(button => {
+      button.classList.toggle('is-chosen', button.dataset[value.attr] === value.chosen);
+    });
   }
 
   triggers.forEach(trigger => {
@@ -3184,9 +3202,21 @@ function initEmergStemiWorkflow (root, state, persist) {
       const panel = root.querySelector(`[data-stemi-panel="${id}"]`);
       if (!panel) return;
       if (id === 'contra') renderContra(panel);
-      if (id === 'p2y12-pci') renderP2y12(panel, 'pci');
-      if (id === 'p2y12-lysis') renderP2y12(panel, 'lysis');
-      if (id === 'fibrinolytic') renderFibrinolytic(panel);
+      if (id === 'p2y12-pci' || id === 'p2y12-lysis') {
+        const strategy = id === 'p2y12-pci' ? 'pci' : 'lysis';
+        renderP2y12(panel, strategy);
+        markChosen(panel, '[data-stemi-p2]', {
+          attr: 'stemiP2',
+          chosen: state.picks[`stemi-p2-${strategy}`]
+        });
+      }
+      if (id === 'fibrinolytic') {
+        renderFibrinolytic(panel);
+        markChosen(panel, '[data-stemi-fibrinolytic]', {
+          attr: 'stemiFibrinolytic',
+          chosen: state.picks['stemi-fibrinolytic']
+        });
+      }
       closePanels(panel);
       panel.hidden = false;
       panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -3215,7 +3245,10 @@ function initEmergStemiWorkflow (root, state, persist) {
       state.picks[`stemi-p2-${p2.dataset.stemiStrategy}`] = p2.dataset.stemiP2;
       state.picks[`stemi-dose-p2-${p2.dataset.stemiStrategy}`] = `${result.title}: ${result.dose}`;
       persist();
-      p2.closest('[data-stemi-panel]').querySelector('[data-stemi-result]').innerHTML = resultCard(result);
+      const p2Panel = p2.closest('[data-stemi-panel]');
+      p2Panel.querySelector('[data-stemi-result]').innerHTML = resultCard(result);
+      markChosen(p2Panel, '[data-stemi-p2]', { attr: 'stemiP2', chosen: p2.dataset.stemiP2 });
+      refreshContraState();
       return;
     }
 
@@ -3237,6 +3270,11 @@ function initEmergStemiWorkflow (root, state, persist) {
       state.picks['stemi-dose-fibrinolytic'] = `${result.title}: ${result.dose}`;
       persist();
       panel.querySelector('[data-stemi-result]').innerHTML = resultCard(result);
+      markChosen(panel, '[data-stemi-fibrinolytic]', {
+        attr: 'stemiFibrinolytic',
+        chosen: fibrinolytic.dataset.stemiFibrinolytic
+      });
+      refreshContraState();
     }
   });
 
@@ -3249,6 +3287,7 @@ function initEmergStemiWorkflow (root, state, persist) {
       panel.hidden = true;
       panel.innerHTML = '';
     });
+    triggers.forEach(trigger => trigger.classList.remove('is-done', 'is-blocked'));
     refreshContraState();
   };
 }
