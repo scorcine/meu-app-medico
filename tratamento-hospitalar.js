@@ -1100,7 +1100,8 @@ function thGeneratePrescription () {
       .next-step-actions { display: flex; flex-wrap: wrap; gap: 10px; }
       .home-rx { background: #1677ff; color: #fff; }
       .finish { border: 1px solid #cbd5e1; background: #f8fafc; color: #334155; }
-      .sheet { width: 210mm; min-height: 297mm; margin: 18px auto; padding: 22mm 20mm; background: #fff; box-shadow: 0 4px 22px #0002; }
+      .sheet { display: flex; flex-direction: column; width: 210mm; min-height: 297mm; margin: 18px auto; padding: 22mm 20mm; background: #fff; box-shadow: 0 4px 22px #0002; }
+      .sheet-body { flex: 1 1 auto; }
       h1 { margin: 0 0 28px; text-align: center; font-size: 20px; letter-spacing: .08em; }
       .meta { display: grid; grid-template-columns: 1fr auto; gap: 8px 24px; padding-bottom: 18px; border-bottom: 1px solid #cbd5e1; }
       .meta p { margin: 0; }
@@ -1109,14 +1110,13 @@ function thGeneratePrescription () {
       ol { margin: 0; padding-left: 24px; }
       li { margin-bottom: 18px; padding-left: 7px; line-height: 1.45; }
       .med-route { margin-top: 4px; color: #334155; }
-      .signature { margin-top: 75px; text-align: center; }
+      .signature { margin-top: auto; padding-top: 40px; text-align: center; }
       .signature-line { width: 320px; margin: 0 auto 10px; border-top: 1px solid #111827; }
       .signature p { margin: 4px 0; }
-      .note { margin-top: 40px; padding-top: 12px; border-top: 1px solid #e5e7eb; color: #64748b; font-size: 11px; }
       @media print {
         body { background: #fff; }
         .toolbar, .next-step { display: none; }
-        .sheet { width: auto; min-height: auto; margin: 0; box-shadow: none; }
+        .sheet { width: auto; min-height: 297mm; margin: 0; box-shadow: none; }
         @page { size: A4; margin: 0; }
       }
     </style>
@@ -1135,21 +1135,22 @@ function thGeneratePrescription () {
       </div>
     </section>
     <main class="sheet">
-      <h1>PRESCRIÇÃO MÉDICA</h1>
-      <section class="meta">
-        <p><strong>Paciente:</strong> ${thEscapeHtml(paciente)}</p>
-        <p><strong>Data:</strong> ${thEscapeHtml(date)}</p>
-        ${idade ? `<p><strong>Idade:</strong> ${thEscapeHtml(idade)}</p>` : ''}
-        ${conditions.length ? `<p class="conditions"><strong>Condições:</strong> ${thEscapeHtml(conditions.join(' · '))}</p>` : ''}
-      </section>
-      <h2>Medicações selecionadas</h2>
-      <ol>${medRows}</ol>
+      <div class="sheet-body">
+        <h1>PRESCRIÇÃO MÉDICA</h1>
+        <section class="meta">
+          <p><strong>Paciente:</strong> ${thEscapeHtml(paciente)}</p>
+          <p><strong>Data:</strong> ${thEscapeHtml(date)}</p>
+          ${idade ? `<p><strong>Idade:</strong> ${thEscapeHtml(idade)}</p>` : ''}
+          ${conditions.length ? `<p class="conditions"><strong>Condições:</strong> ${thEscapeHtml(conditions.join(' · '))}</p>` : ''}
+        </section>
+        <h2>Medicações selecionadas</h2>
+        <ol>${medRows}</ol>
+      </div>
       <section class="signature">
         <div class="signature-line"></div>
         <p><strong>Dr(a). ${thEscapeHtml(doctor || '________________________')}</strong></p>
         <p>${thEscapeHtml(crm)}</p>
       </section>
-      <p class="note">Revise medicação, dose, via, intervalo, alergias e contraindicações antes de assinar.</p>
     </main>
     <script>
       function continueEncounter(action) {
