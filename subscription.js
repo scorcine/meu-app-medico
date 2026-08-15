@@ -272,10 +272,10 @@ async function medhubOpenEloCheckout (email) {
       medhubMetaTrackCheckoutStart('monthly_elo');
     }
 
-    const res = await fetch('/api/create-elo-subscription', {
+    const res = await fetch('/api/create-checkout-session', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: norm })
+      body: JSON.stringify({ email: norm, method: 'elo', plan: 'monthly' })
     });
     const data = await res.json();
     if (!res.ok || !data.url || !data.id) {
@@ -320,9 +320,10 @@ async function medhubCancelEloSubscription () {
   )) return;
 
   try {
-    const res = await fetch('/api/cancel-elo-subscription', {
+    const res = await fetch('/api/create-portal-session', {
       method: 'POST',
-      headers: medhubAuthHeaders()
+      headers: Object.assign({ 'Content-Type': 'application/json' }, medhubAuthHeaders()),
+      body: JSON.stringify({ action: 'cancel_elo' })
     });
     const data = await res.json();
     if (!res.ok) {

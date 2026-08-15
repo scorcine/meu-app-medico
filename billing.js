@@ -118,9 +118,10 @@ async function medhubLoadMercadoPagoSuccess (titleEl, bodyEl, emailEl, registerL
 
   for (let attempt = 0; attempt < 5; attempt++) {
     try {
-      const res = await fetch('/api/mercadopago-subscription?id=' + encodeURIComponent(id), {
-        cache: 'no-store'
-      });
+      const res = await fetch(
+        '/api/checkout-session?provider=mercadopago&preapproval_id=' + encodeURIComponent(id),
+        { cache: 'no-store' }
+      );
       const data = await res.json();
 
       if (res.ok && data.active) {

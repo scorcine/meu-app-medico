@@ -6,9 +6,110 @@ const {
   assertPromotionCodeUsable,
   findCustomerByEmail
 } = require('./_stripe');
-const { syncCheckoutSession, getCheckoutRecord } = require('./_billing-kv');
+const { syncCheckoutSession, getCheckoutRecord, saveCustomerBilling } = require('./_billing-kv');
+const {
+  mercadoPagoEnabled,
+  createMercadoPagoMonthlySubscription,
+  getMercadoPagoSubscription,
+  mercadoPagoSubscriptionSnapshot
+} = require('./_mercadopago');
+
+async function handleGetMercadoPagoSubscription (req, res) {
+  if (!mercadoPagoEnabled()) {
+    json(res, 503, {
+      error: 'Pagamento Elo ainda não configurado.',
+      code: 'mercadopago_not_configured'
+    });
+    return;
+  }
+
+  const id = String(req.query.preapproval_id || req.query.id || '').trim();
+  if (!id) {
+    json(res, 400, { error: 'Identificador da assinatura obrigatório.' });
+    return;
+  }
+
+  try {
+    const subscription = await getMercadoPagoSubscription(id);
+    const snapshot = mercadoPagoSubscriptionSnapshot(subscription);
+
+    // Só torna o Mercado Pago a fonte de acesso após autorização.
+    // Uma tentativa ainda pendente não pode esconder uma assinatura Stripe válida.
+    if (snapshot.active && snapshot.email && snapshot.subscriptionId) {
+      await saveCustomerBilling(snapshot);
+    }
+
+    json(res, 200, {
+      id: snapshot.subscriptionId,
+      email: snapshot.email,
+      active: snapshot.active,
+      status: snapshot.status,
+      plan: snapshot.plan,
+      currentPeriodEnd: snapshot.currentPeriodEnd,
+      readyToRegister: snapshot.active,
+      provider: 'mercadopago'
+    });
+  } catch (err) {
+    json(res, err.status === 404 ? 404 : 500, {
+      error: err.message || 'Não foi possível validar a assinatura Elo.',
+      code: err.code || 'mercadopago_error'
+    });
+  }
+}
+
+async function handleCreateEloSubscription (req, res, body) {
+  if (!mercadoPagoEnabled()) {
+    json(res, 503, {
+      error: 'Pagamento Elo ainda não configurado.',
+      code: 'mercadopago_not_configured'
+    });
+    return;
+  }
+
+  const email = String(body.email || '').trim().toLowerCase();
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    json(res, 400, {
+      error: 'Informe o e-mail que ficará vinculado à assinatura.',
+      code: 'email_required'
+    });
+    return;
+  }
+
+  const amount = Number(process.env.MEDHUB_PRICE_MONTHLY_CENTS || 2990);
+  const origin = siteOrigin(req);
+  const backUrl = `${origin}/subscribe-success.html?provider=mercadopago`;
+
+  try {
+    const subscription = await createMercadoPagoMonthlySubscription({
+      email,
+      amount,
+      backUrl
+    });
+
+    const url = subscription.init_point || subscription.sandbox_init_point;
+    if (!url) throw new Error('Mercado Pago não retornou o checkout da assinatura.');
+
+    json(res, 200, {
+      id: subscription.id,
+      url,
+      method: 'elo',
+      provider: 'mercadopago'
+    });
+  } catch (err) {
+    json(res, err.status && err.status < 500 ? err.status : 500, {
+      error: err.message || 'Não foi possível iniciar o pagamento Elo.',
+      code: err.code || 'mercadopago_error'
+    });
+  }
+}
 
 async function handleGetCheckoutSession (req, res) {
+  const mpId = String(req.query.preapproval_id || '').trim();
+  if (mpId || String(req.query.provider || '').toLowerCase() === 'mercadopago') {
+    await handleGetMercadoPagoSubscription(req, res);
+    return;
+  }
+
   const sessionId = String(req.query.session_id || '').trim();
   if (!sessionId) {
     json(res, 400, { error: 'session_id obrigatório' });
@@ -165,11 +266,17 @@ async function handleCreateCheckoutSession (req, res) {
   }
 
   const plan = body.plan === 'annual' ? 'annual' : 'monthly';
-  const method = String(body.method || 'card').trim().toLowerCase() === 'pix' ? 'pix' : 'card';
+  const rawMethod = String(body.method || 'card').trim().toLowerCase();
+  const method = rawMethod === 'pix' ? 'pix' : (rawMethod === 'elo' ? 'elo' : 'card');
   const email = String(body.email || '').trim().toLowerCase();
   const coupon = String(body.coupon || '').trim();
   const origin = siteOrigin(req);
   const attribution = body.attribution && typeof body.attribution === 'object' ? body.attribution : {};
+
+  if (method === 'elo') {
+    await handleCreateEloSubscription(req, res, body);
+    return;
+  }
 
   try {
     const stripe = getStripe();
