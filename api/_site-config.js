@@ -21,7 +21,7 @@ function defaultSidebar () {
   return [
     { type: 'item', id: 'inicio', label: 'Início', visible: true, enabled: true, icon: '🏠', color: '' },
     { type: 'group', label: 'Atendimento' },
-    { type: 'item', id: 'novo-atendimento', label: 'Novo atendimento', visible: true, enabled: true, icon: '➕', color: '#0d6efd' },
+    { type: 'item', id: 'novo-atendimento', label: 'Novo paciente', visible: true, enabled: true, icon: '➕', color: '#0d6efd' },
     { type: 'group', label: 'Registros do paciente' },
     { type: 'item', id: 'pacientes', label: 'Cadastro do paciente', visible: true, enabled: true, icon: '👤', color: '#6366f1' },
     { type: 'item', id: 'anamnese', label: 'Anamnese', visible: true, enabled: true, icon: '📝', color: '#8b5cf6' },

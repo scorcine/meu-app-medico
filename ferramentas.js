@@ -1,8 +1,5 @@
 /* Ferramentas — atalhos na home (não duplica o menu lateral) */
 
-/** Já destacados nos cards principais de tratamento */
-const FERRAMENTAS_FEATURED_SECTIONS = new Set(['tratamento-hospitalar', 'receituario']);
-
 const FERRAMENTAS_ITEMS = [
   { section: 'calc-essenciais', icon: '🧮', name: 'Calculadoras essenciais', desc: 'Escalas, scores e doses por especialidade.' },
   { section: 'guia-emergencia', icon: '⚡', name: 'Guia rápido de emergência', desc: 'ACLS, AVC, sepse, trauma e fluxogramas.' },
@@ -33,25 +30,22 @@ function medhubOpenHomeSection (section) {
   if (typeof showSection === 'function') showSection(section);
 }
 
-function initHomeTreatmentCards () {
-  document.querySelectorAll('.home-treatment-card[data-section]').forEach(btn => {
-    if (btn.dataset.bound) return;
-    btn.dataset.bound = '1';
-    btn.addEventListener('click', () => medhubOpenHomeSection(btn.dataset.section));
-  });
+function initHomeNovoPaciente () {
+  const btn = document.getElementById('home-novo-paciente');
+  if (!btn || btn.dataset.bound) return;
+  btn.dataset.bound = '1';
+  btn.addEventListener('click', () => medhubOpenHomeSection('novo-atendimento'));
 }
 
 function initFerramentas () {
-  initHomeTreatmentCards();
+  initHomeNovoPaciente();
 
   const grid = document.getElementById('home-ferramentas-grid');
   if (!grid) return;
 
-  const rawItems = typeof medhubGetHomeCards === 'function'
+  const items = typeof medhubGetHomeCards === 'function'
     ? medhubGetHomeCards()
     : FERRAMENTAS_ITEMS;
-
-  const items = rawItems.filter(item => !FERRAMENTAS_FEATURED_SECTIONS.has(item.section));
 
   grid.innerHTML = items.map(item => {
     const style = typeof medhubHomeCardStyle === 'function' ? medhubHomeCardStyle(item) : '';

@@ -16,7 +16,7 @@
   <meta name="apple-mobile-web-app-title" content="MedHub">
   <link rel="apple-touch-icon" href="/assets/icons/icon-192.png?v=icon-v2">
   <script src="theme.js?v=2"></script>
-  <link rel="stylesheet" href="style.css?v=encounter-v12">
+  <link rel="stylesheet" href="style.css?v=home-cta-v1">
   <link rel="stylesheet" href="app-mobile.css?v=pwa-header-v1">
   <script defer src="calculators-risco.js"></script>
   <script defer src="calculators-cardio.js"></script>
@@ -73,7 +73,7 @@
   <script defer src="pacientes.js?v=atendimento-v4"></script>
   <script defer src="consultas.js?v=atendimento-v4"></script>
   <script defer src="medhub-config.js?v=site-v1"></script>
-  <script defer src="ferramentas.js?v=tx-home-v2"></script>
+  <script defer src="ferramentas.js?v=home-cta-v1"></script>
   <script defer src="flashcards/deck-sepse.js?v=fc-v11"></script>
   <script defer src="flashcards/deck-iam.js?v=fc-v11"></script>
   <script defer src="flashcards/deck-avc.js?v=fc-v11"></script>
@@ -89,12 +89,12 @@
   <script defer src="flashcards.js?v=fc-v11"></script>
   <script defer src="backup.js?v=backup-v2"></script>
   <script defer src="clinical-cloud.js?v=cloud-sync-v1"></script>
-  <script defer src="subscription.js?v=billing-v7"></script>
+  <script defer src="subscription.js?v=access-v1"></script>
   <script defer src="auth-cloud.js?v=cloud-v21"></script>
   <script defer src="app-search.js?v=search-v3"></script>
-  <script defer src="medhub-site-config.js?v=site-ui-v3"></script>
+  <script defer src="medhub-site-config.js?v=access-v1"></script>
   <script defer src="novo-atendimento.js?v=encounter-v7"></script>
-  <script defer src="app.js?v=encounter-v1"></script>
+  <script defer src="app.js?v=access-v1"></script>
   <script defer src="auth.js?v=compliance-v1"></script>
   <script defer src="pwa-install.js?v=pwa-v5"></script>
 </head>
@@ -154,7 +154,7 @@
       <nav class="sidebar-nav" id="app-sidebar-nav" aria-label="Menu principal">
         <button type="button" class="sidebar-link active" data-section="inicio">Início</button>
         <p class="sidebar-group">Atendimento</p>
-        <button type="button" class="sidebar-link sidebar-link--primary" data-section="novo-atendimento">➕ Novo atendimento</button>
+        <button type="button" class="sidebar-link sidebar-link--primary" data-section="novo-atendimento">➕ Novo paciente</button>
         <!-- Registros do paciente: oculto por enquanto (uso futuro em ambiente hospitalar) -->
         <div id="sidebar-registros-paciente" hidden>
           <p class="sidebar-group">Registros do paciente</p>
@@ -193,24 +193,10 @@
             <p id="home-courtesy-countdown" class="home-courtesy-countdown" hidden role="status"></p>
             <p class="home-tagline">Apoio clínico no plantão — protocolos, prescrição e calculadoras para <strong>clínica médica do adulto</strong>.</p>
 
-            <div class="home-hero-treatments" aria-label="Tratamentos rápidos">
-              <p class="home-hero-treatments-label">Atalhos principais</p>
-              <div class="home-treatment-grid">
-                <button type="button" class="home-treatment-card home-treatment-card--hospital" data-section="tratamento-hospitalar">
-                  <span class="home-treatment-card-icon" aria-hidden="true">🏥</span>
-                  <span class="home-treatment-card-body">
-                    <span class="home-treatment-card-name">Tratamento hospitalar</span>
-                    <span class="home-treatment-card-desc">IM/EV · busque a doença e escolha as medicações</span>
-                  </span>
-                </button>
-                <button type="button" class="home-treatment-card home-treatment-card--home" data-section="receituario">
-                  <span class="home-treatment-card-icon" aria-hidden="true">🏠</span>
-                  <span class="home-treatment-card-body">
-                    <span class="home-treatment-card-name">Tratamento para casa</span>
-                    <span class="home-treatment-card-desc">VO · receita ambulatorial com escolha de medicações</span>
-                  </span>
-                </button>
-              </div>
+            <div class="home-hero-cta">
+              <button type="button" class="home-novo-paciente-btn" data-section="novo-atendimento" id="home-novo-paciente">
+                Novo paciente
+              </button>
             </div>
           </header>
 
