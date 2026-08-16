@@ -1,6 +1,279 @@
 /* Receituário — catálogo de condições e modelos de receita */
 
+function rxAltaOption (id, tier, label, meds, orientacoes, classes) {
+  return {
+    id,
+    tier,
+    label,
+    classes: classes || [],
+    items: [],
+    meds,
+    orientacoes: orientacoes || ''
+  };
+}
+
+function rxAltaMed (id, text, classes, exclusiveGroup) {
+  return {
+    id,
+    text,
+    classes: classes || [],
+    ...(exclusiveGroup ? { exclusiveGroup } : {})
+  };
+}
+
+function rxAltaMicose (id, name, aliases) {
+  return {
+    id,
+    name,
+    icon: '🦶',
+    aliases,
+    groups: [{
+      id: `${id}-topico`,
+      label: 'Tratamento tópico — pele glabra/interdigital',
+      options: [
+        rxAltaOption(
+          `${id}-azoles`,
+          '1ª linha',
+          'Antifúngico tópico — escolha um',
+          [
+            rxAltaMed(`${id}-clotrimazol`, 'Clotrimazol creme 1% — aplicar camada fina na área afetada e 2 cm ao redor, 2 vezes ao dia, por 2 a 4 semanas', ['antifungal'], `${id}-topico`),
+            rxAltaMed(`${id}-miconazol`, 'Miconazol creme 2% — aplicar camada fina na área afetada, 2 vezes ao dia, por 2 a 4 semanas', ['antifungal'], `${id}-topico`),
+            rxAltaMed(`${id}-terbinafina`, 'Terbinafina creme 1% — aplicar camada fina na área afetada, 1 vez ao dia, por 1 a 2 semanas', ['antifungal'], `${id}-topico`)
+          ],
+          'Manter a pele limpa e seca, trocar meias/roupas diariamente e não compartilhar toalhas. Confirmar diagnóstico se não houver melhora em 2 semanas.',
+          ['antifungal']
+        )
+      ]
+    }, {
+      id: `${id}-extensa`,
+      label: 'Situações que exigem avaliação ambulatorial',
+      options: [
+        rxAltaOption(
+          `${id}-encaminhar`,
+          'Orientação',
+          'Couro cabeludo, unha, doença extensa ou falha do tópico',
+          [
+            rxAltaMed(`${id}-consulta`, 'Avaliação dermatológica/ambulatorial — confirmar micose antes de antifúngico sistêmico e solicitar função hepática quando indicado', [])
+          ],
+          'Não iniciar antifúngico sistêmico automaticamente na alta. Tínea do couro cabeludo e onicomicose exigem diagnóstico e esquema próprios.'
+        )
+      ]
+    }]
+  };
+}
+
+const RX_HOME_RESP_DERM = [
+  {
+    id: 'sinusite-aguda',
+    name: 'Sinusite aguda (alta ambulatorial)',
+    icon: '🤧',
+    aliases: ['sinusite', 'rinossinusite', 'dor facial', 'secrecao nasal', 'congestao nasal'],
+    groups: [{
+      id: 'sin-suporte',
+      label: 'Viral/pós-viral — suporte, sem antibiótico',
+      options: [
+        rxAltaOption('sin-lavagem', '1ª linha', 'Lavagem nasal e analgesia', [
+          rxAltaMed('sin-sf', 'Solução fisiológica 0,9% — irrigar cada narina 3 a 6 vezes ao dia, conforme necessidade', []),
+          rxAltaMed('sin-paracetamol', 'Paracetamol 500 a 750 mg — 1 comprimido VO a cada 6 a 8 horas, se dor ou febre (máximo 3 g/dia), por até 5 dias', ['analgesic_non_opioid'], 'sin-analgesia'),
+          rxAltaMed('sin-dipirona', 'Dipirona 500 mg a 1 g — VO a cada 6 a 8 horas, se dor ou febre (máximo 4 g/dia), por até 5 dias', ['analgesic_non_opioid'], 'sin-analgesia')
+        ], 'Quadro com menos de 10 dias e sem piora bifásica geralmente é viral. Retornar se edema orbitário, alteração visual, rigidez de nuca, prostração ou piora importante.')
+      ]
+    }, {
+      id: 'sin-bacteriana',
+      label: 'Bacteriana — somente se critério clínico',
+      options: [
+        rxAltaOption('sin-atb', 'Se indicado', 'Antibiótico oral — escolha um', [
+          rxAltaMed('sin-amoxclav', 'Amoxicilina + clavulanato 875/125 mg — 1 comprimido VO a cada 12 horas, por 5 a 7 dias', ['antibiotic', 'penicillin'], 'sin-atb'),
+          rxAltaMed('sin-doxi', 'Doxiciclina 100 mg — 1 comprimido VO a cada 12 horas, por 5 a 7 dias', ['antibiotic'], 'sin-atb')
+        ], 'Reservar para sintomas por mais de 10 dias sem melhora, piora após melhora inicial ou início grave. Doxiciclina é contraindicada na gestação e em crianças menores de 8 anos.', ['antibiotic'])
+      ]
+    }]
+  },
+  {
+    id: 'otite-media',
+    name: 'Otite média aguda (alta ambulatorial)',
+    icon: '👂',
+    aliases: ['otite media', 'oma', 'dor de ouvido', 'otalgia'],
+    groups: [{
+      id: 'oma-analgesia',
+      label: 'Analgesia e observação',
+      options: [
+        rxAltaOption('oma-analgesico', '1ª linha', 'Analgésico — escolha um', [
+          rxAltaMed('oma-paracetamol', 'Paracetamol 500 a 750 mg — 1 comprimido VO a cada 6 a 8 horas, se dor ou febre (máximo 3 g/dia), por até 3 dias', ['analgesic_non_opioid'], 'oma-analgesia'),
+          rxAltaMed('oma-dipirona', 'Dipirona 500 mg a 1 g — VO a cada 6 a 8 horas, se dor ou febre (máximo 4 g/dia), por até 3 dias', ['analgesic_non_opioid'], 'oma-analgesia'),
+          rxAltaMed('oma-ibuprofeno', 'Ibuprofeno 400 mg — 1 comprimido VO a cada 8 horas, após alimentação, se dor, por até 3 dias', ['nsaid'], 'oma-analgesia')
+        ], 'Observação por 48–72 horas pode ser usada em OMA leve e com seguimento garantido. Reavaliar antes se piora.')
+      ]
+    }, {
+      id: 'oma-atb',
+      label: 'Antibiótico — quando indicado',
+      options: [
+        rxAltaOption('oma-atb-escolha', '1ª linha', 'Esquema oral — escolha um', [
+          rxAltaMed('oma-amox-adulto', 'Amoxicilina 500 mg — 1 cápsula VO a cada 8 horas, por 5 a 7 dias (adulto)', ['antibiotic', 'penicillin'], 'oma-atb'),
+          rxAltaMed('oma-amox-ped', 'Amoxicilina suspensão — 80 a 90 mg/kg/dia VO, divididos a cada 12 horas, por 7 a 10 dias (criança; calcular o volume pela apresentação)', ['antibiotic', 'penicillin'], 'oma-atb'),
+          rxAltaMed('oma-amoxclav', 'Amoxicilina + clavulanato 875/125 mg — 1 comprimido VO a cada 12 horas, por 7 dias (adulto com falha/uso recente de amoxicilina)', ['antibiotic', 'penicillin'], 'oma-atb')
+        ], 'Indicar conforme idade, bilateralidade, otorreia, febre ≥ 39 °C, dor intensa ou falha da observação. Mastoidite, paralisia facial ou toxicidade exigem avaliação urgente.', ['antibiotic'])
+      ]
+    }]
+  },
+  {
+    id: 'otite-externa',
+    name: 'Otite externa não complicada (alta ambulatorial)',
+    icon: '👂',
+    aliases: ['otite externa', 'ouvido de nadador', 'dor no canal auditivo'],
+    groups: [{
+      id: 'oe-topico',
+      label: 'Tratamento tópico — escolha um',
+      options: [
+        rxAltaOption('oe-gotas', '1ª linha', 'Gotas otológicas', [
+          rxAltaMed('oe-ciprodex', 'Ciprofloxacino 0,3% + dexametasona gotas otológicas — aplicar 4 gotas no ouvido afetado a cada 12 horas, por 7 dias', ['antibiotic', 'corticosteroid'], 'oe-gotas'),
+          rxAltaMed('oe-cipro', 'Ciprofloxacino 0,3% gotas otológicas — aplicar 4 gotas no ouvido afetado a cada 8 horas, por 7 a 10 dias', ['antibiotic'], 'oe-gotas')
+        ], 'Manter o ouvido seco e não introduzir hastes. Preferir quinolona tópica se perfuração timpânica não puder ser excluída. Diabetes, dor desproporcional ou extensão periauricular exigem reavaliação.', ['antibiotic'])
+      ]
+    }]
+  },
+  {
+    id: 'bronquite-aguda',
+    name: 'Bronquite aguda (alta ambulatorial)',
+    icon: '🫁',
+    aliases: ['bronquite', 'bronquite aguda', 'tosse viral'],
+    groups: [{
+      id: 'br-suporte',
+      label: 'Viral — suporte, sem antibiótico',
+      options: [
+        rxAltaOption('br-sintomatico', '1ª linha', 'Sintomáticos', [
+          rxAltaMed('br-paracetamol', 'Paracetamol 500 a 750 mg — 1 comprimido VO a cada 6 a 8 horas, se dor ou febre (máximo 3 g/dia), por até 5 dias', ['analgesic_non_opioid'], 'br-analgesia'),
+          rxAltaMed('br-dipirona', 'Dipirona 500 mg a 1 g — VO a cada 6 a 8 horas, se dor ou febre (máximo 4 g/dia), por até 5 dias', ['analgesic_non_opioid'], 'br-analgesia')
+        ], 'Antibiótico não é indicado de rotina. Hidratação e retorno se dispneia, hemoptise, febre persistente ou saturação baixa.')
+      ]
+    }, {
+      id: 'br-broncoespasmo',
+      label: 'Sibilância/broncoespasmo associado',
+      options: [
+        rxAltaOption('br-salbutamol', 'Se indicado', 'Broncodilatador de resgate', [
+          rxAltaMed('br-salbutamol-spray', 'Salbutamol spray 100 mcg/dose — 2 jatos com espaçador a cada 4 a 6 horas, se chiado ou falta de ar, por até 7 dias (máximo 8 jatos/dia)', ['bronchodilator'])
+        ], 'Não prescrever broncodilatador sem sibilância. Se precisar repetir antes de 4 horas, retornar ao serviço.', ['bronchodilator'])
+      ]
+    }, {
+      id: 'br-coqueluche',
+      label: 'Suspeita de coqueluche',
+      options: [
+        rxAltaOption('br-azitro', 'Se indicado', 'Macrolídeo', [
+          rxAltaMed('br-azitro-adulto', 'Azitromicina 500 mg — 1 comprimido VO 1 vez ao dia, por 5 dias (adulto)', ['antibiotic', 'macrolide'])
+        ], 'Usar somente se quadro compatível com coqueluche e aplicar medidas de isolamento/notificação conforme protocolo local.', ['antibiotic', 'macrolide'])
+      ]
+    }]
+  },
+  {
+    id: 'gripe-influenza',
+    name: 'Síndrome gripal / influenza (alta ambulatorial)',
+    icon: '🤒',
+    aliases: ['gripe', 'influenza', 'sindrome gripal', 'resfriado'],
+    groups: [{
+      id: 'gripe-suporte',
+      label: 'Síndrome gripal leve — suporte',
+      options: [
+        rxAltaOption('gripe-sintomatico', '1ª linha', 'Analgésico/antitérmico — escolha um', [
+          rxAltaMed('gripe-paracetamol', 'Paracetamol 500 a 750 mg — 1 comprimido VO a cada 6 a 8 horas, se dor ou febre (máximo 3 g/dia), por até 5 dias', ['analgesic_non_opioid'], 'gripe-analgesia'),
+          rxAltaMed('gripe-dipirona', 'Dipirona 500 mg a 1 g — VO a cada 6 a 8 horas, se dor ou febre (máximo 4 g/dia), por até 5 dias', ['analgesic_non_opioid'], 'gripe-analgesia')
+        ], 'Hidratação, repouso e máscara enquanto sintomático. Retornar se dispneia, dor torácica, confusão, desidratação ou piora após melhora.')
+      ]
+    }, {
+      id: 'gripe-antiviral',
+      label: 'Influenza — antiviral quando indicado',
+      options: [
+        rxAltaOption('gripe-oseltamivir', 'Se indicado', 'Oseltamivir', [
+          rxAltaMed('gripe-oseltamivir-75', 'Oseltamivir 75 mg — 1 cápsula VO a cada 12 horas, por 5 dias (adulto; ajustar na insuficiência renal)', ['antiviral'])
+        ], 'Priorizar início nas primeiras 48 horas. Em casos graves, progressivos, gestantes ou grupos de risco, não deixar de tratar apenas pelo tempo de sintomas.', ['antiviral'])
+      ]
+    }]
+  },
+  {
+    id: 'rinite-alergica',
+    name: 'Rinite alérgica (alta ambulatorial)',
+    icon: '🌼',
+    aliases: ['rinite', 'rinite alergica', 'espirros', 'coriza alergica'],
+    groups: [{
+      id: 'rinite-intranasal',
+      label: 'Controle nasal',
+      options: [
+        rxAltaOption('rinite-corticoide', '1ª linha', 'Corticoide intranasal — escolha um', [
+          rxAltaMed('rinite-budesonida', 'Budesonida spray nasal 32 mcg/dose — aplicar 1 a 2 jatos em cada narina, 1 vez ao dia, por 14 a 30 dias', ['corticosteroid'], 'rinite-corticoide'),
+          rxAltaMed('rinite-fluticasona', 'Fluticasona spray nasal 50 mcg/dose — aplicar 1 a 2 jatos em cada narina, 1 vez ao dia, por 14 a 30 dias', ['corticosteroid'], 'rinite-corticoide')
+        ], 'Direcionar o jato para a parede lateral da narina, não para o septo. O efeito máximo pode levar alguns dias.', ['corticosteroid'])
+      ]
+    }, {
+      id: 'rinite-anti-h1',
+      label: 'Prurido, espirros e coriza',
+      options: [
+        rxAltaOption('rinite-antihistaminico', 'Adjuvante', 'Anti-histamínico — escolha um', [
+          rxAltaMed('rinite-loratadina', 'Loratadina 10 mg — 1 comprimido VO 1 vez ao dia, por 10 a 14 dias', ['antihistamine'], 'rinite-antihistaminico'),
+          rxAltaMed('rinite-cetirizina', 'Cetirizina 10 mg — 1 comprimido VO à noite, por 10 a 14 dias', ['antihistamine'], 'rinite-antihistaminico')
+        ], 'Associar lavagem nasal com solução salina. Evitar descongestionante tópico por mais de 3 dias.', ['antihistamine'])
+      ]
+    }]
+  },
+  {
+    id: 'impetigo',
+    name: 'Impetigo (alta ambulatorial)',
+    icon: '🩹',
+    aliases: ['impetigo', 'ferida com crosta melicerica', 'infeccao superficial da pele'],
+    groups: [{
+      id: 'imp-localizado',
+      label: 'Localizado — tratamento tópico',
+      options: [
+        rxAltaOption('imp-mupirocina', '1ª linha', 'Mupirocina tópica', [
+          rxAltaMed('imp-mupirocina-2', 'Mupirocina pomada 2% — aplicar camada fina nas lesões 3 vezes ao dia, por 5 dias', ['antibiotic'])
+        ], 'Higienizar suavemente e remover crostas amolecidas antes da aplicação. Não compartilhar toalhas.', ['antibiotic'])
+      ]
+    }, {
+      id: 'imp-extenso',
+      label: 'Extenso, múltiplas lesões ou surto',
+      options: [
+        rxAltaOption('imp-atb-oral', 'Se indicado', 'Antibiótico oral — escolha um', [
+          rxAltaMed('imp-cefalexina', 'Cefalexina 500 mg — 1 cápsula VO a cada 6 horas, por 7 dias (adulto)', ['antibiotic'], 'imp-atb'),
+          rxAltaMed('imp-clindamicina', 'Clindamicina 300 mg — 1 cápsula VO a cada 6 horas, por 7 dias (alergia imediata a beta-lactâmico ou risco de MRSA conforme epidemiologia)', ['antibiotic'], 'imp-atb')
+        ], 'Reavaliar se febre, progressão, bolhas extensas ou ausência de melhora em 48–72 horas.', ['antibiotic'])
+      ]
+    }]
+  },
+  rxAltaMicose('micoses-superficiais', 'Micoses superficiais (alta ambulatorial)', ['micose', 'micoses superficiais', 'dermatofitose']),
+  rxAltaMicose('tinea', 'Tínea da pele (alta ambulatorial)', ['tinea', 'tinha', 'tinea corporis', 'dermatofitose']),
+  rxAltaMicose('frieira', 'Frieira / tinea pedis (alta ambulatorial)', ['frieira', 'pe de atleta', 'tinea pedis', 'micose interdigital']),
+  {
+    id: 'escabiose',
+    name: 'Escabiose (alta ambulatorial)',
+    icon: '🧴',
+    aliases: ['escabiose', 'sarna', 'coceira noturna'],
+    groups: [{
+      id: 'escabiose-topico',
+      label: 'Tratamento do paciente e contatos',
+      options: [
+        rxAltaOption('escabiose-permetrina', '1ª linha', 'Permetrina 5%', [
+          rxAltaMed('escabiose-permetrina-5', 'Permetrina loção 5% — aplicar do pescoço para baixo à noite, incluindo dobras e espaços entre os dedos; lavar após 8 a 14 horas; repetir em 7 dias', ['antiparasitic'])
+        ], 'Tratar simultaneamente contatos domiciliares e sexuais. Lavar roupas de cama/toalhas em água quente ou isolar em saco fechado por pelo menos 72 horas.', ['antiparasitic'])
+      ]
+    }]
+  },
+  {
+    id: 'pediculose',
+    name: 'Pediculose do couro cabeludo (alta ambulatorial)',
+    icon: '🪮',
+    aliases: ['pediculose', 'piolho', 'lendea'],
+    groups: [{
+      id: 'pediculose-topico',
+      label: 'Tratamento tópico',
+      options: [
+        rxAltaOption('pediculose-permetrina', '1ª linha', 'Permetrina 1%', [
+          rxAltaMed('pediculose-permetrina-1', 'Permetrina loção 1% — aplicar no couro cabeludo e cabelos úmidos após lavagem sem condicionador; deixar 10 minutos e enxaguar; repetir no 9º dia', ['antiparasitic'])
+        ], 'Remover lêndeas com pente fino. Examinar e tratar contatos infestados; não compartilhar pentes, bonés ou toalhas.', ['antiparasitic'])
+      ]
+    }]
+  }
+];
+
 const RX_CATALOG_MANUAL = [
+  ...RX_HOME_RESP_DERM,
   {
     id: 'cefaleias',
     name: 'Cefaleia',

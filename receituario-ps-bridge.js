@@ -9,7 +9,19 @@ const RX_MANUAL_PRIORITY_IDS = new Set([
   'violencia-sexual-pep',
   'gonorreia-clamidia',
   'asma-broncoespasmo',
-  'dpoc-exacerbada'
+  'dpoc-exacerbada',
+  'sinusite-aguda',
+  'otite-media',
+  'otite-externa',
+  'bronquite-aguda',
+  'gripe-influenza',
+  'rinite-alergica',
+  'impetigo',
+  'micoses-superficiais',
+  'tinea',
+  'frieira',
+  'escabiose',
+  'pediculose'
 ]);
 
 let RX_CATALOG_CACHE = null;

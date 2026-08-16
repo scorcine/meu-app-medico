@@ -58,6 +58,11 @@ function evalIn (code) {
 console.log('=== MedHub — receita de alta ambulatorial ===\n');
 
 const HOME_IDS = ['asma-broncoespasmo', 'dpoc-exacerbada'];
+const RESP_DERM_IDS = [
+  'sinusite-aguda', 'otite-media', 'otite-externa', 'bronquite-aguda',
+  'gripe-influenza', 'rinite-alergica', 'impetigo', 'micoses-superficiais',
+  'tinea', 'frieira', 'escabiose', 'pediculose'
+];
 
 /* 1. A receita de casa vem do modelo curado, não do protocolo do PS */
 const origem = evalIn(`(() => {
@@ -150,7 +155,46 @@ if (dpoc.grupos.length === 3 && /escarro purulento/i.test(dpoc.atb)) {
   fail('DPOC de alta incompleta: ' + JSON.stringify(dpoc));
 }
 
-/* 6. Ao escolher prescrever para casa, a conduta abre a receita curada */
+/* 6. Lote respiratório/dermatológico vem de modelos completos e sem via hospitalar */
+const lote = evalIn(`(() => {
+  const ids = ${JSON.stringify(RESP_DERM_IDS)};
+  return ids.map(id => {
+    const cond = rxGetCatalogEntry(id);
+    const text = (cond?.groups || []).flatMap(g => (g.options || []).flatMap(o => [
+      o.label, o.orientacoes, ...(o.meds || []).map(m => m.text)
+    ])).join(' ');
+    return {
+      id,
+      source: cond?.source,
+      groups: cond?.groups?.length || 0,
+      homeRx: clinicalPathwayGet(id).homeRx,
+      hospitalRoute: /\\b(EV|IV|IM)\\b|nebuliza/i.test(text),
+      text
+    };
+  });
+})()`);
+
+const loteOk = lote.every(c =>
+  c.source === 'complete' && c.groups > 0 && c.homeRx === 'curated' && !c.hospitalRoute
+);
+if (loteOk) {
+  pass(`${lote.length} receitas curadas de vias aéreas e pele, sem dose/via hospitalar`);
+} else {
+  fail('lote respiratório/dermatológico incompleto: ' + JSON.stringify(lote));
+}
+
+const textoLote = id => lote.find(c => c.id === id)?.text || '';
+if (/mais de 10 dias/i.test(textoLote('sinusite-aguda')) &&
+    /Antibiótico não é indicado de rotina/i.test(textoLote('bronquite-aguda')) &&
+    /primeiras 48 horas/i.test(textoLote('gripe-influenza')) &&
+    /perfuração timpânica/i.test(textoLote('otite-externa')) &&
+    /Tratar simultaneamente contatos/i.test(textoLote('escabiose'))) {
+  pass('lote novo preserva critérios de ATB, antiviral, ouvido e controle de contatos');
+} else {
+  fail('alertas clínicos do lote novo incompletos');
+}
+
+/* 7. Ao escolher prescrever para casa, a conduta abre a receita curada */
 const navegacao = evalIn(`(() => {
   const abertas = [];
   window.showSection = id => abertas.push('section:' + id);

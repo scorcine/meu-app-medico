@@ -54,9 +54,9 @@ const CLINICAL_PATHWAY_BY_ID = {
     scores: [],
     reassessment: null,
     outcomes: ['alta', 'observacao'],
-    homeRx: 'blocked',
+    homeRx: 'curated',
     requiresImprovementForDischarge: false,
-    notes: 'Sintomáticos; evitar ATB de rotina. Receita hospitalar não deve ir para casa.'
+    notes: 'Receita de alta prioriza sintomáticos; ATB apenas se suspeita de coqueluche.'
   },
   'pneumonia-comunitaria': {
     scores: ['curb65'],
@@ -102,19 +102,19 @@ const CLINICAL_PATHWAY_BY_ID = {
     scores: [],
     reassessment: null,
     outcomes: ['alta', 'observacao', 'internacao'],
-    homeRx: 'blocked'
+    homeRx: 'curated'
   },
   'rinite-alergica': {
     scores: [],
     reassessment: null,
     outcomes: ['alta'],
-    homeRx: 'blocked'
+    homeRx: 'curated'
   },
   'sinusite-aguda': {
     scores: [],
     reassessment: null,
     outcomes: ['alta', 'observacao'],
-    homeRx: 'blocked'
+    homeRx: 'curated'
   },
 
   /* Cardiovascular / emergência */
@@ -327,7 +327,7 @@ const CLINICAL_PATHWAY_BY_ID = {
     scores: [],
     reassessment: null,
     outcomes: ['alta'],
-    homeRx: 'blocked'
+    homeRx: 'curated'
   },
   'herpes-zoster': {
     scores: [],
@@ -339,31 +339,31 @@ const CLINICAL_PATHWAY_BY_ID = {
     scores: [],
     reassessment: null,
     outcomes: ['alta'],
-    homeRx: 'blocked'
+    homeRx: 'curated'
   },
   'pediculose': {
     scores: [],
     reassessment: null,
     outcomes: ['alta'],
-    homeRx: 'blocked'
+    homeRx: 'curated'
   },
   'micoses-superficiais': {
     scores: [],
     reassessment: null,
     outcomes: ['alta'],
-    homeRx: 'blocked'
+    homeRx: 'curated'
   },
   'tinea': {
     scores: [],
     reassessment: null,
     outcomes: ['alta'],
-    homeRx: 'blocked'
+    homeRx: 'curated'
   },
   'frieira': {
     scores: [],
     reassessment: null,
     outcomes: ['alta'],
-    homeRx: 'blocked'
+    homeRx: 'curated'
   },
 
   /* Arboviroses / infecciosas sistêmicas */
@@ -549,13 +549,13 @@ const CLINICAL_PATHWAY_BY_ID = {
     scores: [],
     reassessment: null,
     outcomes: ['alta'],
-    homeRx: 'blocked'
+    homeRx: 'curated'
   },
   'otite-media': {
     scores: [],
     reassessment: null,
     outcomes: ['alta', 'observacao'],
-    homeRx: 'blocked'
+    homeRx: 'curated'
   },
   'epistaxe': {
     scores: [],

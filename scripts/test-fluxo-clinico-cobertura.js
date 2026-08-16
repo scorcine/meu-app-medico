@@ -93,7 +93,13 @@ if (!hospitalLeak.length) {
 }
 
 const curated = evalIn(`(() => {
-  return ['asma-broncoespasmo', 'dpoc-exacerbada', 'cefaleias', 'amigdalite-bacteriana', 'cistite-itu-baixa', 'lombalgia-ciatalgia', 'gonorreia-clamidia', 'violencia-sexual-pep']
+  return [
+    'asma-broncoespasmo', 'dpoc-exacerbada', 'cefaleias', 'amigdalite-bacteriana',
+    'cistite-itu-baixa', 'lombalgia-ciatalgia', 'gonorreia-clamidia', 'violencia-sexual-pep',
+    'sinusite-aguda', 'otite-media', 'otite-externa', 'bronquite-aguda',
+    'gripe-influenza', 'rinite-alergica', 'impetigo', 'micoses-superficiais',
+    'tinea', 'frieira', 'escabiose', 'pediculose'
+  ]
     .map(id => ({ id, mode: clinicalPathwayGet(id).homeRx, source: rxGetCatalogEntry(id)?.source }));
 })()`);
 
