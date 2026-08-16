@@ -486,6 +486,73 @@ function psApplyDefaultSubtype (wrap, conditionId, config) {
   if (el && !el.value) el.value = subtype;
 }
 
+/* Fechamento da conduta: prescrever, pedir exames e encerrar sem sair do fluxo */
+function psRenderClosureHtml () {
+  return `
+    <section class="ps-rx-closure" data-ps-closure>
+      <div class="ps-rx-closure-head">
+        <strong>Fechar esta conduta</strong>
+        <p class="muted" data-ps-closure-count></p>
+      </div>
+      <div class="ps-rx-closure-actions">
+        <button type="button" class="ps-rx-closure-btn" data-ps-closure-action="receituario">
+          <strong>Prescrever para casa</strong><span>Abre o receituário com a conduta</span>
+        </button>
+        <button type="button" class="ps-rx-closure-btn" data-ps-closure-action="exames">
+          <strong>Solicitar exames</strong><span>Abre os cenários de exames</span>
+        </button>
+        <button type="button" class="ps-rx-closure-btn" data-ps-closure-action="resumo">
+          <strong>Resumo do atendimento</strong><span>Gera texto e PDF do que foi escolhido</span>
+        </button>
+        <button type="button" class="ps-rx-closure-btn ps-rx-closure-btn--end" data-ps-closure-action="encerrar">
+          <strong>Finalizar protocolo e atendimento</strong><span>Salva em Atendimentos realizados</span>
+        </button>
+      </div>
+      <div class="ps-rx-closure-summary" data-ps-closure-summary hidden></div>
+      <p class="ps-rx-closure-status" data-ps-closure-status hidden></p>
+    </section>`;
+}
+
+function psClosureContextText () {
+  let draft = null;
+  try {
+    draft = JSON.parse(sessionStorage.getItem('medhub-new-encounter-draft') || 'null');
+  } catch { /* atendimento sem rascunho */ }
+  return draft;
+}
+
+function psBuildClosureSummary (conditionName, selectedLabels) {
+  const draft = psClosureContextText();
+  const paciente = [
+    draft?.nome,
+    draft?.idade ? (/\banos?\b/i.test(String(draft.idade)) ? draft.idade : `${draft.idade} anos`) : '',
+    draft?.sexo
+  ].filter(Boolean).join(' · ') || 'Paciente não informado';
+
+  const itens = selectedLabels.length
+    ? selectedLabels.map(label => `<li>${label}</li>`).join('')
+    : '<li>Nenhuma medicação marcada.</li>';
+
+  return `
+    <h2>${conditionName} — resumo do atendimento</h2>
+    <p><strong>Paciente:</strong> ${paciente}</p>
+    <p><strong>Alergias:</strong> ${draft?.alergias || 'Não informadas'}</p>
+    <p><strong>Queixas:</strong> ${(draft?.queixas || []).join(' · ') || 'Não informadas'}</p>
+    <p><strong>Data:</strong> ${new Date().toLocaleString('pt-BR')}</p>
+    <h3>Conduta escolhida</h3>
+    <ul>${itens}</ul>`;
+}
+
+function psOpenSectionWithSearch (sectionId, inputId, query) {
+  if (typeof showSection === 'function') showSection(sectionId);
+  window.setTimeout(() => {
+    const input = document.getElementById(inputId);
+    if (!input || !query) return;
+    input.value = query;
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+  }, 80);
+}
+
 function psRenderInteractiveRx (conditionId, container) {
   const config = typeof psGetInteractiveConfig === 'function'
     ? psGetInteractiveConfig(conditionId)
@@ -517,6 +584,7 @@ function psRenderInteractiveRx (conditionId, container) {
       <button type="button" class="btn-outline ps-rx-clear" id="ps-rx-clear">Limpar seleção</button>
     </div>
     <div class="ps-rx-result" id="ps-rx-result" hidden></div>
+    ${psRenderClosureHtml()}
   `;
 
   container.insertBefore(wrap, container.firstChild);
@@ -524,6 +592,10 @@ function psRenderInteractiveRx (conditionId, container) {
   const ctxEl = wrap.querySelector('#ps-rx-context');
   const medsEl = wrap.querySelector('#ps-rx-meds');
   const resultEl = wrap.querySelector('#ps-rx-result');
+  const closureEl = wrap.querySelector('[data-ps-closure]');
+  const conditionName = (typeof PS_CONDITIONS !== 'undefined'
+    ? (PS_CONDITIONS.find(c => c.id === conditionId)?.name || conditionId)
+    : conditionId);
 
   if (config.contextFields && config.contextFields.length) {
     ctxEl.innerHTML = '<fieldset class="ps-rx-fieldset ps-rx-fieldset--context"><legend>Contexto clínico</legend>' +
@@ -655,7 +727,119 @@ function psRenderInteractiveRx (conditionId, container) {
       <p class="ps-rx-disclaimer" hidden></p>
     `;
     resultEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    showClosure();
   });
+
+  function selectedLabels () {
+    return [...wrap.querySelectorAll('.ps-rx-med-check:checked')].map(input => {
+      const card = input.closest('.ps-rx-med-card');
+      const step = input.closest('.ps-rx-fieldset')?.querySelector('legend')?.textContent?.trim() || '';
+      const label = card?.querySelector('strong')?.textContent?.trim() || input.value;
+      return step ? `${step}: ${label}` : label;
+    });
+  }
+
+  function showClosure () {
+    if (!closureEl) return;
+    const escolhas = selectedLabels();
+    const count = closureEl.querySelector('[data-ps-closure-count]');
+    if (count) {
+      count.textContent = escolhas.length
+        ? `${escolhas.length} medicação(ões) marcada(s) — prescreva, peça exames ou finalize o atendimento.`
+        : 'Nenhuma medicação marcada — você ainda pode prescrever, pedir exames ou finalizar.';
+    }
+  }
+
+  function setClosureStatus (text) {
+    const status = closureEl?.querySelector('[data-ps-closure-status]');
+    if (!status) return;
+    status.hidden = !text;
+    status.textContent = text || '';
+  }
+
+  async function finishEncounter () {
+    const draft = psClosureContextText();
+    const nome = draft?.nome ? ` de ${draft.nome}` : '';
+    if (!window.confirm(
+      `Tem certeza que quer finalizar o protocolo ${conditionName} e o atendimento${nome}?\n\n` +
+      'O atendimento deixará de aparecer como “em andamento”.'
+    )) return;
+
+    const html = psBuildClosureSummary(conditionName, selectedLabels());
+    const holder = document.createElement('div');
+    holder.innerHTML = html;
+    const summaryText = (holder.innerText || holder.textContent || '').replace(/\n{3,}/g, '\n\n').trim();
+
+    let saved = null;
+    if (typeof consultasRegisterEmergencyProtocol === 'function') {
+      saved = await consultasRegisterEmergencyProtocol({
+        sourceId: `ps:${conditionId}:${draft?.startedAt || draft?.nome || Date.now()}`,
+        protocolo: conditionName,
+        pacienteNome: draft?.nome || 'Paciente não informado',
+        queixa: (draft?.queixas || []).join(' · '),
+        summaryHtml: html,
+        summaryText,
+        notas: 'Atendimento finalizado pelas Prescrições de PS.'
+      });
+    }
+
+    if (typeof novoAtendimentoFinishEncounter === 'function') novoAtendimentoFinishEncounter();
+
+    setClosureStatus(saved?.cloudSaved
+      ? 'Protocolo finalizado · atendimento salvo na nuvem ✓'
+      : (saved?.ok
+          ? 'Protocolo finalizado · salvo localmente (sincronização pendente)'
+          : 'Protocolo finalizado ✓'));
+  }
+
+  closureEl?.querySelectorAll('[data-ps-closure-action]').forEach(button => {
+    button.addEventListener('click', () => {
+      const action = button.dataset.psClosureAction;
+
+      if (action === 'receituario') {
+        psOpenSectionWithSearch('receituario', 'rx-search', conditionName);
+        return;
+      }
+      if (action === 'exames') {
+        psOpenSectionWithSearch('exames', 'exames-search', conditionName);
+        return;
+      }
+      if (action === 'resumo') {
+        const html = psBuildClosureSummary(conditionName, selectedLabels());
+        const out = closureEl.querySelector('[data-ps-closure-summary]');
+        out.hidden = false;
+        out.innerHTML = `
+          <div class="ps-rx-closure-summary-body">${html}</div>
+          <div class="ps-rx-closure-summary-actions">
+            <button type="button" data-ps-summary-print>Imprimir / salvar PDF</button>
+            <button type="button" data-ps-summary-copy>Copiar texto</button>
+          </div>`;
+        out.querySelector('[data-ps-summary-print]').addEventListener('click', () => {
+          if (typeof emergPrintSummary === 'function') {
+            emergPrintSummary(`${conditionName} — resumo`, html);
+          } else {
+            window.print?.();
+          }
+        });
+        out.querySelector('[data-ps-summary-copy]').addEventListener('click', event => {
+          const holder = document.createElement('div');
+          holder.innerHTML = html;
+          navigator.clipboard?.writeText((holder.innerText || '').trim());
+          event.currentTarget.textContent = 'Texto copiado ✓';
+        });
+        out.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        return;
+      }
+      if (action === 'encerrar') finishEncounter();
+    });
+  });
+
+  /* As opções são re-renderizadas a cada contexto: escuta na lista, não no input */
+  medsEl.addEventListener('change', event => {
+    if (event.target.classList?.contains('ps-rx-med-check')) showClosure();
+  });
+
+  showClosure();
 
   wrap.querySelector('#ps-rx-clear').addEventListener('click', () => {
     wrap.querySelectorAll('.ps-rx-med-check').forEach(el => { el.checked = false; });

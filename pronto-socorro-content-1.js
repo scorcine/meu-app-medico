@@ -573,8 +573,9 @@ const PS_CONTENT_1 = {
           <ul class="ps-med-options">
             <li><strong>1ª linha:</strong> prednisona 40–60 mg VO dose única diária</li>
             <li><strong>1ª linha:</strong> prednisolona 40 mg VO (solução — 1–2 mg/kg em pediatria, máx. 40 mg)</li>
-            <li><strong>Alternativa:</strong> metilprednisolona 60–125 mg EV se VO impossível, vômitos ou crise grave</li>
-            <li><strong>Alternativa:</strong> hidrocortisona 200 mg EV se choque associado</li>
+            <li><strong>Alternativa:</strong> metilprednisolona 60–125 mg EV (1 amp de 125 mg) 6/6 h se VO impossível, vômitos ou crise grave</li>
+            <li><strong>Alternativa:</strong> hidrocortisona 500 mg EV (1 amp) ou 200 mg EV 6/6 h — escolha quando houver choque associado</li>
+            <li><strong>Alternativa:</strong> dexametasona 10 mg IM ou EV dose única (crise leve, sem via VO)</li>
           </ul>
         </li>
         <li><strong>Crise grave ou refratária ao 3º ciclo</strong> — associar ao broncodilatador em curso:

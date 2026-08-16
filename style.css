@@ -1979,6 +1979,8 @@ body.app-page {
   color: #92400e;
 }
 
+.ps-rx-tier--Refratário,
+.ps-rx-tier--Refratario,
 .ps-rx-tier--Refractário,
 .ps-rx-tier--Refractario {
   background: #fee2e2;
@@ -2026,6 +2028,114 @@ body.app-page {
   padding: 1rem 1.1rem;
   border-radius: 10px;
   border-left: 4px solid var(--text-caption);
+}
+
+.ps-rx-closure {
+  margin-top: 1.1rem;
+  padding: 0.95rem 1.05rem;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--bg-surface-raised);
+}
+
+.ps-rx-closure-head strong {
+  display: block;
+  font-size: 0.98rem;
+}
+
+.ps-rx-closure-head p {
+  margin: 0.2rem 0 0;
+  font-size: 0.82rem;
+}
+
+.ps-rx-closure-actions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  gap: 0.55rem;
+  margin-top: 0.8rem;
+}
+
+.ps-rx-closure-btn {
+  padding: 0.7rem 0.8rem;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--text-primary);
+  background: transparent;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.ps-rx-closure-btn:hover,
+.ps-rx-closure-btn:focus-visible {
+  border-color: var(--state-wait, #f0b429);
+  background: rgba(240, 180, 41, 0.08);
+  outline: none;
+}
+
+.ps-rx-closure-btn strong,
+.ps-rx-closure-btn span {
+  display: block;
+}
+
+.ps-rx-closure-btn span {
+  margin-top: 0.15rem;
+  color: var(--text-muted);
+  font-size: 0.75rem;
+}
+
+.ps-rx-closure-btn--end {
+  border-color: rgba(34, 197, 94, 0.55);
+}
+
+.ps-rx-closure-btn--end:hover,
+.ps-rx-closure-btn--end:focus-visible {
+  border-color: var(--state-done, #16a34a);
+  background: rgba(34, 197, 94, 0.1);
+}
+
+.ps-rx-closure-summary {
+  margin-top: 0.9rem;
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--bg-surface);
+  font-size: 0.88rem;
+}
+
+.ps-rx-closure-summary h2 {
+  margin: 0 0 0.5rem;
+  font-size: 1rem;
+}
+
+.ps-rx-closure-summary h3 {
+  margin: 0.8rem 0 0.35rem;
+  font-size: 0.9rem;
+}
+
+.ps-rx-closure-summary-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.8rem;
+}
+
+.ps-rx-closure-summary-actions button {
+  padding: 0.5rem 0.9rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text-primary);
+  font: inherit;
+  cursor: pointer;
+}
+
+.ps-rx-closure-status {
+  margin: 0.75rem 0 0;
+  color: var(--state-done, #16a34a);
+  font-size: 0.85rem;
+  font-weight: 600;
 }
 
 .ps-rx-result h4 {
