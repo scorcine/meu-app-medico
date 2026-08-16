@@ -203,18 +203,44 @@ evalIn(`(() => {
   cycles.dispatchEvent(new window.Event('change', { bubbles: true }));
 })()`);
 
-/* 4. Prescrever e pedir exames levam às telas com a busca preenchida */
-const navegacao = evalIn(`(() => {
+/* 4. Após o último ciclo, reavalia; somente melhora leva à prescrição para casa */
+const reavaliacao = evalIn(`(() => {
   const host = document.getElementById('host');
-  host.querySelector('[data-ps-closure-action="receituario"]').click();
+  const home = host.querySelector('[data-ps-closure-action="receituario"]');
+  const bloqueadoAntes = home.disabled;
+  host.querySelector('#ps-rx-analyze').click();
+  const panel = host.querySelector('[data-ps-reassessment]');
+  const texto = panel.textContent.replace(/\\s+/g, ' ').trim();
+  panel.querySelector('[data-ps-cycle-prescription]').click();
+  panel.querySelector('[data-ps-improved="nao"]').click();
+  const semMelhora = panel.querySelector('[data-ps-reassessment-outcome]').textContent;
+  const aindaBloqueado = home.disabled;
+  panel.querySelector('[data-ps-improved="sim"]').click();
   host.querySelector('[data-ps-closure-action="exames"]').click();
-  return { secoes: window.__sections.slice() };
+  return {
+    bloqueadoAntes,
+    aindaBloqueado,
+    liberadoDepois: !home.disabled,
+    texto,
+    semMelhora,
+    secoes: window.__sections.slice(),
+    prescricaoCiclos: window.__printed[0] || null
+  };
 })()`);
 
-if (navegacao.secoes.includes('receituario') && navegacao.secoes.includes('exames')) {
-  pass('fechamento abre receituário e exames');
+if (reavaliacao.bloqueadoAntes && reavaliacao.aindaBloqueado &&
+    /Reavaliar após o 3º ciclo/i.test(reavaliacao.texto) &&
+    /Sem melhora/i.test(reavaliacao.semMelhora)) {
+  pass('prescrição para casa fica bloqueada até a reavaliação após o 3º ciclo');
 } else {
-  fail('navegação do fechamento falhou: ' + JSON.stringify(navegacao));
+  fail('reavaliação dos ciclos falhou: ' + JSON.stringify(reavaliacao));
+}
+
+if (reavaliacao.liberadoDepois && reavaliacao.secoes.includes('receituario') &&
+    reavaliacao.secoes.includes('exames') && /prescrição de administração imediata/i.test(reavaliacao.prescricaoCiclos?.html || '')) {
+  pass('melhora confirmada abre prescrição para casa e gera prescrição dos ciclos');
+} else {
+  fail('saída após melhora falhou: ' + JSON.stringify(reavaliacao));
 }
 
 /* 5. Resumo imprimível com paciente e conduta escolhida */
@@ -229,14 +255,15 @@ const resumo = evalIn(`(() => {
   out.querySelector('[data-ps-summary-print]').click();
   return {
     texto: out.textContent.replace(/\\s+/g, ' ').trim(),
-    pdf: window.__printed[0] || null
+    pdf: window.__printed[window.__printed.length - 1] || null
   };
 })()`);
 
 if (/Paciente Asma/.test(resumo.texto) && /salbutamol/i.test(resumo.texto) &&
     /4 puffs.*3 ciclo/i.test(resumo.texto) &&
+    /apresentou melhora do quadro: sim/i.test(resumo.texto) &&
     resumo.pdf && /Paciente Asma/.test(resumo.pdf.html)) {
-  pass('resumo registra puffs e ciclos escolhidos e gera PDF');
+  pass('resumo registra puffs, ciclos, melhora e gera PDF');
 } else {
   fail('resumo incompleto: ' + JSON.stringify(resumo));
 }

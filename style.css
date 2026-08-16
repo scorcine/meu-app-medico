@@ -2135,6 +2135,77 @@ body.app-page {
   background: var(--bg-surface-raised);
 }
 
+.ps-rx-reassessment {
+  margin-top: 1rem;
+  padding: 1rem;
+  border: 1px solid rgba(240, 180, 41, 0.55);
+  border-radius: 12px;
+  background: rgba(240, 180, 41, 0.08);
+}
+
+.ps-rx-reassessment-head > strong,
+.ps-rx-reassessment-question > strong {
+  display: block;
+}
+
+.ps-rx-reassessment-head p,
+.ps-rx-reassessment-question p {
+  margin: 0.3rem 0 0.7rem;
+}
+
+.ps-rx-cycle-prescription {
+  margin-bottom: 1rem;
+}
+
+.ps-rx-reassessment-question {
+  padding-top: 0.85rem;
+  border-top: 1px solid rgba(240, 180, 41, 0.35);
+}
+
+.ps-rx-reassessment-options {
+  display: flex;
+  gap: 0.6rem;
+}
+
+.ps-rx-reassessment-options button {
+  min-width: 6rem;
+  padding: 0.6rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  color: var(--text-primary);
+  background: var(--bg-surface);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.ps-rx-reassessment-options button[data-ps-improved="sim"].is-selected {
+  border-color: var(--state-done, #16a34a);
+  background: rgba(34, 197, 94, 0.14);
+}
+
+.ps-rx-reassessment-options button[data-ps-improved="nao"].is-selected {
+  border-color: var(--state-blocked, #dc2626);
+  background: rgba(220, 38, 38, 0.12);
+}
+
+.ps-rx-reassessment-outcome {
+  margin-bottom: 0 !important;
+  padding: 0.65rem 0.75rem;
+  border-radius: 8px;
+  font-weight: 700;
+}
+
+.ps-rx-reassessment-outcome.is-sim {
+  color: var(--state-done, #16a34a);
+  background: rgba(34, 197, 94, 0.1);
+}
+
+.ps-rx-reassessment-outcome.is-nao {
+  color: var(--state-blocked, #dc2626);
+  background: rgba(220, 38, 38, 0.1);
+}
+
 .ps-rx-closure-head strong {
   display: block;
   font-size: 0.98rem;
@@ -2169,6 +2240,12 @@ body.app-page {
   border-color: var(--state-wait, #f0b429);
   background: rgba(240, 180, 41, 0.08);
   outline: none;
+}
+
+.ps-rx-closure-btn:disabled {
+  border-color: var(--border);
+  opacity: 0.55;
+  cursor: not-allowed;
 }
 
 .ps-rx-closure-btn strong,

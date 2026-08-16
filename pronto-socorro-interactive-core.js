@@ -521,7 +521,7 @@ function psClosureContextText () {
   return draft;
 }
 
-function psBuildClosureSummary (conditionName, selectedLabels) {
+function psBuildClosureSummary (conditionName, selectedLabels, reassessmentText) {
   const draft = psClosureContextText();
   const paciente = [
     draft?.nome,
@@ -540,7 +540,8 @@ function psBuildClosureSummary (conditionName, selectedLabels) {
     <p><strong>Queixas:</strong> ${(draft?.queixas || []).join(' · ') || 'Não informadas'}</p>
     <p><strong>Data:</strong> ${new Date().toLocaleString('pt-BR')}</p>
     <h3>Conduta escolhida</h3>
-    <ul>${itens}</ul>`;
+    <ul>${itens}</ul>
+    ${reassessmentText ? `<h3>Reavaliação</h3><p>${reassessmentText}</p>` : ''}`;
 }
 
 function psOpenSectionWithSearch (sectionId, inputId, query) {
@@ -593,6 +594,7 @@ function psRenderInteractiveRx (conditionId, container) {
   const medsEl = wrap.querySelector('#ps-rx-meds');
   const resultEl = wrap.querySelector('#ps-rx-result');
   const closureEl = wrap.querySelector('[data-ps-closure]');
+  let inhaledReassessment = '';
   const conditionName = (typeof PS_CONDITIONS !== 'undefined'
     ? (PS_CONDITIONS.find(c => c.id === conditionId)?.name || conditionId)
     : conditionId);
@@ -821,7 +823,9 @@ function psRenderInteractiveRx (conditionId, container) {
         ${analysis.messages.map(m => `<li class="ps-rx-msg ps-rx-msg--${m.severity}">${m.text}</li>`).join('')}
       </ul>
       <p class="ps-rx-disclaimer" hidden></p>
+      ${renderInhaledReassessment()}
     `;
+    bindInhaledReassessment();
     resultEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     showClosure();
   });
@@ -838,6 +842,101 @@ function psRenderInteractiveRx (conditionId, container) {
     });
   }
 
+  function selectedGuidedDose () {
+    const input = [...wrap.querySelectorAll('.ps-rx-med-check:checked')].find(candidate => (
+      candidate.closest('.ps-rx-med-entry')?.querySelector('[data-ps-dose-guide]')
+    ));
+    if (!input) return null;
+    const guide = input.closest('.ps-rx-med-entry').querySelector('[data-ps-dose-guide]');
+    const text = guidedDoseText(guide);
+    if (!guide || !text) return null;
+    const label = input.closest('.ps-rx-med-card')?.querySelector('strong')?.textContent?.trim() || 'Salbutamol';
+    return {
+      label,
+      text,
+      cycles: Number(guide.querySelector('[data-ps-dose-cycles]')?.value || 0)
+    };
+  }
+
+  function cycleOrdinal (cycles) {
+    if (cycles === 1) return '1º ciclo';
+    if (cycles === 2) return '2º ciclo';
+    return '3º ciclo';
+  }
+
+  function reassessmentSummaryText () {
+    const dose = selectedGuidedDose();
+    if (!dose || !inhaledReassessment) return '';
+    return inhaledReassessment === 'sim'
+      ? `Após o ${cycleOrdinal(dose.cycles)}, paciente apresentou melhora do quadro: sim. Encaminhado para prescrição para casa.`
+      : `Após o ${cycleOrdinal(dose.cycles)}, paciente apresentou melhora do quadro: não. Alta e prescrição para casa não indicadas nesta etapa.`;
+  }
+
+  function renderInhaledReassessment () {
+    const dose = selectedGuidedDose();
+    if (!dose) return '';
+    return `
+      <section class="ps-rx-reassessment" data-ps-reassessment>
+        <div class="ps-rx-reassessment-head">
+          <strong>Prescrição para administração imediata</strong>
+          <p>${dose.label} — ${dose.text}.</p>
+        </div>
+        <button type="button" class="btn ps-rx-cycle-prescription" data-ps-cycle-prescription>
+          Gerar prescrição dos ${dose.cycles} ciclo(s)
+        </button>
+        <div class="ps-rx-reassessment-question">
+          <strong>Reavaliar após o ${cycleOrdinal(dose.cycles)}</strong>
+          <p>O paciente apresentou melhora do quadro?</p>
+          <div class="ps-rx-reassessment-options">
+            <button type="button" data-ps-improved="sim">Sim</button>
+            <button type="button" data-ps-improved="nao">Não</button>
+          </div>
+          <p class="ps-rx-reassessment-outcome" data-ps-reassessment-outcome hidden></p>
+        </div>
+      </section>`;
+  }
+
+  function bindInhaledReassessment () {
+    const panel = resultEl.querySelector('[data-ps-reassessment]');
+    if (!panel) return;
+
+    panel.querySelector('[data-ps-cycle-prescription]')?.addEventListener('click', () => {
+      const dose = selectedGuidedDose();
+      if (!dose) return;
+      const draft = psClosureContextText();
+      const html = `
+        <h2>${conditionName} — prescrição de administração imediata</h2>
+        <p><strong>Paciente:</strong> ${draft?.nome || 'Paciente não informado'}</p>
+        <p><strong>Prescrição:</strong> ${dose.label} — ${dose.text}.</p>
+        <p><strong>Reavaliação:</strong> obrigatória após o ${cycleOrdinal(dose.cycles)}.</p>`;
+      if (typeof emergPrintSummary === 'function') {
+        emergPrintSummary(`${conditionName} — prescrição dos ciclos`, html);
+      } else {
+        window.print?.();
+      }
+    });
+
+    panel.querySelectorAll('[data-ps-improved]').forEach(button => {
+      button.addEventListener('click', () => {
+        inhaledReassessment = button.dataset.psImproved;
+        panel.querySelectorAll('[data-ps-improved]').forEach(option => {
+          option.classList.toggle('is-selected', option === button);
+        });
+        const outcome = panel.querySelector('[data-ps-reassessment-outcome]');
+        outcome.hidden = false;
+        outcome.className = `ps-rx-reassessment-outcome is-${inhaledReassessment}`;
+        if (inhaledReassessment === 'sim') {
+          outcome.textContent = 'Melhora confirmada ✓ Abrindo prescrição para casa.';
+          showClosure();
+          psOpenSectionWithSearch('receituario', 'rx-search', conditionName);
+        } else {
+          outcome.textContent = 'Sem melhora ✗ Não encaminhar para casa. Mantenha o paciente em atendimento e reavalie escalonamento da conduta.';
+          showClosure();
+        }
+      });
+    });
+  }
+
   function showClosure () {
     if (!closureEl) return;
     const escolhas = selectedLabels();
@@ -846,6 +945,17 @@ function psRenderInteractiveRx (conditionId, container) {
       count.textContent = escolhas.length
         ? `${escolhas.length} medicação(ões) marcada(s) — prescreva, peça exames ou finalize o atendimento.`
         : 'Nenhuma medicação marcada — você ainda pode prescrever, pedir exames ou finalizar.';
+    }
+    const homeButton = closureEl.querySelector('[data-ps-closure-action="receituario"]');
+    const needsReassessment = !!selectedGuidedDose();
+    if (homeButton) {
+      homeButton.disabled = needsReassessment && inhaledReassessment !== 'sim';
+      const detail = homeButton.querySelector('span');
+      if (detail) {
+        detail.textContent = homeButton.disabled
+          ? 'Disponível após confirmar melhora na reavaliação'
+          : 'Abre o receituário com a conduta';
+      }
     }
   }
 
@@ -858,6 +968,11 @@ function psRenderInteractiveRx (conditionId, container) {
 
   async function finishEncounter () {
     if (!requireGuidedDoses()) return;
+    if (selectedGuidedDose() && !inhaledReassessment) {
+      setClosureStatus('Informe se o paciente apresentou melhora após o último ciclo antes de finalizar.');
+      resultEl.querySelector('[data-ps-reassessment]')?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      return;
+    }
     const draft = psClosureContextText();
     const nome = draft?.nome ? ` de ${draft.nome}` : '';
     if (!window.confirm(
@@ -865,7 +980,7 @@ function psRenderInteractiveRx (conditionId, container) {
       'O atendimento deixará de aparecer como “em andamento”.'
     )) return;
 
-    const html = psBuildClosureSummary(conditionName, selectedLabels());
+    const html = psBuildClosureSummary(conditionName, selectedLabels(), reassessmentSummaryText());
     const holder = document.createElement('div');
     holder.innerHTML = html;
     const summaryText = (holder.innerText || holder.textContent || '').replace(/\n{3,}/g, '\n\n').trim();
@@ -898,6 +1013,11 @@ function psRenderInteractiveRx (conditionId, container) {
 
       if (action === 'receituario') {
         if (!requireGuidedDoses()) return;
+        if (selectedGuidedDose() && inhaledReassessment !== 'sim') {
+          setClosureStatus('Reavalie o paciente após o último ciclo e confirme melhora antes da prescrição para casa.');
+          resultEl.querySelector('[data-ps-reassessment]')?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          return;
+        }
         psOpenSectionWithSearch('receituario', 'rx-search', conditionName);
         return;
       }
@@ -907,7 +1027,7 @@ function psRenderInteractiveRx (conditionId, container) {
       }
       if (action === 'resumo') {
         if (!requireGuidedDoses()) return;
-        const html = psBuildClosureSummary(conditionName, selectedLabels());
+        const html = psBuildClosureSummary(conditionName, selectedLabels(), reassessmentSummaryText());
         const out = closureEl.querySelector('[data-ps-closure-summary]');
         out.hidden = false;
         out.innerHTML = `
@@ -940,12 +1060,14 @@ function psRenderInteractiveRx (conditionId, container) {
   medsEl.addEventListener('change', event => {
     const entry = event.target.closest?.('.ps-rx-med-entry');
     if (event.target.classList?.contains('ps-rx-med-check')) {
+      inhaledReassessment = '';
       syncGuidedDoseVisibility(entry, true);
       resultEl.hidden = true;
       showClosure();
       return;
     }
     if (event.target.matches?.('[data-ps-dose-route], [data-ps-dose-amount], [data-ps-dose-cycles]')) {
+      inhaledReassessment = '';
       updateGuidedDose(entry?.querySelector('[data-ps-dose-guide]'));
       resultEl.hidden = true;
       showClosure();
