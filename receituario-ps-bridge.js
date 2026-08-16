@@ -41,7 +41,18 @@ const RX_MANUAL_PRIORITY_IDS = new Set([
   'colica-renal',
   'afta-estomatite',
   'queilite',
-  'parasitoses-intestinais'
+  'parasitoses-intestinais',
+  'fissura-anal',
+  'artralgia-dor-msk',
+  'tosse',
+  'anemia-ferropriva',
+  'flebite',
+  'varizes-mmi',
+  'ulcera-varicosa',
+  'ulceras-genitais',
+  'soluco-persistente',
+  'mononucleose',
+  'diverticulite'
 ]);
 
 let RX_CATALOG_CACHE = null;

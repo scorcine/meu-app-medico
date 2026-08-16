@@ -95,8 +95,8 @@ const CLINICAL_PATHWAY_BY_ID = {
     scores: [],
     reassessment: null,
     outcomes: ['alta'],
-    homeRx: 'blocked',
-    notes: 'Sintomático ambulatorial — modelo curado pendente; não copiar PS.'
+    homeRx: 'curated',
+    notes: 'Sintomáticos; ATB só com critério bacteriano. Não copiar dose hospitalar.'
   },
   'gripe-influenza': {
     scores: [],
@@ -182,19 +182,20 @@ const CLINICAL_PATHWAY_BY_ID = {
     scores: [],
     reassessment: null,
     outcomes: ['alta', 'observacao'],
-    homeRx: 'blocked'
+    homeRx: 'curated',
+    notes: 'Anticoagulação não é automática; Doppler se extensão proximal/suspeita de TVP.'
   },
   'varizes-mmi': {
     scores: [],
     reassessment: null,
     outcomes: ['alta'],
-    homeRx: 'blocked'
+    homeRx: 'curated'
   },
   'ulcera-varicosa': {
     scores: [],
     reassessment: null,
     outcomes: ['alta', 'observacao'],
-    homeRx: 'blocked'
+    homeRx: 'curated'
   },
 
   /* Neurológico */
@@ -424,7 +425,8 @@ const CLINICAL_PATHWAY_BY_ID = {
     scores: [],
     reassessment: null,
     outcomes: ['alta', 'observacao'],
-    homeRx: 'blocked'
+    homeRx: 'curated',
+    notes: 'Evitar amoxicilina/ampicilina.'
   },
 
   /* GI / abdome */
@@ -451,10 +453,15 @@ const CLINICAL_PATHWAY_BY_ID = {
   },
   'diverticulite': {
     scores: [],
-    reassessment: null,
+    reassessment: {
+      trigger: 'after-initial-therapy',
+      label: 'Reavaliar dor, febre e tolerância oral',
+      question: 'Diverticulite não complicada está estável para alta com antibiótico VO?'
+    },
     outcomes: ['alta', 'observacao', 'internacao'],
-    homeRx: 'blocked',
-    notes: 'Hinchey baixa pode ter alta; receita VO curada pendente.'
+    homeRx: 'curated',
+    requiresImprovementForDischarge: true,
+    notes: 'Hinchey complicada / peritonite fora deste modelo.'
   },
   'pancreatite-aguda': {
     scores: [],
@@ -513,7 +520,7 @@ const CLINICAL_PATHWAY_BY_ID = {
     scores: [],
     reassessment: null,
     outcomes: ['alta'],
-    homeRx: 'blocked'
+    homeRx: 'curated'
   },
 
   /* Ortopedia / dor */
@@ -536,7 +543,7 @@ const CLINICAL_PATHWAY_BY_ID = {
       question: 'Dor controlada o suficiente para alta?'
     },
     outcomes: ['alta', 'observacao'],
-    homeRx: 'blocked',
+    homeRx: 'curated',
     requiresImprovementForDischarge: true
   },
   'gota': {
@@ -669,7 +676,8 @@ const CLINICAL_PATHWAY_BY_ID = {
     scores: [],
     reassessment: null,
     outcomes: ['alta', 'observacao'],
-    homeRx: 'blocked'
+    homeRx: 'curated',
+    notes: 'HSV VO; benzatina intramuscular no serviço se sífilis. Sem dose hospitalar automática.'
   },
   'violencia-sexual-pep': {
     scores: [],
@@ -839,7 +847,8 @@ const CLINICAL_PATHWAY_BY_ID = {
     scores: [],
     reassessment: null,
     outcomes: ['alta', 'observacao'],
-    homeRx: 'blocked'
+    homeRx: 'curated',
+    notes: 'Reposição oral; investigar causa. Não copiar ferro parenteral do PS.'
   },
   'anemia-falciforme': {
     scores: [],
@@ -856,7 +865,7 @@ const CLINICAL_PATHWAY_BY_ID = {
     scores: [],
     reassessment: null,
     outcomes: ['alta', 'observacao'],
-    homeRx: 'blocked'
+    homeRx: 'curated'
   },
   'tuberculose': {
     scores: [],

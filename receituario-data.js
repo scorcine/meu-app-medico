@@ -747,9 +747,234 @@ const RX_HOME_GI_OLHO = [
   }
 ];
 
+const RX_HOME_RESIDUAL = [
+  {
+    id: 'fissura-anal',
+    name: 'Fissura anal (alta ambulatorial)',
+    icon: '🩹',
+    aliases: ['fissura anal', 'dor ao evacuar', 'sangue vivo nas fezes'],
+    groups: [{
+      id: 'fis-local',
+      label: 'Medidas locais e fezes macias',
+      options: [
+        rxAltaOption('fis-cuidados', '1ª linha', 'Banho de assento e laxativo osmótico', [
+          rxAltaMed('fis-banho', 'Banho de assento morno — 10 a 15 minutos, 2 a 3 vezes ao dia', []),
+          rxAltaMed('fis-lactulose', 'Lactulose xarope — 15 a 30 mL VO 1 a 2 vezes ao dia, até fezes macias; aumentar fibras e água', ['laxative'])
+        ], 'Evitar esforço evacuatório e opioides. Abscesso, fístula ou fissura crônica refratária exigem proctologia.')
+      ]
+    }, {
+      id: 'fis-topico',
+      label: 'Relaxante esfincteriano tópico',
+      options: [
+        rxAltaOption('fis-pomada', '1ª linha', 'Pomada — escolha uma', [
+          rxAltaMed('fis-diltiazem', 'Diltiazem 2% pomada — aplicar fina camada na fissura 3 vezes ao dia, por 6 a 8 semanas', []),
+          rxAltaMed('fis-nifedipino', 'Nifedipino 0,2% a 0,3% pomada — aplicar fina camada na fissura 3 vezes ao dia, por 6 a 8 semanas', [])
+        ], 'Nitroglicerina tópica pode causar cefaleia intensa. Reavaliar se dor ou sangramento persistirem além de 6–8 semanas.')
+      ]
+    }]
+  },
+  {
+    id: 'artralgia-dor-msk',
+    name: 'Dor musculoesquelética (alta ambulatorial)',
+    icon: '🦴',
+    aliases: ['artralgia', 'dor muscular', 'dor articular', 'entorse'],
+    groups: [{
+      id: 'msk-analgesia',
+      label: 'Analgesia oral — sem sinais de alarme',
+      options: [
+        rxAltaOption('msk-analgesico', '1ª linha', 'Analgésico — escolha um', [
+          rxAltaMed('msk-dipirona', 'Dipirona 500 mg a 1 g — VO a cada 6 a 8 horas, se dor (máximo 4 g/dia), por até 5 dias', ['analgesic_non_opioid'], 'msk-analgesia'),
+          rxAltaMed('msk-paracetamol', 'Paracetamol 500 a 750 mg — VO a cada 6 a 8 horas, se dor (máximo 3 g/dia), por até 5 dias', ['analgesic_non_opioid'], 'msk-analgesia'),
+          rxAltaMed('msk-ibuprofeno', 'Ibuprofeno 400 mg — 1 comprimido VO a cada 8 horas, após alimentação, por até 5 a 7 dias', ['nsaid'], 'msk-analgesia')
+        ], 'Repouso relativo, gelo 20 minutos 3–4 vezes ao dia e elevação. Febre, articulação quente monoarticular, déficit neurovascular ou trauma com deformidade impedem alta simples.')
+      ]
+    }]
+  },
+  {
+    id: 'tosse',
+    name: 'Tosse (alta ambulatorial)',
+    icon: '😷',
+    aliases: ['tosse', 'tosse seca', 'tosse produtiva'],
+    groups: [{
+      id: 'tosse-suporte',
+      label: 'Pós-viral / suporte',
+      options: [
+        rxAltaOption('tosse-sintomatico', '1ª linha', 'Hidratação e sintomáticos', [
+          rxAltaMed('tosse-hidratar', 'Hidratação oral abundante e umidificação do ambiente; evitar antitussígenos de rotina', []),
+          rxAltaMed('tosse-paracetamol', 'Paracetamol 500 a 750 mg — VO a cada 6 a 8 horas, se dor ou febre (máximo 3 g/dia), por até 5 dias', ['analgesic_non_opioid'])
+        ], 'Tosse pós-infecciosa pode durar semanas. Retornar se hemoptise, dispneia, febre persistente ou tosse > 3 semanas com perda de peso/sudorese (investigar TB).')
+      ]
+    }, {
+      id: 'tosse-produtiva',
+      label: 'Produtiva com critério bacteriano — se indicado',
+      options: [
+        rxAltaOption('tosse-atb', 'Se indicado', 'Antibiótico oral — escolha um', [
+          rxAltaMed('tosse-amox', 'Amoxicilina 500 mg — 1 cápsula VO a cada 8 horas, por 5 dias', ['antibiotic', 'penicillin'], 'tosse-atb'),
+          rxAltaMed('tosse-azitro', 'Azitromicina 500 mg — 1 comprimido VO 1 vez ao dia, por 3 dias', ['antibiotic', 'macrolide'], 'tosse-atb')
+        ], 'Reservar para febre, purulência e duração prolongada. Não usar este modelo se pneumonia, hipoxemia ou hemoptise.', ['antibiotic'])
+      ]
+    }]
+  },
+  {
+    id: 'anemia-ferropriva',
+    name: 'Anemia ferropriva estável (alta ambulatorial)',
+    icon: '🩸',
+    aliases: ['anemia ferropriva', 'falta de ferro', 'anemia'],
+    groups: [{
+      id: 'anemia-ferro',
+      label: 'Reposição oral — paciente estável',
+      options: [
+        rxAltaOption('anemia-sulfato', '1ª linha', 'Ferro oral', [
+          rxAltaMed('anemia-sulfato-ferroso', 'Sulfato ferroso 40 mg de ferro elementar por comprimido — 1 a 2 comprimidos VO 1 vez ao dia, preferencialmente em jejum ou com vitamina C, por pelo menos 8 a 12 semanas', [])
+        ], 'Não usar se instabilidade, sangramento ativo ou Hb crítica. Homens e mulheres pós-menopausa precisam investigar sangramento oculto. Retorno em 4–8 semanas com hemograma.')
+      ]
+    }]
+  },
+  {
+    id: 'flebite',
+    name: 'Tromboflebite superficial leve (alta ambulatorial)',
+    icon: '🦵',
+    aliases: ['flebite', 'tromboflebite', 'cordao venoso'],
+    groups: [{
+      id: 'fleb-local',
+      label: 'Medidas locais e analgesia',
+      options: [
+        rxAltaOption('fleb-cuidados', '1ª linha', 'Elevação e analgésico — escolha um', [
+          rxAltaMed('fleb-elevar', 'Elevar o membro, compressa morna e caminhar conforme tolerância; evitar novo acesso venoso no mesmo membro', []),
+          rxAltaMed('fleb-dipirona', 'Dipirona 500 mg a 1 g — VO a cada 6 a 8 horas, se dor (máximo 4 g/dia), por até 5 dias', ['analgesic_non_opioid'], 'fleb-analgesia'),
+          rxAltaMed('fleb-ibuprofeno', 'Ibuprofeno 400 mg — 1 comprimido VO a cada 8 horas, após alimentação, por até 5 dias', ['nsaid'], 'fleb-analgesia')
+        ], 'Extensão > 5 cm, proximidade da junção safeno-femoral, edema importante ou suspeita de TVP exigem Doppler e decisão sobre anticoagulação — não liberar anticoagulação automática neste modelo.')
+      ]
+    }]
+  },
+  {
+    id: 'varizes-mmi',
+    name: 'Varizes / insuficiência venosa (alta ambulatorial)',
+    icon: '🦵',
+    aliases: ['varizes', 'insuficiencia venosa', 'pernas inchadas'],
+    groups: [{
+      id: 'var-conservador',
+      label: 'Medidas conservadoras',
+      options: [
+        rxAltaOption('var-compressao', '1ª linha', 'Compressão e elevação', [
+          rxAltaMed('var-meia', 'Meia elástica de compressão 20–30 mmHg — usar durante o dia; elevar as pernas e caminhar regularmente', []),
+          rxAltaMed('var-dipirona', 'Dipirona 500 mg a 1 g — VO a cada 6 a 8 horas, se dor (máximo 4 g/dia), por até 3 dias', ['analgesic_non_opioid'])
+        ], 'Sangramento varicoso, tromboflebite proximal ou úlcera ativa exigem reavaliação. Encaminhar vascular se sintomático refratário.')
+      ]
+    }]
+  },
+  {
+    id: 'ulcera-varicosa',
+    name: 'Úlcera varicosa (alta ambulatorial)',
+    icon: '🩹',
+    aliases: ['ulcera varicosa', 'ulcera de perna', 'ferida na perna'],
+    groups: [{
+      id: 'uv-curativo',
+      label: 'Cuidados da ferida',
+      options: [
+        rxAltaOption('uv-limpeza', '1ª linha', 'Limpeza e cobertura', [
+          rxAltaMed('uv-sf', 'Limpar com solução fisiológica 0,9%, secar e cobrir com curativo limpo; trocar conforme exsudato; elevar o membro', [])
+        ], 'Confirmar pulsos/ITB antes de compressão forte. Úlcera > 6 meses ou suspeita arterial/neoplásica exige encaminhamento.')
+      ]
+    }, {
+      id: 'uv-celulite',
+      label: 'Celulite perilesional — se indicado',
+      options: [
+        rxAltaOption('uv-atb', 'Se indicado', 'Antibiótico oral — escolha um', [
+          rxAltaMed('uv-cefalexina', 'Cefalexina 500 mg — 1 cápsula VO a cada 6 horas, por 7 dias', ['antibiotic'], 'uv-atb'),
+          rxAltaMed('uv-clindamicina', 'Clindamicina 300 mg — 1 cápsula VO a cada 6 horas, por 7 dias (alergia imediata a beta-lactâmico)', ['antibiotic'], 'uv-atb')
+        ], 'Antibiótico apenas se celulite franca. Compressão contínua diurna quando ITB permitir.', ['antibiotic'])
+      ]
+    }]
+  },
+  {
+    id: 'ulceras-genitais',
+    name: 'Úlceras genitais (alta ambulatorial)',
+    icon: '🩺',
+    aliases: ['ulcera genital', 'herpes genital', 'cancro'],
+    groups: [{
+      id: 'ug-herpes',
+      label: 'Herpes genital — vesículas dolorosas',
+      options: [
+        rxAltaOption('ug-aciclovir', '1ª linha', 'Antiviral oral — escolha um', [
+          rxAltaMed('ug-aciclovir-400', 'Aciclovir 400 mg — 1 comprimido VO a cada 8 horas, por 7 a 10 dias', ['antiviral'], 'ug-hsv'),
+          rxAltaMed('ug-valaciclovir', 'Valaciclovir 500 mg — 1 comprimido VO a cada 12 horas, por 7 a 10 dias', ['antiviral'], 'ug-hsv')
+        ], 'Abstinência até cicatrização. Solicitar sorologias conforme protocolo e notificar parceiros.', ['antiviral'])
+      ]
+    }, {
+      id: 'ug-cancro',
+      label: 'Cancro mole / LGV — se indicado',
+      options: [
+        rxAltaOption('ug-atb', 'Se indicado', 'Antibiótico oral — escolha um', [
+          rxAltaMed('ug-azitro', 'Azitromicina 1 g — 2 comprimidos de 500 mg VO dose única (cancro mole)', ['antibiotic', 'macrolide'], 'ug-atb'),
+          rxAltaMed('ug-doxi', 'Doxiciclina 100 mg — 1 comprimido VO a cada 12 horas, por 21 dias (LGV) ou 14 dias (sífilis se alergia à penicilina e sem gestação)', ['antibiotic'], 'ug-atb')
+        ], 'Sífilis precoce: penicilina benzatina intramuscular deve ser aplicada no serviço. Gestação e neurosífilis exigem protocolo específico.', ['antibiotic'])
+      ]
+    }]
+  },
+  {
+    id: 'soluco-persistente',
+    name: 'Soluço persistente (alta ambulatorial)',
+    icon: '😮',
+    aliases: ['soluco', 'soluco persistente', 'hiccup'],
+    groups: [{
+      id: 'soluco-vo',
+      label: 'Tratamento oral após exclusão de causa urgente',
+      options: [
+        rxAltaOption('soluco-escolha', '1ª linha', 'Escolha um', [
+          rxAltaMed('soluco-metoclopramida', 'Metoclopramida 10 mg — 1 comprimido VO a cada 8 horas, por até 3 a 5 dias', ['antiemetic'], 'soluco-tx'),
+          rxAltaMed('soluco-baclofeno', 'Baclofeno 10 mg — 1 comprimido VO a cada 8 horas, por até 5 a 7 dias (ajustar conforme sedação)', [], 'soluco-tx')
+        ], 'Investigar eletrólitos, medicamentos e irritação diafragmática. Soluço > 48 h sem resposta ou com sinais de alarme exige reavaliação.')
+      ]
+    }]
+  },
+  {
+    id: 'mononucleose',
+    name: 'Mononucleose (alta ambulatorial)',
+    icon: '🤒',
+    aliases: ['mononucleose', 'ebv', 'doenca do beijo'],
+    groups: [{
+      id: 'mono-suporte',
+      label: 'Suporte — sem amoxicilina',
+      options: [
+        rxAltaOption('mono-sintomatico', '1ª linha', 'Analgésico/antitérmico — escolha um', [
+          rxAltaMed('mono-paracetamol', 'Paracetamol 500 a 750 mg — VO a cada 6 a 8 horas, se dor ou febre (máximo 3 g/dia), por até 5 dias', ['analgesic_non_opioid'], 'mono-analgesia'),
+          rxAltaMed('mono-dipirona', 'Dipirona 500 mg a 1 g — VO a cada 6 a 8 horas, se dor ou febre (máximo 4 g/dia), por até 5 dias', ['analgesic_non_opioid'], 'mono-analgesia')
+        ], 'Não prescrever amoxicilina/ampicilina (rash clássico). Evitar esportes de contato por 3–4 semanas se esplenomegalia. Retornar se dor abdominal intensa, icterícia ou dispneia.')
+      ]
+    }]
+  },
+  {
+    id: 'diverticulite',
+    name: 'Diverticulite não complicada (alta ambulatorial)',
+    icon: '🩺',
+    aliases: ['diverticulite', 'dor em fossa iliaca esquerda'],
+    groups: [{
+      id: 'div-atb',
+      label: 'Antibiótico oral — Hinchey baixa / sem complicação',
+      options: [
+        rxAltaOption('div-atb-escolha', '1ª linha', 'Esquema oral — escolha um', [
+          rxAltaMed('div-amoxclav', 'Amoxicilina + clavulanato 875/125 mg — 1 comprimido VO a cada 12 horas, por 7 a 10 dias', ['antibiotic', 'penicillin'], 'div-atb'),
+          rxAltaMed('div-cipro-metro', 'Ciprofloxacino 500 mg VO a cada 12 horas + metronidazol 500 mg VO a cada 8 horas, por 7 a 10 dias (alergia a penicilina)', ['antibiotic'], 'div-atb')
+        ], 'Dieta líquida progressiva e retorno em 48–72 horas. Abscesso, peritonite, febre alta, intolerância oral ou idade/comorbidade elevada exigem internação.', ['antibiotic'])
+      ]
+    }, {
+      id: 'div-analgesia',
+      label: 'Analgesia oral',
+      options: [
+        rxAltaOption('div-analgesico', 'Adjuvante', 'Analgésico — escolha um', [
+          rxAltaMed('div-dipirona', 'Dipirona 500 mg a 1 g — VO a cada 6 a 8 horas, se dor (máximo 4 g/dia), por até 3 dias', ['analgesic_non_opioid'], 'div-analgesia'),
+          rxAltaMed('div-paracetamol', 'Paracetamol 500 a 750 mg — VO a cada 6 a 8 horas, se dor (máximo 3 g/dia), por até 3 dias', ['analgesic_non_opioid'], 'div-analgesia')
+        ], 'Evitar opioides se possível (pioram íleo/constipação).')
+      ]
+    }]
+  }
+];
+
 const RX_CATALOG_MANUAL = [
   ...RX_HOME_RESP_DERM,
   ...RX_HOME_GI_OLHO,
+  ...RX_HOME_RESIDUAL,
   {
     id: 'cefaleias',
     name: 'Cefaleia',

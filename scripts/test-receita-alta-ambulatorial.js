@@ -70,7 +70,12 @@ const GI_OLHO_IDS = [
   'dispepsia-drge', 'hemorroidas', 'gota', 'colica-renal', 'afta-estomatite',
   'queilite', 'parasitoses-intestinais'
 ];
-const ALL_CURATED_BATCH = [...RESP_DERM_IDS, ...GI_OLHO_IDS];
+const RESIDUAL_IDS = [
+  'fissura-anal', 'artralgia-dor-msk', 'tosse', 'anemia-ferropriva',
+  'flebite', 'varizes-mmi', 'ulcera-varicosa', 'ulceras-genitais',
+  'soluco-persistente', 'mononucleose', 'diverticulite'
+];
+const ALL_CURATED_BATCH = [...RESP_DERM_IDS, ...GI_OLHO_IDS, ...RESIDUAL_IDS];
 
 /* 1. A receita de casa vem do modelo curado, não do protocolo do PS */
 const origem = evalIn(`(() => {
@@ -186,7 +191,7 @@ const loteOk = lote.every(c =>
   c.source === 'complete' && c.groups > 0 && c.homeRx === 'curated' && !c.hospitalRoute
 );
 if (loteOk) {
-  pass(`${lote.length} receitas curadas de vias aéreas, pele, olho e GI, sem dose/via hospitalar`);
+  pass(`${lote.length} receitas curadas (vias aéreas, pele, olho, GI e residual), sem dose/via hospitalar`);
 } else {
   fail('lote curado incompleto: ' + JSON.stringify(lote.filter(c =>
     c.source !== 'complete' || !c.groups || c.homeRx !== 'curated' || c.hospitalRoute
@@ -206,7 +211,12 @@ const checks = [
   ['conjuntivite', /Não usar colírio antibiótico/i.test(textoLote('conjuntivite'))],
   ['gota', /Não iniciar alopurinol/i.test(textoLote('gota'))],
   ['diarreia', /Antibiótico não é rotina/i.test(textoLote('diarreia-gastroenterite'))],
-  ['zoster', /Herpes oftálmico/i.test(textoLote('herpes-zoster'))]
+  ['zoster', /Herpes oftálmico/i.test(textoLote('herpes-zoster'))],
+  ['flebite', /não liberar anticoagulação automática/i.test(textoLote('flebite'))],
+  ['mono', /Não prescrever amoxicilina/i.test(textoLote('mononucleose'))],
+  ['diverticulite', /Abscesso, peritonite/i.test(textoLote('diverticulite'))],
+  ['tosse', /investigar TB/i.test(textoLote('tosse'))],
+  ['ulceras-genitais', /penicilina benzatina intramuscular/i.test(textoLote('ulceras-genitais'))]
 ];
 if (checks.every(([, ok]) => ok)) {
   pass('lotes novos preservam critérios clínicos e barreiras de segurança');

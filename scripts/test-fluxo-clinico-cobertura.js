@@ -103,7 +103,10 @@ const curated = evalIn(`(() => {
     'conjuntivite', 'hordeolo', 'herpes-zoster', 'candidiase', 'vulvovaginites',
     'balanopostite', 'diarreia-gastroenterite', 'vomitos-agudos', 'constipacao',
     'dispepsia-drge', 'hemorroidas', 'gota', 'colica-renal', 'afta-estomatite',
-    'queilite', 'parasitoses-intestinais'
+    'queilite', 'parasitoses-intestinais',
+    'fissura-anal', 'artralgia-dor-msk', 'tosse', 'anemia-ferropriva',
+    'flebite', 'varizes-mmi', 'ulcera-varicosa', 'ulceras-genitais',
+    'soluco-persistente', 'mononucleose', 'diverticulite'
   ]
     .map(id => ({ id, mode: clinicalPathwayGet(id).homeRx, source: rxGetCatalogEntry(id)?.source }));
 })()`);
