@@ -3398,18 +3398,35 @@ function emergPrintSummary (title, html) {
     window.print?.();
     return;
   }
+  const safeTitle = emergSummaryEscape(title);
   win.document.write(`<!doctype html><html lang="pt-BR"><head><meta charset="utf-8">
-    <title>${title}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>${safeTitle}</title>
     <style>
-      body { margin: 24px; font-family: Arial, Helvetica, sans-serif; color: #111; font-size: 12pt; }
-      h1 { font-size: 15pt; margin: 0 0 4px; }
+      @page { size: A4; margin: 15mm; }
+      * { box-sizing: border-box; }
+      html, body { margin: 0; padding: 0; color: #111; background: #fff; }
+      body { font-family: Arial, Helvetica, sans-serif; font-size: 11pt; line-height: 1.4; }
+      .print-document { width: 100%; min-height: 267mm; display: flex; flex-direction: column; }
+      h1 { font-size: 15pt; margin: 0 0 8px; border-bottom: 1px solid #999; padding-bottom: 5px; }
       h2 { font-size: 12pt; margin: 18px 0 6px; border-bottom: 1px solid #999; padding-bottom: 3px; }
       ul { margin: 4px 0 0 18px; padding: 0; }
       li { margin: 3px 0; }
-      .meta { color: #444; font-size: 10pt; }
-      .doc-sign { margin-top: 48px; page-break-inside: avoid; }
+      p { margin: 5px 0; }
+      .meta { color: #333; font-size: 9.5pt; }
+      .doc-sign { margin-top: auto; padding-top: 18mm; break-inside: avoid; page-break-inside: avoid; }
       .doc-sign p { margin: 3px 0; }
-    </style></head><body>${html}</body></html>`);
+      table { width: 100%; border-collapse: collapse; }
+      th, td { padding: 5px 0; text-align: left; vertical-align: top; }
+      @media screen {
+        body { width: 210mm; min-height: 297mm; margin: 0 auto; padding: 15mm; }
+      }
+      @media print {
+        .print-document { min-height: 267mm; }
+        h1, h2, .doc-sign { break-after: avoid; }
+        li, p { orphans: 3; widows: 3; }
+      }
+    </style></head><body><main class="print-document">${html}</main></body></html>`);
   win.document.close();
   win.focus();
   win.print?.();

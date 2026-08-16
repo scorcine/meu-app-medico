@@ -5833,6 +5833,25 @@ textarea {
   font-weight: 600;
 }
 
+.th-next-step-outcome {
+  display: grid;
+  gap: 0.35rem;
+  max-width: 24rem;
+  margin-bottom: 0.75rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.th-next-step-outcome select {
+  min-height: 2.5rem;
+  padding: 0.5rem 0.65rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-primary);
+  background: var(--bg-surface);
+  font: inherit;
+}
+
 .th-next-step-actions {
   display: flex;
   flex-wrap: wrap;

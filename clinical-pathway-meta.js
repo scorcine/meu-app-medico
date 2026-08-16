@@ -860,6 +860,60 @@ const CLINICAL_OUTCOME_LABELS = {
   transferencia: 'Transferir'
 };
 
+/* IDs canônicos entre Tratamento hospitalar e Prescrições PS. */
+const CLINICAL_TH_TO_PS = {
+  cefaleia: 'cefaleias',
+  'ansiedade-panico': 'ansiedade-crise',
+  anafilaxia: 'alergia-anafilaxia',
+  'anemia-falciforme': 'anemia-falciforme',
+  'abscesso-cutaneo': 'abscesso-cutaneo',
+  'abstinencia-alcool': 'abstinencia-alcoolica',
+  apendicite: 'apendicite-aguda',
+  'artralgia-dor-msk': 'artralgia-dor-msk',
+  'asma-broncoespasmo': 'asma-broncoespasmo',
+  'celulite-erisipela': 'celulite',
+  'cetoacidose-dm': 'cetoacidose-diabetica',
+  'colica-renal': 'colica-renal',
+  colecistite: 'colecistite-aguda',
+  'convulsao-eme': 'crise-convulsiva-em',
+  'crise-hipertensiva': 'crise-hipertensiva',
+  'crise-tireotoxica': 'crise-tireotoxica',
+  'dengue-dor': 'dengue',
+  diverticulite: 'diverticulite',
+  'disturbios-eletroliticos': 'disturbios-eletroliticos',
+  'dor-abdominal': 'abdome-agudo',
+  'dor-toracica': 'sca-iam',
+  'dpoc-exacerbada': 'dpoc-exacerbada',
+  'edema-pulmao-ic': 'edema-agudo-pulmao',
+  flebite: 'flebite',
+  'gonorreia-ist': 'gonorreia-clamidia',
+  'gota-crise': 'gota',
+  hda: 'hda',
+  'herpes-zoster': 'herpes-zoster',
+  hipoglicemia: 'hipoglicemia-grave',
+  'influenza-gripe': 'gripe-influenza',
+  'intoxicacoes-exogenas': 'intoxicacoes-exogenas',
+  leptospirose: 'leptospirose',
+  'lombalgia-ciatalgia': 'lombalgia-ciatalgia',
+  'malaria-grave': 'malaria',
+  'meningite-bacteriana': 'meningite-bacteriana',
+  'nausea-vomitos': 'vomitos-agudos',
+  pancreatite: 'pancreatite-aguda',
+  pielonefrite: 'pielonefrite',
+  pneumonia: 'pneumonia-comunitaria',
+  'pre-eclampsia-eclampsia': 'eclampsia-pre-eclampsia',
+  'profilaxia-antirrabica': 'profilaxia-antirrabica',
+  queimadura: 'queimaduras',
+  'sepse-infeccao-grave': 'sepse-choque-septico',
+  'vertigem-vestibular': 'sindrome-vestibular'
+};
+
+function clinicalPathwayPsIdFromTh (thConditionId) {
+  return CLINICAL_TH_TO_PS[thConditionId] || (
+    CLINICAL_PATHWAY_BY_ID[thConditionId] ? thConditionId : ''
+  );
+}
+
 function clinicalPathwayGet (conditionId) {
   const curated = CLINICAL_PATHWAY_BY_ID[conditionId] || {};
   return {
@@ -935,6 +989,7 @@ if (typeof window !== 'undefined') {
   window.clinicalPathwayAllowsHomeRx = clinicalPathwayAllowsHomeRx;
   window.clinicalPathwayBlocksHomeRx = clinicalPathwayBlocksHomeRx;
   window.clinicalPathwayRequiresImprovement = clinicalPathwayRequiresImprovement;
+  window.clinicalPathwayPsIdFromTh = clinicalPathwayPsIdFromTh;
   window.CLINICAL_OUTCOME_LABELS = CLINICAL_OUTCOME_LABELS;
 }
 
@@ -942,6 +997,7 @@ if (typeof module !== 'undefined' && module.exports) {
   module.exports = {
     CLINICAL_PATHWAY_DEFAULT,
     CLINICAL_PATHWAY_BY_ID,
+    CLINICAL_TH_TO_PS,
     CLINICAL_OUTCOME_LABELS,
     clinicalPathwayGet,
     clinicalPathwayAllIds,
@@ -949,6 +1005,7 @@ if (typeof module !== 'undefined' && module.exports) {
     clinicalPathwayAllowsOutcome,
     clinicalPathwayAllowsHomeRx,
     clinicalPathwayBlocksHomeRx,
-    clinicalPathwayRequiresImprovement
+    clinicalPathwayRequiresImprovement,
+    clinicalPathwayPsIdFromTh
   };
 }

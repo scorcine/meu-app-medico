@@ -586,6 +586,211 @@ function thEnsurePrescriptionButton () {
 }
 
 /** Próximo passo do atendimento, sempre visível enquanto uma condição estiver aberta */
+function thCurrentPsConditionIds () {
+  return String(currentThConditionId || '')
+    .split(',')
+    .map(id => typeof clinicalPathwayPsIdFromTh === 'function'
+      ? clinicalPathwayPsIdFromTh(id)
+      : id)
+    .filter(Boolean);
+}
+
+function thCurrentPathways () {
+  if (typeof clinicalPathwayGet !== 'function') return [];
+  return thCurrentPsConditionIds().map(id => clinicalPathwayGet(id));
+}
+
+function thHasCuratedHomePrescription () {
+  const ids = thCurrentPsConditionIds();
+  return !!ids.length && ids.every(id => (
+    typeof clinicalPathwayAllowsHomeRx === 'function' &&
+    clinicalPathwayAllowsHomeRx(id)
+  ));
+}
+
+function thNeedsImprovementForDischarge () {
+  return thCurrentPathways().some(pathway => (
+    pathway.requiresImprovementForDischarge && pathway.reassessment
+  ));
+}
+
+function thImprovementAnswer () {
+  return document.getElementById('th-next-step-improved')?.value || '';
+}
+
+function thCanOpenHomePrescription () {
+  if (!thHasCuratedHomePrescription()) return false;
+  return !thNeedsImprovementForDischarge() || thImprovementAnswer() === 'sim';
+}
+
+function thOpenHomePrescription () {
+  const ids = thCurrentPsConditionIds();
+  if (!ids.length || !thHasCuratedHomePrescription()) {
+    window.alert(
+      'Receita ambulatorial curada indisponível para uma ou mais condições.\n\n' +
+      'A prescrição hospitalar não será copiada para casa. Finalize a ficha com o desfecho clínico ou use um modelo ambulatorial validado.'
+    );
+    return false;
+  }
+  if (thNeedsImprovementForDischarge() && thImprovementAnswer() !== 'sim') {
+    window.alert('Confirme melhora clínica na reavaliação antes de abrir a receita para casa.');
+    return false;
+  }
+
+  const entries = typeof rxGetCatalogEntry === 'function'
+    ? ids.map(id => rxGetCatalogEntry(id))
+    : [];
+  if (entries.some(entry => !entry || entry.source !== 'complete')) {
+    window.alert('Modelo de alta não validado. A dose hospitalar não será usada no receituário.');
+    return false;
+  }
+
+  if (typeof showSection === 'function') showSection('receituario');
+  if (typeof rxShowCombinedConditions === 'function') {
+    rxShowCombinedConditions(ids, { skipGate: true });
+  } else if (typeof rxShowCondition === 'function' && ids.length === 1) {
+    rxShowCondition(ids[0]);
+  }
+  return true;
+}
+
+function thAllowedOutcomes () {
+  const pathways = thCurrentPathways();
+  if (!pathways.length) return ['alta', 'observacao', 'internacao', 'transferencia'];
+  return ['alta', 'observacao', 'internacao', 'transferencia'].filter(outcome => (
+    pathways.every(pathway => pathway.outcomes.includes(outcome))
+  ));
+}
+
+function thUpdateNextStepPanel () {
+  const panel = document.getElementById('th-next-step');
+  if (!panel) return;
+  const allowed = thAllowedOutcomes();
+  const pathways = thCurrentPathways();
+  const reassessment = panel.querySelector('#th-next-step-reassessment');
+  const reassessmentLabel = panel.querySelector('#th-next-step-reassessment-label');
+  const improved = panel.querySelector('#th-next-step-improved');
+  const needsReassessment = thNeedsImprovementForDischarge();
+  if (reassessment) reassessment.hidden = !needsReassessment;
+  if (reassessmentLabel) {
+    reassessmentLabel.textContent = pathways.find(pathway => (
+      pathway.requiresImprovementForDischarge && pathway.reassessment
+    ))?.reassessment?.question || 'O paciente apresentou melhora suficiente para alta?';
+  }
+
+  const select = panel.querySelector('#th-next-step-outcome');
+  if (select) {
+    [...select.options].forEach(option => {
+      if (!option.value) return;
+      option.disabled = !allowed.includes(option.value) ||
+        (option.value === 'alta' && needsReassessment && improved?.value !== 'sim');
+      option.hidden = option.disabled;
+    });
+    if (select.value && !allowed.includes(select.value)) select.value = '';
+  }
+
+  const home = panel.querySelector('#th-next-step-home');
+  if (home) {
+    const available = thCanOpenHomePrescription();
+    home.disabled = !available;
+    home.title = available
+      ? 'Abrir receita ambulatorial curada'
+      : (thHasCuratedHomePrescription() && needsReassessment
+          ? 'Confirme melhora clínica antes da receita para casa'
+          : 'Receita para casa bloqueada: não há modelo ambulatorial curado para todas as condições');
+  }
+}
+
+async function thFinalizeEncounter () {
+  const panel = document.getElementById('th-next-step');
+  const outcome = panel?.querySelector('#th-next-step-outcome')?.value || '';
+  if (!outcome) {
+    window.alert('Escolha o desfecho do atendimento antes de finalizar a ficha.');
+    return false;
+  }
+  if (!thAllowedOutcomes().includes(outcome)) {
+    window.alert('Esse desfecho não é permitido para a condição hospitalar selecionada.');
+    return false;
+  }
+  if (outcome === 'alta' && thNeedsImprovementForDischarge() && thImprovementAnswer() !== 'sim') {
+    window.alert('Alta bloqueada: confirme melhora clínica na reavaliação.');
+    return false;
+  }
+
+  const draft = (() => {
+    try {
+      return JSON.parse(sessionStorage.getItem('medhub-new-encounter-draft') || 'null');
+    } catch {
+      return null;
+    }
+  })();
+  const patient = thGetPatientInfo();
+  const nome = draft?.nome || patient.nome || 'Paciente não informado';
+  const labels = typeof CLINICAL_OUTCOME_LABELS !== 'undefined'
+    ? CLINICAL_OUTCOME_LABELS
+    : { alta: 'Alta', observacao: 'Observação', internacao: 'Internação', transferencia: 'Transferência' };
+  const outcomeLabel = labels[outcome] || outcome;
+  if (!window.confirm(
+    `Tem certeza que quer finalizar o atendimento de ${nome}?\n\n` +
+    `Desfecho: ${outcomeLabel}.\nA ficha será salva em Atendimentos realizados.`
+  )) return false;
+
+  const conditionNames = String(currentThConditionId || '')
+    .split(',')
+    .map(id => TH_CONDITIONS.find(c => c.id === id)?.name)
+    .filter(Boolean);
+  const meds = thGetPrescriptionMeds();
+  const doctor = typeof rxGetDoctorName === 'function'
+    ? rxGetDoctorName()
+    : (typeof medhubGetRxDoctorName === 'function' ? medhubGetRxDoctorName() : '');
+  const crm = typeof rxGetStoredCrmDisplay === 'function'
+    ? rxGetStoredCrmDisplay()
+    : (typeof medhubGetRxCrmFormatted === 'function' ? medhubGetRxCrmFormatted() : '');
+  const medItems = meds.length
+    ? meds.map(med => `<li>${thEscapeHtml(med.text)}${med.route ? ` — via ${thEscapeHtml(med.route)}` : ''}</li>`).join('')
+    : '<li>Nenhuma medicação hospitalar marcada.</li>';
+  const html = `
+    <h1>Tratamento hospitalar — resumo do atendimento</h1>
+    <p class="meta"><strong>Paciente:</strong> ${thEscapeHtml(nome)}${patient.idade ? ` · ${thEscapeHtml(patient.idade)}` : ''}</p>
+    <p class="meta"><strong>Médico(a):</strong> ${thEscapeHtml(doctor || 'Não informado')} · <strong>${thEscapeHtml(crm || 'CRM não informado')}</strong></p>
+    <p class="meta"><strong>Data:</strong> ${thEscapeHtml(new Date().toLocaleString('pt-BR'))}</p>
+    <h2>Condições tratadas</h2>
+    <p>${thEscapeHtml(conditionNames.join(' · ') || 'Não informadas')}</p>
+    <h2>Medicações na unidade</h2>
+    <ul>${medItems}</ul>
+    <h2>Desfecho</h2>
+    <p>${thEscapeHtml(outcomeLabel)}</p>`;
+  const holder = document.createElement('div');
+  holder.innerHTML = html;
+  const summaryText = (holder.innerText || holder.textContent || '').replace(/\n{3,}/g, '\n\n').trim();
+
+  let saved = null;
+  if (typeof consultasRegisterEmergencyProtocol === 'function') {
+    saved = await consultasRegisterEmergencyProtocol({
+      sourceId: `th:${currentThConditionId}:${draft?.startedAt || nome || Date.now()}`,
+      protocolo: conditionNames.join(' · ') || 'Tratamento hospitalar',
+      pacienteNome: nome,
+      queixa: (draft?.queixas || []).join(' · '),
+      medico: doctor,
+      crm,
+      desfecho: outcome,
+      summaryHtml: html,
+      summaryText,
+      notas: `Tratamento hospitalar finalizado · desfecho: ${outcomeLabel}.`
+    });
+  }
+
+  if (!saved?.ok && typeof consultasRegisterEmergencyProtocol === 'function') {
+    window.alert('Não foi possível salvar a ficha. O atendimento permanece aberto.');
+    return false;
+  }
+
+  if (typeof novoAtendimentoFinishEncounter === 'function') novoAtendimentoFinishEncounter();
+  else if (typeof novoAtendimentoFinishPatient === 'function') novoAtendimentoFinishPatient();
+  if (typeof showSection === 'function') showSection('novo-atendimento');
+  return true;
+}
+
 function thEnsureNextStepPanel () {
   const bar = document.getElementById('th-selection-bar');
   if (!bar) return null;
@@ -598,24 +803,38 @@ function thEnsureNextStepPanel () {
     panel.hidden = true;
     panel.innerHTML = `
       <p class="th-next-step-title">Próximo passo do atendimento</p>
+      <label class="th-next-step-outcome">
+        <span>Desfecho obrigatório</span>
+        <select id="th-next-step-outcome">
+          <option value="">Selecione</option>
+          <option value="alta">Alta com orientação</option>
+          <option value="observacao">Manter em observação</option>
+          <option value="internacao">Internar</option>
+          <option value="transferencia">Transferir</option>
+        </select>
+      </label>
+      <label class="th-next-step-outcome" id="th-next-step-reassessment" hidden>
+        <span id="th-next-step-reassessment-label">O paciente apresentou melhora suficiente para alta?</span>
+        <select id="th-next-step-improved">
+          <option value="">Selecione</option>
+          <option value="sim">Sim — melhora clínica</option>
+          <option value="nao">Não — sem melhora suficiente</option>
+        </select>
+      </label>
       <div class="th-next-step-actions">
         <button type="button" class="btn" id="th-next-step-home">Fazer prescrição para casa →</button>
-        <button type="button" class="btn btn-secondary" id="th-next-step-finish">Finalizar paciente</button>
+        <button type="button" class="btn btn-secondary" id="th-next-step-finish">Finalizar ficha e salvar paciente</button>
       </div>
     `;
     bar.after(panel);
 
     panel.querySelector('#th-next-step-home')?.addEventListener('click', () => {
-      if (typeof novoAtendimentoContinueHomePrescription === 'function') {
-        novoAtendimentoContinueHomePrescription();
-      } else if (typeof showSection === 'function') {
-        showSection('receituario');
-      }
+      thOpenHomePrescription();
     });
+    panel.querySelector('#th-next-step-improved')?.addEventListener('change', thUpdateNextStepPanel);
 
-    panel.querySelector('#th-next-step-finish')?.addEventListener('click', () => {
-      if (typeof novoAtendimentoFinishPatient === 'function') novoAtendimentoFinishPatient();
-      else if (typeof showSection === 'function') showSection('novo-atendimento');
+    panel.querySelector('#th-next-step-finish')?.addEventListener('click', async () => {
+      await thFinalizeEncounter();
     });
   }
 
@@ -628,6 +847,7 @@ function thShowNextStep () {
   panel.hidden = false;
   const home = document.getElementById('th-next-step-home');
   if (home) home.hidden = !thHasEncounterDraft();
+  thUpdateNextStepPanel();
 }
 
 function thHideNextStep () {
@@ -1111,6 +1331,14 @@ function thGeneratePrescription () {
     .split(',')
     .map(id => TH_CONDITIONS.find(c => c.id === id)?.name)
     .filter(Boolean);
+  const outcomeLabels = typeof CLINICAL_OUTCOME_LABELS !== 'undefined'
+    ? CLINICAL_OUTCOME_LABELS
+    : { alta: 'Alta com orientação', observacao: 'Manter em observação', internacao: 'Internar', transferencia: 'Transferir' };
+  const outcomeOptions = thAllowedOutcomes()
+    .map(outcome => `<option value="${outcome}">${thEscapeHtml(outcomeLabels[outcome] || outcome)}</option>`)
+    .join('');
+  const homeModelAvailable = thHasCuratedHomePrescription();
+  const needsReassessment = thNeedsImprovementForDischarge();
 
   thShowNextStep();
 
@@ -1141,6 +1369,8 @@ function thGeneratePrescription () {
       .next-step { width: 210mm; margin: 18px auto 0; padding: 18px 20px; border-radius: 10px; background: #fff; box-shadow: 0 4px 22px #0002; }
       .next-step h2 { margin: 0 0 6px; font-size: 18px; }
       .next-step p { margin: 0 0 14px; color: #475569; }
+      .next-step label { display: grid; gap: 5px; margin-bottom: 12px; font-weight: 700; }
+      .next-step select { padding: 9px 10px; border: 1px solid #cbd5e1; border-radius: 7px; background: #fff; }
       .next-step-actions { display: flex; flex-wrap: wrap; gap: 10px; }
       .home-rx { background: #1677ff; color: #fff; }
       .finish { border: 1px solid #cbd5e1; background: #f8fafc; color: #334155; }
@@ -1172,10 +1402,26 @@ function thGeneratePrescription () {
     </div>
     <section class="next-step">
       <h2>Após a prescrição hospitalar</h2>
-      <p>Escolha o próximo passo para este paciente.</p>
+      <p>Escolha o desfecho e o próximo passo para este paciente.</p>
+      <label>
+        Desfecho obrigatório
+        <select id="popup-outcome">
+          <option value="">Selecione</option>
+          ${outcomeOptions}
+        </select>
+      </label>
+      ${needsReassessment ? `
+      <label>
+        Reavaliação antes da alta
+        <select id="popup-improved">
+          <option value="">Selecione</option>
+          <option value="sim">Sim — melhora clínica</option>
+          <option value="nao">Não — sem melhora suficiente</option>
+        </select>
+      </label>` : ''}
       <div class="next-step-actions">
-        <button class="home-rx" onclick="continueEncounter('home')">Fazer prescrição para casa →</button>
-        <button class="finish" onclick="continueEncounter('finish')">Finalizar paciente</button>
+        <button class="home-rx" onclick="continueEncounter('home')"${homeModelAvailable ? '' : ' disabled title="Receita ambulatorial curada indisponível"'}>Fazer prescrição para casa →</button>
+        <button class="finish" onclick="continueEncounter('finish')">Finalizar ficha e salvar paciente</button>
       </div>
     </section>
     <main class="sheet">
@@ -1202,13 +1448,23 @@ function thGeneratePrescription () {
           alert('A janela principal do MedHub não está disponível.');
           return;
         }
-        if (action === 'home' && typeof window.opener.novoAtendimentoContinueHomePrescription === 'function') {
-          window.opener.novoAtendimentoContinueHomePrescription();
-          window.close();
+        const improved = document.getElementById('popup-improved')?.value || '';
+        const mainImproved = window.opener.document.getElementById('th-next-step-improved');
+        if (mainImproved && improved) {
+          mainImproved.value = improved;
+          mainImproved.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+        if (action === 'home' && typeof window.opener.thOpenHomePrescription === 'function') {
+          if (window.opener.thOpenHomePrescription()) window.close();
           return;
         }
-        if (action === 'finish' && typeof window.opener.novoAtendimentoFinishPatient === 'function') {
-          if (window.opener.novoAtendimentoFinishPatient()) window.close();
+        if (action === 'finish' && typeof window.opener.thFinalizeEncounter === 'function') {
+          const outcome = document.getElementById('popup-outcome')?.value || '';
+          const mainSelect = window.opener.document.getElementById('th-next-step-outcome');
+          if (mainSelect) mainSelect.value = outcome;
+          Promise.resolve(window.opener.thFinalizeEncounter()).then(ok => {
+            if (ok) window.close();
+          });
         }
       }
     <\/script>

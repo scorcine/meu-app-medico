@@ -139,7 +139,7 @@ function consultasExportPdf (c) {
 
   const tipo = consultasLabel(CONSULTA_TIPOS, c.tipo);
   const status = consultasLabel(CONSULTA_STATUS, c.status);
-  const bodyHtml = `
+  const standardBody = `
     <div class="cons-print-doc">
       <h1 class="cons-print-title">REGISTRO DE CONSULTA</h1>
       <p class="cons-print-sub">MedHub — documento educacional (não substitui prontuário legal)</p>
@@ -151,6 +151,7 @@ function consultasExportPdf (c) {
         <tr><th>Profissional</th><td>${consultasEscapeHtml(c.medico).replace(/<br>/g, ' ')}</td></tr>
         ${c.crm ? `<tr><th>CRM</th><td>${consultasEscapeHtml(c.crm).replace(/<br>/g, ' ')}</td></tr>` : ''}
         ${c.protocolo ? `<tr><th>Protocolo</th><td>${consultasEscapeHtml(c.protocolo).replace(/<br>/g, ' ')}</td></tr>` : ''}
+        ${c.desfecho ? `<tr><th>Desfecho</th><td>${consultasEscapeHtml(c.desfecho).replace(/<br>/g, ' ')}</td></tr>` : ''}
       </table>
       <h2>Queixa / motivo</h2>
       <p>${consultasEscapeHtml(c.queixa)}</p>
@@ -160,6 +161,9 @@ function consultasExportPdf (c) {
       <p>${consultasEscapeHtml(c.notas)}</p>
       <p class="cons-print-foot">Gerado em ${new Date().toLocaleString('pt-BR')}</p>
     </div>`;
+  const bodyHtml = c.summaryHtml
+    ? `<div class="cons-print-doc cons-print-summary">${c.summaryHtml}</div>`
+    : standardBody;
 
   const win = window.open('', '_blank', 'width=720,height=900');
   if (!win) {
@@ -173,7 +177,11 @@ function consultasExportPdf (c) {
   <meta charset="UTF-8">
   <title>${consultasBuildFilename(c)}</title>
   <style>
-    body { font-family: Georgia, 'Times New Roman', serif; color: #111; margin: 2rem; line-height: 1.55; }
+    @page { size: A4; margin: 15mm; }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; color: #111; background: #fff; }
+    body { font-family: Arial, Helvetica, sans-serif; line-height: 1.45; font-size: 11pt; }
+    .cons-print-doc { min-height: 267mm; display: flex; flex-direction: column; }
     .cons-print-title { text-align: center; font-size: 1.15rem; letter-spacing: 0.06em; margin: 0 0 0.35rem; }
     .cons-print-sub { text-align: center; font-size: 0.82rem; color: #555; margin: 0 0 1.5rem; }
     .cons-print-meta { width: 100%; border-collapse: collapse; margin-bottom: 1.25rem; font-size: 0.95rem; }
@@ -182,7 +190,19 @@ function consultasExportPdf (c) {
     h2 { font-size: 1rem; margin: 1.1rem 0 0.35rem; border-bottom: 1px solid #ccc; padding-bottom: 0.2rem; }
     p { margin: 0 0 0.75rem; white-space: pre-wrap; }
     .cons-print-foot { margin-top: 2rem; font-size: 0.8rem; color: #666; }
-    @media print { body { margin: 1.5cm; } }
+    .meta { color: #333; font-size: 9.5pt; }
+    .doc-sign { margin-top: auto; padding-top: 18mm; break-inside: avoid; page-break-inside: avoid; }
+    .doc-sign p { margin: 3px 0; }
+    ul { margin: 4px 0 0 18px; padding: 0; }
+    li { margin: 3px 0; }
+    @media screen {
+      body { width: 210mm; min-height: 297mm; margin: 0 auto; padding: 15mm; }
+    }
+    @media print {
+      .cons-print-doc { min-height: 267mm; }
+      h1, h2, .doc-sign { break-after: avoid; }
+      li, p { orphans: 3; widows: 3; }
+    }
   </style>
 </head>
 <body>${bodyHtml}</body>
