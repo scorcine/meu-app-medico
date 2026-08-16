@@ -608,6 +608,17 @@ function psBuildClosureSummary (conditionName, selectedLabels, reassessmentText)
     ${psDocumentSignatureHtml()}`;
 }
 
+/* Prescrição de casa: abre a receita curada da condição, nunca a dose hospitalar */
+function psOpenHomePrescription (conditionId, conditionName) {
+  const entry = typeof rxGetCatalogEntry === 'function' ? rxGetCatalogEntry(conditionId) : null;
+  if (!entry || typeof rxShowCondition !== 'function') {
+    psOpenSectionWithSearch('receituario', 'rx-search', conditionName);
+    return;
+  }
+  if (typeof showSection === 'function') showSection('receituario');
+  window.setTimeout(() => rxShowCondition(conditionId), 80);
+}
+
 function psOpenSectionWithSearch (sectionId, inputId, query) {
   if (typeof showSection === 'function') showSection(sectionId);
   window.setTimeout(() => {
@@ -1014,7 +1025,7 @@ function psRenderInteractiveRx (conditionId, container) {
     panel.querySelectorAll('[data-ps-next]').forEach(button => {
       button.addEventListener('click', () => {
         if (button.dataset.psNext === 'receituario') {
-          psOpenSectionWithSearch('receituario', 'rx-search', conditionName);
+          psOpenHomePrescription(conditionId, conditionName);
           return;
         }
         finishEncounter();
@@ -1103,7 +1114,7 @@ function psRenderInteractiveRx (conditionId, container) {
           resultEl.querySelector('[data-ps-reassessment]')?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
           return;
         }
-        psOpenSectionWithSearch('receituario', 'rx-search', conditionName);
+        psOpenHomePrescription(conditionId, conditionName);
         return;
       }
       if (action === 'exames') {

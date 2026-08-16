@@ -645,6 +645,157 @@ const RX_CATALOG_MANUAL = [
         ]
       }
     ]
+  },
+  {
+    id: 'asma-broncoespasmo',
+    name: 'Asma brônquica (alta ambulatorial)',
+    icon: '🌬️',
+    aliases: [
+      'asma', 'asma bronquica', 'asma bronquica (crise) e broncoespasmo', 'broncoespasmo',
+      'crise asmatica', 'sibilancia', 'chiado no peito', 'alta de asma'
+    ],
+    groups: [
+      {
+        id: 'asma-alivio',
+        label: 'Alívio dos sintomas em casa (dose ambulatorial)',
+        options: [
+          {
+            id: 'asma-dom-saba',
+            tier: '1ª linha',
+            label: 'β₂ de curta ação com espaçador — escolha um',
+            classes: ['bronchodilator'],
+            noVoExpand: true,
+            items: [],
+            meds: [
+              { id: 'asma-dom-salb', text: 'Salbutamol spray 100 mcg/dose — 2 jatos (200 mcg) com espaçador a cada 4 a 6 horas, se falta de ar ou chiado, por até 7 dias (máximo 8 jatos por dia)', classes: ['bronchodilator'], exclusiveGroup: 'asma-dom-saba' },
+              { id: 'asma-dom-fen', text: 'Fenoterol spray 100 mcg/dose — 2 jatos com espaçador a cada 6 a 8 horas, se falta de ar ou chiado, por até 7 dias', classes: ['bronchodilator'], exclusiveGroup: 'asma-dom-saba' }
+            ],
+            orientacoes: 'Dose de casa é menor que a da crise no hospital: 2 jatos por vez, nunca 4–8 jatos. Se precisar repetir antes de 4 horas ou passar de 8 jatos no dia, procurar atendimento no mesmo dia.'
+          }
+        ]
+      },
+      {
+        id: 'asma-corticoide-vo',
+        label: 'Corticoide oral — curso curto após a crise',
+        options: [
+          {
+            id: 'asma-dom-cort-adulto',
+            tier: '1ª linha',
+            label: 'Adulto — 5 dias, sem desmame',
+            classes: ['corticosteroid'],
+            noVoExpand: true,
+            items: [],
+            meds: [
+              { id: 'asma-dom-pred20', text: 'Prednisona 20 mg — 2 comprimidos (40 mg) VO 1 vez ao dia, pela manhã, após o café, por 5 dias', classes: ['corticosteroid'], exclusiveGroup: 'asma-dom-cort-adulto' },
+              { id: 'asma-dom-pred5', text: 'Prednisona 5 mg — 8 comprimidos (40 mg) VO 1 vez ao dia, pela manhã, após o café, por 5 dias', classes: ['corticosteroid'], exclusiveGroup: 'asma-dom-cort-adulto' },
+              { id: 'asma-dom-predniso20', text: 'Prednisolona 20 mg — 2 comprimidos (40 mg) VO 1 vez ao dia, pela manhã, por 5 dias', classes: ['corticosteroid'], exclusiveGroup: 'asma-dom-cort-adulto' }
+            ],
+            orientacoes: 'Curso curto de 5 a 7 dias não exige desmame. Cautela em diabetes, úlcera péptica e infecção ativa; orientar tomar após alimentação.'
+          },
+          {
+            id: 'asma-dom-cort-ped',
+            tier: 'Pediatria',
+            label: 'Criança — 3 a 5 dias',
+            classes: ['corticosteroid'],
+            noVoExpand: true,
+            items: [],
+            meds: [
+              { id: 'asma-dom-predsol', text: 'Prednisolona 3 mg/mL solução oral — 1 a 2 mg/kg/dia (máximo 40 mg/dia) VO 1 vez ao dia, pela manhã, por 3 a 5 dias', classes: ['corticosteroid'] }
+            ],
+            orientacoes: 'Ajustar o volume ao peso da criança e anotar a dose em mL na receita. Manter espaçador com máscara conforme a idade.'
+          }
+        ]
+      },
+      {
+        id: 'asma-manutencao',
+        label: 'Manutenção — corticoide inalatório (não suspender)',
+        options: [
+          {
+            id: 'asma-dom-ics',
+            tier: '1ª linha',
+            label: 'Corticoide inalatório de manutenção — escolha um',
+            classes: ['corticosteroid'],
+            noVoExpand: true,
+            items: [],
+            meds: [
+              { id: 'asma-dom-budform', text: 'Budesonida/formoterol 200/6 mcg — 1 inalação a cada 12 horas, de manutenção contínua', classes: ['corticosteroid'], exclusiveGroup: 'asma-dom-ics' },
+              { id: 'asma-dom-bud', text: 'Budesonida spray 200 mcg/dose — 1 jato a cada 12 horas, com espaçador, de manutenção contínua', classes: ['corticosteroid'], exclusiveGroup: 'asma-dom-ics' },
+              { id: 'asma-dom-becl', text: 'Beclometasona spray 250 mcg/dose — 1 jato a cada 12 horas, com espaçador, de manutenção contínua', classes: ['corticosteroid'], exclusiveGroup: 'asma-dom-ics' }
+            ],
+            orientacoes: 'Bochechar a boca com água após cada uso, sem engolir. O corticoide inalatório é a base do tratamento: não interromper quando os sintomas melhorarem. Reavaliar a manutenção em consulta ambulatorial.'
+          }
+        ]
+      }
+    ]
+  },
+  {
+    id: 'dpoc-exacerbada',
+    name: 'DPOC exacerbada (alta ambulatorial)',
+    icon: '🫁',
+    aliases: [
+      'dpoc', 'dpoc exacerbada', 'exacerbacao de dpoc', 'bronquite cronica', 'enfisema',
+      'alta de dpoc'
+    ],
+    groups: [
+      {
+        id: 'dpoc-alivio',
+        label: 'Alívio dos sintomas em casa (dose ambulatorial)',
+        options: [
+          {
+            id: 'dpoc-dom-saba',
+            tier: '1ª linha',
+            label: 'Broncodilatador de resgate com espaçador',
+            classes: ['bronchodilator'],
+            noVoExpand: true,
+            items: [],
+            meds: [
+              { id: 'dpoc-dom-salb', text: 'Salbutamol spray 100 mcg/dose — 2 jatos (200 mcg) com espaçador a cada 4 a 6 horas, se falta de ar, por até 7 dias (máximo 8 jatos por dia)', classes: ['bronchodilator'], exclusiveGroup: 'dpoc-dom-saba' },
+              { id: 'dpoc-dom-salbipra', text: 'Salbutamol/ipratrópio spray — 2 jatos com espaçador a cada 6 horas, se falta de ar, por até 7 dias', classes: ['bronchodilator'], exclusiveGroup: 'dpoc-dom-saba' }
+            ],
+            orientacoes: 'Dose de casa é menor que a da exacerbação no hospital: 2 jatos por vez. Manter a terapia inalatória de manutenção (LAMA/LABA) já prescrita.'
+          }
+        ]
+      },
+      {
+        id: 'dpoc-corticoide-vo',
+        label: 'Corticoide oral — curso curto',
+        options: [
+          {
+            id: 'dpoc-dom-cort',
+            tier: '1ª linha',
+            label: 'Prednisona 40 mg/dia por 5 dias',
+            classes: ['corticosteroid'],
+            noVoExpand: true,
+            items: [],
+            meds: [
+              { id: 'dpoc-dom-pred20', text: 'Prednisona 20 mg — 2 comprimidos (40 mg) VO 1 vez ao dia, pela manhã, após o café, por 5 dias', classes: ['corticosteroid'], exclusiveGroup: 'dpoc-dom-cort' },
+              { id: 'dpoc-dom-pred5', text: 'Prednisona 5 mg — 8 comprimidos (40 mg) VO 1 vez ao dia, pela manhã, após o café, por 5 dias', classes: ['corticosteroid'], exclusiveGroup: 'dpoc-dom-cort' }
+            ],
+            orientacoes: 'Cinco dias são suficientes e não exigem desmame. Monitorar glicemia em diabéticos.'
+          }
+        ]
+      },
+      {
+        id: 'dpoc-atb',
+        label: 'Antibiótico — se escarro purulento ou aumento do volume',
+        options: [
+          {
+            id: 'dpoc-dom-atb',
+            tier: 'Se indicado',
+            label: 'Antibiótico oral — escolha um',
+            classes: ['antibiotic'],
+            noVoExpand: true,
+            items: [],
+            meds: [
+              { id: 'dpoc-dom-amoxclav', text: 'Amoxicilina + clavulanato 875/125 mg — 1 comprimido VO a cada 12 horas, por 5 a 7 dias', classes: ['antibiotic', 'penicillin'], exclusiveGroup: 'dpoc-dom-atb' },
+              { id: 'dpoc-dom-azi', text: 'Azitromicina 500 mg — 1 comprimido VO 1 vez ao dia, por 3 a 5 dias', classes: ['antibiotic', 'macrolide'], exclusiveGroup: 'dpoc-dom-atb' },
+              { id: 'dpoc-dom-doxi', text: 'Doxiciclina 100 mg — 1 comprimido VO a cada 12 horas, por 5 a 7 dias', classes: ['antibiotic'], exclusiveGroup: 'dpoc-dom-atb' }
+            ],
+            orientacoes: 'Antibiótico apenas com escarro purulento, aumento do volume/viscosidade do escarro ou necessidade de ventilação. Considerar cobertura para Pseudomonas em exacerbações frequentes e uso recente de antibiótico.'
+          }
+        ]
+      }
+    ]
   }
 ];
 

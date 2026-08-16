@@ -1,12 +1,15 @@
 /* Receituário — catálogo completo a partir dos protocolos PS + modelos manuais */
 
+/* Condições com receita de alta curada: a dose de casa nunca vem do protocolo hospitalar */
 const RX_MANUAL_PRIORITY_IDS = new Set([
   'cefaleias',
   'amigdalite-bacteriana',
   'cistite-itu-baixa',
   'lombalgia-ciatalgia',
   'violencia-sexual-pep',
-  'gonorreia-clamidia'
+  'gonorreia-clamidia',
+  'asma-broncoespasmo',
+  'dpoc-exacerbada'
 ]);
 
 let RX_CATALOG_CACHE = null;
