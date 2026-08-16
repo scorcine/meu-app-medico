@@ -6,6 +6,7 @@ function rxAltaOption (id, tier, label, meds, orientacoes, classes) {
     tier,
     label,
     classes: classes || [],
+    noVoExpand: true,
     items: [],
     meds,
     orientacoes: orientacoes || ''
@@ -1157,11 +1158,10 @@ const RX_HOME_COMPLEX = [
       id: 'ana-plano',
       label: 'Plano de alta — após observação adequada',
       options: [
-        rxAltaOption('ana-adrenalina', 'Essencial', 'Adrenalina autoinjetável e anti-histamínico', [
-          rxAltaMed('ana-autoinjetor', 'Adrenalina autoinjetável 0,3 mg — aplicar no meio da face anterolateral da coxa conforme o dispositivo, se nova reação grave; procurar emergência imediatamente após o uso', []),
-          rxAltaMed('ana-loratadina', 'Loratadina 10 mg — 1 comprimido VO 1 vez ao dia, por 3 a 5 dias', ['antihistamine']),
-          rxAltaMed('ana-prednisona', 'Prednisona 40 mg — 1 comprimido VO 1 vez ao dia, por 3 a 5 dias (se indicado pelo quadro)', ['corticosteroid'])
-        ], 'Alta só após observação. Evitar o alérgeno. Orientar retorno imediato se recidiva. Não substituir observação por receita.')
+        rxAltaOption('ana-adrenalina', 'Essencial', 'Adrenalina autoinjetável — conforme peso', [
+          rxAltaMed('ana-autoinjetor-015', 'Adrenalina autoinjetável 0,15 mg — prescrever 2 dispositivos para paciente de 15 a 30 kg; aplicar 1 no meio da face anterolateral da coxa ao primeiro sinal de nova anafilaxia', [], 'ana-autoinjetor'),
+          rxAltaMed('ana-autoinjetor-03', 'Adrenalina autoinjetável 0,3 mg — prescrever 2 dispositivos para paciente com 30 kg ou mais; aplicar 1 no meio da face anterolateral da coxa ao primeiro sinal de nova anafilaxia', [], 'ana-autoinjetor')
+        ], 'Treinar paciente/cuidador com o dispositivo e fornecer plano escrito. Acionar emergência se a reação for grave, não melhorar prontamente, voltar ou piorar; pode repetir a segunda dose conforme o dispositivo e o plano. Alta só após observação adequada e com encaminhamento à alergologia. Anti-histamínico trata apenas sintomas cutâneos; corticoide não previne reação bifásica e não é rotina.')
       ]
     }]
   },
@@ -1192,8 +1192,8 @@ const RX_HOME_COMPLEX = [
       options: [
         rxAltaOption('queim-curativo', '1ª linha', 'Limpeza e cobertura', [
           rxAltaMed('queim-sf', 'Limpar com solução fisiológica 0,9%, secar e cobrir com curativo limpo não aderente; trocar conforme exsudato', []),
-          rxAltaMed('queim-sulfadiazina', 'Sulfadiazina de prata 1% creme — aplicar camada fina 1 a 2 vezes ao dia sob curativo, se indicado (evitar face/áreas extensas sem orientação)', [])
-        ], 'Queimadura de mão/face/períneo, circunferencial, elétrica, química ou > pequena área exige avaliação especializada.')
+          rxAltaMed('queim-petrolato', 'Petrolato estéril ou gaze não aderente vaselinada — aplicar fina camada/cobertura e trocar conforme orientação e exsudato', [])
+        ], 'Resfriar previamente com água corrente fresca por 20 minutos se ainda dentro de 3 horas; não usar gelo. Sulfadiazina de prata não é rotina em queimadura pequena não infectada porque pode atrasar a reepitelização. Queimadura profunda, extensa, de mão/face/períneo, circunferencial, elétrica ou química exige avaliação especializada.')
       ]
     }, {
       id: 'queim-analgesia',
@@ -1284,8 +1284,8 @@ const RX_HOME_ORIENTACOES = [
       options: [
         rxAltaOption('aborto-analgesia', '1ª linha', 'Analgesia segura e orientação', [
           rxAltaMed('aborto-paracetamol', 'Paracetamol 500 a 750 mg — 1 comprimido VO a cada 6 a 8 horas, se dor (máximo 3 g/dia), por até 3 dias', ['analgesic_non_opioid']),
-          rxAltaMed('aborto-repouso', 'Repouso relativo e evitar relações sexuais enquanto houver sangramento, conforme orientação obstétrica', [])
-        ], 'Só liberar após confirmar gestação intrauterina/viabilidade e excluir ectópica. Não iniciar progesterona automaticamente; usar apenas se prescrita pela obstetrícia. Retorno imediato se dor intensa, síncope, febre ou aumento do sangramento.')
+          rxAltaMed('aborto-atividade', 'Manter atividade conforme tolerância; repouso no leito não previne aborto e não deve ser prescrito de rotina', [])
+        ], 'Só liberar após confirmar gestação intrauterina e excluir ectópica. Progesterona vaginal 400 mg a cada 12 horas é opção quando houver sangramento e aborto prévio, após indicação obstétrica; outras apresentações/doses não devem ser iniciadas automaticamente. Retorno imediato se dor intensa, síncope, febre ou aumento do sangramento.')
       ]
     }]
   },

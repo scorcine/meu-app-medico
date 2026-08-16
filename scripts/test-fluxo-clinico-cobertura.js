@@ -46,6 +46,7 @@ const files = [
 const dom = new JSDOM('<!doctype html><html><body></body></html>', {
   url: 'https://www.medhub.ia.br/app.html'
 });
+dom.window.Element.prototype.scrollIntoView = function () {};
 const context = vm.createContext(dom.window);
 vm.runInContext(files.map(read).join('\n'), context);
 
@@ -155,5 +156,102 @@ if (asmaPanel.outcomes.join(',') === 'alta,observacao,internacao,transferencia' 
   fail('painel de fechamento incompleto: ' + JSON.stringify(asmaPanel));
 }
 
-console.log('\n' + (failures ? `FALHAS: ${failures}` : 'TODOS OS TESTES PASSARAM'));
-process.exit(failures ? 1 : 0);
+const navPreserve = evalIn(`(() => {
+  currentPsConditionId = 'pneumonia-comunitaria';
+  const list = document.createElement('div');
+  list.id = 'ps-list-view';
+  list.hidden = true;
+  const detail = document.createElement('div');
+  detail.id = 'ps-condition-view';
+  detail.hidden = false;
+  detail.innerHTML = '<div data-ps-marker="conduta">em andamento</div>';
+  document.body.appendChild(list);
+  document.body.appendChild(detail);
+
+  const before = {
+    id: currentPsConditionId,
+    marker: !!document.querySelector('[data-ps-marker="conduta"]'),
+    detailHidden: detail.hidden
+  };
+
+  /* Simula a correção: só volta à home do PS se não houver conduta ativa */
+  if (!currentPsConditionId) showProntoSocorroHome();
+
+  return {
+    before,
+    afterId: currentPsConditionId,
+    afterMarker: !!document.querySelector('[data-ps-marker="conduta"]'),
+    afterDetailHidden: detail.hidden
+  };
+})()`);
+
+if (navPreserve.afterId === 'pneumonia-comunitaria' &&
+    navPreserve.afterMarker &&
+    navPreserve.afterDetailHidden === false) {
+  pass('navegação preserva a conduta do PS quando há condição ativa');
+} else {
+  fail('conduta do PS foi resetada indevidamente: ' + JSON.stringify(navPreserve));
+}
+
+const scoreDeepLink = evalIn(`(() => {
+  const opened = [];
+  window.CALC_AREAS = [
+    { id: 'avaliacao-geral', calculators: ['curb65'] },
+    { id: 'cardiologia', calculators: ['heart', 'wells-tvp'] }
+  ];
+  window.showSection = id => opened.push('section:' + id);
+  window.showCalcArea = id => opened.push('area:' + id);
+  window.showCalcTool = id => opened.push('tool:' + id);
+
+  const host = document.createElement('div');
+  host.innerHTML = '<div class="emerg-algo-single"></div>';
+  document.body.appendChild(host);
+  psRenderInteractiveRx('pneumonia-comunitaria', host.querySelector('.emerg-algo-single'));
+  host.querySelector('[data-ps-closure-action="score"][data-ps-score="curb65"]')?.click();
+  return opened;
+})()`);
+
+const scorePromise = new Promise(resolve => setTimeout(() => resolve(scoreDeepLink), 120));
+scorePromise.then(opened => {
+  if (opened.includes('section:calculadoras') &&
+      opened.includes('area:avaliacao-geral') &&
+      opened.includes('tool:curb65')) {
+    pass('botão de escore abre a calculadora correta (CURB-65)');
+  } else {
+    fail('deep-link de escore falhou: ' + JSON.stringify(opened));
+  }
+
+  const ctxReset = evalIn(`(() => {
+    const host = document.createElement('div');
+    host.innerHTML = '<div class="emerg-algo-single"></div>';
+    document.body.appendChild(host);
+    psRenderInteractiveRx('abscesso-cutaneo', host.querySelector('.emerg-algo-single'));
+    host.querySelector('#ps-rx-analyze')?.click();
+    host.querySelector('[data-ps-improved="sim"]')?.click();
+    const before = host.querySelector('[data-ps-closure-action="receituario"]')?.disabled;
+    const ctx = host.querySelector('[data-ctx-field]');
+    if (ctx) {
+      if (ctx.type === 'checkbox') ctx.checked = !ctx.checked;
+      else if (ctx.tagName === 'SELECT' && ctx.options.length > 1) ctx.selectedIndex = Math.max(1, ctx.selectedIndex);
+      else ctx.value = (ctx.value || '') + 'x';
+      ctx.dispatchEvent(new window.Event('change', { bubbles: true }));
+    }
+    return {
+      beforeDisabled: before,
+      afterDisabled: host.querySelector('[data-ps-closure-action="receituario"]')?.disabled,
+      hasPanel: !!host.querySelector('[data-ps-reassessment]'),
+      status: host.querySelector('[data-ps-closure-status]')?.textContent || ''
+    };
+  })()`);
+
+  if (ctxReset.beforeDisabled === false &&
+      ctxReset.afterDisabled === true &&
+      /Contexto clínico alterado/i.test(ctxReset.status)) {
+    pass('mudança de contexto invalida a melhora e bloqueia a receita novamente');
+  } else {
+    fail('contexto não resetou a reavaliação: ' + JSON.stringify(ctxReset));
+  }
+
+  console.log('\n' + (failures ? `FALHAS: ${failures}` : 'TODOS OS TESTES PASSARAM'));
+  process.exit(failures ? 1 : 0);
+});

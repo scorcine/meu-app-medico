@@ -214,6 +214,37 @@ if (loteOk) {
   )));
 }
 
+const integridadeCurada = evalIn(`(() => {
+  const ids = new Set(${JSON.stringify(ALL_CURATED_BATCH)});
+  const divergencias = [];
+  RX_CATALOG_MANUAL.filter(c => ids.has(c.id)).forEach(rawCondition => {
+    const runtimeCondition = rxGetCatalogEntry(rawCondition.id);
+    (rawCondition.groups || []).forEach(rawGroup => {
+      const runtimeGroup = (runtimeCondition?.groups || []).find(g => g.id === rawGroup.id);
+      (rawGroup.options || []).filter(o => o.noVoExpand).forEach(rawOption => {
+        const runtimeOption = (runtimeGroup?.options || []).find(o => o.id === rawOption.id);
+        const rawIds = (rawOption.meds || []).map(m => m.id);
+        const runtimeIds = (runtimeOption?.meds || []).map(m => m.id);
+        if (JSON.stringify(rawIds) !== JSON.stringify(runtimeIds)) {
+          divergencias.push({
+            condition: rawCondition.id,
+            option: rawOption.id,
+            expected: rawIds,
+            actual: runtimeIds
+          });
+        }
+      });
+    });
+  });
+  return divergencias;
+})()`);
+
+if (!integridadeCurada.length) {
+  pass('doses e apresentações curadas permanecem intactas no catálogo em runtime');
+} else {
+  fail('expansor alterou opções curadas: ' + JSON.stringify(integridadeCurada.slice(0, 8)));
+}
+
 const textoLote = id => lote.find(c => c.id === id)?.text || '';
 const checks = [
   ['sinusite', /mais de 10 dias/i.test(textoLote('sinusite-aguda'))],
@@ -236,9 +267,13 @@ const checks = [
   ['pneumonia', /CURB-65 baixo/i.test(textoLote('pneumonia-comunitaria'))],
   ['dengue', /jamais AINE/i.test(textoLote('dengue'))],
   ['tvp', /Confirmar TVP por Doppler/i.test(textoLote('tvp'))],
-  ['anafilaxia', /autoinjetável/i.test(textoLote('alergia-anafilaxia'))],
+  ['anafilaxia', /2 dispositivos/i.test(textoLote('alergia-anafilaxia')) &&
+    /corticoide não previne reação bifásica/i.test(textoLote('alergia-anafilaxia'))],
   ['tb', /Notificação compulsória/i.test(textoLote('tuberculose'))],
-  ['aborto', /excluir ectópica/i.test(textoLote('ameaca-aborto'))],
+  ['aborto', /excluir ectópica/i.test(textoLote('ameaca-aborto')) &&
+    /repouso no leito não previne aborto/i.test(textoLote('ameaca-aborto'))],
+  ['queimadura', /Sulfadiazina de prata não é rotina/i.test(textoLote('queimaduras')) &&
+    /não usar gelo/i.test(textoLote('queimaduras'))],
   ['olho', /Não prescrever anestésico tópico/i.test(textoLote('corpo-estranho-ocular'))],
   ['epistaxe', /comprimir.*10–15 minutos/i.test(textoLote('epistaxe'))],
   ['hipoglicemia', /Não oferecer alimento.*inconsciente/i.test(textoLote('hipoglicemia-grave'))],

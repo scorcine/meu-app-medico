@@ -152,6 +152,12 @@ function initApp () {
 }
 
 function showSection (sectionId) {
+  if (typeof medhubCanAccessSection === 'function' && !medhubCanAccessSection(sectionId)) {
+    alert('Este módulo não está incluído no acesso desta conta.');
+    if (sectionId !== 'inicio') showSection('inicio');
+    return;
+  }
+
   if (typeof medhubTrackAppSection === 'function') {
     medhubTrackAppSection(sectionId);
   }
@@ -167,7 +173,10 @@ function showSection (sectionId) {
   showCalcCategories();
   if (typeof showEmergenciaCategories === 'function') showEmergenciaCategories();
   if (sectionId === 'tratamento-hospitalar' && typeof thOnSectionShow === 'function') thOnSectionShow();
-  if (typeof showProntoSocorroHome === 'function') showProntoSocorroHome();
+  /* Não resetar o PS ao navegar para exames/calculadoras/receituário — preserva a conduta em andamento */
+  if (sectionId === 'pronto-socorro' && typeof showProntoSocorroHome === 'function') {
+    if (!currentPsConditionId) showProntoSocorroHome();
+  }
   if (sectionId === 'receituario' && typeof rxOnSectionShow === 'function') rxOnSectionShow();
   if (sectionId === 'medicacoes' && typeof medShowList === 'function') medShowList();
   if (sectionId === 'exames' && typeof examesOnSectionShow === 'function') examesOnSectionShow();

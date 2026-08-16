@@ -900,21 +900,60 @@ function psRenderInteractiveRx (conditionId, container) {
   function requireGuidedDoses () {
     const incomplete = incompleteGuidedDoses();
     if (!incomplete.length) return true;
-    resultEl.hidden = false;
-    resultEl.removeAttribute('hidden');
-    resultEl.className = 'ps-rx-result ps-rx-result--error';
-    resultEl.innerHTML = `
-      <h4>✗ Complete o esquema inalatório</h4>
-      <ul class="ps-rx-result-list">
-        <li class="ps-rx-msg ps-rx-msg--error">
-          Informe a via, a dose por ciclo e o número de ciclos do salbutamol antes de continuar.
-        </li>
-      </ul>`;
+    setClosureStatus('Complete o esquema inalatório: informe via, dose por ciclo e número de ciclos do salbutamol antes de continuar.');
+    /* Não apagar reavaliação já respondida: só usa o painel de erro se ainda não há pathway */
+    if (!resultEl.querySelector('[data-ps-reassessment]')) {
+      resultEl.hidden = false;
+      resultEl.removeAttribute('hidden');
+      resultEl.className = 'ps-rx-result ps-rx-result--error';
+      resultEl.innerHTML = `
+        <h4>✗ Complete o esquema inalatório</h4>
+        <ul class="ps-rx-result-list">
+          <li class="ps-rx-msg ps-rx-msg--error">
+            Informe a via, a dose por ciclo e o número de ciclos do salbutamol antes de continuar.
+          </li>
+        </ul>`;
+    }
     incomplete[0].querySelector('[data-ps-dose-guide]')?.scrollIntoView({
       behavior: 'smooth',
       block: 'nearest'
     });
     return false;
+  }
+
+  function ensureReassessmentPanel () {
+    if (!needsImprovementGate() || improvementAnswer()) return;
+    if (resultEl.querySelector('[data-ps-reassessment]')) return;
+    /* Ciclos inalatórios: só perguntar depois de definir a dose */
+    if (pathway.reassessment?.trigger === 'inhaled-cycles' && !selectedGuidedDose()) return;
+    resultEl.hidden = false;
+    resultEl.removeAttribute('hidden');
+    if (!resultEl.querySelector('.ps-rx-result-list') && !resultEl.querySelector('h4')) {
+      resultEl.className = 'ps-rx-result ps-rx-result--warning';
+      resultEl.innerHTML = `
+        <h4>Reavaliação necessária antes da alta/receita</h4>
+        <ul class="ps-rx-result-list">
+          <li class="ps-rx-msg ps-rx-msg--warning">Confirme a resposta clínica abaixo para liberar o fechamento.</li>
+        </ul>
+        ${renderClinicalPathwayPanel()}
+      `;
+    } else {
+      resultEl.insertAdjacentHTML('beforeend', renderClinicalPathwayPanel());
+    }
+    bindClinicalPathwayPanel();
+  }
+
+  function openPathwayScore (scoreId) {
+    if (!scoreId || typeof showSection !== 'function') return;
+    showSection('calculadoras');
+    window.setTimeout(() => {
+      const areas = typeof CALC_AREAS !== 'undefined' ? CALC_AREAS : [];
+      const area = areas.find(candidate => (candidate.calculators || []).includes(scoreId));
+      if (area && typeof showCalcArea === 'function') showCalcArea(area.id);
+      if (typeof showCalcTool === 'function') {
+        window.setTimeout(() => showCalcTool(scoreId), 40);
+      }
+    }, 40);
   }
 
   renderMedGroups();
@@ -923,9 +962,15 @@ function psRenderInteractiveRx (conditionId, container) {
 
   wrap.querySelectorAll('[data-ctx-field]').forEach(el => {
     el.addEventListener('change', () => {
+      inhaledReassessment = '';
+      clinicalReassessment = '';
+      selectedOutcome = '';
       syncEtiologyTabs();
       renderMedGroups();
       resultEl.hidden = true;
+      resultEl.innerHTML = '';
+      showClosure();
+      setClosureStatus('Contexto clínico alterado — reavalie antes de liberar alta ou receita.');
     });
   });
 
@@ -1180,18 +1225,18 @@ function psRenderInteractiveRx (conditionId, container) {
     const curatedHome = pathway.homeRx === 'curated';
     if (homeButton) {
       homeButton.disabled = !curatedHome || improvementGate;
-      const detail = homeButton.querySelector('span');
-      if (detail) {
-        if (!curatedHome) {
-          detail.textContent = pathway.homeRx === 'none'
+      const homeReason = !curatedHome
+        ? (pathway.homeRx === 'none'
             ? 'Esta condição não gera receita domiciliar automática'
-            : 'Bloqueado até existir receita ambulatorial curada';
-        } else if (improvementGate) {
-          detail.textContent = 'Disponível após confirmar melhora na reavaliação';
-        } else {
-          detail.textContent = 'Abre a receita ambulatorial curada';
-        }
-      }
+            : 'Bloqueado até existir receita ambulatorial curada')
+        : (improvementGate
+            ? 'Disponível após confirmar melhora na reavaliação'
+            : 'Abre a receita ambulatorial curada');
+      const detail = homeButton.querySelector('span');
+      if (detail) detail.textContent = homeReason;
+      homeButton.title = homeReason;
+      homeButton.setAttribute('aria-description', homeReason);
+      if (improvementGate) ensureReassessmentPanel();
     }
 
     /* Alta exige melhora quando o schema pede */
@@ -1199,9 +1244,19 @@ function psRenderInteractiveRx (conditionId, container) {
     if (altaBtn) {
       const blockAlta = pathway.hospitalOnly || (needsImprovementGate() && improved === 'nao');
       altaBtn.disabled = blockAlta;
+      const altaReason = pathway.hospitalOnly
+        ? 'Condição hospitalar — alta domiciliar não disponível neste fluxo'
+        : (needsImprovementGate() && improved === 'nao'
+            ? 'Alta bloqueada após ausência de melhora na reavaliação'
+            : (needsImprovementGate() && improved !== 'sim'
+                ? 'Alta disponível após confirmar melhora na reavaliação'
+                : 'Registrar alta com orientação'));
+      altaBtn.title = altaReason;
+      altaBtn.setAttribute('aria-description', altaReason);
       if (blockAlta && selectedOutcome === 'alta') {
         selectedOutcome = '';
       }
+      if (needsImprovementGate() && !improved) ensureReassessmentPanel();
     }
     syncOutcomeButtons();
   }
@@ -1289,17 +1344,7 @@ function psRenderInteractiveRx (conditionId, container) {
       const action = button.dataset.psClosureAction;
 
       if (action === 'score') {
-        const scoreId = button.dataset.psScore;
-        if (typeof showSection === 'function') showSection('calculadoras');
-        window.setTimeout(() => {
-          const search = document.getElementById('calc-search');
-          if (search && scoreId) {
-            search.value = scoreId;
-            search.dispatchEvent(new Event('input', { bubbles: true }));
-          }
-          const openBtn = document.querySelector(`[data-calc-id="${scoreId}"]`);
-          openBtn?.click?.();
-        }, 80);
+        openPathwayScore(button.dataset.psScore);
         return;
       }
 

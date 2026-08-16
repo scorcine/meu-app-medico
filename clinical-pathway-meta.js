@@ -753,7 +753,7 @@ const CLINICAL_PATHWAY_BY_ID = {
     outcomes: ['observacao', 'internacao', 'transferencia'],
     homeRx: 'curated',
     requiresImprovementForDischarge: true,
-    notes: 'Receita pós-observação: autoinjetor + anti-histamínico; não substitui observação.'
+    notes: 'Receita pós-observação: autoinjetor (idealmente 2 dispositivos) + plano escrito; corticoide não é rotina para prevenir bifásica.'
   },
   'edema-angioneurotico': {
     scores: [],
@@ -818,7 +818,7 @@ const CLINICAL_PATHWAY_BY_ID = {
     reassessment: null,
     outcomes: ['alta', 'observacao', 'internacao', 'transferencia'],
     homeRx: 'curated',
-    notes: 'Só queimadura leve de pequena extensão.'
+    notes: 'Só queimadura leve; curativo simples — sulfadiazina de prata não é rotina.'
   },
   'trauma-atls': {
     scores: [],
