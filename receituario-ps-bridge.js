@@ -68,7 +68,15 @@ const RX_MANUAL_PRIORITY_IDS = new Set([
   'antiparasitarios',
   'ascaridiase',
   'anemia-falciforme',
-  'tuberculose'
+  'tuberculose',
+  'ameaca-aborto',
+  'corpo-estranho-ocular',
+  'epistaxe',
+  'hipoglicemia-grave',
+  'insolacao',
+  'profilaxia-antirrabica',
+  'sangramento-uterino',
+  'sincope'
 ]);
 
 let RX_CATALOG_CACHE = null;

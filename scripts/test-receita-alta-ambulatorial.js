@@ -81,7 +81,17 @@ const COMPLEX_IDS = [
   'alergia-anafilaxia', 'edema-angioneurotico', 'queimaduras',
   'antiparasitarios', 'ascaridiase', 'anemia-falciforme', 'tuberculose'
 ];
-const ALL_CURATED_BATCH = [...RESP_DERM_IDS, ...GI_OLHO_IDS, ...RESIDUAL_IDS, ...COMPLEX_IDS];
+const GUIDANCE_IDS = [
+  'ameaca-aborto', 'corpo-estranho-ocular', 'epistaxe', 'hipoglicemia-grave',
+  'insolacao', 'profilaxia-antirrabica', 'sangramento-uterino', 'sincope'
+];
+const ALL_CURATED_BATCH = [
+  ...RESP_DERM_IDS,
+  ...GI_OLHO_IDS,
+  ...RESIDUAL_IDS,
+  ...COMPLEX_IDS,
+  ...GUIDANCE_IDS
+];
 
 /* 1. A receita de casa vem do modelo curado, não do protocolo do PS */
 const origem = evalIn(`(() => {
@@ -227,7 +237,15 @@ const checks = [
   ['dengue', /jamais AINE/i.test(textoLote('dengue'))],
   ['tvp', /Confirmar TVP por Doppler/i.test(textoLote('tvp'))],
   ['anafilaxia', /autoinjetável/i.test(textoLote('alergia-anafilaxia'))],
-  ['tb', /Notificação compulsória/i.test(textoLote('tuberculose'))]
+  ['tb', /Notificação compulsória/i.test(textoLote('tuberculose'))],
+  ['aborto', /excluir ectópica/i.test(textoLote('ameaca-aborto'))],
+  ['olho', /Não prescrever anestésico tópico/i.test(textoLote('corpo-estranho-ocular'))],
+  ['epistaxe', /comprimir.*10–15 minutos/i.test(textoLote('epistaxe'))],
+  ['hipoglicemia', /Não oferecer alimento.*inconsciente/i.test(textoLote('hipoglicemia-grave'))],
+  ['insolacao', /Não usar antitérmico/i.test(textoLote('insolacao'))],
+  ['raiva', /Vacina e imunoglobulina são aplicadas no serviço/i.test(textoLote('profilaxia-antirrabica'))],
+  ['sangramento-uterino', /gestação negativo/i.test(textoLote('sangramento-uterino'))],
+  ['sincope', /Não iniciar fludrocortisona ou midodrina/i.test(textoLote('sincope'))]
 ];
 if (checks.every(([, ok]) => ok)) {
   pass('lotes novos preservam critérios clínicos e barreiras de segurança');

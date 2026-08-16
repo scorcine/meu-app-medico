@@ -1272,11 +1272,169 @@ const RX_HOME_COMPLEX = [
   }
 ];
 
+const RX_HOME_ORIENTACOES = [
+  {
+    id: 'ameaca-aborto',
+    name: 'Ameaça de aborto estável (alta orientada)',
+    icon: '🤰',
+    aliases: ['ameaca de aborto', 'sangramento na gestacao', 'sangramento primeiro trimestre'],
+    groups: [{
+      id: 'aborto-suporte',
+      label: 'Suporte após avaliação obstétrica',
+      options: [
+        rxAltaOption('aborto-analgesia', '1ª linha', 'Analgesia segura e orientação', [
+          rxAltaMed('aborto-paracetamol', 'Paracetamol 500 a 750 mg — 1 comprimido VO a cada 6 a 8 horas, se dor (máximo 3 g/dia), por até 3 dias', ['analgesic_non_opioid']),
+          rxAltaMed('aborto-repouso', 'Repouso relativo e evitar relações sexuais enquanto houver sangramento, conforme orientação obstétrica', [])
+        ], 'Só liberar após confirmar gestação intrauterina/viabilidade e excluir ectópica. Não iniciar progesterona automaticamente; usar apenas se prescrita pela obstetrícia. Retorno imediato se dor intensa, síncope, febre ou aumento do sangramento.')
+      ]
+    }]
+  },
+  {
+    id: 'corpo-estranho-ocular',
+    name: 'Corpo estranho ocular superficial (pós-remoção)',
+    icon: '👁️',
+    aliases: ['corpo estranho ocular', 'cisco no olho', 'abrasao corneana'],
+    groups: [{
+      id: 'ceo-pos-remocao',
+      label: 'Pós-remoção sem perfuração',
+      options: [
+        rxAltaOption('ceo-colirio', '1ª linha', 'Antibiótico tópico — escolha um', [
+          rxAltaMed('ceo-tobra', 'Tobramicina 0,3% colírio — instilar 1 gota no olho afetado a cada 6 horas, por 5 dias', ['antibiotic'], 'ceo-atb'),
+          rxAltaMed('ceo-cipro', 'Ciprofloxacino 0,3% colírio — instilar 1 gota no olho afetado a cada 6 horas, por 5 dias', ['antibiotic'], 'ceo-atb'),
+          rxAltaMed('ceo-eritro', 'Eritromicina 0,5% pomada oftálmica — aplicar pequena faixa no olho afetado a cada 6 horas, por 5 dias', ['antibiotic'], 'ceo-atb')
+        ], 'Somente após remoção completa e teste de Seidel negativo. Não prescrever anestésico tópico para casa. Suspeita de perfuração, perda visual ou corpo estranho incrustado exige escudo ocular e oftalmologia.')
+      ]
+    }, {
+      id: 'ceo-analgesia',
+      label: 'Analgesia oral',
+      options: [
+        rxAltaOption('ceo-analgesico', 'Adjuvante', 'Analgésico — escolha um', [
+          rxAltaMed('ceo-paracetamol', 'Paracetamol 500 a 750 mg — VO a cada 6 a 8 horas, se dor (máximo 3 g/dia), por até 3 dias', ['analgesic_non_opioid'], 'ceo-analgesia'),
+          rxAltaMed('ceo-dipirona', 'Dipirona 500 mg a 1 g — VO a cada 6 a 8 horas, se dor (máximo 4 g/dia), por até 3 dias', ['analgesic_non_opioid'], 'ceo-analgesia')
+        ], 'Reavaliar em 24–48 horas se abrasão corneana extensa; retornar antes se piora da dor ou visão.')
+      ]
+    }]
+  },
+  {
+    id: 'epistaxe',
+    name: 'Epistaxe controlada (alta ambulatorial)',
+    icon: '🩸',
+    aliases: ['epistaxe', 'sangramento nasal', 'nariz sangrando'],
+    groups: [{
+      id: 'epi-cuidados',
+      label: 'Prevenção de ressangramento',
+      options: [
+        rxAltaOption('epi-hidratacao', '1ª linha', 'Hidratação nasal e compressão', [
+          rxAltaMed('epi-soro', 'Solução fisiológica 0,9% spray nasal — aplicar em cada narina 3 a 6 vezes ao dia, por 5 a 7 dias', []),
+          rxAltaMed('epi-gel', 'Gel nasal salino — aplicar fina camada na porção anterior das narinas 2 vezes ao dia, por 5 a 7 dias', [])
+        ], 'Se recidivar: sentar, inclinar para frente e comprimir a parte mole do nariz continuamente por 10–15 minutos. Não assoar o nariz por 48 horas. Sangramento posterior, instabilidade ou falha do tamponamento impedem alta.')
+      ]
+    }]
+  },
+  {
+    id: 'hipoglicemia-grave',
+    name: 'Plano pós-hipoglicemia grave (alta segura)',
+    icon: '🍬',
+    aliases: ['hipoglicemia grave', 'glicose baixa', 'hipoglicemia'],
+    groups: [{
+      id: 'hipo-resgate',
+      label: 'Plano domiciliar de resgate',
+      options: [
+        rxAltaOption('hipo-carbo', 'Essencial', 'Carboidrato de ação rápida', [
+          rxAltaMed('hipo-glicose', 'Glicose oral 15 a 20 g — usar ao reconhecer sintomas se estiver consciente e conseguindo engolir; repetir glicemia em 15 minutos e repetir a dose se ainda baixa', []),
+          rxAltaMed('hipo-lanche', 'Após corrigir, fazer refeição ou lanche com carboidrato de absorção lenta e proteína', [])
+        ], 'Alta somente se a causa estiver identificada, glicemias seriadas estáveis e houver suporte domiciliar. Ajuste de insulina/sulfonilureia deve ser individualizado; não copiar a dose anterior automaticamente.')
+      ]
+    }, {
+      id: 'hipo-glucagon',
+      label: 'Resgate por familiar — incapaz de ingerir',
+      options: [
+        rxAltaOption('hipo-glucagon-nasal', 'Se disponível', 'Glucagon nasal', [
+          rxAltaMed('hipo-glucagon-3', 'Glucagon nasal 3 mg — administrar 1 dose em uma narina se inconsciência ou incapacidade de engolir; acionar emergência imediatamente', [])
+        ], 'Treinar familiar/cuidador. Não oferecer alimento ou líquido a paciente inconsciente.')
+      ]
+    }]
+  },
+  {
+    id: 'insolacao',
+    name: 'Exaustão pelo calor resolvida (alta orientada)',
+    icon: '☀️',
+    aliases: ['insolacao', 'exaustao pelo calor', 'golpe de calor'],
+    groups: [{
+      id: 'calor-hidratacao',
+      label: 'Hidratação e prevenção',
+      options: [
+        rxAltaOption('calor-sro', '1ª linha', 'Reposição oral', [
+          rxAltaMed('calor-soro', 'Soro de reidratação oral — beber em pequenos volumes frequentes conforme sede e perdas, até urina clara e regular', []),
+          rxAltaMed('calor-ambiente', 'Permanecer em ambiente fresco por 24–48 horas, evitar exercício e exposição solar, usar roupas leves', [])
+        ], 'Não usar antitérmico para hipertermia por calor. Alteração de consciência, temperatura central elevada, hipotensão ou disfunção orgânica caracteriza emergência e impede alta.')
+      ]
+    }]
+  },
+  {
+    id: 'profilaxia-antirrabica',
+    name: 'Profilaxia antirrábica (agenda de retorno)',
+    icon: '🐕',
+    aliases: ['profilaxia antirrabica', 'mordida de animal', 'vacina da raiva'],
+    groups: [{
+      id: 'raiva-agenda',
+      label: 'Cuidados e continuidade no serviço',
+      options: [
+        rxAltaOption('raiva-retorno', 'Essencial', 'Lavagem e agenda vacinal', [
+          rxAltaMed('raiva-ferida', 'Lavar o ferimento com água corrente e sabão por 15 minutos; manter limpo e não ocluir sem avaliação', []),
+          rxAltaMed('raiva-agenda', 'Retornar nas datas registradas pelo serviço para completar a vacinação antirrábica; não interromper o esquema por conta própria', [])
+        ], 'Vacina e imunoglobulina são aplicadas no serviço conforme categoria da exposição e protocolo vigente. Notificar a exposição e observar cão/gato saudável por 10 dias quando indicado.')
+      ]
+    }]
+  },
+  {
+    id: 'sangramento-uterino',
+    name: 'Sangramento uterino anormal estável (alta ambulatorial)',
+    icon: '🩸',
+    aliases: ['sangramento uterino', 'sangramento vaginal', 'menorragia'],
+    groups: [{
+      id: 'sua-controle',
+      label: 'Controle do sangramento — gestação excluída',
+      options: [
+        rxAltaOption('sua-tranexamico', '1ª linha', 'Antifibrinolítico', [
+          rxAltaMed('sua-tranex', 'Ácido tranexâmico 1 g — 1 comprimido VO a cada 8 horas, por até 5 dias enquanto houver sangramento intenso', [])
+        ], 'Contraindicado em trombose ativa ou alto risco trombótico. Confirmar teste de gestação negativo e estabilidade hemodinâmica antes da alta.')
+      ]
+    }, {
+      id: 'sua-hormonal',
+      label: 'Controle hormonal — se indicado pela ginecologia',
+      options: [
+        rxAltaOption('sua-progestageno', 'Alternativa', 'Progestagênio — escolha um', [
+          rxAltaMed('sua-noretisterona', 'Noretisterona 5 mg — 1 comprimido VO a cada 8 horas, conforme plano de desmame prescrito pela ginecologia', [], 'sua-hormonal'),
+          rxAltaMed('sua-medroxi', 'Medroxiprogesterona 10 mg — 1 comprimido VO a cada 12 horas, conforme plano prescrito pela ginecologia', [], 'sua-hormonal')
+        ], 'Não iniciar hormônio automaticamente: revisar risco trombótico, contraindicações e causa PALM-COEIN. Seguimento ginecológico em 1–2 semanas.')
+      ]
+    }]
+  },
+  {
+    id: 'sincope',
+    name: 'Síncope reflexa de baixo risco (alta orientada)',
+    icon: '💫',
+    aliases: ['sincope', 'desmaio', 'vasovagal'],
+    groups: [{
+      id: 'sincope-medidas',
+      label: 'Medidas não farmacológicas — ECG normal',
+      options: [
+        rxAltaOption('sincope-hidratar', '1ª linha', 'Hidratação e manobras preventivas', [
+          rxAltaMed('sincope-agua', 'Hidratação oral regular — aumentar ingestão de água ao longo do dia, salvo restrição por insuficiência cardíaca ou renal', []),
+          rxAltaMed('sincope-postura', 'Ao perceber pródromos, sentar ou deitar e elevar as pernas; levantar lentamente e evitar longos períodos em pé', [])
+        ], 'Somente síncope reflexa de baixo risco, com ECG e avaliação clínica sem sinais de alarme. Não iniciar fludrocortisona ou midodrina automaticamente. Retornar se síncope no esforço, dor torácica, palpitações, dispneia ou recorrência.')
+      ]
+    }]
+  }
+];
+
 const RX_CATALOG_MANUAL = [
   ...RX_HOME_RESP_DERM,
   ...RX_HOME_GI_OLHO,
   ...RX_HOME_RESIDUAL,
   ...RX_HOME_COMPLEX,
+  ...RX_HOME_ORIENTACOES,
   {
     id: 'cefaleias',
     name: 'Cefaleia',

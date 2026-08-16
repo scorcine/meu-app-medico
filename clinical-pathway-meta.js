@@ -155,8 +155,8 @@ const CLINICAL_PATHWAY_BY_ID = {
     scores: [],
     reassessment: null,
     outcomes: ['alta', 'observacao', 'internacao'],
-    homeRx: 'none',
-    notes: 'Alta só se baixo risco clínico documentado.'
+    homeRx: 'curated',
+    notes: 'Alta orientada só para síncope reflexa de baixo risco, com ECG e avaliação sem alarme.'
   },
   'tvp': {
     scores: ['wells-tvp'],
@@ -591,8 +591,9 @@ const CLINICAL_PATHWAY_BY_ID = {
       question: 'Sangramento cessou e o paciente está estável para alta?'
     },
     outcomes: ['alta', 'observacao', 'internacao'],
-    homeRx: 'none',
-    requiresImprovementForDischarge: true
+    homeRx: 'curated',
+    requiresImprovementForDischarge: true,
+    notes: 'Alta somente após cessar o sangramento; modelo prioriza hidratação nasal e prevenção.'
   },
   'conjuntivite': {
     scores: [],
@@ -610,7 +611,8 @@ const CLINICAL_PATHWAY_BY_ID = {
     scores: [],
     reassessment: null,
     outcomes: ['alta', 'transferencia'],
-    homeRx: 'none'
+    homeRx: 'curated',
+    notes: 'Receita apenas após remoção superficial completa e exclusão de perfuração.'
   },
   'trauma-ocular': {
     scores: [],
@@ -637,8 +639,8 @@ const CLINICAL_PATHWAY_BY_ID = {
     scores: [],
     reassessment: null,
     outcomes: ['alta', 'observacao', 'internacao', 'transferencia'],
-    homeRx: 'none',
-    notes: 'Encaminhar ao Guia/obstetrícia conforme gravidade.'
+    homeRx: 'curated',
+    notes: 'Alta orientada somente após avaliação obstétrica e exclusão de gestação ectópica.'
   },
   'eclampsia-pre-eclampsia': {
     scores: [],
@@ -651,7 +653,8 @@ const CLINICAL_PATHWAY_BY_ID = {
     scores: [],
     reassessment: null,
     outcomes: ['alta', 'observacao', 'internacao', 'transferencia'],
-    homeRx: 'none'
+    homeRx: 'curated',
+    notes: 'Modelo para paciente estável e com gestação excluída; hormônio requer avaliação individual.'
   },
   'vulvovaginites': {
     scores: [],
@@ -715,8 +718,9 @@ const CLINICAL_PATHWAY_BY_ID = {
       question: 'Glicemia corrigida e paciente estável?'
     },
     outcomes: ['alta', 'observacao', 'internacao'],
-    homeRx: 'none',
-    requiresImprovementForDischarge: true
+    homeRx: 'curated',
+    requiresImprovementForDischarge: true,
+    notes: 'Alta só após glicemias seriadas estáveis, causa definida, educação e suporte domiciliar.'
   },
   'diabetes-insulina-hipo': {
     scores: [],
@@ -805,8 +809,9 @@ const CLINICAL_PATHWAY_BY_ID = {
       question: 'Temperatura e consciência normalizadas?'
     },
     outcomes: ['alta', 'observacao', 'internacao'],
-    homeRx: 'none',
-    requiresImprovementForDischarge: true
+    homeRx: 'curated',
+    requiresImprovementForDischarge: true,
+    notes: 'Modelo de alta apenas para exaustão pelo calor resolvida; golpe de calor é hospitalar.'
   },
   'queimaduras': {
     scores: [],
@@ -826,8 +831,8 @@ const CLINICAL_PATHWAY_BY_ID = {
     scores: [],
     reassessment: null,
     outcomes: ['alta'],
-    homeRx: 'none',
-    notes: 'Esquema vacinal/IG no serviço; orientar retorno das doses.'
+    homeRx: 'curated',
+    notes: 'Receita registra cuidados e agenda; vacina/imunoglobulina permanecem no serviço.'
   },
 
   /* Parasitoses / hematologia / miscelânea */

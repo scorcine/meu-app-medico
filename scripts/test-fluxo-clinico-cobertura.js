@@ -110,7 +110,9 @@ const curated = evalIn(`(() => {
     'pneumonia-comunitaria', 'pielonefrite', 'tvp', 'dengue', 'chikungunya',
     'edema-mmi', 'sindrome-vestibular', 'ansiedade-crise', 'desconforto-abdominal',
     'alergia-anafilaxia', 'edema-angioneurotico', 'queimaduras',
-    'antiparasitarios', 'ascaridiase', 'anemia-falciforme', 'tuberculose'
+    'antiparasitarios', 'ascaridiase', 'anemia-falciforme', 'tuberculose',
+    'ameaca-aborto', 'corpo-estranho-ocular', 'epistaxe', 'hipoglicemia-grave',
+    'insolacao', 'profilaxia-antirrabica', 'sangramento-uterino', 'sincope'
   ]
     .map(id => ({ id, mode: clinicalPathwayGet(id).homeRx, source: rxGetCatalogEntry(id)?.source }));
 })()`);
