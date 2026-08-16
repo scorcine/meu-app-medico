@@ -75,7 +75,13 @@ const RESIDUAL_IDS = [
   'flebite', 'varizes-mmi', 'ulcera-varicosa', 'ulceras-genitais',
   'soluco-persistente', 'mononucleose', 'diverticulite'
 ];
-const ALL_CURATED_BATCH = [...RESP_DERM_IDS, ...GI_OLHO_IDS, ...RESIDUAL_IDS];
+const COMPLEX_IDS = [
+  'pneumonia-comunitaria', 'pielonefrite', 'tvp', 'dengue', 'chikungunya',
+  'edema-mmi', 'sindrome-vestibular', 'ansiedade-crise', 'desconforto-abdominal',
+  'alergia-anafilaxia', 'edema-angioneurotico', 'queimaduras',
+  'antiparasitarios', 'ascaridiase', 'anemia-falciforme', 'tuberculose'
+];
+const ALL_CURATED_BATCH = [...RESP_DERM_IDS, ...GI_OLHO_IDS, ...RESIDUAL_IDS, ...COMPLEX_IDS];
 
 /* 1. A receita de casa vem do modelo curado, não do protocolo do PS */
 const origem = evalIn(`(() => {
@@ -216,7 +222,12 @@ const checks = [
   ['mono', /Não prescrever amoxicilina/i.test(textoLote('mononucleose'))],
   ['diverticulite', /Abscesso, peritonite/i.test(textoLote('diverticulite'))],
   ['tosse', /investigar TB/i.test(textoLote('tosse'))],
-  ['ulceras-genitais', /penicilina benzatina intramuscular/i.test(textoLote('ulceras-genitais'))]
+  ['ulceras-genitais', /penicilina benzatina intramuscular/i.test(textoLote('ulceras-genitais'))],
+  ['pneumonia', /CURB-65 baixo/i.test(textoLote('pneumonia-comunitaria'))],
+  ['dengue', /jamais AINE/i.test(textoLote('dengue'))],
+  ['tvp', /Confirmar TVP por Doppler/i.test(textoLote('tvp'))],
+  ['anafilaxia', /autoinjetável/i.test(textoLote('alergia-anafilaxia'))],
+  ['tb', /Notificação compulsória/i.test(textoLote('tuberculose'))]
 ];
 if (checks.every(([, ok]) => ok)) {
   pass('lotes novos preservam critérios clínicos e barreiras de segurança');

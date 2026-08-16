@@ -52,7 +52,23 @@ const RX_MANUAL_PRIORITY_IDS = new Set([
   'ulceras-genitais',
   'soluco-persistente',
   'mononucleose',
-  'diverticulite'
+  'diverticulite',
+  'pneumonia-comunitaria',
+  'pielonefrite',
+  'tvp',
+  'dengue',
+  'chikungunya',
+  'edema-mmi',
+  'sindrome-vestibular',
+  'ansiedade-crise',
+  'desconforto-abdominal',
+  'alergia-anafilaxia',
+  'edema-angioneurotico',
+  'queimaduras',
+  'antiparasitarios',
+  'ascaridiase',
+  'anemia-falciforme',
+  'tuberculose'
 ]);
 
 let RX_CATALOG_CACHE = null;

@@ -106,7 +106,11 @@ const curated = evalIn(`(() => {
     'queilite', 'parasitoses-intestinais',
     'fissura-anal', 'artralgia-dor-msk', 'tosse', 'anemia-ferropriva',
     'flebite', 'varizes-mmi', 'ulcera-varicosa', 'ulceras-genitais',
-    'soluco-persistente', 'mononucleose', 'diverticulite'
+    'soluco-persistente', 'mononucleose', 'diverticulite',
+    'pneumonia-comunitaria', 'pielonefrite', 'tvp', 'dengue', 'chikungunya',
+    'edema-mmi', 'sindrome-vestibular', 'ansiedade-crise', 'desconforto-abdominal',
+    'alergia-anafilaxia', 'edema-angioneurotico', 'queimaduras',
+    'antiparasitarios', 'ascaridiase', 'anemia-falciforme', 'tuberculose'
   ]
     .map(id => ({ id, mode: clinicalPathwayGet(id).homeRx, source: rxGetCatalogEntry(id)?.source }));
 })()`);

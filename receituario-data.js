@@ -971,10 +971,312 @@ const RX_HOME_RESIDUAL = [
   }
 ];
 
+const RX_HOME_COMPLEX = [
+  {
+    id: 'pneumonia-comunitaria',
+    name: 'Pneumonia comunitária leve (alta ambulatorial)',
+    icon: '🫁',
+    aliases: ['pneumonia', 'pac', 'pneumonia comunitaria'],
+    groups: [{
+      id: 'pn-atb',
+      label: 'Antibiótico oral — CURB-65 baixo / apto à VO',
+      options: [
+        rxAltaOption('pn-atb-escolha', '1ª linha', 'Esquema oral — escolha um', [
+          rxAltaMed('pn-amoxclav', 'Amoxicilina + clavulanato 875/125 mg — 1 comprimido VO a cada 12 horas, por 5 a 7 dias', ['antibiotic', 'penicillin'], 'pn-atb'),
+          rxAltaMed('pn-amox', 'Amoxicilina 1 g — 1 comprimido VO a cada 8 horas, por 5 a 7 dias (sem comorbidades)', ['antibiotic', 'penicillin'], 'pn-atb'),
+          rxAltaMed('pn-levoflox', 'Levofloxacino 750 mg — 1 comprimido VO 1 vez ao dia, por 5 dias (alergia a beta-lactâmico ou falha)', ['antibiotic'], 'pn-atb')
+        ], 'Só se CURB-65 baixo, SpO₂ adequada, VO possível e sem critérios de internação. Retornar em 48–72 h se febre, dispneia ou piora.', ['antibiotic'])
+      ]
+    }, {
+      id: 'pn-sintomatico',
+      label: 'Sintomáticos',
+      options: [
+        rxAltaOption('pn-analgesico', 'Adjuvante', 'Analgésico/antitérmico — escolha um', [
+          rxAltaMed('pn-paracetamol', 'Paracetamol 500 a 750 mg — VO a cada 6 a 8 horas, se dor ou febre (máximo 3 g/dia), por até 5 dias', ['analgesic_non_opioid'], 'pn-analgesia'),
+          rxAltaMed('pn-dipirona', 'Dipirona 500 mg a 1 g — VO a cada 6 a 8 horas, se dor ou febre (máximo 4 g/dia), por até 5 dias', ['analgesic_non_opioid'], 'pn-analgesia')
+        ], 'Hidratação e repouso relativo. Não copiar ciclos inalatórios da unidade para a receita de casa.')
+      ]
+    }]
+  },
+  {
+    id: 'pielonefrite',
+    name: 'Pielonefrite não complicada (alta ambulatorial)',
+    icon: '🩺',
+    aliases: ['pielonefrite', 'itu alta', 'infeccao urinaria alta'],
+    groups: [{
+      id: 'pielo-atb',
+      label: 'Antibiótico oral — estável, VO possível',
+      options: [
+        rxAltaOption('pielo-atb-escolha', '1ª linha', 'Esquema oral — escolha um', [
+          rxAltaMed('pielo-cipro', 'Ciprofloxacino 500 mg — 1 comprimido VO a cada 12 horas, por 7 dias', ['antibiotic'], 'pielo-atb'),
+          rxAltaMed('pielo-amoxclav', 'Amoxicilina + clavulanato 875/125 mg — 1 comprimido VO a cada 12 horas, por 10 a 14 dias', ['antibiotic', 'penicillin'], 'pielo-atb'),
+          rxAltaMed('pielo-cefuroxima', 'Cefuroxima 500 mg — 1 comprimido VO a cada 12 horas, por 10 a 14 dias', ['antibiotic'], 'pielo-atb')
+        ], 'Só se afebril ou em defervescência, sem vômitos, sem sepse e sem obstrução. Gestação, uropatia e imunodepressão exigem outra via.', ['antibiotic'])
+      ]
+    }, {
+      id: 'pielo-analgesia',
+      label: 'Analgesia oral',
+      options: [
+        rxAltaOption('pielo-analgesico', 'Adjuvante', 'Analgésico — escolha um', [
+          rxAltaMed('pielo-dipirona', 'Dipirona 500 mg a 1 g — VO a cada 6 a 8 horas, se dor (máximo 4 g/dia), por até 3 dias', ['analgesic_non_opioid'], 'pielo-analgesia'),
+          rxAltaMed('pielo-paracetamol', 'Paracetamol 500 a 750 mg — VO a cada 6 a 8 horas, se dor (máximo 3 g/dia), por até 3 dias', ['analgesic_non_opioid'], 'pielo-analgesia')
+        ], 'Retornar se febre persistente > 48–72 h, vômitos ou dor lombar intensa.')
+      ]
+    }]
+  },
+  {
+    id: 'tvp',
+    name: 'TVP de baixo risco (alta ambulatorial)',
+    icon: '🦵',
+    aliases: ['tvp', 'trombose venosa profunda', 'trombose'],
+    groups: [{
+      id: 'tvp-anticoag',
+      label: 'Anticoagulação oral — após confirmação e exclusão de contraindicação',
+      options: [
+        rxAltaOption('tvp-doac', '1ª linha', 'Anticoagulante oral — escolha um', [
+          rxAltaMed('tvp-rivaro', 'Rivaroxabana 15 mg — 1 comprimido VO a cada 12 horas, por 21 dias; depois 20 mg VO 1 vez ao dia com alimentação (duração conforme risco e orientação vascular)', ['anticoagulant'], 'tvp-doac'),
+          rxAltaMed('tvp-apixa', 'Apixabana 10 mg — 1 comprimido VO a cada 12 horas, por 7 dias; depois 5 mg VO a cada 12 horas (duração conforme risco)', ['anticoagulant'], 'tvp-doac')
+        ], 'Confirmar TVP por Doppler. Não usar se sangramento ativo, plaquetopenia grave, gestação ou necessidade de procedimento urgente. Orientar sinais de TEP e sangramento.', ['anticoagulant'])
+      ]
+    }, {
+      id: 'tvp-suporte',
+      label: 'Medidas de suporte',
+      options: [
+        rxAltaOption('tvp-cuidados', 'Adjuvante', 'Elevação e analgesia', [
+          rxAltaMed('tvp-elevar', 'Elevar o membro, deambular conforme orientação e evitar imobilização prolongada', []),
+          rxAltaMed('tvp-paracetamol', 'Paracetamol 500 a 750 mg — VO a cada 6 a 8 horas, se dor (máximo 3 g/dia), por até 5 dias', ['analgesic_non_opioid'])
+        ], 'Compressão elástica conforme avaliação. Retorno vascular programado.')
+      ]
+    }]
+  },
+  {
+    id: 'dengue',
+    name: 'Dengue grupo A (alta ambulatorial)',
+    icon: '🦟',
+    aliases: ['dengue', 'arbovirose', 'febre dengue'],
+    groups: [{
+      id: 'dengue-hidrata',
+      label: 'Hidratação e sintomáticos — sem AINE',
+      options: [
+        rxAltaOption('dengue-suporte', '1ª linha', 'Hidratação oral e paracetamol', [
+          rxAltaMed('dengue-soro', 'Soro de reidratação oral ou água/isotônico — volume generoso conforme orientação; manter diurese', []),
+          rxAltaMed('dengue-paracetamol', 'Paracetamol 500 a 750 mg — VO a cada 6 a 8 horas, se dor ou febre (máximo 3 g/dia), enquanto houver sintomas', ['analgesic_non_opioid'])
+        ], 'Não usar dipirona de rotina se preferir paracetamol exclusivo; jamais AINE ou AAS (risco hemorrágico). Retorno imediato se dor abdominal intensa, vômitos, sangramento, sonolência, hipotensão ou queda abrupta da febre com piora.')
+      ]
+    }]
+  },
+  {
+    id: 'chikungunya',
+    name: 'Chikungunya (alta ambulatorial)',
+    icon: '🦟',
+    aliases: ['chikungunya', 'chik', 'febre chikungunya'],
+    groups: [{
+      id: 'chik-analgesia',
+      label: 'Analgesia — após excluir dengue aguda com risco',
+      options: [
+        rxAltaOption('chik-analgesico', '1ª linha', 'Analgésico — escolha um', [
+          rxAltaMed('chik-paracetamol', 'Paracetamol 500 a 750 mg — VO a cada 6 a 8 horas, se dor ou febre (máximo 3 g/dia)', ['analgesic_non_opioid'], 'chik-analgesia'),
+          rxAltaMed('chik-dipirona', 'Dipirona 500 mg a 1 g — VO a cada 6 a 8 horas, se dor ou febre (máximo 4 g/dia)', ['analgesic_non_opioid'], 'chik-analgesia'),
+          rxAltaMed('chik-ibuprofeno', 'Ibuprofeno 400 mg — 1 comprimido VO a cada 8 horas, após alimentação, por até 5 a 7 dias (só se dengue descartada)', ['nsaid'], 'chik-analgesia')
+        ], 'Na fase febril inicial, preferir paracetamol até afastar dengue. Artralgia intensa pode exigir reavaliação reumatológica se persistir semanas.')
+      ]
+    }]
+  },
+  {
+    id: 'edema-mmi',
+    name: 'Edema de membros inferiores (alta ambulatorial)',
+    icon: '🦵',
+    aliases: ['edema mmi', 'pernas inchadas', 'edema de membros'],
+    groups: [{
+      id: 'edema-cuidados',
+      label: 'Medidas gerais — após excluir TVP/IC descompensada',
+      options: [
+        rxAltaOption('edema-conservador', '1ª linha', 'Elevação e compressão', [
+          rxAltaMed('edema-elevar', 'Elevar as pernas acima do nível do coração várias vezes ao dia; restringir sal; meia elástica se não houver contraindicação arterial', []),
+          rxAltaMed('edema-paracetamol', 'Paracetamol 500 a 750 mg — VO a cada 6 a 8 horas, se dor (máximo 3 g/dia), por até 3 dias', ['analgesic_non_opioid'])
+        ], 'Não iniciar diurético às cegas. Dispneia, dor unilateral súbita, crepitações ou anasarca exigem reavaliação urgente.')
+      ]
+    }]
+  },
+  {
+    id: 'sindrome-vestibular',
+    name: 'Síndrome vestibular periférica (alta ambulatorial)',
+    icon: '🌀',
+    aliases: ['vertigem', 'labirintite', 'sindrome vestibular'],
+    groups: [{
+      id: 'vest-sintomatico',
+      label: 'Sintomáticos — após excluir central',
+      options: [
+        rxAltaOption('vest-antiemetico', '1ª linha', 'Antivertiginoso — escolha um', [
+          rxAltaMed('vest-dimenidrinato', 'Dimenidrinato 50 mg — 1 comprimido VO a cada 6 a 8 horas, se vertigem, por até 3 a 5 dias', ['antiemetic'], 'vest-tx'),
+          rxAltaMed('vest-meclizina', 'Meclizina 25 mg — 1 comprimido VO a cada 8 a 12 horas, se vertigem, por até 3 a 5 dias', ['antiemetic'], 'vest-tx'),
+          rxAltaMed('vest-ondansetrona', 'Ondansetrona 4 a 8 mg — VO a cada 8 horas, se náusea intensa, por até 3 dias', ['antiemetic'], 'vest-tx')
+        ], 'Déficit neurológico focal, cefaleia súbita, diplopia ou ataxia progressiva impedem alta simples. Evitar sedativos prolongados em idosos.')
+      ]
+    }]
+  },
+  {
+    id: 'ansiedade-crise',
+    name: 'Crise de ansiedade (alta ambulatorial)',
+    icon: '💭',
+    aliases: ['ansiedade', 'panico', 'crise de panico'],
+    groups: [{
+      id: 'ans-controle',
+      label: 'Controle sintomático curto — sem organicidade',
+      options: [
+        rxAltaOption('ans-escolha', '1ª linha', 'Ansiolítico leve — escolha um', [
+          rxAltaMed('ans-hidroxizina', 'Hidroxizina 25 mg — 1 comprimido VO a cada 8 a 12 horas, se ansiedade, por até 3 a 5 dias', [], 'ans-tx'),
+          rxAltaMed('ans-clonazepam', 'Clonazepam 0,5 mg — 1 comprimido VO se crise intensa (máximo 1 a 2 mg/dia), por até 3 dias', [], 'ans-tx')
+        ], 'Excluir SCA, asma, hipoglicemia e tireotoxicose. Evitar dirigir sob sedação. Encaminhar saúde mental se recorrente; benzodiazepínico só por período muito curto.')
+      ]
+    }]
+  },
+  {
+    id: 'desconforto-abdominal',
+    name: 'Desconforto abdominal inespecífico (alta ambulatorial)',
+    icon: '🩺',
+    aliases: ['desconforto abdominal', 'dor abdominal leve', 'gases'],
+    groups: [{
+      id: 'abd-sintomatico',
+      label: 'Sintomáticos — sem abdome agudo',
+      options: [
+        rxAltaOption('abd-escolha', '1ª linha', 'Analgésico/antiespasmódico — escolha', [
+          rxAltaMed('abd-butilescopolamina', 'Butilbrometo de escopolamina 10 mg — 1 comprimido VO a cada 8 horas, se cólica, por até 3 dias', [], 'abd-tx'),
+          rxAltaMed('abd-dipirona', 'Dipirona 500 mg a 1 g — VO a cada 6 a 8 horas, se dor (máximo 4 g/dia), por até 3 dias', ['analgesic_non_opioid'], 'abd-tx'),
+          rxAltaMed('abd-simeticona', 'Simeticona 40 a 80 mg — VO a cada 8 horas, se flatulência, por até 3 dias', [], 'abd-tx')
+        ], 'Defesa, febre, vômitos incoercíveis, sangue ou dor migratória para fossa iliaca exigem reavaliação — não usar este modelo.')
+      ]
+    }]
+  },
+  {
+    id: 'alergia-anafilaxia',
+    name: 'Pós-anafilaxia (alta após observação)',
+    icon: '⚠️',
+    aliases: ['anafilaxia', 'alergia grave', 'choque anafilatico'],
+    groups: [{
+      id: 'ana-plano',
+      label: 'Plano de alta — após observação adequada',
+      options: [
+        rxAltaOption('ana-adrenalina', 'Essencial', 'Adrenalina autoinjetável e anti-histamínico', [
+          rxAltaMed('ana-autoinjetor', 'Adrenalina autoinjetável 0,3 mg — aplicar no meio da face anterolateral da coxa conforme o dispositivo, se nova reação grave; procurar emergência imediatamente após o uso', []),
+          rxAltaMed('ana-loratadina', 'Loratadina 10 mg — 1 comprimido VO 1 vez ao dia, por 3 a 5 dias', ['antihistamine']),
+          rxAltaMed('ana-prednisona', 'Prednisona 40 mg — 1 comprimido VO 1 vez ao dia, por 3 a 5 dias (se indicado pelo quadro)', ['corticosteroid'])
+        ], 'Alta só após observação. Evitar o alérgeno. Orientar retorno imediato se recidiva. Não substituir observação por receita.')
+      ]
+    }]
+  },
+  {
+    id: 'edema-angioneurotico',
+    name: 'Angioedema leve estável (alta após observação)',
+    icon: '😮',
+    aliases: ['angioedema', 'edema angioneurotico', 'edema de glote leve'],
+    groups: [{
+      id: 'angio-vo',
+      label: 'Tratamento oral — vias aéreas estáveis',
+      options: [
+        rxAltaOption('angio-anti', '1ª linha', 'Anti-histamínico ± corticoide', [
+          rxAltaMed('angio-loratadina', 'Loratadina 10 mg — 1 comprimido VO 1 vez ao dia, por 3 a 5 dias', ['antihistamine'], 'angio-tx'),
+          rxAltaMed('angio-prednisona', 'Prednisona 40 mg — 1 comprimido VO 1 vez ao dia, por 3 a 5 dias', ['corticosteroid'], 'angio-tx')
+        ], 'Estridor, disfagia, hipotensão ou uso de IECA com progressão exigem conduta hospitalar. Revisar IECA/ARA2 quando aplicável.')
+      ]
+    }]
+  },
+  {
+    id: 'queimaduras',
+    name: 'Queimadura leve (alta ambulatorial)',
+    icon: '🔥',
+    aliases: ['queimadura', 'queimadura leve', 'burn'],
+    groups: [{
+      id: 'queim-local',
+      label: 'Cuidados locais — pequena extensão, sem 3º grau',
+      options: [
+        rxAltaOption('queim-curativo', '1ª linha', 'Limpeza e cobertura', [
+          rxAltaMed('queim-sf', 'Limpar com solução fisiológica 0,9%, secar e cobrir com curativo limpo não aderente; trocar conforme exsudato', []),
+          rxAltaMed('queim-sulfadiazina', 'Sulfadiazina de prata 1% creme — aplicar camada fina 1 a 2 vezes ao dia sob curativo, se indicado (evitar face/áreas extensas sem orientação)', [])
+        ], 'Queimadura de mão/face/períneo, circunferencial, elétrica, química ou > pequena área exige avaliação especializada.')
+      ]
+    }, {
+      id: 'queim-analgesia',
+      label: 'Analgesia oral',
+      options: [
+        rxAltaOption('queim-analgesico', 'Adjuvante', 'Analgésico — escolha um', [
+          rxAltaMed('queim-dipirona', 'Dipirona 500 mg a 1 g — VO a cada 6 a 8 horas, se dor (máximo 4 g/dia), por até 3 dias', ['analgesic_non_opioid'], 'queim-analgesia'),
+          rxAltaMed('queim-paracetamol', 'Paracetamol 500 a 750 mg — VO a cada 6 a 8 horas, se dor (máximo 3 g/dia), por até 3 dias', ['analgesic_non_opioid'], 'queim-analgesia'),
+          rxAltaMed('queim-ibuprofeno', 'Ibuprofeno 400 mg — 1 comprimido VO a cada 8 horas, após alimentação, por até 3 dias', ['nsaid'], 'queim-analgesia')
+        ], 'Atualizar antitetânica conforme calendário.')
+      ]
+    }]
+  },
+  {
+    id: 'antiparasitarios',
+    name: 'Antiparasitários (alta ambulatorial)',
+    icon: '🦠',
+    aliases: ['antiparasitario', 'vermes', 'parasitose'],
+    groups: [{
+      id: 'anti-par',
+      label: 'Esquema oral comum',
+      options: [
+        rxAltaOption('anti-albendazol', '1ª linha', 'Benzimidazol', [
+          rxAltaMed('anti-albendazol-400', 'Albendazol 400 mg — 1 comprimido VO dose única; repetir em 14 dias se oxiurose e tratar contactantes', ['antiparasitic'])
+        ], 'Confirmar indicação clínica/laboratorial. Gestação no 1º trimestre: evitar albendazol sem orientação específica.')
+      ]
+    }]
+  },
+  {
+    id: 'ascaridiase',
+    name: 'Ascaridíase (alta ambulatorial)',
+    icon: '🦠',
+    aliases: ['ascaris', 'ascaridiase', 'lombriga'],
+    groups: [{
+      id: 'asc-tx',
+      label: 'Tratamento oral',
+      options: [
+        rxAltaOption('asc-albendazol', '1ª linha', 'Benzimidazol — escolha um', [
+          rxAltaMed('asc-albendazol-400', 'Albendazol 400 mg — 1 comprimido VO dose única', ['antiparasitic'], 'asc-tx'),
+          rxAltaMed('asc-mebendazol', 'Mebendazol 100 mg — 1 comprimido VO a cada 12 horas, por 3 dias', ['antiparasitic'], 'asc-tx')
+        ], 'Obstrução intestinal ou migração ectópica exigem conduta hospitalar.')
+      ]
+    }]
+  },
+  {
+    id: 'anemia-falciforme',
+    name: 'Crise álgica falciforme leve (alta ambulatorial)',
+    icon: '🩸',
+    aliases: ['anemia falciforme', 'drepanocitose', 'crise falciforme'],
+    groups: [{
+      id: 'falc-analgesia',
+      label: 'Analgesia oral — após melhora na unidade',
+      options: [
+        rxAltaOption('falc-analgesico', '1ª linha', 'Analgésico — escolha um', [
+          rxAltaMed('falc-dipirona', 'Dipirona 500 mg a 1 g — VO a cada 6 a 8 horas, se dor (máximo 4 g/dia), por até 3 a 5 dias', ['analgesic_non_opioid'], 'falc-analgesia'),
+          rxAltaMed('falc-paracetamol', 'Paracetamol 500 a 750 mg — VO a cada 6 a 8 horas, se dor (máximo 3 g/dia), por até 3 a 5 dias', ['analgesic_non_opioid'], 'falc-analgesia'),
+          rxAltaMed('falc-ibuprofeno', 'Ibuprofeno 400 mg — 1 comprimido VO a cada 8 horas, após alimentação, por até 3 dias (se sem contraindicação renal)', ['nsaid'], 'falc-analgesia')
+        ], 'Hidratação oral generosa. Febre, tórax agudo, déficit neurológico, priapismo ou dor refratária impedem alta. Manter ácido fólico se já em uso crônico.')
+      ]
+    }]
+  },
+  {
+    id: 'tuberculose',
+    name: 'Tuberculose — esquema básico (alta ambulatorial)',
+    icon: '🫁',
+    aliases: ['tuberculose', 'tb', 'tisiologia'],
+    groups: [{
+      id: 'tb-rhze',
+      label: 'Fase intensiva — sob programa de TB',
+      options: [
+        rxAltaOption('tb-esquema', '1ª linha', 'RHZE combinado conforme peso', [
+          rxAltaMed('tb-rhze', 'Comprimido RHZE (rifampicina + isoniazida + pirazinamida + etambutol) — dose conforme faixa de peso, VO 1 vez ao dia em jejum, por 2 meses na fase intensiva; seguir com RH conforme protocolo do serviço de TB', ['antitubercular'])
+        ], 'Notificação compulsória e vinculação ao programa de TB são obrigatórias. Não iniciar/ajustar esquema fora do protocolo oficial. Orientar hepatotoxicidade e retorno imediato se icterícia ou neuropatia.')
+      ]
+    }]
+  }
+];
+
 const RX_CATALOG_MANUAL = [
   ...RX_HOME_RESP_DERM,
   ...RX_HOME_GI_OLHO,
   ...RX_HOME_RESIDUAL,
+  ...RX_HOME_COMPLEX,
   {
     id: 'cefaleias',
     name: 'Cefaleia',

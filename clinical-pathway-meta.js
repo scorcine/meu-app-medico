@@ -66,9 +66,9 @@ const CLINICAL_PATHWAY_BY_ID = {
       question: 'Há melhora clínica suficiente para alta ambulatorial?'
     },
     outcomes: ['alta', 'observacao', 'internacao', 'transferencia'],
-    homeRx: 'blocked',
+    homeRx: 'curated',
     requiresImprovementForDischarge: true,
-    notes: 'CURB-65 guia local de tratamento. Receita de casa exige modelo curado (ainda bloqueada).'
+    notes: 'CURB-65 guia local. Receita VO só se apto à alta; não copiar dose hospitalar.'
   },
   'edema-agudo-pulmao': {
     scores: [],
@@ -162,8 +162,8 @@ const CLINICAL_PATHWAY_BY_ID = {
     scores: ['wells-tvp'],
     reassessment: null,
     outcomes: ['alta', 'observacao', 'internacao'],
-    homeRx: 'blocked',
-    notes: 'Anticoagulação de alta exige modelo curado; não copiar dose EV do PS.'
+    homeRx: 'curated',
+    notes: 'DOAC oral após confirmação; não copiar heparina EV do PS.'
   },
   'hda': {
     scores: [],
@@ -176,7 +176,8 @@ const CLINICAL_PATHWAY_BY_ID = {
     scores: [],
     reassessment: null,
     outcomes: ['alta', 'observacao', 'internacao'],
-    homeRx: 'blocked'
+    homeRx: 'curated',
+    notes: 'Medidas gerais; sem diurético automático.'
   },
   'flebite': {
     scores: [],
@@ -251,7 +252,7 @@ const CLINICAL_PATHWAY_BY_ID = {
       question: 'Há melhora suficiente para alta ambulatorial?'
     },
     outcomes: ['alta', 'observacao', 'internacao'],
-    homeRx: 'blocked',
+    homeRx: 'curated',
     requiresImprovementForDischarge: true
   },
   'ansiedade-crise': {
@@ -262,8 +263,9 @@ const CLINICAL_PATHWAY_BY_ID = {
       question: 'Sintomas cederam o suficiente para alta?'
     },
     outcomes: ['alta', 'observacao'],
-    homeRx: 'blocked',
-    requiresImprovementForDischarge: true
+    homeRx: 'curated',
+    requiresImprovementForDischarge: true,
+    notes: 'Benzodiazepínico só curto; excluir causa orgânica.'
   },
 
   /* Infeccioso / dermatológico ambulatorial frequente */
@@ -287,8 +289,9 @@ const CLINICAL_PATHWAY_BY_ID = {
       question: 'Paciente está estável para alta com antibiótico VO?'
     },
     outcomes: ['alta', 'observacao', 'internacao'],
-    homeRx: 'blocked',
-    requiresImprovementForDischarge: true
+    homeRx: 'curated',
+    requiresImprovementForDischarge: true,
+    notes: 'VO só se estável e sem sepse/obstrução.'
   },
   'celulite': {
     scores: [],
@@ -389,15 +392,16 @@ const CLINICAL_PATHWAY_BY_ID = {
       question: 'Classificação e hidratação permitem alta com retorno programado?'
     },
     outcomes: ['alta', 'observacao', 'internacao', 'transferencia'],
-    homeRx: 'blocked',
+    homeRx: 'curated',
     requiresImprovementForDischarge: true,
-    notes: 'Alta só dengue A sem sinais de alarme; retorno obrigatório.'
+    notes: 'Alta só dengue A sem sinais de alarme; sem AINE; retorno obrigatório.'
   },
   'chikungunya': {
     scores: [],
     reassessment: null,
     outcomes: ['alta', 'observacao', 'internacao'],
-    homeRx: 'blocked'
+    homeRx: 'curated',
+    notes: 'AINE só após afastar dengue.'
   },
   'malaria': {
     scores: [],
@@ -502,7 +506,8 @@ const CLINICAL_PATHWAY_BY_ID = {
     scores: [],
     reassessment: null,
     outcomes: ['alta'],
-    homeRx: 'blocked'
+    homeRx: 'curated',
+    notes: 'Só sem sinais de abdome agudo.'
   },
   'dispepsia-drge': {
     scores: [],
@@ -742,9 +747,9 @@ const CLINICAL_PATHWAY_BY_ID = {
       question: 'Há resolução suficiente para observação/alta com plano de anaphylaxia?'
     },
     outcomes: ['observacao', 'internacao', 'transferencia'],
-    homeRx: 'blocked',
+    homeRx: 'curated',
     requiresImprovementForDischarge: true,
-    notes: 'Alta precoce sem observação prolongada é exceção; receita de adrenalina autoinjetável exige modelo curado.'
+    notes: 'Receita pós-observação: autoinjetor + anti-histamínico; não substitui observação.'
   },
   'edema-angioneurotico': {
     scores: [],
@@ -754,7 +759,7 @@ const CLINICAL_PATHWAY_BY_ID = {
       question: 'Vias aéreas estáveis para observação/alta?'
     },
     outcomes: ['observacao', 'internacao', 'transferencia'],
-    homeRx: 'blocked',
+    homeRx: 'curated',
     requiresImprovementForDischarge: true
   },
   'alcoolismo-intox-abstinencia': {
@@ -807,7 +812,8 @@ const CLINICAL_PATHWAY_BY_ID = {
     scores: [],
     reassessment: null,
     outcomes: ['alta', 'observacao', 'internacao', 'transferencia'],
-    homeRx: 'blocked'
+    homeRx: 'curated',
+    notes: 'Só queimadura leve de pequena extensão.'
   },
   'trauma-atls': {
     scores: [],
@@ -829,13 +835,13 @@ const CLINICAL_PATHWAY_BY_ID = {
     scores: [],
     reassessment: null,
     outcomes: ['alta'],
-    homeRx: 'blocked'
+    homeRx: 'curated'
   },
   'ascaridiase': {
     scores: [],
     reassessment: null,
     outcomes: ['alta'],
-    homeRx: 'blocked'
+    homeRx: 'curated'
   },
   'parasitoses-intestinais': {
     scores: [],
@@ -858,8 +864,9 @@ const CLINICAL_PATHWAY_BY_ID = {
       question: 'Dor controlada o suficiente para alta?'
     },
     outcomes: ['alta', 'observacao', 'internacao'],
-    homeRx: 'blocked',
-    requiresImprovementForDischarge: true
+    homeRx: 'curated',
+    requiresImprovementForDischarge: true,
+    notes: 'Analgesia VO após melhora; sem opioide parenteral automático.'
   },
   'soluco-persistente': {
     scores: [],
@@ -871,8 +878,8 @@ const CLINICAL_PATHWAY_BY_ID = {
     scores: [],
     reassessment: null,
     outcomes: ['alta', 'observacao', 'internacao'],
-    homeRx: 'blocked',
-    notes: 'RHZE exige notificação e modelo curado; não copiar do PS automaticamente.'
+    homeRx: 'curated',
+    notes: 'RHZE sob programa de TB e notificação; não copiar esquema do PS automaticamente.'
   }
 };
 
