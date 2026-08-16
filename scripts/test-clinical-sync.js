@@ -88,7 +88,11 @@ async function main () {
   const pushB = await pushClinical(tokenB, { [key]: payloadB }, t2, true);
   if (pushB.status !== 200) throw new Error('Push B falhou');
 
-  const cloud2 = await pullClinical(tokenA);
+  // Login em B encerra a sessão de A (uma sessão por conta) — reloga A para o pull.
+  const tokenA2 = await login(email, password);
+  console.log('  OK   Aparelho A — relogin após sessão única');
+
+  const cloud2 = await pullClinical(tokenA2);
   if (cloud2.entries[key] !== payloadB) {
     throw new Error('Aparelho A não viu atualização do B');
   }

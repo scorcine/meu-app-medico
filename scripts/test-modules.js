@@ -138,10 +138,23 @@ try {
 } catch (e) { fail('Interpretação', e.message); }
 
 try {
-  const calc = runScripts(['app.js'], ['CALC_AREAS']);
-  const total = calc.CALC_AREAS?.reduce((n, a) => n + a.calculators.length, 0) || 0;
-  if (total >= 50) pass('Calculadoras', total + ' calculadoras');
-  else fail('Calculadoras', total);
+  // app.js registra listeners no load; stub mínimo para contar o catálogo sem DOM.
+  const prevDoc = global.document;
+  global.document = {
+    addEventListener () {},
+    getElementById () { return null; },
+    querySelector () { return null; },
+    querySelectorAll () { return []; }
+  };
+  try {
+    const calc = runScripts(['app.js'], ['CALC_AREAS']);
+    const total = calc.CALC_AREAS?.reduce((n, a) => n + a.calculators.length, 0) || 0;
+    if (total >= 50) pass('Calculadoras', total + ' calculadoras');
+    else fail('Calculadoras', total);
+  } finally {
+    if (prevDoc === undefined) delete global.document;
+    else global.document = prevDoc;
+  }
 } catch (e) { fail('Calculadoras', e.message); }
 
 console.log('\nRender UI (jsdom):\n');
@@ -166,8 +179,8 @@ const SCRIPTS = [
   'calculators-neuro.js', 'calculators-derma.js', 'calculators-orto.js', 'calculators-extras.js',
   'emergency-guide.js',
   'ventilacao-mecanica.js',
+  'clinical-pathway-meta.js',
   'tratamento-hospitalar-content-1.js', 'tratamento-hospitalar-content-2.js', 'tratamento-hospitalar.js',
-  'ventilacao-mecanica.js',
   'pronto-socorro-content-1.js', 'pronto-socorro-content-2.js', 'pronto-socorro-content-3.js',
   'pronto-socorro-content-4.js', 'pronto-socorro-content-5.js', 'ps-drug-meta-gaps.js', 'med-promoted-meta.js',
   'pronto-socorro-interactive-drugs.js', 'pronto-socorro-interactive-data.js',
@@ -207,6 +220,9 @@ try {
   window.medhubHasSessionCryptoKey = () => true;
   global.medhubHasSessionCryptoKey = () => true;
   initAppCore({ name: 'Test', email: 'test@local.dev' });
+  // initAppCore agenda inits em async; garantir grades de calc/emerg no sync do teste.
+  if (typeof initCalcEssenciais === 'function') initCalcEssenciais();
+  if (typeof initGuiaEmergencia === 'function') initGuiaEmergencia();
 
   UI.forEach(([label, section, elId, min]) => {
     showSection(section);
