@@ -521,27 +521,69 @@ function psClosureContextText () {
   return draft;
 }
 
-function psBuildClosureSummary (conditionName, selectedLabels, reassessmentText) {
-  const draft = psClosureContextText();
-  const paciente = [
-    draft?.nome,
-    draft?.idade ? (/\banos?\b/i.test(String(draft.idade)) ? draft.idade : `${draft.idade} anos`) : '',
-    draft?.sexo
-  ].filter(Boolean).join(' · ') || 'Paciente não informado';
+function psEscape (value) {
+  if (typeof emergSummaryEscape === 'function') return emergSummaryEscape(value);
+  return String(value || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
 
+/* Mesmo cabeçalho dos documentos do Guia de emergência: paciente, médico, CRM e datas */
+function psDocumentContext () {
+  if (typeof emergSummaryContext === 'function') return emergSummaryContext();
+
+  const draft = psClosureContextText();
+  let profile = null;
+  try {
+    if (typeof medhubLoadUserProfile === 'function') profile = medhubLoadUserProfile();
+  } catch { /* perfil local indisponível */ }
+
+  const crmNumber = String(profile?.crmNumber || '').replace(/\D/g, '');
+  const crm = crmNumber
+    ? `CRM-${String(profile?.crmUf || 'SP').toUpperCase()} ${crmNumber}`
+    : '';
+  const started = draft?.startedAt ? new Date(draft.startedAt) : null;
+  const startedLabel = started && !Number.isNaN(started.getTime())
+    ? started.toLocaleString('pt-BR')
+    : new Date().toLocaleString('pt-BR');
+
+  return {
+    patient: [
+      draft?.nome,
+      draft?.idade ? (/\banos?\b/i.test(String(draft.idade)) ? draft.idade : `${draft.idade} anos`) : '',
+      draft?.sexo,
+      (draft?.queixas || []).join(' · ')
+    ].filter(Boolean).map(psEscape).join(' · '),
+    allergies: psEscape(draft?.alergias || 'Não informadas'),
+    doctor: psEscape(profile?.rxDisplayName || 'Médico(a) responsável'),
+    crm: psEscape(crm || 'CRM não informado'),
+    startedAt: psEscape(startedLabel),
+    finishedAt: psEscape(new Date().toLocaleString('pt-BR'))
+  };
+}
+
+function psDocumentHeaderHtml (title, dateLabel) {
+  const context = psDocumentContext();
+  return `
+    <h1>${psEscape(title)}</h1>
+    <p class="meta"><strong>Paciente:</strong> ${context.patient || 'Não informado'}</p>
+    <p class="meta"><strong>Alergias:</strong> ${context.allergies}</p>
+    <p class="meta"><strong>Médico(a):</strong> ${context.doctor} · <strong>${context.crm}</strong></p>
+    <p class="meta"><strong>Data do atendimento:</strong> ${context.startedAt} · <strong>${psEscape(dateLabel)}:</strong> ${context.finishedAt}</p>`;
+}
+
+function psBuildClosureSummary (conditionName, selectedLabels, reassessmentText) {
   const itens = selectedLabels.length
     ? selectedLabels.map(label => `<li>${label}</li>`).join('')
     : '<li>Nenhuma medicação marcada.</li>';
 
   return `
-    <h2>${conditionName} — resumo do atendimento</h2>
-    <p><strong>Paciente:</strong> ${paciente}</p>
-    <p><strong>Alergias:</strong> ${draft?.alergias || 'Não informadas'}</p>
-    <p><strong>Queixas:</strong> ${(draft?.queixas || []).join(' · ') || 'Não informadas'}</p>
-    <p><strong>Data:</strong> ${new Date().toLocaleString('pt-BR')}</p>
-    <h3>Conduta escolhida</h3>
+    ${psDocumentHeaderHtml(`${conditionName} — resumo do atendimento`, 'Finalizado')}
+    <h2>Conduta escolhida</h2>
     <ul>${itens}</ul>
-    ${reassessmentText ? `<h3>Reavaliação</h3><p>${reassessmentText}</p>` : ''}`;
+    ${reassessmentText ? `<h2>Reavaliação</h2><p>${reassessmentText}</p>` : ''}`;
 }
 
 function psOpenSectionWithSearch (sectionId, inputId, query) {
@@ -903,12 +945,20 @@ function psRenderInteractiveRx (conditionId, container) {
     panel.querySelector('[data-ps-cycle-prescription]')?.addEventListener('click', () => {
       const dose = selectedGuidedDose();
       if (!dose) return;
-      const draft = psClosureContextText();
+      const outrasEscolhas = selectedLabels().filter(label => !label.includes(dose.text));
       const html = `
-        <h2>${conditionName} — prescrição de administração imediata</h2>
-        <p><strong>Paciente:</strong> ${draft?.nome || 'Paciente não informado'}</p>
-        <p><strong>Prescrição:</strong> ${dose.label} — ${dose.text}.</p>
-        <p><strong>Reavaliação:</strong> obrigatória após o ${cycleOrdinal(dose.cycles)}.</p>`;
+        ${psDocumentHeaderHtml(`${conditionName} — prescrição de administração imediata`, 'Emitido em')}
+        <h2>Administrar agora</h2>
+        <ul>
+          <li>${psEscape(dose.label)} — ${psEscape(dose.text)}.</li>
+          ${outrasEscolhas.map(label => `<li>${psEscape(label)}</li>`).join('')}
+        </ul>
+        <h2>Reavaliação</h2>
+        <ul>
+          <li>Obrigatória após o ${cycleOrdinal(dose.cycles)} do esquema inalatório.</li>
+          <li>Registrar melhora do quadro: sim ou não.</li>
+        </ul>
+        <p class="meta">Assinatura: ______________________________________</p>`;
       if (typeof emergPrintSummary === 'function') {
         emergPrintSummary(`${conditionName} — prescrição dos ciclos`, html);
       } else {

@@ -69,6 +69,11 @@ dom.window.__encerrados = 0;
 dom.window.novoAtendimentoFinishEncounter = () => { dom.window.__encerrados += 1; };
 dom.window.__printed = [];
 dom.window.emergPrintSummary = (title, html) => dom.window.__printed.push({ title, html });
+dom.window.medhubLoadUserProfile = () => ({
+  rxDisplayName: 'Dra. Ana Ribeiro',
+  crmUf: 'sp',
+  crmNumber: '123456'
+});
 
 const context = vm.createContext(dom.window);
 vm.runInContext(files.map(read).join('\n'), context);
@@ -96,6 +101,10 @@ if (temHidrocortisona500 && temMetil125) {
 
 /* 2. Painel de fechamento aparece com as quatro saídas */
 const painel = evalIn(`(() => {
+  sessionStorage.setItem('medhub-new-encounter-draft', JSON.stringify({
+    nome: 'Paciente Asma', idade: '32', sexo: 'Feminino', alergias: 'Nega alergias',
+    queixas: ['Falta de ar'], startedAt: '2026-08-15T21:00:00-03:00'
+  }));
   const host = document.getElementById('host');
   host.innerHTML = '<div class="emerg-algo-single"></div>';
   psRenderInteractiveRx('asma-broncoespasmo', host.querySelector('.emerg-algo-single'));
@@ -243,12 +252,20 @@ if (reavaliacao.liberadoDepois && reavaliacao.secoes.includes('receituario') &&
   fail('saída após melhora falhou: ' + JSON.stringify(reavaliacao));
 }
 
+/* 4b. Documento dos ciclos segue o padrão: paciente, médico, CRM e datas */
+const docCiclos = (reavaliacao.prescricaoCiclos?.html || '').replace(/\s+/g, ' ');
+if (/Paciente:<\/strong> Paciente Asma · 32 anos · Feminino/i.test(docCiclos) &&
+    /Alergias:<\/strong> Nega alergias/i.test(docCiclos) &&
+    /Médico\(a\):<\/strong> Dra. Ana Ribeiro · <strong>CRM-SP 123456/i.test(docCiclos) &&
+    /Data do atendimento:<\/strong> 15\/08\/2026/i.test(docCiclos) &&
+    /4 puffs por ciclo/i.test(docCiclos)) {
+  pass('PDF dos ciclos traz paciente, médico, CRM, datas e o esquema');
+} else {
+  fail('PDF dos ciclos fora do padrão: ' + docCiclos);
+}
+
 /* 5. Resumo imprimível com paciente e conduta escolhida */
 const resumo = evalIn(`(() => {
-  sessionStorage.setItem('medhub-new-encounter-draft', JSON.stringify({
-    nome: 'Paciente Asma', idade: '32', sexo: 'Feminino', alergias: 'Nega alergias',
-    queixas: ['Falta de ar'], startedAt: '2026-08-15T21:00:00-03:00'
-  }));
   const host = document.getElementById('host');
   host.querySelector('[data-ps-closure-action="resumo"]').click();
   const out = host.querySelector('[data-ps-closure-summary]');
@@ -262,8 +279,9 @@ const resumo = evalIn(`(() => {
 if (/Paciente Asma/.test(resumo.texto) && /salbutamol/i.test(resumo.texto) &&
     /4 puffs.*3 ciclo/i.test(resumo.texto) &&
     /apresentou melhora do quadro: sim/i.test(resumo.texto) &&
+    /Dra\. Ana Ribeiro · CRM-SP 123456/.test(resumo.texto) &&
     resumo.pdf && /Paciente Asma/.test(resumo.pdf.html)) {
-  pass('resumo registra puffs, ciclos, melhora e gera PDF');
+  pass('resumo registra puffs, ciclos, melhora, médico com CRM e gera PDF');
 } else {
   fail('resumo incompleto: ' + JSON.stringify(resumo));
 }
