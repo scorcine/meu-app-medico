@@ -70,7 +70,7 @@ dom.window.novoAtendimentoFinishEncounter = () => { dom.window.__encerrados += 1
 dom.window.__printed = [];
 dom.window.emergPrintSummary = (title, html) => dom.window.__printed.push({ title, html });
 dom.window.medhubLoadUserProfile = () => ({
-  rxDisplayName: 'Dra. Ana Ribeiro',
+  rxDisplayName: 'Ana Ribeiro',
   crmUf: 'sp',
   crmNumber: '123456'
 });
@@ -252,16 +252,25 @@ if (reavaliacao.liberadoDepois && reavaliacao.secoes.includes('receituario') &&
   fail('saída após melhora falhou: ' + JSON.stringify(reavaliacao));
 }
 
-/* 4b. Documento dos ciclos segue o padrão: paciente, médico, CRM e datas */
+/* 4b. Documento dos ciclos: paciente em cima, prescrição, assinatura no pé */
 const docCiclos = (reavaliacao.prescricaoCiclos?.html || '').replace(/\s+/g, ' ');
+const ordemCorreta = docCiclos.indexOf('Paciente:') < docCiclos.indexOf('<h2>Prescrição</h2>') &&
+  docCiclos.indexOf('<h2>Prescrição</h2>') < docCiclos.indexOf('doc-sign');
+
 if (/Paciente:<\/strong> Paciente Asma · 32 anos · Feminino/i.test(docCiclos) &&
     /Alergias:<\/strong> Nega alergias/i.test(docCiclos) &&
-    /Médico\(a\):<\/strong> Dra. Ana Ribeiro · <strong>CRM-SP 123456/i.test(docCiclos) &&
     /Data do atendimento:<\/strong> 15\/08\/2026/i.test(docCiclos) &&
-    /4 puffs por ciclo/i.test(docCiclos)) {
-  pass('PDF dos ciclos traz paciente, médico, CRM, datas e o esquema');
+    /4 puffs por ciclo/i.test(docCiclos) && ordemCorreta) {
+  pass('prescrição traz paciente em cima, conduta no meio e assinatura no fim');
 } else {
-  fail('PDF dos ciclos fora do padrão: ' + docCiclos);
+  fail('ordem do documento dos ciclos fora do padrão: ' + docCiclos);
+}
+
+if (/Dr\(a\)\. Ana Ribeiro<\/strong><\/p> <p>CRM: CRM-SP 123456/i.test(docCiclos) &&
+    !/Reavaliação/i.test(docCiclos)) {
+  pass('assinatura no pé traz nome e CRM, sem reavaliação no receituário');
+} else {
+  fail('assinatura ou reavaliação incorretas: ' + docCiclos);
 }
 
 /* 5. Resumo imprimível com paciente e conduta escolhida */
@@ -279,7 +288,7 @@ const resumo = evalIn(`(() => {
 if (/Paciente Asma/.test(resumo.texto) && /salbutamol/i.test(resumo.texto) &&
     /4 puffs.*3 ciclo/i.test(resumo.texto) &&
     /apresentou melhora do quadro: sim/i.test(resumo.texto) &&
-    /Dra\. Ana Ribeiro · CRM-SP 123456/.test(resumo.texto) &&
+    /Dr\(a\)\. Ana Ribeiro CRM: CRM-SP 123456/.test(resumo.texto) &&
     resumo.pdf && /Paciente Asma/.test(resumo.pdf.html)) {
   pass('resumo registra puffs, ciclos, melhora, médico com CRM e gera PDF');
 } else {

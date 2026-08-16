@@ -3407,6 +3407,8 @@ function emergPrintSummary (title, html) {
       ul { margin: 4px 0 0 18px; padding: 0; }
       li { margin: 3px 0; }
       .meta { color: #444; font-size: 10pt; }
+      .doc-sign { margin-top: 48px; page-break-inside: avoid; }
+      .doc-sign p { margin: 3px 0; }
     </style></head><body>${html}</body></html>`);
   win.document.close();
   win.focus();

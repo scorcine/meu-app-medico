@@ -570,8 +570,29 @@ function psDocumentHeaderHtml (title, dateLabel) {
     <h1>${psEscape(title)}</h1>
     <p class="meta"><strong>Paciente:</strong> ${context.patient || 'Não informado'}</p>
     <p class="meta"><strong>Alergias:</strong> ${context.allergies}</p>
-    <p class="meta"><strong>Médico(a):</strong> ${context.doctor} · <strong>${context.crm}</strong></p>
     <p class="meta"><strong>Data do atendimento:</strong> ${context.startedAt} · <strong>${psEscape(dateLabel)}:</strong> ${context.finishedAt}</p>`;
+}
+
+/* Assinatura no pé da página, como no receituário: linha, nome e CRM */
+function psDocumentSignatureHtml () {
+  const context = psDocumentContext();
+  const doctor = typeof rxGetDoctorName === 'function'
+    ? (rxGetDoctorName() || context.doctor)
+    : context.doctor;
+  const crm = typeof rxGetStoredCrmDisplay === 'function'
+    ? (rxGetStoredCrmDisplay() || context.crm)
+    : context.crm;
+  const address = typeof medhubGetProfileAddressBlock === 'function'
+    ? medhubGetProfileAddressBlock()
+    : '';
+
+  return `
+    <div class="doc-sign">
+      <p>______________________________, ${psEscape(new Date().toLocaleDateString('pt-BR'))}</p>
+      <p><strong>Dr(a). ${psEscape(doctor)}</strong></p>
+      <p>CRM: ${psEscape(crm)}</p>
+      ${address ? `<p class="meta">${psEscape(address).replace(/\n/g, '<br>')}</p>` : ''}
+    </div>`;
 }
 
 function psBuildClosureSummary (conditionName, selectedLabels, reassessmentText) {
@@ -583,7 +604,8 @@ function psBuildClosureSummary (conditionName, selectedLabels, reassessmentText)
     ${psDocumentHeaderHtml(`${conditionName} — resumo do atendimento`, 'Finalizado')}
     <h2>Conduta escolhida</h2>
     <ul>${itens}</ul>
-    ${reassessmentText ? `<h2>Reavaliação</h2><p>${reassessmentText}</p>` : ''}`;
+    ${reassessmentText ? `<h2>Reavaliação</h2><p>${reassessmentText}</p>` : ''}
+    ${psDocumentSignatureHtml()}`;
 }
 
 function psOpenSectionWithSearch (sectionId, inputId, query) {
@@ -948,17 +970,12 @@ function psRenderInteractiveRx (conditionId, container) {
       const outrasEscolhas = selectedLabels().filter(label => !label.includes(dose.text));
       const html = `
         ${psDocumentHeaderHtml(`${conditionName} — prescrição de administração imediata`, 'Emitido em')}
-        <h2>Administrar agora</h2>
+        <h2>Prescrição</h2>
         <ul>
           <li>${psEscape(dose.label)} — ${psEscape(dose.text)}.</li>
           ${outrasEscolhas.map(label => `<li>${psEscape(label)}</li>`).join('')}
         </ul>
-        <h2>Reavaliação</h2>
-        <ul>
-          <li>Obrigatória após o ${cycleOrdinal(dose.cycles)} do esquema inalatório.</li>
-          <li>Registrar melhora do quadro: sim ou não.</li>
-        </ul>
-        <p class="meta">Assinatura: ______________________________________</p>`;
+        ${psDocumentSignatureHtml()}`;
       if (typeof emergPrintSummary === 'function') {
         emergPrintSummary(`${conditionName} — prescrição dos ciclos`, html);
       } else {
