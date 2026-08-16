@@ -666,6 +666,9 @@ function psRenderInteractiveRx (conditionId, container) {
         </div>
       </fieldset>`;
     }).join('');
+    medsEl.querySelectorAll('.ps-rx-med-entry').forEach(entry => {
+      syncGuidedDoseVisibility(entry, false);
+    });
   }
 
   function syncEtiologyTabs () {
@@ -694,8 +697,100 @@ function psRenderInteractiveRx (conditionId, container) {
     return ids;
   }
 
+  function guidedDoseText (guide) {
+    if (!guide) return '';
+    const route = guide.querySelector('[data-ps-dose-route]:checked')?.value || '';
+    const amount = guide.querySelector('[data-ps-dose-amount]')?.value || '';
+    const cycles = guide.querySelector('[data-ps-dose-cycles]')?.value || '';
+    if (!route || !amount || !cycles) return '';
+    const via = route === 'mdi' ? 'MDI com espaçador' : 'nebulização';
+    return `${via} · ${amount} por ciclo · ${cycles} ciclo(s), a cada 20 min`;
+  }
+
+  function updateGuidedDose (guide) {
+    if (!guide) return;
+    const route = guide.querySelector('[data-ps-dose-route]:checked')?.value || '';
+    const amount = guide.querySelector('[data-ps-dose-amount]');
+    const currentAmount = amount?.value || '';
+    const options = route === 'mdi'
+      ? [
+          ['4 puffs', '4 puffs'],
+          ['6 puffs', '6 puffs'],
+          ['8 puffs', '8 puffs']
+        ]
+      : (route === 'nebulizacao'
+          ? [
+              ['2,5 mg + 3 mL SF 0,9%', '2,5 mg + 3 mL SF 0,9%'],
+              ['5 mg + 3 mL SF 0,9%', '5 mg + 3 mL SF 0,9%']
+            ]
+          : []);
+
+    if (amount && amount.dataset.route !== route) {
+      amount.dataset.route = route;
+      amount.disabled = !route;
+      amount.innerHTML = route
+        ? '<option value="">Selecione</option>' +
+          options.map(([value, label]) => `<option value="${value}">${label}</option>`).join('')
+        : '<option value="">Escolha primeiro a via</option>';
+      if (options.some(([value]) => value === currentAmount)) amount.value = currentAmount;
+    }
+
+    const preview = guide.querySelector('[data-ps-dose-preview]');
+    const text = guidedDoseText(guide);
+    if (preview) {
+      preview.textContent = text ? `Esquema: ${text}.` : 'Preencha via, dose e ciclos.';
+      preview.classList.toggle('is-complete', !!text);
+    }
+  }
+
+  function syncGuidedDoseVisibility (entry, reset) {
+    const checkbox = entry?.querySelector('.ps-rx-med-check');
+    const guide = entry?.querySelector('[data-ps-dose-guide]');
+    if (!checkbox || !guide) return;
+    guide.hidden = !checkbox.checked;
+    if (!checkbox.checked && reset) {
+      guide.querySelectorAll('input[type="radio"]').forEach(input => { input.checked = false; });
+      guide.querySelector('[data-ps-dose-cycles]').value = '';
+      const amount = guide.querySelector('[data-ps-dose-amount]');
+      amount.dataset.route = '';
+      amount.disabled = true;
+      amount.innerHTML = '<option value="">Escolha primeiro a via</option>';
+    }
+    updateGuidedDose(guide);
+  }
+
+  function incompleteGuidedDoses () {
+    return [...wrap.querySelectorAll('.ps-rx-med-check:checked')]
+      .map(input => input.closest('.ps-rx-med-entry'))
+      .filter(entry => {
+        const guide = entry?.querySelector('[data-ps-dose-guide]');
+        return guide && !guidedDoseText(guide);
+      });
+  }
+
+  function requireGuidedDoses () {
+    const incomplete = incompleteGuidedDoses();
+    if (!incomplete.length) return true;
+    resultEl.hidden = false;
+    resultEl.removeAttribute('hidden');
+    resultEl.className = 'ps-rx-result ps-rx-result--error';
+    resultEl.innerHTML = `
+      <h4>✗ Complete o esquema inalatório</h4>
+      <ul class="ps-rx-result-list">
+        <li class="ps-rx-msg ps-rx-msg--error">
+          Informe a via, a dose por ciclo e o número de ciclos do salbutamol antes de continuar.
+        </li>
+      </ul>`;
+    incomplete[0].querySelector('[data-ps-dose-guide]')?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'nearest'
+    });
+    return false;
+  }
+
   renderMedGroups();
   syncEtiologyTabs();
+  wrap.querySelectorAll('.ps-rx-med-entry').forEach(entry => syncGuidedDoseVisibility(entry, false));
 
   wrap.querySelectorAll('[data-ctx-field]').forEach(el => {
     el.addEventListener('change', () => {
@@ -706,6 +801,7 @@ function psRenderInteractiveRx (conditionId, container) {
   });
 
   wrap.querySelector('#ps-rx-analyze').addEventListener('click', () => {
+    if (!requireGuidedDoses()) return;
     let analysis;
     try {
       analysis = psValidatePrescription(conditionId, config, getSelected(), getContext());
@@ -733,9 +829,12 @@ function psRenderInteractiveRx (conditionId, container) {
   function selectedLabels () {
     return [...wrap.querySelectorAll('.ps-rx-med-check:checked')].map(input => {
       const card = input.closest('.ps-rx-med-card');
+      const guide = input.closest('.ps-rx-med-entry')?.querySelector('[data-ps-dose-guide]');
       const step = input.closest('.ps-rx-fieldset')?.querySelector('legend')?.textContent?.trim() || '';
       const label = card?.querySelector('strong')?.textContent?.trim() || input.value;
-      return step ? `${step}: ${label}` : label;
+      const dose = guidedDoseText(guide);
+      const fullLabel = dose ? `${label} — ${dose}` : label;
+      return step ? `${step}: ${fullLabel}` : fullLabel;
     });
   }
 
@@ -758,6 +857,7 @@ function psRenderInteractiveRx (conditionId, container) {
   }
 
   async function finishEncounter () {
+    if (!requireGuidedDoses()) return;
     const draft = psClosureContextText();
     const nome = draft?.nome ? ` de ${draft.nome}` : '';
     if (!window.confirm(
@@ -797,6 +897,7 @@ function psRenderInteractiveRx (conditionId, container) {
       const action = button.dataset.psClosureAction;
 
       if (action === 'receituario') {
+        if (!requireGuidedDoses()) return;
         psOpenSectionWithSearch('receituario', 'rx-search', conditionName);
         return;
       }
@@ -805,6 +906,7 @@ function psRenderInteractiveRx (conditionId, container) {
         return;
       }
       if (action === 'resumo') {
+        if (!requireGuidedDoses()) return;
         const html = psBuildClosureSummary(conditionName, selectedLabels());
         const out = closureEl.querySelector('[data-ps-closure-summary]');
         out.hidden = false;
@@ -836,7 +938,18 @@ function psRenderInteractiveRx (conditionId, container) {
 
   /* As opções são re-renderizadas a cada contexto: escuta na lista, não no input */
   medsEl.addEventListener('change', event => {
-    if (event.target.classList?.contains('ps-rx-med-check')) showClosure();
+    const entry = event.target.closest?.('.ps-rx-med-entry');
+    if (event.target.classList?.contains('ps-rx-med-check')) {
+      syncGuidedDoseVisibility(entry, true);
+      resultEl.hidden = true;
+      showClosure();
+      return;
+    }
+    if (event.target.matches?.('[data-ps-dose-route], [data-ps-dose-amount], [data-ps-dose-cycles]')) {
+      updateGuidedDose(entry?.querySelector('[data-ps-dose-guide]'));
+      resultEl.hidden = true;
+      showClosure();
+    }
   });
 
   showClosure();
@@ -908,19 +1021,66 @@ function psRenderContextField (field) {
   return '';
 }
 
+function psNeedsGuidedInhaledDose (med) {
+  const hasSalbutamol = (med?.drugs || []).some(drug => drug.id === 'salbutamol');
+  return hasSalbutamol && /\b(MDI|puffs?|jatos?)\b/i.test(med.label || '');
+}
+
+function psRenderGuidedInhaledDose (med) {
+  if (!psNeedsGuidedInhaledDose(med)) return '';
+  const radioName = `ps-dose-route-${String(med.id).replace(/[^a-z0-9_-]/gi, '-')}`;
+  return `
+    <div class="ps-rx-dose-guide" data-ps-dose-guide data-med-id="${med.id}" hidden>
+      <strong>Defina a administração</strong>
+      <p>Escolha a via, a dose de cada ciclo e quantos ciclos serão feitos.</p>
+      <div class="ps-rx-dose-routes" role="radiogroup" aria-label="Via do salbutamol">
+        <label>
+          <input type="radio" name="${radioName}" value="mdi" data-ps-dose-route>
+          MDI com espaçador
+        </label>
+        <label>
+          <input type="radio" name="${radioName}" value="nebulizacao" data-ps-dose-route>
+          Nebulização
+        </label>
+      </div>
+      <div class="ps-rx-dose-fields">
+        <label>
+          <span>Dose por ciclo</span>
+          <select data-ps-dose-amount disabled>
+            <option value="">Escolha primeiro a via</option>
+          </select>
+        </label>
+        <label>
+          <span>Número de ciclos</span>
+          <select data-ps-dose-cycles>
+            <option value="">Selecione</option>
+            <option value="1">1 ciclo</option>
+            <option value="2">2 ciclos</option>
+            <option value="3">3 ciclos</option>
+          </select>
+        </label>
+      </div>
+      <p class="ps-rx-dose-interval">Intervalo: a cada 20 minutos.</p>
+      <p class="ps-rx-dose-preview" data-ps-dose-preview>Preencha via, dose e ciclos.</p>
+    </div>`;
+}
+
 function psRenderMedOption (med, checked) {
   const tierLabel = typeof psTierLabel === 'function' ? psTierLabel(med.tier) : med.tier;
   const tier = tierLabel ? `<span class="ps-rx-tier ps-rx-tier--${tierLabel.replace(/\s+/g, '')}">${tierLabel}</span>` : '';
   const isChecked = checked ? ' checked' : '';
   return `
-    <label class="ps-rx-med-card">
-      <input type="checkbox" class="ps-rx-med-check" value="${med.id}"${isChecked}>
-      <span class="ps-rx-med-body">
-        ${tier}
-        <strong>${med.label}</strong>
-        ${med.detail ? `<span class="ps-rx-med-detail">${med.detail}</span>` : ''}
-      </span>
-    </label>`;
+    <div class="ps-rx-med-entry">
+      <label class="ps-rx-med-card">
+        <input type="checkbox" class="ps-rx-med-check" value="${med.id}"${isChecked}>
+        <span class="ps-rx-med-body">
+          ${tier}
+          <strong>${med.label}</strong>
+          ${med.detail ? `<span class="ps-rx-med-detail">${med.detail}</span>` : ''}
+        </span>
+      </label>
+      ${psRenderGuidedInhaledDose(med)}
+    </div>`;
 }
 
 function initPsInteractive (conditionId, contentEl) {

@@ -42,6 +42,11 @@ const files = [
 
 const dom = new JSDOM(`<!doctype html><html><body>
   <div id="host"></div>
+  <div id="ps-list-view"></div>
+  <div id="ps-condition-view">
+    <h2 id="ps-condition-title"></h2>
+    <div id="ps-condition-content"></div>
+  </div>
   <input id="rx-search">
   <input id="exames-search">
 </body></html>`, { url: 'https://www.medhub.ia.br/app.html' });
@@ -108,17 +113,95 @@ if (painel.visivel && painel.acoes.join(',') === 'receituario,exames,resumo,ence
   fail('painel de fechamento incompleto: ' + JSON.stringify(painel));
 }
 
-/* 3. Marcar medicação atualiza a contagem do fechamento */
-const contagem = evalIn(`(() => {
+/* 3. Salbutamol exige via, dose por ciclo e número de ciclos */
+const doseGuiada = evalIn(`(() => {
   const host = document.getElementById('host');
   const box = host.querySelector('.ps-rx-med-check');
   box.checked = true;
   box.dispatchEvent(new window.Event('change', { bubbles: true }));
-  return host.querySelector('[data-ps-closure-count]').textContent;
+  const guide = box.closest('.ps-rx-med-entry').querySelector('[data-ps-dose-guide]');
+  const preselected = [
+    guide.querySelector('[data-ps-dose-route]:checked'),
+    guide.querySelector('[data-ps-dose-amount]').value,
+    guide.querySelector('[data-ps-dose-cycles]').value
+  ].filter(Boolean).length;
+
+  host.querySelector('#ps-rx-analyze').click();
+  const bloqueouIncompleto = /Complete o esquema inalatório/i.test(
+    host.querySelector('#ps-rx-result').textContent
+  );
+
+  const route = guide.querySelector('[data-ps-dose-route][value="mdi"]');
+  route.checked = true;
+  route.dispatchEvent(new window.Event('change', { bubbles: true }));
+  const amount = guide.querySelector('[data-ps-dose-amount]');
+  amount.value = '4 puffs';
+  amount.dispatchEvent(new window.Event('change', { bubbles: true }));
+  const cycles = guide.querySelector('[data-ps-dose-cycles]');
+  cycles.value = '3';
+  cycles.dispatchEvent(new window.Event('change', { bubbles: true }));
+
+  return {
+    count: host.querySelector('[data-ps-closure-count]').textContent,
+    visible: !guide.hidden,
+    preselected,
+    bloqueouIncompleto,
+    preview: guide.querySelector('[data-ps-dose-preview]').textContent
+  };
 })()`);
 
-if (/1 medicação/i.test(contagem)) pass('fechamento conta a medicação marcada');
-else fail('contagem não atualizou: ' + contagem);
+if (doseGuiada.visible && doseGuiada.preselected === 0 && doseGuiada.bloqueouIncompleto) {
+  pass('salbutamol abre sem valores pré-marcados e bloqueia esquema incompleto');
+} else {
+  fail('dose guiada não bloqueou corretamente: ' + JSON.stringify(doseGuiada));
+}
+
+if (/1 medicação/i.test(doseGuiada.count) &&
+    /MDI com espaçador.*4 puffs.*3 ciclo/i.test(doseGuiada.preview)) {
+  pass('usuário define 4 puffs por ciclo durante 3 ciclos');
+} else {
+  fail('esquema inalatório não foi montado: ' + JSON.stringify(doseGuiada));
+}
+
+/* 3b. Pela tela real da conduta, um clique no cartão já abre o esquema */
+const cliqueReal = evalIn(`(() => {
+  showProntoSocorroCondition('asma-broncoespasmo');
+  const content = document.getElementById('ps-condition-content');
+  const card = content.querySelector('.ps-rx-med-card');
+  const guide = card.closest('.ps-rx-med-entry').querySelector('[data-ps-dose-guide]');
+  const antes = !guide.hidden;
+  card.querySelector('.ps-rx-med-check').click();
+  return {
+    antes,
+    depois: !guide.hidden,
+    vias: [...guide.querySelectorAll('[data-ps-dose-route]')].map(r => r.value)
+  };
+})()`);
+
+if (!cliqueReal.antes && cliqueReal.depois && cliqueReal.vias.join(',') === 'mdi,nebulizacao') {
+  pass('na tela da conduta, clicar no salbutamol abre via, dose e ciclos');
+} else {
+  fail('esquema não abriu ao clicar na conduta real: ' + JSON.stringify(cliqueReal));
+}
+
+/* Refaz o host isolado com o esquema completo para as validações de fechamento */
+evalIn(`(() => {
+  const host = document.getElementById('host');
+  host.innerHTML = '<div class="emerg-algo-single"></div>';
+  psRenderInteractiveRx('asma-broncoespasmo', host.querySelector('.emerg-algo-single'));
+  const box = host.querySelector('.ps-rx-med-check');
+  box.click();
+  const guide = box.closest('.ps-rx-med-entry').querySelector('[data-ps-dose-guide]');
+  const route = guide.querySelector('[data-ps-dose-route][value="mdi"]');
+  route.checked = true;
+  route.dispatchEvent(new window.Event('change', { bubbles: true }));
+  const amount = guide.querySelector('[data-ps-dose-amount]');
+  amount.value = '4 puffs';
+  amount.dispatchEvent(new window.Event('change', { bubbles: true }));
+  const cycles = guide.querySelector('[data-ps-dose-cycles]');
+  cycles.value = '3';
+  cycles.dispatchEvent(new window.Event('change', { bubbles: true }));
+})()`);
 
 /* 4. Prescrever e pedir exames levam às telas com a busca preenchida */
 const navegacao = evalIn(`(() => {
@@ -151,8 +234,9 @@ const resumo = evalIn(`(() => {
 })()`);
 
 if (/Paciente Asma/.test(resumo.texto) && /salbutamol/i.test(resumo.texto) &&
+    /4 puffs.*3 ciclo/i.test(resumo.texto) &&
     resumo.pdf && /Paciente Asma/.test(resumo.pdf.html)) {
-  pass('resumo mostra paciente e conduta escolhida e gera PDF');
+  pass('resumo registra puffs e ciclos escolhidos e gera PDF');
 } else {
   fail('resumo incompleto: ' + JSON.stringify(resumo));
 }

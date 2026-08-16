@@ -1999,6 +1999,103 @@ body.app-page {
   margin-top: 0.5rem;
 }
 
+.ps-rx-med-entry + .ps-rx-med-entry {
+  margin-top: 0.55rem;
+}
+
+.ps-rx-dose-guide {
+  margin: 0.45rem 0 0 2.2rem;
+  padding: 0.8rem 0.9rem;
+  border: 1px solid rgba(59, 130, 246, 0.45);
+  border-radius: 10px;
+  background: rgba(59, 130, 246, 0.07);
+}
+
+.ps-rx-dose-guide > strong,
+.ps-rx-dose-guide > p {
+  display: block;
+}
+
+.ps-rx-dose-guide > p {
+  margin: 0.15rem 0 0.65rem;
+  color: var(--text-muted);
+  font-size: 0.78rem;
+}
+
+.ps-rx-dose-routes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.ps-rx-dose-routes label {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.55rem 0.7rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.ps-rx-dose-routes label:has(input:checked) {
+  border-color: var(--accent);
+  background: rgba(59, 130, 246, 0.1);
+}
+
+.ps-rx-dose-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.6rem;
+  margin-top: 0.65rem;
+}
+
+.ps-rx-dose-fields label span {
+  display: block;
+  margin-bottom: 0.25rem;
+  color: var(--text-muted);
+  font-size: 0.74rem;
+}
+
+.ps-rx-dose-fields select {
+  width: 100%;
+  min-height: 2.5rem;
+  padding: 0.45rem 0.55rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-primary);
+  background: var(--bg-surface);
+  font: inherit;
+}
+
+.ps-rx-dose-interval {
+  margin-bottom: 0.2rem !important;
+}
+
+.ps-rx-dose-preview {
+  margin-bottom: 0 !important;
+  padding: 0.45rem 0.55rem;
+  border-radius: 7px;
+  background: rgba(240, 180, 41, 0.1);
+  color: var(--state-wait, #a16207) !important;
+  font-weight: 600;
+}
+
+.ps-rx-dose-preview.is-complete {
+  background: rgba(34, 197, 94, 0.1);
+  color: var(--state-done, #15803d) !important;
+}
+
+@media (max-width: 620px) {
+  .ps-rx-dose-guide {
+    margin-left: 0;
+  }
+
+  .ps-rx-dose-fields {
+    grid-template-columns: 1fr;
+  }
+}
+
 .ps-rx-actions .btn {
   border: none;
   cursor: pointer;
