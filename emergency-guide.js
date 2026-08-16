@@ -3299,6 +3299,42 @@ const EMERG_CLOSING_CONFIRMATIONS = [
   { id: 'reavaliacao', label: 'Monitorização e reavaliação definidas', hint: 'Monitor, exames seriados e horário da reavaliação' }
 ];
 
+function emergConfirmProtocolFinish (protocolName) {
+  let patientName = '';
+  try {
+    const draft = JSON.parse(sessionStorage.getItem('medhub-new-encounter-draft') || 'null');
+    patientName = String(draft?.nome || '').trim();
+  } catch { /* atendimento sem rascunho */ }
+
+  const patient = patientName ? ` do paciente ${patientName}` : ' deste paciente';
+  return window.confirm(
+    `Tem certeza que quer finalizar o atendimento${patient} e o protocolo ${protocolName}?\n\n` +
+    'O atendimento deixará de aparecer como “em andamento”.'
+  );
+}
+
+function emergEndActiveEncounter () {
+  if (typeof novoAtendimentoFinishEncounter === 'function') {
+    novoAtendimentoFinishEncounter();
+  } else if (typeof novoAtendimentoClear === 'function') {
+    novoAtendimentoClear();
+  } else {
+    sessionStorage.removeItem('medhub-new-encounter-draft');
+    if (typeof clinicalEndEncounter === 'function') {
+      clinicalEndEncounter();
+    } else {
+      [
+        'medhub-active-encounter',
+        'medhub-active-paciente-id',
+        'medhub-active-paciente',
+        'medhub-active-queixa',
+        'medhub-active-idade'
+      ].forEach(key => sessionStorage.removeItem(key));
+    }
+  }
+  if (typeof novoAtendimentoRenderResume === 'function') novoAtendimentoRenderResume();
+}
+
 function emergSummaryEscape (value) {
   return String(value || '')
     .replace(/&/g, '&amp;')
@@ -3728,6 +3764,8 @@ function initEmergProtocolExperience (root, topicId, protocol) {
     });
 
     finalizeButton.addEventListener('click', async () => {
+      if (!emergConfirmProtocolFinish(protocol.name)) return;
+
       state.picks['stemi-finalized'] = true;
       emergSaveProtocolProgress(topicId, protocol.id, state);
       applyReperfusion();
@@ -3744,9 +3782,9 @@ function initEmergProtocolExperience (root, topicId, protocol) {
         .replace(/\n{3,}/g, '\n\n')
         .trim();
 
-      let saved = null;
+      let savePromise = null;
       if (typeof consultasRegisterEmergencyProtocol === 'function') {
-        saved = await consultasRegisterEmergencyProtocol({
+        savePromise = consultasRegisterEmergencyProtocol({
           sourceId: `emergency:${protocol.id}:${context.startedIso || context.patientNameRaw}`,
           protocolo: protocol.name,
           pacienteId: context.patientIdRaw,
@@ -3762,6 +3800,8 @@ function initEmergProtocolExperience (root, topicId, protocol) {
         });
       }
 
+      emergEndActiveEncounter();
+      const saved = savePromise ? await savePromise : null;
       finalizedStatus.textContent = saved?.cloudSaved
         ? 'Protocolo STEMI finalizado · PDF gerado · atendimento salvo na nuvem ✓'
         : (saved?.ok
@@ -3788,7 +3828,16 @@ function initEmergProtocolExperience (root, topicId, protocol) {
     apply();
   });
 
-  closurePanel.querySelector('[data-emerg-summary]').addEventListener('click', renderSummary);
+  closurePanel.querySelector('[data-emerg-summary]').addEventListener('click', () => {
+    const isStemi = topicId === 'sca' && protocol.id === 'stemi';
+    if (isStemi) {
+      renderSummary();
+      return;
+    }
+    if (!emergConfirmProtocolFinish(protocol.name)) return;
+    renderSummary();
+    emergEndActiveEncounter();
+  });
 
   updateStatus = () => {
     const parts = [];

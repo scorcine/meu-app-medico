@@ -5469,6 +5469,17 @@ textarea {
   font-size: 0.9rem;
 }
 
+.novo-atendimento-resume-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.novo-atendimento-resume-end {
+  border-color: rgba(220, 38, 38, 0.5) !important;
+  color: var(--state-blocked, #dc2626);
+}
+
 .novo-atendimento-status {
   margin: 0;
   padding: 0.8rem 0.9rem;

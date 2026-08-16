@@ -35,6 +35,12 @@ function buildUi () {
   dom.window.Element.prototype.scrollIntoView = function () {};
   dom.window.showSection = function () {};
   dom.window.novoAtendimentoShowStep = function () {};
+  dom.window.__confirmMessages = [];
+  dom.window.__confirmResult = true;
+  dom.window.confirm = function (message) {
+    dom.window.__confirmMessages.push(message);
+    return dom.window.__confirmResult;
+  };
   dom.window.__printedDocuments = [];
   dom.window.open = function () {
     const printed = { html: '', printCalled: false };
@@ -286,6 +292,11 @@ function testClosureSummary () {
     const closure = content.querySelector('.emerg-protocol-closure');
     const confirmacoes = [...closure.querySelectorAll('[data-emerg-closure]')].map(b => b.dataset.emergClosure);
     closure.querySelector('[data-emerg-closure="hemodinamica"]').click();
+    window.__confirmResult = false;
+    closure.querySelector('[data-emerg-summary]').click();
+    const cancelou = closure.querySelector('[data-emerg-summary-out]').hidden &&
+      !!sessionStorage.getItem('medhub-new-encounter-draft');
+    window.__confirmResult = true;
     closure.querySelector('[data-emerg-summary]').click();
 
     const resumo = closure.querySelector('[data-emerg-summary-out]');
@@ -297,7 +308,10 @@ function testClosureSummary () {
       resumo: resumo.textContent.replace(/\\s+/g, ' ').trim(),
       podeImprimir: !!resumo.querySelector('[data-emerg-print]'),
       podeCopiar: !!resumo.querySelector('[data-emerg-copy]'),
-      proximoVisivel: !document.querySelector('.emerg-protocol-next').hidden
+      proximoVisivel: !document.querySelector('.emerg-protocol-next').hidden,
+      cancelou,
+      atendimentoEncerrado: !sessionStorage.getItem('medhub-new-encounter-draft'),
+      confirmacao: window.__confirmMessages[0] || ''
     };
   })()`);
 
@@ -323,6 +337,13 @@ function testClosureSummary () {
     pass('Depois do resumo o próximo protocolo continua disponível como escolha');
   } else {
     fail('Encaminhamento desapareceu após o resumo: ' + JSON.stringify(result));
+  }
+  if (result.cancelou && result.atendimentoEncerrado &&
+      /Tem certeza que quer finalizar/i.test(result.confirmacao) &&
+      /Maria Teste/.test(result.confirmacao) && /NSTEMI/i.test(result.confirmacao)) {
+    pass('Fechamento pede confirmação e remove o atendimento da lista de retomada');
+  } else {
+    fail('Confirmação de encerramento falhou: ' + JSON.stringify(result));
   }
 }
 
@@ -368,7 +389,9 @@ function testStemiReperfusionBeforeFinalize () {
       printAfter: !content.querySelector('.emerg-summary-actions').classList.contains('is-pending'),
       hasUnexpectedNext: !content.querySelector('.emerg-protocol-next').hidden,
       pdfCount: window.__printedDocuments.length,
-      pdf: window.__printedDocuments[0] || null
+      pdf: window.__printedDocuments[0] || null,
+      atendimentoEncerrado: !sessionStorage.getItem('medhub-new-encounter-draft'),
+      confirmacao: window.__confirmMessages[0] || ''
     };
   })()`);
 
@@ -398,6 +421,13 @@ function testStemiReperfusionBeforeFinalize () {
     pass('Finalizar STEMI abre PDF com paciente, médico, CRM e data do atendimento');
   } else {
     fail('PDF automático incompleto: ' + JSON.stringify(result.pdf));
+  }
+  if (result.atendimentoEncerrado &&
+      /Tem certeza que quer finalizar/i.test(result.confirmacao) &&
+      /Paciente PDF/.test(result.confirmacao) && /STEMI/i.test(result.confirmacao)) {
+    pass('Finalizar STEMI confirma o paciente e encerra o atendimento em andamento');
+  } else {
+    fail('STEMI não encerrou o atendimento ativo: ' + JSON.stringify(result));
   }
 }
 

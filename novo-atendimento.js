@@ -1,6 +1,7 @@
 /* Novo atendimento — coleta inicial e contexto clínico da sessão */
 
 const MEDHUB_NEW_ENCOUNTER_DRAFT = 'medhub-new-encounter-draft';
+const MEDHUB_FINISHED_ENCOUNTERS = 'medhub-finished-encounters';
 let novoAtendimentoQueixas = [];
 
 function novoAtendimentoElements () {
@@ -32,7 +33,8 @@ function novoAtendimentoElements () {
     novoPaciente: document.getElementById('novo-atendimento-novo-paciente'),
     resume: document.getElementById('novo-atendimento-resume'),
     resumeText: document.getElementById('novo-atendimento-resume-text'),
-    resumeBtn: document.getElementById('novo-atendimento-resume-btn')
+    resumeBtn: document.getElementById('novo-atendimento-resume-btn'),
+    resumeDiscard: document.getElementById('novo-atendimento-resume-discard')
   };
 }
 
@@ -1193,6 +1195,7 @@ function initNovoAtendimento () {
   });
   novoPaciente?.addEventListener('click', novoAtendimentoClear);
   novoAtendimentoElements().resumeBtn?.addEventListener('click', novoAtendimentoResumeStep);
+  novoAtendimentoElements().resumeDiscard?.addEventListener('click', novoAtendimentoDiscardResume);
   document.querySelectorAll('input[name="novo-atendimento-alergia"]').forEach(input => {
     input.addEventListener('change', novoAtendimentoUpdateAllergyField);
   });
@@ -1220,16 +1223,71 @@ function novoAtendimentoPrepareNew () {
   novoAtendimentoSetStatus('');
 }
 
+/* Assinatura do atendimento para saber se ele já foi encerrado em outra tela */
+function novoAtendimentoDraftSignature (data) {
+  if (!data?.nome) return '';
+  return `${String(data.nome).trim().toLowerCase()}|${data.startedAt || ''}`;
+}
+
+function novoAtendimentoFinishedSignatures () {
+  try {
+    const stored = JSON.parse(sessionStorage.getItem(MEDHUB_FINISHED_ENCOUNTERS) || '[]');
+    return Array.isArray(stored) ? stored.filter(Boolean) : [];
+  } catch {
+    return [];
+  }
+}
+
+function novoAtendimentoMarkFinished (data) {
+  const signature = novoAtendimentoDraftSignature(data);
+  if (!signature) return;
+  const list = novoAtendimentoFinishedSignatures();
+  if (!list.includes(signature)) list.push(signature);
+  try {
+    sessionStorage.setItem(MEDHUB_FINISHED_ENCOUNTERS, JSON.stringify(list.slice(-40)));
+  } catch { /* sessão indisponível */ }
+}
+
+function novoAtendimentoIsFinished (data) {
+  const signature = novoAtendimentoDraftSignature(data);
+  return !!signature && novoAtendimentoFinishedSignatures().includes(signature);
+}
+
+/** Encerra o atendimento atual — chamado ao finalizar protocolos de emergência */
+function novoAtendimentoFinishEncounter () {
+  const data = novoAtendimentoReadDraft();
+  novoAtendimentoMarkFinished(data);
+  novoAtendimentoClear();
+  novoAtendimentoRenderResume();
+}
+
 function novoAtendimentoRenderResume () {
   const { resume, resumeText } = novoAtendimentoElements();
   if (!resume) return;
 
   const data = novoAtendimentoReadDraft();
+  /* Atendimento já finalizado não volta como "em andamento", mesmo com rascunho residual */
+  if (data && novoAtendimentoIsFinished(data)) {
+    sessionStorage.removeItem(MEDHUB_NEW_ENCOUNTER_DRAFT);
+    resume.hidden = true;
+    return;
+  }
+
   const emAndamento = !!(data && data.nome && data.step && data.step !== 'identificacao');
   resume.hidden = !emAndamento;
   if (emAndamento && resumeText) {
     resumeText.textContent = `Atendimento em andamento: ${data.nome}`;
   }
+}
+
+/** Descarta o atendimento pendente mostrado no aviso de retomada */
+function novoAtendimentoDiscardResume () {
+  const data = novoAtendimentoReadDraft();
+  const nome = data?.nome ? ` de ${data.nome}` : '';
+  if (!window.confirm(`Encerrar o atendimento${nome} e limpar este aviso?`)) return false;
+
+  novoAtendimentoFinishEncounter();
+  return true;
 }
 
 /** Retoma o atendimento anterior com os campos, as queixas e o passo onde parou */
@@ -1254,8 +1312,9 @@ function novoAtendimentoContinueHomePrescription () {
 function novoAtendimentoFinishPatient () {
   const data = novoAtendimentoReadDraft();
   const nome = data?.nome ? ` de ${data.nome}` : '';
-  if (!window.confirm(`Finalizar o atendimento${nome}?`)) return false;
+  if (!window.confirm(`Tem certeza que quer finalizar o atendimento${nome}?`)) return false;
 
+  novoAtendimentoMarkFinished(data);
   novoAtendimentoClear();
   if (typeof showSection === 'function') showSection('novo-atendimento');
   return true;

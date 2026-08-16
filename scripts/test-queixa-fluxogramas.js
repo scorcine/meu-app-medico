@@ -60,6 +60,11 @@ const dom = new JSDOM(`<!doctype html><html><body>
   <div id="novo-atendimento-queixas-list"></div>
   <p id="novo-atendimento-queixas-empty"></p>
   <section id="novo-atendimento-protocolo" hidden></section>
+  <div id="novo-atendimento-resume" hidden>
+    <span id="novo-atendimento-resume-text"></span>
+    <button type="button" id="novo-atendimento-resume-btn"></button>
+    <button type="button" id="novo-atendimento-resume-discard"></button>
+  </div>
   <div id="calc-area-content"></div>
 </body></html>`, { url: 'https://www.medhub.ia.br/app.html' });
 
@@ -322,6 +327,62 @@ if (esperados.every(id => chestScores.botoes.includes(id)) && chestScores.primei
   pass(`Dor torácica oferece ${chestScores.botoes.length} calculadoras, com HEART em destaque`);
 } else {
   fail('Calculadoras da dor torácica incompletas: ' + JSON.stringify(chestScores));
+}
+
+/* 13. Atendimento finalizado não volta como "em andamento" */
+console.log('\nEncerramento do atendimento:\n');
+const encerramento = evalIn(`(() => {
+  sessionStorage.removeItem('medhub-finished-encounters');
+  sessionStorage.setItem('medhub-new-encounter-draft', JSON.stringify({
+    nome: 'Claudio Teste', queixas: ['Dor torácica'], step: 'tratamento', startedAt: '2026-08-15T20:00:00-03:00'
+  }));
+  novoAtendimentoRenderResume();
+  const avisoAntes = !document.getElementById('novo-atendimento-resume').hidden;
+
+  novoAtendimentoFinishEncounter();
+  const avisoDepois = !document.getElementById('novo-atendimento-resume').hidden;
+
+  /* Rascunho residual gravado depois do encerramento não ressuscita o aviso */
+  sessionStorage.setItem('medhub-new-encounter-draft', JSON.stringify({
+    nome: 'Claudio Teste', queixas: ['Dor torácica'], step: 'tratamento', startedAt: '2026-08-15T20:00:00-03:00'
+  }));
+  novoAtendimentoRenderResume();
+
+  return {
+    avisoAntes,
+    avisoDepois,
+    avisoResiduo: !document.getElementById('novo-atendimento-resume').hidden,
+    rascunho: sessionStorage.getItem('medhub-new-encounter-draft')
+  };
+})()`);
+
+if (encerramento.avisoAntes && !encerramento.avisoDepois &&
+    !encerramento.avisoResiduo && !encerramento.rascunho) {
+  pass('Atendimento finalizado sai do aviso "Continuar atendimento" e não reaparece');
+} else {
+  fail('Paciente finalizado continuou em andamento: ' + JSON.stringify(encerramento));
+}
+
+const descartar = evalIn(`(() => {
+  sessionStorage.removeItem('medhub-finished-encounters');
+  sessionStorage.setItem('medhub-new-encounter-draft', JSON.stringify({
+    nome: 'Paciente Preso', queixas: ['Febre'], step: 'queixas', startedAt: '2026-08-15T19:00:00-03:00'
+  }));
+  novoAtendimentoRenderResume();
+
+  window.confirm = () => false;
+  novoAtendimentoDiscardResume();
+  const mantido = !!sessionStorage.getItem('medhub-new-encounter-draft');
+
+  window.confirm = () => true;
+  novoAtendimentoDiscardResume();
+  return { mantido, removido: !sessionStorage.getItem('medhub-new-encounter-draft') };
+})()`);
+
+if (descartar.mantido && descartar.removido) {
+  pass('Botão Encerrar atendimento pede confirmação antes de limpar o aviso');
+} else {
+  fail('Descarte do aviso falhou: ' + JSON.stringify(descartar));
 }
 
 const calcSemDor = evalIn(`(() => {
