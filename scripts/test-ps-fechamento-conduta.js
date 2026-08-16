@@ -224,7 +224,13 @@ const reavaliacao = evalIn(`(() => {
   panel.querySelector('[data-ps-improved="nao"]').click();
   const semMelhora = panel.querySelector('[data-ps-reassessment-outcome]').textContent;
   const aindaBloqueado = home.disabled;
+  const nextAntes = !panel.querySelector('[data-ps-reassessment-next]').hidden;
   panel.querySelector('[data-ps-improved="sim"]').click();
+  const nextDepois = !panel.querySelector('[data-ps-reassessment-next]').hidden;
+  const opcoesFinais = [...panel.querySelectorAll('[data-ps-next]')].map(b => b.dataset.psNext);
+  const semNavegacaoAutomatica = window.__sections.length === 0;
+
+  panel.querySelector('[data-ps-next="receituario"]').click();
   host.querySelector('[data-ps-closure-action="exames"]').click();
   return {
     bloqueadoAntes,
@@ -232,6 +238,10 @@ const reavaliacao = evalIn(`(() => {
     liberadoDepois: !home.disabled,
     texto,
     semMelhora,
+    nextAntes,
+    nextDepois,
+    opcoesFinais,
+    semNavegacaoAutomatica,
     secoes: window.__sections.slice(),
     prescricaoCiclos: window.__printed[0] || null
   };
@@ -245,9 +255,17 @@ if (reavaliacao.bloqueadoAntes && reavaliacao.aindaBloqueado &&
   fail('reavaliação dos ciclos falhou: ' + JSON.stringify(reavaliacao));
 }
 
-if (reavaliacao.liberadoDepois && reavaliacao.secoes.includes('receituario') &&
-    reavaliacao.secoes.includes('exames') && /prescrição de administração imediata/i.test(reavaliacao.prescricaoCiclos?.html || '')) {
-  pass('melhora confirmada abre prescrição para casa e gera prescrição dos ciclos');
+if (reavaliacao.liberadoDepois && !reavaliacao.nextAntes && reavaliacao.nextDepois &&
+    reavaliacao.semNavegacaoAutomatica &&
+    reavaliacao.opcoesFinais.join(',') === 'receituario,encerrar') {
+  pass('melhora confirmada pergunta entre prescrever para casa e finalizar, sem pular de tela');
+} else {
+  fail('escolha após melhora falhou: ' + JSON.stringify(reavaliacao));
+}
+
+if (reavaliacao.secoes.includes('receituario') && reavaliacao.secoes.includes('exames') &&
+    /prescrição de administração imediata/i.test(reavaliacao.prescricaoCiclos?.html || '')) {
+  pass('escolher prescrever abre o receituário e a prescrição dos ciclos é gerada');
 } else {
   fail('saída após melhora falhou: ' + JSON.stringify(reavaliacao));
 }

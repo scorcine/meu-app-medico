@@ -956,6 +956,13 @@ function psRenderInteractiveRx (conditionId, container) {
             <button type="button" data-ps-improved="nao">Não</button>
           </div>
           <p class="ps-rx-reassessment-outcome" data-ps-reassessment-outcome hidden></p>
+          <div class="ps-rx-reassessment-next" data-ps-reassessment-next hidden>
+            <strong>O que você quer fazer agora?</strong>
+            <div class="ps-rx-reassessment-next-actions">
+              <button type="button" data-ps-next="receituario">Prescrever medicação para casa</button>
+              <button type="button" data-ps-next="encerrar">Finalizar atendimento do paciente</button>
+            </div>
+          </div>
         </div>
       </section>`;
   }
@@ -990,16 +997,27 @@ function psRenderInteractiveRx (conditionId, container) {
           option.classList.toggle('is-selected', option === button);
         });
         const outcome = panel.querySelector('[data-ps-reassessment-outcome]');
+        const next = panel.querySelector('[data-ps-reassessment-next]');
         outcome.hidden = false;
         outcome.className = `ps-rx-reassessment-outcome is-${inhaledReassessment}`;
+        next.hidden = inhaledReassessment !== 'sim';
         if (inhaledReassessment === 'sim') {
-          outcome.textContent = 'Melhora confirmada ✓ Abrindo prescrição para casa.';
+          outcome.textContent = 'Melhora confirmada ✓ Escolha o próximo passo abaixo.';
           showClosure();
-          psOpenSectionWithSearch('receituario', 'rx-search', conditionName);
         } else {
           outcome.textContent = 'Sem melhora ✗ Não encaminhar para casa. Mantenha o paciente em atendimento e reavalie escalonamento da conduta.';
           showClosure();
         }
+      });
+    });
+
+    panel.querySelectorAll('[data-ps-next]').forEach(button => {
+      button.addEventListener('click', () => {
+        if (button.dataset.psNext === 'receituario') {
+          psOpenSectionWithSearch('receituario', 'rx-search', conditionName);
+          return;
+        }
+        finishEncounter();
       });
     });
   }

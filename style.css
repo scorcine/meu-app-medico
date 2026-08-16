@@ -2206,6 +2206,42 @@ body.app-page {
   background: rgba(220, 38, 38, 0.1);
 }
 
+.ps-rx-reassessment-next {
+  margin-top: 0.9rem;
+  padding-top: 0.85rem;
+  border-top: 1px solid rgba(240, 180, 41, 0.35);
+}
+
+.ps-rx-reassessment-next > strong {
+  display: block;
+  margin-bottom: 0.55rem;
+}
+
+.ps-rx-reassessment-next-actions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  gap: 0.55rem;
+}
+
+.ps-rx-reassessment-next-actions button {
+  padding: 0.7rem 0.9rem;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--text-primary);
+  background: var(--bg-surface);
+  font: inherit;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+}
+
+.ps-rx-reassessment-next-actions button:hover,
+.ps-rx-reassessment-next-actions button:focus-visible {
+  border-color: var(--state-done, #16a34a);
+  background: rgba(34, 197, 94, 0.1);
+  outline: none;
+}
+
 .ps-rx-closure-head strong {
   display: block;
   font-size: 0.98rem;
