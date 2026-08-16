@@ -297,7 +297,7 @@ const CLINICAL_PATHWAY_BY_ID = {
       question: 'Há melhora ou estabilidade suficiente para alta?'
     },
     outcomes: ['alta', 'observacao', 'internacao'],
-    homeRx: 'blocked',
+    homeRx: 'curated',
     requiresImprovementForDischarge: true
   },
   'erisipela': {
@@ -308,20 +308,32 @@ const CLINICAL_PATHWAY_BY_ID = {
       question: 'Há melhora ou estabilidade suficiente para alta?'
     },
     outcomes: ['alta', 'observacao', 'internacao'],
-    homeRx: 'blocked',
+    homeRx: 'curated',
     requiresImprovementForDischarge: true
   },
   'abscesso-cutaneo': {
     scores: [],
-    reassessment: null,
+    reassessment: {
+      trigger: 'after-initial-therapy',
+      label: 'Confirmar controle do foco antes da alta',
+      question: 'Coleção foi drenada quando indicada e o paciente está sem sinais sistêmicos?'
+    },
     outcomes: ['alta', 'observacao'],
-    homeRx: 'blocked'
+    homeRx: 'curated',
+    requiresImprovementForDischarge: true,
+    notes: 'Antibiótico não substitui incisão e drenagem de coleção flutuante.'
   },
   'furunculose': {
     scores: [],
-    reassessment: null,
+    reassessment: {
+      trigger: 'after-initial-therapy',
+      label: 'Confirmar controle do foco antes da alta',
+      question: 'Lesão foi drenada quando indicada e não há celulite extensa ou sinais sistêmicos?'
+    },
     outcomes: ['alta'],
-    homeRx: 'blocked'
+    homeRx: 'curated',
+    requiresImprovementForDischarge: true,
+    notes: 'Carbúnculo, sepse ou progressão exigem observação/internação, não receita domiciliar isolada.'
   },
   'impetigo': {
     scores: [],

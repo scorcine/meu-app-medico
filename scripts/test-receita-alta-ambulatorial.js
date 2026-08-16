@@ -60,7 +60,8 @@ console.log('=== MedHub — receita de alta ambulatorial ===\n');
 const HOME_IDS = ['asma-broncoespasmo', 'dpoc-exacerbada'];
 const RESP_DERM_IDS = [
   'sinusite-aguda', 'otite-media', 'otite-externa', 'bronquite-aguda',
-  'gripe-influenza', 'rinite-alergica', 'impetigo', 'micoses-superficiais',
+  'gripe-influenza', 'rinite-alergica', 'impetigo',
+  'celulite', 'erisipela', 'abscesso-cutaneo', 'furunculose', 'micoses-superficiais',
   'tinea', 'frieira', 'escabiose', 'pediculose'
 ];
 
@@ -188,13 +189,40 @@ if (/mais de 10 dias/i.test(textoLote('sinusite-aguda')) &&
     /Antibiótico não é indicado de rotina/i.test(textoLote('bronquite-aguda')) &&
     /primeiras 48 horas/i.test(textoLote('gripe-influenza')) &&
     /perfuração timpânica/i.test(textoLote('otite-externa')) &&
-    /Tratar simultaneamente contatos/i.test(textoLote('escabiose'))) {
-  pass('lote novo preserva critérios de ATB, antiviral, ouvido e controle de contatos');
+    /Tratar simultaneamente contatos/i.test(textoLote('escabiose')) &&
+    /não substitui incisão e drenagem/i.test(textoLote('abscesso-cutaneo')) &&
+    /não substitui drenagem/i.test(textoLote('furunculose')) &&
+    /suspeita de fascite/i.test(textoLote('celulite'))) {
+  pass('lote novo preserva critérios de ATB, antiviral, drenagem e formas graves');
 } else {
   fail('alertas clínicos do lote novo incompletos');
 }
 
-/* 7. Ao escolher prescrever para casa, a conduta abre a receita curada */
+/* 7. Abscesso/furúnculo exigem confirmar drenagem quando indicada antes da receita */
+const drenagemGate = evalIn(`(() => {
+  const host = document.createElement('div');
+  host.innerHTML = '<div class="emerg-algo-single"></div>';
+  document.body.appendChild(host);
+  psRenderInteractiveRx('abscesso-cutaneo', host.querySelector('.emerg-algo-single'));
+  const home = host.querySelector('[data-ps-closure-action="receituario"]');
+  const before = home?.disabled;
+  host.querySelector('#ps-rx-analyze')?.click();
+  const panel = host.querySelector('[data-ps-reassessment-kind="clinical"]');
+  panel?.querySelector('[data-ps-improved="sim"]')?.click();
+  return {
+    before,
+    after: home?.disabled,
+    question: panel?.querySelector('p')?.textContent || ''
+  };
+})()`);
+
+if (drenagemGate.before && !drenagemGate.after && /drenada quando indicada/i.test(drenagemGate.question)) {
+  pass('abscesso bloqueia receita até confirmar drenagem quando indicada e ausência de sinais sistêmicos');
+} else {
+  fail('barreira de drenagem do abscesso incompleta: ' + JSON.stringify(drenagemGate));
+}
+
+/* 8. Ao escolher prescrever para casa, a conduta abre a receita curada */
 const navegacao = evalIn(`(() => {
   const abertas = [];
   window.showSection = id => abertas.push('section:' + id);

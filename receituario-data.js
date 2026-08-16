@@ -237,6 +237,109 @@ const RX_HOME_RESP_DERM = [
       ]
     }]
   },
+  {
+    id: 'celulite',
+    name: 'Celulite não purulenta leve (alta ambulatorial)',
+    icon: '🩹',
+    aliases: ['celulite', 'infeccao de pele', 'celulite bacteriana'],
+    groups: [{
+      id: 'cel-atb-oral',
+      label: 'Antibiótico oral — somente após estabilidade para alta',
+      options: [
+        rxAltaOption('cel-atb-escolha', '1ª linha', 'Cobertura para estreptococo/MSSA — escolha um', [
+          rxAltaMed('cel-cefalexina', 'Cefalexina 500 mg — 1 cápsula VO a cada 6 horas, por 5 a 7 dias', ['antibiotic', 'cephalosporin', 'beta_lactam'], 'cel-atb'),
+          rxAltaMed('cel-amoxclav', 'Amoxicilina + clavulanato 875/125 mg — 1 comprimido VO a cada 12 horas, por 5 a 7 dias', ['antibiotic', 'penicillin', 'beta_lactam'], 'cel-atb'),
+          rxAltaMed('cel-clindamicina', 'Clindamicina 300 mg — 1 cápsula VO a cada 6 horas, por 5 a 7 dias (alergia imediata a beta-lactâmico)', ['antibiotic'], 'cel-atb')
+        ], 'Marcar a borda do eritema e reavaliar em 48–72 horas. Não usar este modelo se houver toxemia, progressão rápida, dor desproporcional, imunossupressão importante ou suspeita de fascite.', ['antibiotic'])
+      ]
+    }, {
+      id: 'cel-suporte',
+      label: 'Medidas associadas',
+      options: [
+        rxAltaOption('cel-elevacao', 'Adjuvante', 'Elevação e analgesia', [
+          rxAltaMed('cel-elevar', 'Elevar o membro afetado acima do nível do coração sempre que possível e manter hidratação', []),
+          rxAltaMed('cel-dipirona', 'Dipirona 500 mg a 1 g — VO a cada 6 a 8 horas, se dor ou febre (máximo 4 g/dia), por até 3 dias', ['analgesic_non_opioid'], 'cel-analgesia'),
+          rxAltaMed('cel-paracetamol', 'Paracetamol 500 a 750 mg — VO a cada 6 a 8 horas, se dor ou febre (máximo 3 g/dia), por até 3 dias', ['analgesic_non_opioid'], 'cel-analgesia')
+        ], 'Retorno imediato se febre persistente, bolhas, necrose, aumento além da marca ou piora da dor.')
+      ]
+    }]
+  },
+  {
+    id: 'erisipela',
+    name: 'Erisipela leve (alta ambulatorial)',
+    icon: '🦵',
+    aliases: ['erisipela', 'placa vermelha dolorosa', 'infeccao superficial da pele'],
+    groups: [{
+      id: 'eri-atb-oral',
+      label: 'Antibiótico oral — paciente estável',
+      options: [
+        rxAltaOption('eri-atb-escolha', '1ª linha', 'Cobertura estreptocócica — escolha um', [
+          rxAltaMed('eri-amoxicilina', 'Amoxicilina 500 mg — 1 cápsula VO a cada 8 horas, por 7 a 10 dias', ['antibiotic', 'penicillin', 'beta_lactam'], 'eri-atb'),
+          rxAltaMed('eri-cefalexina', 'Cefalexina 500 mg — 1 cápsula VO a cada 6 horas, por 7 a 10 dias', ['antibiotic', 'cephalosporin', 'beta_lactam'], 'eri-atb'),
+          rxAltaMed('eri-clindamicina', 'Clindamicina 300 mg — 1 cápsula VO a cada 6 horas, por 7 a 10 dias (alergia imediata a beta-lactâmico)', ['antibiotic'], 'eri-atb')
+        ], 'Tratar porta de entrada (fissura interdigital, úlcera ou micose) e reavaliar em 48–72 horas. Toxemia, bolhas, necrose ou progressão rápida impedem alta simples.', ['antibiotic'])
+      ]
+    }, {
+      id: 'eri-suporte',
+      label: 'Medidas associadas',
+      options: [
+        rxAltaOption('eri-elevacao', 'Adjuvante', 'Elevação e analgesia', [
+          rxAltaMed('eri-elevar', 'Elevar o membro afetado acima do nível do coração sempre que possível e marcar a borda do eritema', []),
+          rxAltaMed('eri-dipirona', 'Dipirona 500 mg a 1 g — VO a cada 6 a 8 horas, se dor ou febre (máximo 4 g/dia), por até 3 dias', ['analgesic_non_opioid'])
+        ], 'Procurar atendimento no mesmo dia se a vermelhidão ultrapassar a marca, houver febre persistente ou piora da dor.')
+      ]
+    }]
+  },
+  {
+    id: 'abscesso-cutaneo',
+    name: 'Abscesso cutâneo após controle do foco (alta)',
+    icon: '🩹',
+    aliases: ['abscesso', 'abscesso cutaneo', 'colecao de pele', 'pus na pele'],
+    groups: [{
+      id: 'abs-drenagem',
+      label: 'Controle do foco — obrigatório quando há coleção',
+      options: [
+        rxAltaOption('abs-curativo', 'Após drenagem', 'Curativo e cuidados locais', [
+          rxAltaMed('abs-limpeza', 'Higienizar a ferida com água e sabonete ou solução fisiológica, secar e cobrir com curativo limpo; trocar 1 a 2 vezes ao dia', [])
+        ], 'Antibiótico isolado não substitui incisão e drenagem de coleção flutuante. Retorno em 24–48 horas para revisão do curativo quando indicado.')
+      ]
+    }, {
+      id: 'abs-atb',
+      label: 'Antibiótico — apenas se indicação adicional após drenagem',
+      options: [
+        rxAltaOption('abs-atb-escolha', 'Se indicado', 'Cobertura para MRSA comunitário — escolha um', [
+          rxAltaMed('abs-smt', 'Sulfametoxazol + trimetoprima 800/160 mg — 1 comprimido VO a cada 12 horas, por 5 a 7 dias', ['antibiotic', 'sulfonamide'], 'abs-atb'),
+          rxAltaMed('abs-clindamicina', 'Clindamicina 300 mg — 1 cápsula VO a cada 6 horas, por 5 a 7 dias', ['antibiotic'], 'abs-atb'),
+          rxAltaMed('abs-doxiciclina', 'Doxiciclina 100 mg — 1 comprimido VO a cada 12 horas, por 5 a 7 dias', ['antibiotic'], 'abs-atb')
+        ], 'Considerar se celulite extensa, sinais sistêmicos, múltiplas lesões, extremos de idade, imunossupressão ou falha prévia. Doxiciclina é contraindicada na gestação e em crianças menores de 8 anos.', ['antibiotic'])
+      ]
+    }]
+  },
+  {
+    id: 'furunculose',
+    name: 'Furúnculo/furunculose após avaliação para drenagem',
+    icon: '🩹',
+    aliases: ['furunculo', 'furunculose', 'caroco com pus'],
+    groups: [{
+      id: 'fur-local',
+      label: 'Lesão pequena sem celulite extensa',
+      options: [
+        rxAltaOption('fur-compressa', '1ª linha', 'Cuidados locais', [
+          rxAltaMed('fur-compressa-morna', 'Aplicar compressa morna por 10 a 15 minutos, 3 a 4 vezes ao dia; manter a área limpa e coberta', [])
+        ], 'Não espremer. Lesão flutuante deve ser avaliada para incisão e drenagem; carbúnculo, face, imunossupressão ou sinais sistêmicos exigem reavaliação.')
+      ]
+    }, {
+      id: 'fur-atb',
+      label: 'Antibiótico após drenagem — somente se indicado',
+      options: [
+        rxAltaOption('fur-atb-escolha', 'Se indicado', 'Esquema oral — escolha um', [
+          rxAltaMed('fur-smt', 'Sulfametoxazol + trimetoprima 800/160 mg — 1 comprimido VO a cada 12 horas, por 5 a 7 dias', ['antibiotic', 'sulfonamide'], 'fur-atb'),
+          rxAltaMed('fur-clindamicina', 'Clindamicina 300 mg — 1 cápsula VO a cada 6 horas, por 5 a 7 dias', ['antibiotic'], 'fur-atb'),
+          rxAltaMed('fur-cefalexina', 'Cefalexina 500 mg — 1 cápsula VO a cada 6 horas, por 5 a 7 dias (se celulite não purulenta associada, sem risco de MRSA)', ['antibiotic', 'cephalosporin', 'beta_lactam'], 'fur-atb')
+        ], 'Antibiótico não substitui drenagem. Retornar se febre, progressão da vermelhidão, novas lesões ou ausência de melhora em 48 horas.', ['antibiotic'])
+      ]
+    }]
+  },
   rxAltaMicose('micoses-superficiais', 'Micoses superficiais (alta ambulatorial)', ['micose', 'micoses superficiais', 'dermatofitose']),
   rxAltaMicose('tinea', 'Tínea da pele (alta ambulatorial)', ['tinea', 'tinha', 'tinea corporis', 'dermatofitose']),
   rxAltaMicose('frieira', 'Frieira / tinea pedis (alta ambulatorial)', ['frieira', 'pe de atleta', 'tinea pedis', 'micose interdigital']),
