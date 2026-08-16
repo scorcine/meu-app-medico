@@ -64,6 +64,13 @@ const RESP_DERM_IDS = [
   'celulite', 'erisipela', 'abscesso-cutaneo', 'furunculose', 'micoses-superficiais',
   'tinea', 'frieira', 'escabiose', 'pediculose'
 ];
+const GI_OLHO_IDS = [
+  'conjuntivite', 'hordeolo', 'herpes-zoster', 'candidiase', 'vulvovaginites',
+  'balanopostite', 'diarreia-gastroenterite', 'vomitos-agudos', 'constipacao',
+  'dispepsia-drge', 'hemorroidas', 'gota', 'colica-renal', 'afta-estomatite',
+  'queilite', 'parasitoses-intestinais'
+];
+const ALL_CURATED_BATCH = [...RESP_DERM_IDS, ...GI_OLHO_IDS];
 
 /* 1. A receita de casa vem do modelo curado, não do protocolo do PS */
 const origem = evalIn(`(() => {
@@ -158,7 +165,7 @@ if (dpoc.grupos.length === 3 && /escarro purulento/i.test(dpoc.atb)) {
 
 /* 6. Lote respiratório/dermatológico vem de modelos completos e sem via hospitalar */
 const lote = evalIn(`(() => {
-  const ids = ${JSON.stringify(RESP_DERM_IDS)};
+  const ids = ${JSON.stringify(ALL_CURATED_BATCH)};
   return ids.map(id => {
     const cond = rxGetCatalogEntry(id);
     const text = (cond?.groups || []).flatMap(g => (g.options || []).flatMap(o => [
@@ -179,23 +186,32 @@ const loteOk = lote.every(c =>
   c.source === 'complete' && c.groups > 0 && c.homeRx === 'curated' && !c.hospitalRoute
 );
 if (loteOk) {
-  pass(`${lote.length} receitas curadas de vias aéreas e pele, sem dose/via hospitalar`);
+  pass(`${lote.length} receitas curadas de vias aéreas, pele, olho e GI, sem dose/via hospitalar`);
 } else {
-  fail('lote respiratório/dermatológico incompleto: ' + JSON.stringify(lote));
+  fail('lote curado incompleto: ' + JSON.stringify(lote.filter(c =>
+    c.source !== 'complete' || !c.groups || c.homeRx !== 'curated' || c.hospitalRoute
+  )));
 }
 
 const textoLote = id => lote.find(c => c.id === id)?.text || '';
-if (/mais de 10 dias/i.test(textoLote('sinusite-aguda')) &&
-    /Antibiótico não é indicado de rotina/i.test(textoLote('bronquite-aguda')) &&
-    /primeiras 48 horas/i.test(textoLote('gripe-influenza')) &&
-    /perfuração timpânica/i.test(textoLote('otite-externa')) &&
-    /Tratar simultaneamente contatos/i.test(textoLote('escabiose')) &&
-    /não substitui incisão e drenagem/i.test(textoLote('abscesso-cutaneo')) &&
-    /não substitui drenagem/i.test(textoLote('furunculose')) &&
-    /suspeita de fascite/i.test(textoLote('celulite'))) {
-  pass('lote novo preserva critérios de ATB, antiviral, drenagem e formas graves');
+const checks = [
+  ['sinusite', /mais de 10 dias/i.test(textoLote('sinusite-aguda'))],
+  ['bronquite', /Antibiótico não é indicado de rotina/i.test(textoLote('bronquite-aguda'))],
+  ['gripe', /primeiras 48 horas/i.test(textoLote('gripe-influenza'))],
+  ['oe', /perfuração timpânica/i.test(textoLote('otite-externa'))],
+  ['escabiose', /Tratar simultaneamente contatos/i.test(textoLote('escabiose'))],
+  ['abscesso', /não substitui incisão e drenagem/i.test(textoLote('abscesso-cutaneo'))],
+  ['furunculo', /não substitui drenagem/i.test(textoLote('furunculose'))],
+  ['celulite', /suspeita de fascite/i.test(textoLote('celulite'))],
+  ['conjuntivite', /Não usar colírio antibiótico/i.test(textoLote('conjuntivite'))],
+  ['gota', /Não iniciar alopurinol/i.test(textoLote('gota'))],
+  ['diarreia', /Antibiótico não é rotina/i.test(textoLote('diarreia-gastroenterite'))],
+  ['zoster', /Herpes oftálmico/i.test(textoLote('herpes-zoster'))]
+];
+if (checks.every(([, ok]) => ok)) {
+  pass('lotes novos preservam critérios clínicos e barreiras de segurança');
 } else {
-  fail('alertas clínicos do lote novo incompletos');
+  fail('alertas clínicos do lote novo incompletos: ' + JSON.stringify(checks.filter(([, ok]) => !ok).map(([k]) => k)));
 }
 
 /* 7. Abscesso/furúnculo exigem confirmar drenagem quando indicada antes da receita */

@@ -99,7 +99,11 @@ const curated = evalIn(`(() => {
     'sinusite-aguda', 'otite-media', 'otite-externa', 'bronquite-aguda',
     'gripe-influenza', 'rinite-alergica', 'impetigo',
     'celulite', 'erisipela', 'abscesso-cutaneo', 'furunculose', 'micoses-superficiais',
-    'tinea', 'frieira', 'escabiose', 'pediculose'
+    'tinea', 'frieira', 'escabiose', 'pediculose',
+    'conjuntivite', 'hordeolo', 'herpes-zoster', 'candidiase', 'vulvovaginites',
+    'balanopostite', 'diarreia-gastroenterite', 'vomitos-agudos', 'constipacao',
+    'dispepsia-drge', 'hemorroidas', 'gota', 'colica-renal', 'afta-estomatite',
+    'queilite', 'parasitoses-intestinais'
   ]
     .map(id => ({ id, mode: clinicalPathwayGet(id).homeRx, source: rxGetCatalogEntry(id)?.source }));
 })()`);

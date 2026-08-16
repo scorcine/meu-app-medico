@@ -375,8 +375,381 @@ const RX_HOME_RESP_DERM = [
   }
 ];
 
+const RX_HOME_GI_OLHO = [
+  {
+    id: 'conjuntivite',
+    name: 'Conjuntivite (alta ambulatorial)',
+    icon: '👁️',
+    aliases: ['conjuntivite', 'olho vermelho', 'secrecao ocular'],
+    groups: [{
+      id: 'conj-viral',
+      label: 'Viral — suporte, sem antibiótico',
+      options: [
+        rxAltaOption('conj-viral-suporte', '1ª linha', 'Lágrimas artificiais e higiene', [
+          rxAltaMed('conj-lagrimas', 'Lágrimas artificiais — aplicar 1 gota em cada olho 4 a 6 vezes ao dia, por 5 a 7 dias', []),
+          rxAltaMed('conj-compressa', 'Compressas frias limpas — 3 a 4 vezes ao dia; lavar mãos e não compartilhar toalhas', [])
+        ], 'Não usar colírio antibiótico na forma viral. Retornar se dor intensa, fotofobia, redução visual ou secreção purulenta intensa.')
+      ]
+    }, {
+      id: 'conj-bact',
+      label: 'Bacteriana — colírio antibiótico',
+      options: [
+        rxAltaOption('conj-bact-colirio', 'Se indicado', 'Antibiótico tópico — escolha um', [
+          rxAltaMed('conj-tobra', 'Tobramicina 0,3% colírio — 1 gota no olho afetado a cada 4 horas em vigília, por 5 a 7 dias', ['antibiotic'], 'conj-bact'),
+          rxAltaMed('conj-cipro', 'Ciprofloxacino 0,3% colírio — 1 gota no olho afetado a cada 4 horas em vigília, por 5 a 7 dias', ['antibiotic'], 'conj-bact')
+        ], 'Reservar para secreção purulenta franca. Avaliar oftalmologia se não houver melhora em 48–72 horas ou se houver envolvimento da córnea.', ['antibiotic'])
+      ]
+    }, {
+      id: 'conj-alerg',
+      label: 'Alérgica',
+      options: [
+        rxAltaOption('conj-alerg-escolha', 'Se indicado', 'Anti-histamínico ± colírio', [
+          rxAltaMed('conj-loratadina', 'Loratadina 10 mg — 1 comprimido VO 1 vez ao dia, por 7 a 14 dias', ['antihistamine'], 'conj-alerg-vo'),
+          rxAltaMed('conj-olopatadina', 'Olopatadina 0,1% colírio — 1 gota em cada olho a cada 12 horas, por 7 a 14 dias', ['antihistamine'])
+        ], 'Evitar coçar os olhos. Suspender lentes de contato até a resolução.')
+      ]
+    }]
+  },
+  {
+    id: 'hordeolo',
+    name: 'Hordéolo / terçol (alta ambulatorial)',
+    icon: '👁️',
+    aliases: ['hordeolo', 'tercol', 'abscesso palpebral'],
+    groups: [{
+      id: 'hor-local',
+      label: 'Cuidados locais',
+      options: [
+        rxAltaOption('hor-compressa', '1ª linha', 'Compressas e higiene', [
+          rxAltaMed('hor-compressa-morna', 'Compressas mornas limpas — 10 a 15 minutos, 4 a 6 vezes ao dia, por 5 a 7 dias; não espremer', [])
+        ], 'A maioria drena espontaneamente. Retornar se celulite periocular, febre, dor intensa ou redução visual.')
+      ]
+    }, {
+      id: 'hor-topico',
+      label: 'Antibiótico tópico — se inflamação importante',
+      options: [
+        rxAltaOption('hor-pomada', 'Se indicado', 'Pomada oftálmica — escolha uma', [
+          rxAltaMed('hor-tobra', 'Tobramicina pomada oftálmica 0,3% — aplicar fina camada na margem palpebral 3 a 4 vezes ao dia, por 7 dias', ['antibiotic'], 'hor-topico'),
+          rxAltaMed('hor-eritro', 'Eritromicina pomada oftálmica 0,5% — aplicar fina camada na margem palpebral 3 a 4 vezes ao dia, por 7 dias', ['antibiotic'], 'hor-topico')
+        ], 'Celulite pré-septal extensa exige antibiótico sistêmico e reavaliação; suspeita orbital é emergência.', ['antibiotic'])
+      ]
+    }]
+  },
+  {
+    id: 'herpes-zoster',
+    name: 'Herpes-zóster não complicado (alta ambulatorial)',
+    icon: '🩹',
+    aliases: ['herpes zoster', 'cobreiro', 'zoster'],
+    groups: [{
+      id: 'hz-antiviral',
+      label: 'Antiviral — iniciar preferencialmente em até 72 h do rash',
+      options: [
+        rxAltaOption('hz-antiviral-escolha', '1ª linha', 'Esquema oral — escolha um', [
+          rxAltaMed('hz-valaciclovir', 'Valaciclovir 1 g — 1 comprimido VO a cada 8 horas, por 7 dias', ['antiviral'], 'hz-antiviral'),
+          rxAltaMed('hz-aciclovir', 'Aciclovir 800 mg — 1 comprimido VO 5 vezes ao dia, por 7 dias', ['antiviral'], 'hz-antiviral')
+        ], 'Cobrir as lesões e evitar contato com gestantes sem imunidade e imunossuprimidos. Herpes oftálmico, disseminado, Ramsay Hunt ou imunossupressão grave exigem avaliação especializada/internação.', ['antiviral'])
+      ]
+    }, {
+      id: 'hz-analgesia',
+      label: 'Analgesia',
+      options: [
+        rxAltaOption('hz-analgesico', '1ª linha', 'Analgésico — escolha um', [
+          rxAltaMed('hz-dipirona', 'Dipirona 500 mg a 1 g — VO a cada 6 a 8 horas, se dor (máximo 4 g/dia), por até 7 dias', ['analgesic_non_opioid'], 'hz-analgesia'),
+          rxAltaMed('hz-paracetamol', 'Paracetamol 500 a 750 mg — VO a cada 6 a 8 horas, se dor (máximo 3 g/dia), por até 7 dias', ['analgesic_non_opioid'], 'hz-analgesia')
+        ], 'Se neuralgia intensa persistir após a fase aguda, reavaliar para adjuvantes neuropáticos em consulta.')
+      ]
+    }]
+  },
+  {
+    id: 'candidiase',
+    name: 'Candidíase não complicada (alta ambulatorial)',
+    icon: '🧬',
+    aliases: ['candidiase', 'sapinho', 'candida'],
+    groups: [{
+      id: 'cand-oral',
+      label: 'Oral leve',
+      options: [
+        rxAltaOption('cand-oral-escolha', '1ª linha', 'Tratamento tópico oral — escolha um', [
+          rxAltaMed('cand-nistatina', 'Nistatina suspensão 100.000 UI/mL — bochechar e engolir 4 a 6 mL, 4 vezes ao dia, por 7 a 14 dias', ['antifungal'], 'cand-oral'),
+          rxAltaMed('cand-miconazol-gel', 'Miconazol gel oral 2% — aplicar na mucosa oral 2 vezes ao dia, por 7 a 14 dias', ['antifungal'], 'cand-oral')
+        ], 'Remover próteses à noite e higienizar. Candidíase esofágica ou imunossupressão grave não usam este modelo simples.', ['antifungal'])
+      ]
+    }, {
+      id: 'cand-vag',
+      label: 'Vaginal não complicada',
+      options: [
+        rxAltaOption('cand-vag-escolha', '1ª linha', 'Esquema — escolha um', [
+          rxAltaMed('cand-fluconazol', 'Fluconazol 150 mg — 1 comprimido VO dose única', ['antifungal'], 'cand-vag'),
+          rxAltaMed('cand-miconazol-vag', 'Miconazol creme vaginal 2% — aplicar 1 aplicador à noite, por 7 noites', ['antifungal'], 'cand-vag')
+        ], 'Evitar relações sexuais até a melhora. Gestação: preferir azol tópico e evitar fluconazol.', ['antifungal'])
+      ]
+    }]
+  },
+  {
+    id: 'vulvovaginites',
+    name: 'Vulvovaginites (alta ambulatorial)',
+    icon: '🩺',
+    aliases: ['vulvovaginite', 'corrimento vaginal', 'vaginose', 'tricomoníase'],
+    groups: [{
+      id: 'vv-vb',
+      label: 'Vaginose bacteriana',
+      options: [
+        rxAltaOption('vv-vb-escolha', '1ª linha', 'Esquema — escolha um', [
+          rxAltaMed('vv-metro-7d', 'Metronidazol 500 mg — 1 comprimido VO a cada 12 horas, por 7 dias', ['antibiotic', 'nitroimidazole'], 'vv-vb'),
+          rxAltaMed('vv-secnidazol', 'Secnidazol 2 g — 4 comprimidos de 500 mg VO dose única', ['antibiotic', 'nitroimidazole'], 'vv-vb')
+        ], 'Evitar álcool durante o metronidazol e por 24 horas após. Não usar metronidazol isolado se o quadro for candidíase.', ['antibiotic'])
+      ]
+    }, {
+      id: 'vv-candida',
+      label: 'Candidíase vaginal',
+      options: [
+        rxAltaOption('vv-cand-escolha', '1ª linha', 'Esquema — escolha um', [
+          rxAltaMed('vv-fluconazol', 'Fluconazol 150 mg — 1 comprimido VO dose única', ['antifungal'], 'vv-cand'),
+          rxAltaMed('vv-miconazol', 'Miconazol creme vaginal 2% — aplicar 1 aplicador à noite, por 7 noites', ['antifungal'], 'vv-cand')
+        ], 'Confirmar prurido/grumos brancos. Gestação: preferir clotrimazol/miconazol tópico.', ['antifungal'])
+      ]
+    }, {
+      id: 'vv-trico',
+      label: 'Tricomoníase',
+      options: [
+        rxAltaOption('vv-trico-metro', '1ª linha', 'Tratar paciente e parceiro', [
+          rxAltaMed('vv-metro-2g', 'Metronidazol 2 g — 4 comprimidos de 500 mg VO dose única; tratar o(a) parceiro(a) sexual', ['antibiotic', 'nitroimidazole'])
+        ], 'Abstinência sexual até o tratamento de ambos e resolução dos sintomas.', ['antibiotic'])
+      ]
+    }]
+  },
+  {
+    id: 'balanopostite',
+    name: 'Balanopostite (alta ambulatorial)',
+    icon: '🩺',
+    aliases: ['balanopostite', 'balanite', 'inflamacao da glande'],
+    groups: [{
+      id: 'bal-candida',
+      label: 'Provável candidíase',
+      options: [
+        rxAltaOption('bal-clotrimazol', '1ª linha', 'Antifúngico tópico', [
+          rxAltaMed('bal-clotri', 'Clotrimazol creme 1% — aplicar camada fina na glande e prepúcio 2 vezes ao dia, por 7 a 14 dias', ['antifungal'])
+        ], 'Higienizar com água, secar bem e evitar sabonetes irritantes. Investigar diabetes se recorrente.', ['antifungal'])
+      ]
+    }, {
+      id: 'bal-bacteriana',
+      label: 'Bacteriana / mista — se indicado',
+      options: [
+        rxAltaOption('bal-atb', 'Se indicado', 'Antibiótico oral — escolha um', [
+          rxAltaMed('bal-cefalexina', 'Cefalexina 500 mg — 1 cápsula VO a cada 6 horas, por 5 a 7 dias', ['antibiotic'], 'bal-atb'),
+          rxAltaMed('bal-amoxclav', 'Amoxicilina + clavulanato 875/125 mg — 1 comprimido VO a cada 12 horas, por 5 a 7 dias', ['antibiotic', 'penicillin'], 'bal-atb')
+        ], 'Retornar se edema progressivo, retenção urinária, febre ou necrose — avaliar fimose/parafimose.', ['antibiotic'])
+      ]
+    }]
+  },
+  {
+    id: 'diarreia-gastroenterite',
+    name: 'Gastroenterite (alta ambulatorial)',
+    icon: '🚽',
+    aliases: ['diarreia', 'gastroenterite', 'vomito e diarreia'],
+    groups: [{
+      id: 'dge-sro',
+      label: 'Viral/leve — reidratação (sem antibiótico)',
+      options: [
+        rxAltaOption('dge-reidratacao', '1ª linha', 'SRO e suporte', [
+          rxAltaMed('dge-soro', 'Solução de reidratação oral — oferecer pequenos goles frequentes conforme sede e diurese; manter alimentação leve', []),
+          rxAltaMed('dge-ondansetrona', 'Ondansetrona 4 mg — 1 comprimido VO a cada 8 horas, se náusea impedir a reidratação, por até 2 dias', ['antiemetic'])
+        ], 'Antibiótico não é rotina. Retornar se sangue nas fezes, febre alta persistente, desidratação, sonolência ou incapacidade de beber.')
+      ]
+    }, {
+      id: 'dge-invasiva',
+      label: 'Invasiva/disenteria — antibiótico se critério clínico',
+      options: [
+        rxAltaOption('dge-atb', 'Se indicado', 'Antibiótico oral — escolha um', [
+          rxAltaMed('dge-cipro', 'Ciprofloxacino 500 mg — 1 comprimido VO a cada 12 horas, por 3 dias (adulto não gestante)', ['antibiotic'], 'dge-atb'),
+          rxAltaMed('dge-azitro', 'Azitromicina 500 mg — 1 comprimido VO 1 vez ao dia, por 3 dias', ['antibiotic', 'macrolide'], 'dge-atb')
+        ], 'Preferir azitromicina em gestantes e quando houver risco de resistência a quinolona. Evitar loperamida na disenteria.', ['antibiotic'])
+      ]
+    }]
+  },
+  {
+    id: 'vomitos-agudos',
+    name: 'Náuseas e vômitos (alta ambulatorial)',
+    icon: '🤢',
+    aliases: ['vomitos', 'nauseas', 'enjoo'],
+    groups: [{
+      id: 'vom-antiemetico',
+      label: 'Antiemético oral — após tolerância inicial',
+      options: [
+        rxAltaOption('vom-escolha', '1ª linha', 'Escolha um', [
+          rxAltaMed('vom-ondansetrona', 'Ondansetrona 4 mg — 1 comprimido VO a cada 8 horas, se náusea, por até 2 a 3 dias', ['antiemetic'], 'vom-anti'),
+          rxAltaMed('vom-metoclopramida', 'Metoclopramida 10 mg — 1 comprimido VO a cada 8 horas, 30 minutos antes das refeições, por até 2 a 3 dias', ['antiemetic'], 'vom-anti')
+        ], 'Manter pequenos volumes de líquidos. Retornar se dor abdominal intensa, sangue, febre, desidratação ou incapacidade de beber.', ['antiemetic'])
+      ]
+    }]
+  },
+  {
+    id: 'constipacao',
+    name: 'Constipação (alta ambulatorial)',
+    icon: '🚽',
+    aliases: ['constipacao', 'prisao de ventre', 'obstipacao'],
+    groups: [{
+      id: 'const-fibra',
+      label: 'Medidas e laxativo osmótico',
+      options: [
+        rxAltaOption('const-lactulose', '1ª linha', 'Osmótico', [
+          rxAltaMed('const-lactulose-xarope', 'Lactulose xarope — 15 a 30 mL VO 1 a 2 vezes ao dia, ajustar até evacuar fezes macias; aumentar fibras e água', ['laxative'])
+        ], 'Investigar alarme (perda de peso, sangue, anemia, início após 50 anos). Evitar uso crônico de estimulantes sem avaliação.', ['laxative'])
+      ]
+    }]
+  },
+  {
+    id: 'dispepsia-drge',
+    name: 'Dispepsia / DRGE (alta ambulatorial)',
+    icon: '🔥',
+    aliases: ['dispepsia', 'drge', 'refluxo', 'queimacao no estomago'],
+    groups: [{
+      id: 'drge-ibp',
+      label: 'Inibidor de bomba de prótons',
+      options: [
+        rxAltaOption('drge-omeprazol', '1ª linha', 'IBP', [
+          rxAltaMed('drge-omeprazol-20', 'Omeprazol 20 mg — 1 cápsula VO em jejum, 1 vez ao dia, por 14 a 28 dias', ['ppi'])
+        ], 'Elevar cabeceira, evitar refeições tardias e excesso de café/álcool. Alarmes (disfagia, anemia, perda de peso, sangramento) exigem endoscopia.', ['ppi'])
+      ]
+    }, {
+      id: 'drge-sintoma',
+      label: 'Sintomático se dor',
+      options: [
+        rxAltaOption('drge-analgesia', 'Adjuvante', 'Analgésico simples — escolha um', [
+          rxAltaMed('drge-paracetamol', 'Paracetamol 500 a 750 mg — VO a cada 6 a 8 horas, se dor (máximo 3 g/dia), por até 3 dias', ['analgesic_non_opioid'])
+        ], 'Evitar AINE se possível — pioram dispepsia e risco de úlcera.')
+      ]
+    }]
+  },
+  {
+    id: 'hemorroidas',
+    name: 'Hemorroidas (alta ambulatorial)',
+    icon: '🩹',
+    aliases: ['hemorroida', 'hemorroidas', 'sangramento anal'],
+    groups: [{
+      id: 'hem-local',
+      label: 'Medidas locais e evacuação macia',
+      options: [
+        rxAltaOption('hem-cuidados', '1ª linha', 'Banho de assento e laxativo osmótico', [
+          rxAltaMed('hem-banho', 'Banho de assento morno — 10 a 15 minutos, 2 a 3 vezes ao dia', []),
+          rxAltaMed('hem-lactulose', 'Lactulose xarope — 15 a 30 mL VO 1 a 2 vezes ao dia, para fezes macias', ['laxative'])
+        ], 'Não confundir com fissura, abscesso ou neoplasia. Colonoscopia se idade ≥ 50 anos, anemia ou sangramento atípico.')
+      ]
+    }, {
+      id: 'hem-topico',
+      label: 'Tópico de curta duração',
+      options: [
+        rxAltaOption('hem-pomada', 'Adjuvante', 'Anestésico + corticoide tópico', [
+          rxAltaMed('hem-lidohc', 'Pomada de lidocaína + hidrocortisona — aplicar fina camada na região anal 2 vezes ao dia, por até 5 a 7 dias', ['corticosteroid', 'local_anesthetic'])
+        ], 'Uso curto. Trombose extensa < 72 h, prolapso irredutível ou sangramento abundante exigem reavaliação.', ['corticosteroid'])
+      ]
+    }]
+  },
+  {
+    id: 'gota',
+    name: 'Crise de gota (alta ambulatorial)',
+    icon: '🦴',
+    aliases: ['gota', 'crise de gota', 'podagra'],
+    groups: [{
+      id: 'gota-crise',
+      label: 'Tratamento da crise — escolha uma estratégia',
+      options: [
+        rxAltaOption('gota-colchicina', '1ª linha', 'Colchicina (início precoce)', [
+          rxAltaMed('gota-colchicina-ataque', 'Colchicina 0,5 mg — 2 comprimidos VO agora e 1 comprimido 1 hora depois; depois 1 comprimido a cada 12 horas por até 3 dias (ajustar se TFG reduzida)', ['antigout'])
+        ], 'Não iniciar alopurinol durante a crise aguda. Reduzir dose se DRC.', ['antigout']),
+        rxAltaOption('gota-aine', 'Alternativa', 'AINE — escolha um', [
+          rxAltaMed('gota-naproxeno', 'Naproxeno 500 mg — 1 comprimido VO a cada 12 horas, após alimentação, por 5 a 7 dias', ['nsaid'], 'gota-aine'),
+          rxAltaMed('gota-ibuprofeno', 'Ibuprofeno 600 mg — 1 comprimido VO a cada 8 horas, após alimentação, por 5 a 7 dias', ['nsaid'], 'gota-aine')
+        ], 'Evitar se DRC, úlcera ativa, anticoagulação ou gestação.', ['nsaid']),
+        rxAltaOption('gota-corticoide', 'Se AINE e colchicina contraindicados', 'Corticoide oral', [
+          rxAltaMed('gota-prednisona', 'Prednisona 40 mg — 2 comprimidos de 20 mg VO 1 vez ao dia, pela manhã, por 5 dias', ['corticosteroid'])
+        ], 'Excluir artrite séptica se febre ou dúvida diagnóstica.', ['corticosteroid'])
+      ]
+    }]
+  },
+  {
+    id: 'colica-renal',
+    name: 'Cólica renal (alta ambulatorial)',
+    icon: '💧',
+    aliases: ['colica renal', 'calculo renal', 'litíase urinaria'],
+    groups: [{
+      id: 'cr-analgesia',
+      label: 'Analgesia oral após controle da dor',
+      options: [
+        rxAltaOption('cr-analgesico', '1ª linha', 'Analgésico/AINE — escolha um', [
+          rxAltaMed('cr-dipirona', 'Dipirona 500 mg a 1 g — VO a cada 6 a 8 horas, se dor (máximo 4 g/dia), por até 3 dias', ['analgesic_non_opioid'], 'cr-analgesia'),
+          rxAltaMed('cr-ibuprofeno', 'Ibuprofeno 400 a 600 mg — VO a cada 8 horas, após alimentação, se dor, por até 3 dias', ['nsaid'], 'cr-analgesia')
+        ], 'Manter hidratação. Retornar se febre, anúria, vômitos incoercíveis, dor refratária ou rim único.')
+      ]
+    }, {
+      id: 'cr-expulsao',
+      label: 'Facilitação da expulsão — se indicado',
+      options: [
+        rxAltaOption('cr-tansulosina', 'Se cálculo ureteral distal adequado', 'Alfa-bloqueador', [
+          rxAltaMed('cr-tansulosina-04', 'Tansulosina 0,4 mg — 1 comprimido VO à noite, por até 7 a 14 dias', [])
+        ], 'Orientar filtrar a urina. Cálculo > 10 mm, infecção obstrutiva ou IRA exigem urologia/internação.')
+      ]
+    }]
+  },
+  {
+    id: 'afta-estomatite',
+    name: 'Afta / estomatite (alta ambulatorial)',
+    icon: '👄',
+    aliases: ['afta', 'estomatite', 'ulcera oral'],
+    groups: [{
+      id: 'afta-local',
+      label: 'Tratamento local',
+      options: [
+        rxAltaOption('afta-cuidados', '1ª linha', 'Higiene e proteção', [
+          rxAltaMed('afta-bochecho', 'Bochechos com solução fisiológica ou água morna — 3 a 4 vezes ao dia', []),
+          rxAltaMed('afta-triancinolona', 'Triancinolona acetonida pasta oral 0,1% — aplicar fina camada sobre a afta 2 a 3 vezes ao dia, após higiene, por até 5 dias', ['corticosteroid'])
+        ], 'Evitar alimentos ácidos/ásperos. Lesões > 2 semanas, febre ou imunodepressão exigem reavaliação.', ['corticosteroid'])
+      ]
+    }]
+  },
+  {
+    id: 'queilite',
+    name: 'Queilite (alta ambulatorial)',
+    icon: '👄',
+    aliases: ['queilite', 'lábios rachados', 'inflamacao labial'],
+    groups: [{
+      id: 'queilite-cuidado',
+      label: 'Hidratação e proteção',
+      options: [
+        rxAltaOption('queilite-basico', '1ª linha', 'Cuidado local', [
+          rxAltaMed('queilite-vaselina', 'Vaselina ou hidratante labial sem perfume — aplicar várias vezes ao dia; proteção solar labial se exposição', [])
+        ], 'Investigar hábito de lambedura, deficiência nutricional e candidíase angular se fissura persistente nos cantos da boca.')
+      ]
+    }]
+  },
+  {
+    id: 'parasitoses-intestinais',
+    name: 'Parasitoses intestinais (alta ambulatorial)',
+    icon: '🪱',
+    aliases: ['parasitose', 'verme', 'oxiurose', 'giardiase', 'ascaridiase'],
+    groups: [{
+      id: 'par-oxi-helm',
+      label: 'Oxiurose / helmintos',
+      options: [
+        rxAltaOption('par-albendazol', '1ª linha', 'Benzimidazol', [
+          rxAltaMed('par-albendazol-400', 'Albendazol 400 mg — 1 comprimido VO dose única; na oxiurose, repetir em 14 dias e tratar contactantes', ['antiparasitic'])
+        ], 'Reforçar higiene das mãos e unhas curtas. Evitar automedicação repetida sem diagnóstico.', ['antiparasitic'])
+      ]
+    }, {
+      id: 'par-giardia',
+      label: 'Giardíase / amebíase intestinal',
+      options: [
+        rxAltaOption('par-metro', 'Se indicado', 'Nitroimidazol — escolha um', [
+          rxAltaMed('par-metro-giardia', 'Metronidazol 250 mg — 1 comprimido VO a cada 8 horas, por 5 dias (giardíase)', ['antibiotic', 'nitroimidazole'], 'par-metro'),
+          rxAltaMed('par-metro-ameba', 'Metronidazol 750 mg — VO a cada 8 horas, por 7 a 10 dias (amebíase intestinal)', ['antibiotic', 'nitroimidazole'], 'par-metro')
+        ], 'Disenteria grave, abscesso hepático ou desidratação importante exigem reavaliação hospitalar.', ['antibiotic'])
+      ]
+    }]
+  }
+];
+
 const RX_CATALOG_MANUAL = [
   ...RX_HOME_RESP_DERM,
+  ...RX_HOME_GI_OLHO,
   {
     id: 'cefaleias',
     name: 'Cefaleia',

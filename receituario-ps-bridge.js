@@ -25,7 +25,23 @@ const RX_MANUAL_PRIORITY_IDS = new Set([
   'tinea',
   'frieira',
   'escabiose',
-  'pediculose'
+  'pediculose',
+  'conjuntivite',
+  'hordeolo',
+  'herpes-zoster',
+  'candidiase',
+  'vulvovaginites',
+  'balanopostite',
+  'diarreia-gastroenterite',
+  'vomitos-agudos',
+  'constipacao',
+  'dispepsia-drge',
+  'hemorroidas',
+  'gota',
+  'colica-renal',
+  'afta-estomatite',
+  'queilite',
+  'parasitoses-intestinais'
 ]);
 
 let RX_CATALOG_CACHE = null;

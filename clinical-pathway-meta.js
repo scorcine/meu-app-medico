@@ -345,7 +345,8 @@ const CLINICAL_PATHWAY_BY_ID = {
     scores: [],
     reassessment: null,
     outcomes: ['alta', 'observacao'],
-    homeRx: 'blocked'
+    homeRx: 'curated',
+    notes: 'Oftálmico, disseminado ou imunossupressão grave fora deste modelo de alta.'
   },
   'escabiose': {
     scores: [],
@@ -470,7 +471,7 @@ const CLINICAL_PATHWAY_BY_ID = {
       question: 'Paciente está hidratado e tolerando VO para alta?'
     },
     outcomes: ['alta', 'observacao', 'internacao'],
-    homeRx: 'blocked',
+    homeRx: 'curated',
     requiresImprovementForDischarge: true
   },
   'vomitos-agudos': {
@@ -481,14 +482,14 @@ const CLINICAL_PATHWAY_BY_ID = {
       question: 'Sintomas controlados e VO possível?'
     },
     outcomes: ['alta', 'observacao', 'internacao'],
-    homeRx: 'blocked',
+    homeRx: 'curated',
     requiresImprovementForDischarge: true
   },
   'constipacao': {
     scores: [],
     reassessment: null,
     outcomes: ['alta'],
-    homeRx: 'blocked'
+    homeRx: 'curated'
   },
   'desconforto-abdominal': {
     scores: [],
@@ -500,13 +501,13 @@ const CLINICAL_PATHWAY_BY_ID = {
     scores: [],
     reassessment: null,
     outcomes: ['alta'],
-    homeRx: 'blocked'
+    homeRx: 'curated'
   },
   'hemorroidas': {
     scores: [],
     reassessment: null,
     outcomes: ['alta'],
-    homeRx: 'blocked'
+    homeRx: 'curated'
   },
   'fissura-anal': {
     scores: [],
@@ -542,7 +543,8 @@ const CLINICAL_PATHWAY_BY_ID = {
     scores: [],
     reassessment: null,
     outcomes: ['alta'],
-    homeRx: 'blocked'
+    homeRx: 'curated',
+    notes: 'Não iniciar alopurinol na crise aguda.'
   },
   'colica-renal': {
     scores: [],
@@ -552,7 +554,7 @@ const CLINICAL_PATHWAY_BY_ID = {
       question: 'Dor controlada e paciente apto à alta?'
     },
     outcomes: ['alta', 'observacao', 'internacao'],
-    homeRx: 'blocked',
+    homeRx: 'curated',
     requiresImprovementForDischarge: true
   },
 
@@ -584,13 +586,13 @@ const CLINICAL_PATHWAY_BY_ID = {
     scores: [],
     reassessment: null,
     outcomes: ['alta'],
-    homeRx: 'blocked'
+    homeRx: 'curated'
   },
   'hordeolo': {
     scores: [],
     reassessment: null,
     outcomes: ['alta'],
-    homeRx: 'blocked'
+    homeRx: 'curated'
   },
   'corpo-estranho-ocular': {
     scores: [],
@@ -609,13 +611,13 @@ const CLINICAL_PATHWAY_BY_ID = {
     scores: [],
     reassessment: null,
     outcomes: ['alta'],
-    homeRx: 'blocked'
+    homeRx: 'curated'
   },
   'queilite': {
     scores: [],
     reassessment: null,
     outcomes: ['alta'],
-    homeRx: 'blocked'
+    homeRx: 'curated'
   },
 
   /* Gineco / obstetrícia / ITS */
@@ -643,19 +645,19 @@ const CLINICAL_PATHWAY_BY_ID = {
     scores: [],
     reassessment: null,
     outcomes: ['alta'],
-    homeRx: 'blocked'
+    homeRx: 'curated'
   },
   'candidiase': {
     scores: [],
     reassessment: null,
     outcomes: ['alta'],
-    homeRx: 'blocked'
+    homeRx: 'curated'
   },
   'balanopostite': {
     scores: [],
     reassessment: null,
     outcomes: ['alta'],
-    homeRx: 'blocked'
+    homeRx: 'curated'
   },
   'gonorreia-clamidia': {
     scores: [],
@@ -831,7 +833,7 @@ const CLINICAL_PATHWAY_BY_ID = {
     scores: [],
     reassessment: null,
     outcomes: ['alta'],
-    homeRx: 'blocked'
+    homeRx: 'curated'
   },
   'anemia-ferropriva': {
     scores: [],
