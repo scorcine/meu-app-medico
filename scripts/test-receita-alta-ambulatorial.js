@@ -256,16 +256,14 @@ const checks = [
   ['furunculo', /não substitui drenagem/i.test(textoLote('furunculose'))],
   ['celulite', /suspeita de fascite/i.test(textoLote('celulite'))],
   ['conjuntivite', /Não usar colírio antibiótico/i.test(textoLote('conjuntivite'))],
-  ['gota', /Não iniciar alopurinol/i.test(textoLote('gota'))],
+  ['gota', /Não iniciar alopurinol automaticamente/i.test(textoLote('gota'))],
   ['diarreia', /Antibiótico não é rotina/i.test(textoLote('diarreia-gastroenterite'))],
   ['zoster', /Herpes oftálmico/i.test(textoLote('herpes-zoster'))],
   ['flebite', /não liberar anticoagulação automática/i.test(textoLote('flebite'))],
   ['mono', /Não prescrever amoxicilina/i.test(textoLote('mononucleose'))],
   ['diverticulite', /Abscesso, peritonite/i.test(textoLote('diverticulite'))],
-  ['tosse', /investigar TB/i.test(textoLote('tosse'))],
   ['ulceras-genitais', /penicilina benzatina intramuscular/i.test(textoLote('ulceras-genitais'))],
-  ['pneumonia', /CURB-65 baixo/i.test(textoLote('pneumonia-comunitaria'))],
-  ['dengue', /jamais AINE/i.test(textoLote('dengue'))],
+  ['dengue', /60 mL\/kg\/dia/i.test(textoLote('dengue')) && /jamais AINE/i.test(textoLote('dengue'))],
   ['tvp', /Confirmar TVP por Doppler/i.test(textoLote('tvp'))],
   ['anafilaxia', /2 dispositivos/i.test(textoLote('alergia-anafilaxia')) &&
     /corticoide não previne reação bifásica/i.test(textoLote('alergia-anafilaxia'))],
@@ -277,10 +275,14 @@ const checks = [
   ['olho', /Não prescrever anestésico tópico/i.test(textoLote('corpo-estranho-ocular'))],
   ['epistaxe', /comprimir.*10–15 minutos/i.test(textoLote('epistaxe'))],
   ['hipoglicemia', /Não oferecer alimento.*inconsciente/i.test(textoLote('hipoglicemia-grave'))],
-  ['insolacao', /Não usar antitérmico/i.test(textoLote('insolacao'))],
-  ['raiva', /Vacina e imunoglobulina são aplicadas no serviço/i.test(textoLote('profilaxia-antirrabica'))],
+  ['insolacao', /Golpe de calor/i.test(textoLote('insolacao'))],
+  ['raiva', /vacina do dia 0/i.test(textoLote('profilaxia-antirrabica'))],
   ['sangramento-uterino', /gestação negativo/i.test(textoLote('sangramento-uterino'))],
-  ['sincope', /Não iniciar fludrocortisona ou midodrina/i.test(textoLote('sincope'))]
+  ['sincope', /Não iniciar fludrocortisona ou midodrina/i.test(textoLote('sincope'))],
+  ['pneumonia', /Com comorbidades, não usar beta-lactâmico isolado/i.test(textoLote('pneumonia-comunitaria'))],
+  ['pielo', /Coletar urocultura/i.test(textoLote('pielonefrite'))],
+  ['coqueluche', /250 mg VO 1 vez ao dia nos dias 2 a 5/i.test(textoLote('bronquite-aguda'))],
+  ['tosse', /Purulência isolada não indica antibiótico/i.test(textoLote('tosse'))]
 ];
 if (checks.every(([, ok]) => ok)) {
   pass('lotes novos preservam critérios clínicos e barreiras de segurança');
@@ -299,15 +301,19 @@ const drenagemGate = evalIn(`(() => {
   host.querySelector('#ps-rx-analyze')?.click();
   const panel = host.querySelector('[data-ps-reassessment-kind="clinical"]');
   panel?.querySelector('[data-ps-improved="sim"]')?.click();
+  const afterMelhora = home?.disabled;
+  host.querySelector('[data-ps-outcome="alta"]')?.click();
   return {
     before,
+    afterMelhora,
     after: home?.disabled,
     question: panel?.querySelector('p')?.textContent || ''
   };
 })()`);
 
-if (drenagemGate.before && !drenagemGate.after && /drenada quando indicada/i.test(drenagemGate.question)) {
-  pass('abscesso bloqueia receita até confirmar drenagem quando indicada e ausência de sinais sistêmicos');
+if (drenagemGate.before && drenagemGate.afterMelhora && !drenagemGate.after &&
+    /drenada quando indicada/i.test(drenagemGate.question)) {
+  pass('abscesso bloqueia receita até confirmar drenagem e escolher o desfecho Alta');
 } else {
   fail('barreira de drenagem do abscesso incompleta: ' + JSON.stringify(drenagemGate));
 }

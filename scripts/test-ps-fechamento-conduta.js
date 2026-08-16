@@ -236,6 +236,8 @@ const reavaliacao = evalIn(`(() => {
   const nextAntes = !panel.querySelector('[data-ps-reassessment-next]').hidden;
   panel.querySelector('[data-ps-improved="sim"]').click();
   const nextDepois = !panel.querySelector('[data-ps-reassessment-next]').hidden;
+  const aindaPrecisaAlta = home.disabled;
+  host.querySelector('[data-ps-outcome="alta"]')?.click();
   const opcoesFinais = [...panel.querySelectorAll('[data-ps-next]')].map(b => b.dataset.psNext);
   const semNavegacaoAutomatica = window.__sections.length === 0;
 
@@ -244,6 +246,7 @@ const reavaliacao = evalIn(`(() => {
   return {
     bloqueadoAntes,
     aindaBloqueado,
+    aindaPrecisaAlta,
     liberadoDepois: !home.disabled,
     texto,
     semMelhora,
@@ -264,10 +267,10 @@ if (reavaliacao.bloqueadoAntes && reavaliacao.aindaBloqueado &&
   fail('reavaliação dos ciclos falhou: ' + JSON.stringify(reavaliacao));
 }
 
-if (reavaliacao.liberadoDepois && !reavaliacao.nextAntes && reavaliacao.nextDepois &&
+if (reavaliacao.aindaPrecisaAlta && reavaliacao.liberadoDepois && !reavaliacao.nextAntes && reavaliacao.nextDepois &&
     reavaliacao.semNavegacaoAutomatica &&
     reavaliacao.opcoesFinais.join(',') === 'receituario,encerrar') {
-  pass('melhora confirmada pergunta entre prescrever para casa e finalizar, sem pular de tela');
+  pass('melhora confirmada exige desfecho Alta antes da receita e pergunta o próximo passo');
 } else {
   fail('escolha após melhora falhou: ' + JSON.stringify(reavaliacao));
 }

@@ -1166,11 +1166,7 @@ function psRenderInteractiveRx (conditionId, container) {
         outcome.className = `ps-rx-reassessment-outcome is-${answer}`;
         next.hidden = answer !== 'sim';
         if (answer === 'sim') {
-          outcome.textContent = 'Melhora confirmada ✓ Escolha o próximo passo abaixo.';
-          if (!selectedOutcome && pathway.outcomes.includes('alta')) {
-            selectedOutcome = 'alta';
-            syncOutcomeButtons();
-          }
+          outcome.textContent = 'Melhora confirmada ✓ Escolha o desfecho Alta e o próximo passo abaixo.';
         } else {
           outcome.textContent = pathway.hospitalOnly
             ? 'Sem melhora ✗ Manter observação, internar ou transferir.'
@@ -1187,6 +1183,17 @@ function psRenderInteractiveRx (conditionId, container) {
     panel.querySelectorAll('[data-ps-next]').forEach(button => {
       button.addEventListener('click', () => {
         if (button.dataset.psNext === 'receituario') {
+          if (!pathway.outcomes.includes('alta') || pathway.hospitalOnly) {
+            setClosureStatus('Esta condição não permite alta com receita domiciliar automática.');
+            return;
+          }
+          selectedOutcome = 'alta';
+          syncOutcomeButtons();
+          showClosure();
+          if (!canOpenHomePrescription()) {
+            setClosureStatus('Confirme melhora e o desfecho Alta antes de prescrever para casa.');
+            return;
+          }
           psOpenHomePrescription(conditionId, conditionName);
           return;
         }
@@ -1209,6 +1216,14 @@ function psRenderInteractiveRx (conditionId, container) {
     }
   }
 
+  function canOpenHomePrescription () {
+    if (pathway.homeRx !== 'curated') return false;
+    if (needsImprovementGate() && improvementAnswer() !== 'sim') return false;
+    if (selectedOutcome !== 'alta') return false;
+    if (pathway.hospitalOnly) return false;
+    return pathway.outcomes.includes('alta');
+  }
+
   function showClosure () {
     if (!closureEl) return;
     const escolhas = selectedLabels();
@@ -1222,16 +1237,19 @@ function psRenderInteractiveRx (conditionId, container) {
     const homeButton = closureEl.querySelector('[data-ps-closure-action="receituario"]');
     const improved = improvementAnswer();
     const improvementGate = needsImprovementGate() && improved !== 'sim';
-    const curatedHome = pathway.homeRx === 'curated';
+    const curatedHome = pathway.homeRx === 'curated' && pathway.outcomes.includes('alta');
+    const needsAltaOutcome = curatedHome && !improvementGate && selectedOutcome !== 'alta';
     if (homeButton) {
-      homeButton.disabled = !curatedHome || improvementGate;
+      homeButton.disabled = !canOpenHomePrescription();
       const homeReason = !curatedHome
-        ? (pathway.homeRx === 'none'
-            ? 'Esta condição não gera receita domiciliar automática'
+        ? (pathway.homeRx === 'none' || !pathway.outcomes.includes('alta')
+            ? 'Esta condição não gera receita domiciliar automática neste desfecho'
             : 'Bloqueado até existir receita ambulatorial curada')
         : (improvementGate
             ? 'Disponível após confirmar melhora na reavaliação'
-            : 'Abre a receita ambulatorial curada');
+            : (needsAltaOutcome
+                ? 'Escolha o desfecho Alta antes de prescrever para casa'
+                : 'Abre a receita ambulatorial curada'));
       const detail = homeButton.querySelector('span');
       if (detail) detail.textContent = homeReason;
       homeButton.title = homeReason;
@@ -1353,6 +1371,15 @@ function psRenderInteractiveRx (conditionId, container) {
         if (needsImprovementGate() && improvementAnswer() !== 'sim') {
           setClosureStatus('Reavalie o paciente e confirme melhora antes da prescrição para casa.');
           resultEl.querySelector('[data-ps-reassessment]')?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          return;
+        }
+        if (selectedOutcome !== 'alta') {
+          setClosureStatus('Escolha o desfecho Alta antes de abrir a receita para casa.');
+          closureEl?.querySelector('[data-ps-pathway-outcome]')?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          return;
+        }
+        if (!canOpenHomePrescription()) {
+          setClosureStatus('Receita para casa indisponível neste desfecho.');
           return;
         }
         psOpenHomePrescription(conditionId, conditionName);

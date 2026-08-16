@@ -160,8 +160,8 @@ const RX_HOME_RESP_DERM = [
       label: 'Suspeita de coqueluche',
       options: [
         rxAltaOption('br-azitro', 'Se indicado', 'Macrolídeo', [
-          rxAltaMed('br-azitro-adulto', 'Azitromicina 500 mg — 1 comprimido VO 1 vez ao dia, por 5 dias (adulto)', ['antibiotic', 'macrolide'])
-        ], 'Usar somente se quadro compatível com coqueluche e aplicar medidas de isolamento/notificação conforme protocolo local.', ['antibiotic', 'macrolide'])
+          rxAltaMed('br-azitro-adulto', 'Azitromicina 500 mg — 1 comprimido VO no dia 1; depois 250 mg VO 1 vez ao dia nos dias 2 a 5 (adulto)', ['antibiotic', 'macrolide'])
+        ], 'Usar somente se quadro compatível com coqueluche. Cautela se QT prolongado ou interações. Aplicar isolamento/notificação conforme protocolo local.', ['antibiotic', 'macrolide'])
       ]
     }]
   },
@@ -513,8 +513,9 @@ const RX_HOME_GI_OLHO = [
       label: 'Tricomoníase',
       options: [
         rxAltaOption('vv-trico-metro', '1ª linha', 'Tratar paciente e parceiro', [
-          rxAltaMed('vv-metro-2g', 'Metronidazol 2 g — 4 comprimidos de 500 mg VO dose única; tratar o(a) parceiro(a) sexual', ['antibiotic', 'nitroimidazole'])
-        ], 'Abstinência sexual até o tratamento de ambos e resolução dos sintomas.', ['antibiotic'])
+          rxAltaMed('vv-metro-7d', 'Metronidazol 500 mg — 1 comprimido VO a cada 12 horas, por 7 dias (preferencial em mulheres); tratar o(a) parceiro(a) sexual', ['antibiotic', 'nitroimidazole'], 'vv-trico'),
+          rxAltaMed('vv-metro-2g', 'Metronidazol 2 g — 4 comprimidos de 500 mg VO dose única (alternativa em homens ou se aderência ao esquema de 7 dias for inviável)', ['antibiotic', 'nitroimidazole'], 'vv-trico')
+        ], 'Abstinência sexual até o tratamento de ambos e resolução dos sintomas. Evitar álcool durante o metronidazol e por 24 horas após.', ['antibiotic'])
       ]
     }]
   },
@@ -656,7 +657,7 @@ const RX_HOME_GI_OLHO = [
       options: [
         rxAltaOption('gota-colchicina', '1ª linha', 'Colchicina (início precoce)', [
           rxAltaMed('gota-colchicina-ataque', 'Colchicina 0,5 mg — 2 comprimidos VO agora e 1 comprimido 1 hora depois; depois 1 comprimido a cada 12 horas por até 3 dias (ajustar se TFG reduzida)', ['antigout'])
-        ], 'Não iniciar alopurinol durante a crise aguda. Reduzir dose se DRC.', ['antigout']),
+        ], 'Não iniciar alopurinol automaticamente só por causa da crise; se o paciente já usa, manter. Hipouricemiante pode ser iniciado na crise com cobertura anti-inflamatória adequada, sob plano ambulatorial.', ['antigout']),
         rxAltaOption('gota-aine', 'Alternativa', 'AINE — escolha um', [
           rxAltaMed('gota-naproxeno', 'Naproxeno 500 mg — 1 comprimido VO a cada 12 horas, após alimentação, por 5 a 7 dias', ['nsaid'], 'gota-aine'),
           rxAltaMed('gota-ibuprofeno', 'Ibuprofeno 600 mg — 1 comprimido VO a cada 8 horas, após alimentação, por 5 a 7 dias', ['nsaid'], 'gota-aine')
@@ -741,8 +742,8 @@ const RX_HOME_GI_OLHO = [
       options: [
         rxAltaOption('par-metro', 'Se indicado', 'Nitroimidazol — escolha um', [
           rxAltaMed('par-metro-giardia', 'Metronidazol 250 mg — 1 comprimido VO a cada 8 horas, por 5 dias (giardíase)', ['antibiotic', 'nitroimidazole'], 'par-metro'),
-          rxAltaMed('par-metro-ameba', 'Metronidazol 750 mg — VO a cada 8 horas, por 7 a 10 dias (amebíase intestinal)', ['antibiotic', 'nitroimidazole'], 'par-metro')
-        ], 'Disenteria grave, abscesso hepático ou desidratação importante exigem reavaliação hospitalar.', ['antibiotic'])
+          rxAltaMed('par-metro-ameba', 'Metronidazol 750 mg — VO a cada 8 horas, por 7 a 10 dias (amebíase intestinal); em seguida completar com amebicida luminal conforme disponibilidade local (ex.: paromomicina)', ['antibiotic', 'nitroimidazole'], 'par-metro')
+        ], 'Metronidazol sozinho não erradica cistos luminais na amebíase — planejar agente luminal após a fase tecidual. Disenteria grave, abscesso hepático ou desidratação importante exigem reavaliação hospitalar.', ['antibiotic'])
       ]
     }]
   }
@@ -803,16 +804,7 @@ const RX_HOME_RESIDUAL = [
         rxAltaOption('tosse-sintomatico', '1ª linha', 'Hidratação e sintomáticos', [
           rxAltaMed('tosse-hidratar', 'Hidratação oral abundante e umidificação do ambiente; evitar antitussígenos de rotina', []),
           rxAltaMed('tosse-paracetamol', 'Paracetamol 500 a 750 mg — VO a cada 6 a 8 horas, se dor ou febre (máximo 3 g/dia), por até 5 dias', ['analgesic_non_opioid'])
-        ], 'Tosse pós-infecciosa pode durar semanas. Retornar se hemoptise, dispneia, febre persistente ou tosse > 3 semanas com perda de peso/sudorese (investigar TB).')
-      ]
-    }, {
-      id: 'tosse-produtiva',
-      label: 'Produtiva com critério bacteriano — se indicado',
-      options: [
-        rxAltaOption('tosse-atb', 'Se indicado', 'Antibiótico oral — escolha um', [
-          rxAltaMed('tosse-amox', 'Amoxicilina 500 mg — 1 cápsula VO a cada 8 horas, por 5 dias', ['antibiotic', 'penicillin'], 'tosse-atb'),
-          rxAltaMed('tosse-azitro', 'Azitromicina 500 mg — 1 comprimido VO 1 vez ao dia, por 3 dias', ['antibiotic', 'macrolide'], 'tosse-atb')
-        ], 'Reservar para febre, purulência e duração prolongada. Não usar este modelo se pneumonia, hipoxemia ou hemoptise.', ['antibiotic'])
+        ], 'Tosse pós-infecciosa pode durar semanas. Purulência isolada não indica antibiótico. Retornar se hemoptise, dispneia, febre persistente ou tosse > 3 semanas com perda de peso/sudorese (investigar TB). Não usar este modelo se pneumonia ou coqueluche — abrir o protocolo específico.')
       ]
     }]
   },
@@ -898,8 +890,9 @@ const RX_HOME_RESIDUAL = [
       label: 'Herpes genital — vesículas dolorosas',
       options: [
         rxAltaOption('ug-aciclovir', '1ª linha', 'Antiviral oral — escolha um', [
-          rxAltaMed('ug-aciclovir-400', 'Aciclovir 400 mg — 1 comprimido VO a cada 8 horas, por 7 a 10 dias', ['antiviral'], 'ug-hsv'),
-          rxAltaMed('ug-valaciclovir', 'Valaciclovir 500 mg — 1 comprimido VO a cada 12 horas, por 7 a 10 dias', ['antiviral'], 'ug-hsv')
+          rxAltaMed('ug-aciclovir-400', 'Aciclovir 400 mg — 1 comprimido VO a cada 8 horas, por 7 a 10 dias (primeiro episódio)', ['antiviral'], 'ug-hsv'),
+          rxAltaMed('ug-valaciclovir-1g', 'Valaciclovir 1 g — 1 comprimido VO a cada 12 horas, por 7 a 10 dias (primeiro episódio)', ['antiviral'], 'ug-hsv'),
+          rxAltaMed('ug-valaciclovir-500', 'Valaciclovir 500 mg — 1 comprimido VO a cada 12 horas, por 3 a 5 dias (recorrência típica)', ['antiviral'], 'ug-hsv')
         ], 'Abstinência até cicatrização. Solicitar sorologias conforme protocolo e notificar parceiros.', ['antiviral'])
       ]
     }, {
@@ -983,10 +976,10 @@ const RX_HOME_COMPLEX = [
       label: 'Antibiótico oral — CURB-65 baixo / apto à VO',
       options: [
         rxAltaOption('pn-atb-escolha', '1ª linha', 'Esquema oral — escolha um', [
-          rxAltaMed('pn-amoxclav', 'Amoxicilina + clavulanato 875/125 mg — 1 comprimido VO a cada 12 horas, por 5 a 7 dias', ['antibiotic', 'penicillin'], 'pn-atb'),
           rxAltaMed('pn-amox', 'Amoxicilina 1 g — 1 comprimido VO a cada 8 horas, por 5 a 7 dias (sem comorbidades)', ['antibiotic', 'penicillin'], 'pn-atb'),
-          rxAltaMed('pn-levoflox', 'Levofloxacino 750 mg — 1 comprimido VO 1 vez ao dia, por 5 dias (alergia a beta-lactâmico ou falha)', ['antibiotic'], 'pn-atb')
-        ], 'Só se CURB-65 baixo, SpO₂ adequada, VO possível e sem critérios de internação. Retornar em 48–72 h se febre, dispneia ou piora.', ['antibiotic'])
+          rxAltaMed('pn-amoxclav-azit', 'Amoxicilina + clavulanato 875/125 mg VO a cada 12 horas + azitromicina 500 mg VO no dia 1 e 250 mg/dia nos dias 2–5 (com comorbidades)', ['antibiotic', 'penicillin'], 'pn-atb'),
+          rxAltaMed('pn-levoflox', 'Levofloxacino 750 mg — 1 comprimido VO 1 vez ao dia, por 5 dias (alergia a beta-lactâmico, falha ou preferência por monoterapia)', ['antibiotic'], 'pn-atb')
+        ], 'Só se CURB-65 baixo, SpO₂ adequada, VO possível e sem critérios de internação. Com comorbidades, não usar beta-lactâmico isolado. Retornar em 48–72 h se febre, dispneia ou piora.', ['antibiotic'])
       ]
     }, {
       id: 'pn-sintomatico',
@@ -1009,10 +1002,10 @@ const RX_HOME_COMPLEX = [
       label: 'Antibiótico oral — estável, VO possível',
       options: [
         rxAltaOption('pielo-atb-escolha', '1ª linha', 'Esquema oral — escolha um', [
-          rxAltaMed('pielo-cipro', 'Ciprofloxacino 500 mg — 1 comprimido VO a cada 12 horas, por 7 dias', ['antibiotic'], 'pielo-atb'),
-          rxAltaMed('pielo-amoxclav', 'Amoxicilina + clavulanato 875/125 mg — 1 comprimido VO a cada 12 horas, por 10 a 14 dias', ['antibiotic', 'penicillin'], 'pielo-atb'),
-          rxAltaMed('pielo-cefuroxima', 'Cefuroxima 500 mg — 1 comprimido VO a cada 12 horas, por 10 a 14 dias', ['antibiotic'], 'pielo-atb')
-        ], 'Só se afebril ou em defervescência, sem vômitos, sem sepse e sem obstrução. Gestação, uropatia e imunodepressão exigem outra via.', ['antibiotic'])
+          rxAltaMed('pielo-cipro', 'Ciprofloxacino 500 mg — 1 comprimido VO a cada 12 horas, por 7 dias (se resistência local baixa)', ['antibiotic'], 'pielo-atb'),
+          rxAltaMed('pielo-cefuroxima', 'Cefuroxima 500 mg — 1 comprimido VO a cada 12 horas, por 10 a 14 dias (após dose parenteral inicial quando indicada ou com antibiograma)', ['antibiotic'], 'pielo-atb'),
+          rxAltaMed('pielo-amoxclav', 'Amoxicilina + clavulanato 875/125 mg — 1 comprimido VO a cada 12 horas, por 10 a 14 dias (somente se urocultura/antibiograma permitir)', ['antibiotic', 'penicillin'], 'pielo-atb')
+        ], 'Coletar urocultura antes do antibiótico. Só se afebril ou em defervescência, sem vômitos, sem sepse e sem obstrução. Beta-lactâmico oral não é empírico indiscriminado. Gestação, uropatia e imunodepressão exigem outra via.', ['antibiotic'])
       ]
     }, {
       id: 'pielo-analgesia',
@@ -1060,9 +1053,9 @@ const RX_HOME_COMPLEX = [
       label: 'Hidratação e sintomáticos — sem AINE',
       options: [
         rxAltaOption('dengue-suporte', '1ª linha', 'Hidratação oral e paracetamol', [
-          rxAltaMed('dengue-soro', 'Soro de reidratação oral ou água/isotônico — volume generoso conforme orientação; manter diurese', []),
+          rxAltaMed('dengue-soro', 'Hidratação oral 60 mL/kg/dia no adulto — cerca de 1/3 com soro de reidratação oral e o restante com água/isotônicos, fracionado; manter diurese clara', []),
           rxAltaMed('dengue-paracetamol', 'Paracetamol 500 a 750 mg — VO a cada 6 a 8 horas, se dor ou febre (máximo 3 g/dia), enquanto houver sintomas', ['analgesic_non_opioid'])
-        ], 'Não usar dipirona de rotina se preferir paracetamol exclusivo; jamais AINE ou AAS (risco hemorrágico). Retorno imediato se dor abdominal intensa, vômitos, sangramento, sonolência, hipotensão ou queda abrupta da febre com piora.')
+        ], 'Não usar dipirona de rotina se preferir paracetamol exclusivo; jamais AINE ou AAS (risco hemorrágico). Retorno diário até 48 horas após a defervescência. Retorno imediato se dor abdominal intensa, vômitos, sangramento, sonolência, hipotensão ou queda abrupta da febre com piora.')
       ]
     }]
   },
@@ -1169,15 +1162,15 @@ const RX_HOME_COMPLEX = [
     id: 'edema-angioneurotico',
     name: 'Angioedema leve estável (alta após observação)',
     icon: '😮',
-    aliases: ['angioedema', 'edema angioneurotico', 'edema de glote leve'],
+    aliases: ['angioedema', 'edema angioneurotico'],
     groups: [{
       id: 'angio-vo',
       label: 'Tratamento oral — vias aéreas estáveis',
       options: [
-        rxAltaOption('angio-anti', '1ª linha', 'Anti-histamínico ± corticoide', [
+        rxAltaOption('angio-anti', '1ª linha', 'Anti-histamínico ± corticoide (histaminérgico)', [
           rxAltaMed('angio-loratadina', 'Loratadina 10 mg — 1 comprimido VO 1 vez ao dia, por 3 a 5 dias', ['antihistamine'], 'angio-tx'),
           rxAltaMed('angio-prednisona', 'Prednisona 40 mg — 1 comprimido VO 1 vez ao dia, por 3 a 5 dias', ['corticosteroid'], 'angio-tx')
-        ], 'Estridor, disfagia, hipotensão ou uso de IECA com progressão exigem conduta hospitalar. Revisar IECA/ARA2 quando aplicável.')
+        ], 'Estridor, disfagia, voz abafada, hipotensão ou qualquer edema de via aérea impedem alta. Angioedema por IECA/bradicinina não responde a anti-histamínico/corticoide — revisar IECA/ARA2 e manter observação hospitalar.')
       ]
     }]
   },
@@ -1359,7 +1352,7 @@ const RX_HOME_ORIENTACOES = [
     id: 'insolacao',
     name: 'Exaustão pelo calor resolvida (alta orientada)',
     icon: '☀️',
-    aliases: ['insolacao', 'exaustao pelo calor', 'golpe de calor'],
+    aliases: ['insolacao', 'exaustao pelo calor'],
     groups: [{
       id: 'calor-hidratacao',
       label: 'Hidratação e prevenção',
@@ -1367,7 +1360,7 @@ const RX_HOME_ORIENTACOES = [
         rxAltaOption('calor-sro', '1ª linha', 'Reposição oral', [
           rxAltaMed('calor-soro', 'Soro de reidratação oral — beber em pequenos volumes frequentes conforme sede e perdas, até urina clara e regular', []),
           rxAltaMed('calor-ambiente', 'Permanecer em ambiente fresco por 24–48 horas, evitar exercício e exposição solar, usar roupas leves', [])
-        ], 'Não usar antitérmico para hipertermia por calor. Alteração de consciência, temperatura central elevada, hipotensão ou disfunção orgânica caracteriza emergência e impede alta.')
+        ], 'Não usar antitérmico para hipertermia por calor. Golpe de calor (alteração de consciência, temperatura central elevada, hipotensão ou disfunção orgânica) é emergência hospitalar e impede este modelo.')
       ]
     }]
   },
@@ -1383,7 +1376,7 @@ const RX_HOME_ORIENTACOES = [
         rxAltaOption('raiva-retorno', 'Essencial', 'Lavagem e agenda vacinal', [
           rxAltaMed('raiva-ferida', 'Lavar o ferimento com água corrente e sabão por 15 minutos; manter limpo e não ocluir sem avaliação', []),
           rxAltaMed('raiva-agenda', 'Retornar nas datas registradas pelo serviço para completar a vacinação antirrábica; não interromper o esquema por conta própria', [])
-        ], 'Vacina e imunoglobulina são aplicadas no serviço conforme categoria da exposição e protocolo vigente. Notificar a exposição e observar cão/gato saudável por 10 dias quando indicado.')
+        ], 'Só liberar após registrar a categoria da exposição e confirmar que a vacina do dia 0 (e a imunoglobulina, se categoria III) foram aplicadas no serviço ou justificadamente não indicadas. Notificar a exposição e observar cão/gato saudável por 10 dias quando indicado.')
       ]
     }]
   },
@@ -1397,8 +1390,8 @@ const RX_HOME_ORIENTACOES = [
       label: 'Controle do sangramento — gestação excluída',
       options: [
         rxAltaOption('sua-tranexamico', '1ª linha', 'Antifibrinolítico', [
-          rxAltaMed('sua-tranex', 'Ácido tranexâmico 1 g — 1 comprimido VO a cada 8 horas, por até 5 dias enquanto houver sangramento intenso', [])
-        ], 'Contraindicado em trombose ativa ou alto risco trombótico. Confirmar teste de gestação negativo e estabilidade hemodinâmica antes da alta.')
+          rxAltaMed('sua-tranex', 'Ácido tranexâmico 500 mg — 2 comprimidos VO a cada 8 horas, por até 5 dias enquanto houver sangramento intenso', [])
+        ], 'Contraindicado em trombose ativa ou alto risco trombótico. Confirmar teste de gestação negativo, estabilidade hemodinâmica e Hb compatível com alta antes de liberar.')
       ]
     }, {
       id: 'sua-hormonal',

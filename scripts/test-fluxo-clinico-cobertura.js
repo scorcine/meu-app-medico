@@ -228,6 +228,7 @@ scorePromise.then(opened => {
     psRenderInteractiveRx('abscesso-cutaneo', host.querySelector('.emerg-algo-single'));
     host.querySelector('#ps-rx-analyze')?.click();
     host.querySelector('[data-ps-improved="sim"]')?.click();
+    host.querySelector('[data-ps-outcome="alta"]')?.click();
     const before = host.querySelector('[data-ps-closure-action="receituario"]')?.disabled;
     const ctx = host.querySelector('[data-ctx-field]');
     if (ctx) {

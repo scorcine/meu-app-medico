@@ -432,23 +432,26 @@ function rxBuildFullCatalog () {
 
   if (typeof PS_CONDITIONS !== 'undefined') {
     PS_CONDITIONS.forEach(ps => {
-      /* Receita curada tem prioridade absoluta sobre qualquer extração do PS */
-      if (manualIds.has(ps.id) && RX_MANUAL_PRIORITY_IDS.has(ps.id)) return;
+      /* Modelo manual completo nunca é substituído/duplicado por extração do PS */
+      if (manualIds.has(ps.id)) return;
 
       const mode = rxHomeRxMode(ps.id);
-      /* Rigor: nunca transformar conduta hospitalar em receita de casa */
-      if (mode !== 'curated') {
-        full.push(rxBuildReferenceCondition(ps));
+      /* Rigor: curated exige receita completa no catálogo manual — nunca rotular PS como curated */
+      if (mode === 'curated') {
+        full.push(rxBuildReferenceCondition({
+          ...ps,
+          /* força texto de pendência até existir entrada manual */
+          id: ps.id
+        }));
+        /* Corrige o modo exibido na referência pendente */
+        full[full.length - 1].homeRxMode = 'blocked';
+        full[full.length - 1].groups[0].options[0].label = 'Modelo ambulatorial pendente — não copiar dose hospitalar';
+        full[full.length - 1].groups[0].options[0].meds[0].text =
+          'Receita de alta marcada como curada no fluxo, mas ainda sem modelo completo no catálogo. Não copie doses EV/IM/nebulização do protocolo hospitalar.';
         return;
       }
 
-      const built = rxBuildConditionFromPs(ps);
-      if (built) {
-        built.homeRxMode = 'curated';
-        full.push(built);
-      } else {
-        full.push(rxBuildReferenceCondition(ps));
-      }
+      full.push(rxBuildReferenceCondition(ps));
     });
   }
 

@@ -334,7 +334,7 @@ const CLINICAL_PATHWAY_BY_ID = {
       label: 'Confirmar controle do foco antes da alta',
       question: 'Lesão foi drenada quando indicada e não há celulite extensa ou sinais sistêmicos?'
     },
-    outcomes: ['alta'],
+    outcomes: ['alta', 'observacao', 'internacao'],
     homeRx: 'curated',
     requiresImprovementForDischarge: true,
     notes: 'Carbúnculo, sepse ou progressão exigem observação/internação, não receita domiciliar isolada.'
@@ -556,7 +556,7 @@ const CLINICAL_PATHWAY_BY_ID = {
     reassessment: null,
     outcomes: ['alta'],
     homeRx: 'curated',
-    notes: 'Não iniciar alopurinol na crise aguda.'
+    notes: 'Não iniciar alopurinol automaticamente; manter se já em uso e planejar hipouricemiante com cobertura anti-inflamatória.'
   },
   'colica-renal': {
     scores: [],
@@ -748,12 +748,12 @@ const CLINICAL_PATHWAY_BY_ID = {
     reassessment: {
       trigger: 'after-initial-therapy',
       label: 'Reavaliar vias aéreas, PA e rash após adrenalina/antihistamínico',
-      question: 'Há resolução suficiente para observação/alta com plano de anaphylaxia?'
+      question: 'Há resolução suficiente para observação/alta com plano de anafilaxia?'
     },
-    outcomes: ['observacao', 'internacao', 'transferencia'],
+    outcomes: ['alta', 'observacao', 'internacao', 'transferencia'],
     homeRx: 'curated',
     requiresImprovementForDischarge: true,
-    notes: 'Receita pós-observação: autoinjetor (idealmente 2 dispositivos) + plano escrito; corticoide não é rotina para prevenir bifásica.'
+    notes: 'Alta só após observação adequada. Receita: autoinjetor (idealmente 2) + plano escrito; corticoide não é rotina para prevenir bifásica.'
   },
   'edema-angioneurotico': {
     scores: [],
@@ -762,9 +762,10 @@ const CLINICAL_PATHWAY_BY_ID = {
       label: 'Reavaliar vias aéreas e edema',
       question: 'Vias aéreas estáveis para observação/alta?'
     },
-    outcomes: ['observacao', 'internacao', 'transferencia'],
+    outcomes: ['alta', 'observacao', 'internacao', 'transferencia'],
     homeRx: 'curated',
-    requiresImprovementForDischarge: true
+    requiresImprovementForDischarge: true,
+    notes: 'Sem comprometimento de via aérea; IECA/bradicinina fora do modelo histaminérgico.'
   },
   'alcoolismo-intox-abstinencia': {
     scores: [],
@@ -811,7 +812,7 @@ const CLINICAL_PATHWAY_BY_ID = {
     outcomes: ['alta', 'observacao', 'internacao'],
     homeRx: 'curated',
     requiresImprovementForDischarge: true,
-    notes: 'Modelo de alta apenas para exaustão pelo calor resolvida; golpe de calor é hospitalar.'
+    notes: 'Modelo só para exaustão pelo calor resolvida. Golpe de calor permanece hospitalar.'
   },
   'queimaduras': {
     scores: [],
@@ -832,7 +833,7 @@ const CLINICAL_PATHWAY_BY_ID = {
     reassessment: null,
     outcomes: ['alta'],
     homeRx: 'curated',
-    notes: 'Receita registra cuidados e agenda; vacina/imunoglobulina permanecem no serviço.'
+    notes: 'Só liberar orientação após registrar categoria e confirmar vacina do dia 0 (± imunoglobulina) no serviço.'
   },
 
   /* Parasitoses / hematologia / miscelânea */
