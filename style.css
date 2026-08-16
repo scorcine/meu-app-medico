@@ -2127,12 +2127,59 @@ body.app-page {
   border-left: 4px solid var(--text-caption);
 }
 
-.ps-rx-closure {
-  margin-top: 1.1rem;
-  padding: 0.95rem 1.05rem;
+.ps-rx-closure-scores {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  gap: 0.55rem;
+  margin-top: 0.8rem;
+}
+
+.ps-rx-pathway-outcome {
+  margin-top: 0.9rem;
+  padding: 0.85rem 0.9rem;
   border: 1px solid var(--border);
-  border-radius: 12px;
-  background: var(--bg-surface-raised);
+  border-radius: 10px;
+  background: var(--bg-surface);
+}
+
+.ps-rx-pathway-outcome > strong {
+  display: block;
+}
+
+.ps-rx-pathway-outcome > p {
+  margin: 0.25rem 0 0.65rem;
+}
+
+.ps-rx-outcome-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.ps-rx-outcome-btn {
+  padding: 0.55rem 0.85rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  color: var(--text-primary);
+  background: transparent;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.ps-rx-outcome-btn.is-selected {
+  border-color: var(--state-done, #16a34a);
+  background: rgba(34, 197, 94, 0.12);
+}
+
+.ps-rx-outcome-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.ps-rx-outcome-selected {
+  margin: 0.65rem 0 0;
+  font-weight: 600;
 }
 
 .ps-rx-reassessment {

@@ -387,6 +387,7 @@ async function consultasRegisterEmergencyProtocol (data) {
     medico: data.medico || '',
     crm: data.crm || '',
     reperfusao: data.reperfusao || '',
+    desfecho: data.desfecho || '',
     summaryHtml: data.summaryHtml || '',
     createdAt: existingIndex >= 0 ? list[existingIndex].createdAt : now,
     updatedAt: now

@@ -486,17 +486,50 @@ function psApplyDefaultSubtype (wrap, conditionId, config) {
   if (el && !el.value) el.value = subtype;
 }
 
-/* Fechamento da conduta: prescrever, pedir exames e encerrar sem sair do fluxo */
-function psRenderClosureHtml () {
+/* Fechamento da conduta: escore (se curado), reavaliação, desfecho, receita de casa e salvamento */
+function psRenderClosureHtml (conditionId) {
+  const pathway = typeof clinicalPathwayGet === 'function'
+    ? clinicalPathwayGet(conditionId)
+    : { scores: [], outcomes: ['alta', 'observacao', 'internacao', 'transferencia'], homeRx: 'blocked' };
+  const labels = typeof CLINICAL_OUTCOME_LABELS !== 'undefined'
+    ? CLINICAL_OUTCOME_LABELS
+    : { alta: 'Alta', observacao: 'Observação', internacao: 'Internar', transferencia: 'Transferir' };
+
+  const scoreButtons = (pathway.scores || []).map(scoreId => {
+    const title = (typeof CALC_FORMS !== 'undefined' && CALC_FORMS[scoreId]?.title) || scoreId.toUpperCase();
+    return `<button type="button" class="ps-rx-closure-btn" data-ps-closure-action="score" data-ps-score="${scoreId}">
+      <strong>Calcular ${title}</strong><span>Escore para decisão hospitalar</span>
+    </button>`;
+  }).join('');
+
+  const outcomeButtons = (pathway.outcomes || []).map(outcome => `
+    <button type="button" class="ps-rx-outcome-btn" data-ps-outcome="${outcome}">
+      ${labels[outcome] || outcome}
+    </button>`).join('');
+
+  const homeEnabled = pathway.homeRx === 'curated';
+  const homeSpan = homeEnabled
+    ? 'Abre a receita ambulatorial curada'
+    : (pathway.homeRx === 'none'
+      ? 'Esta condição não gera receita domiciliar automática'
+      : 'Bloqueado até existir receita ambulatorial curada');
+
   return `
-    <section class="ps-rx-closure" data-ps-closure>
+    <section class="ps-rx-closure" data-ps-closure data-home-rx="${pathway.homeRx || 'blocked'}">
       <div class="ps-rx-closure-head">
         <strong>Fechar esta conduta</strong>
         <p class="muted" data-ps-closure-count></p>
       </div>
+      ${scoreButtons ? `<div class="ps-rx-closure-scores">${scoreButtons}</div>` : ''}
+      <div class="ps-rx-pathway-outcome" data-ps-pathway-outcome>
+        <strong>Desfecho do atendimento</strong>
+        <p class="muted">Escolha o destino clínico antes de finalizar a ficha.</p>
+        <div class="ps-rx-outcome-options">${outcomeButtons}</div>
+        <p class="ps-rx-outcome-selected muted" data-ps-outcome-selected hidden></p>
+      </div>
       <div class="ps-rx-closure-actions">
-        <button type="button" class="ps-rx-closure-btn" data-ps-closure-action="receituario">
-          <strong>Prescrever para casa</strong><span>Abre o receituário com a conduta</span>
+        <button type="button" class="ps-rx-closure-btn" data-ps-closure-action="receituario"${homeEnabled ? '' : ' disabled'}>
+          <strong>Prescrever para casa</strong><span>${homeSpan}</span>
         </button>
         <button type="button" class="ps-rx-closure-btn" data-ps-closure-action="exames">
           <strong>Solicitar exames</strong><span>Abre os cenários de exames</span>
@@ -505,7 +538,7 @@ function psRenderClosureHtml () {
           <strong>Resumo do atendimento</strong><span>Gera texto e PDF do que foi escolhido</span>
         </button>
         <button type="button" class="ps-rx-closure-btn ps-rx-closure-btn--end" data-ps-closure-action="encerrar">
-          <strong>Finalizar protocolo e atendimento</strong><span>Salva em Atendimentos realizados</span>
+          <strong>Finalizar ficha e salvar paciente</strong><span>Salva em Atendimentos realizados</span>
         </button>
       </div>
       <div class="ps-rx-closure-summary" data-ps-closure-summary hidden></div>
@@ -595,7 +628,7 @@ function psDocumentSignatureHtml () {
     </div>`;
 }
 
-function psBuildClosureSummary (conditionName, selectedLabels, reassessmentText) {
+function psBuildClosureSummary (conditionName, selectedLabels, reassessmentText, outcomeText) {
   const itens = selectedLabels.length
     ? selectedLabels.map(label => `<li>${label}</li>`).join('')
     : '<li>Nenhuma medicação marcada.</li>';
@@ -605,18 +638,29 @@ function psBuildClosureSummary (conditionName, selectedLabels, reassessmentText)
     <h2>Conduta escolhida</h2>
     <ul>${itens}</ul>
     ${reassessmentText ? `<h2>Reavaliação</h2><p>${reassessmentText}</p>` : ''}
+    ${outcomeText ? `<h2>Desfecho</h2><p>${outcomeText}</p>` : ''}
     ${psDocumentSignatureHtml()}`;
 }
 
-/* Prescrição de casa: abre a receita curada da condição, nunca a dose hospitalar */
+/* Prescrição de casa: só abre modelo curado; nunca dose hospitalar */
 function psOpenHomePrescription (conditionId, conditionName) {
+  if (typeof clinicalPathwayAllowsHomeRx === 'function' && !clinicalPathwayAllowsHomeRx(conditionId)) {
+    window.alert(
+      'Esta condição ainda não tem receita ambulatorial curada.\n\n' +
+      'O protocolo hospitalar não será copiado para casa (EV/IM/nebulização/bolus).'
+    );
+    return;
+  }
   const entry = typeof rxGetCatalogEntry === 'function' ? rxGetCatalogEntry(conditionId) : null;
-  if (!entry || typeof rxShowCondition !== 'function') {
-    psOpenSectionWithSearch('receituario', 'rx-search', conditionName);
+  if (!entry || entry.source !== 'complete' || typeof rxShowCondition !== 'function') {
+    window.alert(
+      'Receita de alta curada indisponível para esta condição.\n\n' +
+      'Finalize a ficha com orientações ou adapte VO manualmente — sem copiar a dose da unidade.'
+    );
     return;
   }
   if (typeof showSection === 'function') showSection('receituario');
-  window.setTimeout(() => rxShowCondition(conditionId), 80);
+  if (typeof rxShowCondition === 'function') rxShowCondition(conditionId);
 }
 
 function psOpenSectionWithSearch (sectionId, inputId, query) {
@@ -660,7 +704,7 @@ function psRenderInteractiveRx (conditionId, container) {
       <button type="button" class="btn-outline ps-rx-clear" id="ps-rx-clear">Limpar seleção</button>
     </div>
     <div class="ps-rx-result" id="ps-rx-result" hidden></div>
-    ${psRenderClosureHtml()}
+    ${psRenderClosureHtml(conditionId)}
   `;
 
   container.insertBefore(wrap, container.firstChild);
@@ -670,6 +714,14 @@ function psRenderInteractiveRx (conditionId, container) {
   const resultEl = wrap.querySelector('#ps-rx-result');
   const closureEl = wrap.querySelector('[data-ps-closure]');
   let inhaledReassessment = '';
+  let clinicalReassessment = '';
+  let selectedOutcome = '';
+  const pathway = typeof clinicalPathwayGet === 'function'
+    ? clinicalPathwayGet(conditionId)
+    : { scores: [], reassessment: null, outcomes: ['alta', 'observacao', 'internacao', 'transferencia'], homeRx: 'blocked', requiresImprovementForDischarge: false };
+  const outcomeLabels = typeof CLINICAL_OUTCOME_LABELS !== 'undefined'
+    ? CLINICAL_OUTCOME_LABELS
+    : { alta: 'Alta', observacao: 'Observação', internacao: 'Internar', transferencia: 'Transferir' };
   const conditionName = (typeof PS_CONDITIONS !== 'undefined'
     ? (PS_CONDITIONS.find(c => c.id === conditionId)?.name || conditionId)
     : conditionId);
@@ -898,9 +950,9 @@ function psRenderInteractiveRx (conditionId, container) {
         ${analysis.messages.map(m => `<li class="ps-rx-msg ps-rx-msg--${m.severity}">${m.text}</li>`).join('')}
       </ul>
       <p class="ps-rx-disclaimer" hidden></p>
-      ${renderInhaledReassessment()}
+      ${renderClinicalPathwayPanel()}
     `;
-    bindInhaledReassessment();
+    bindClinicalPathwayPanel();
     resultEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     showClosure();
   });
@@ -941,46 +993,99 @@ function psRenderInteractiveRx (conditionId, container) {
 
   function reassessmentSummaryText () {
     const dose = selectedGuidedDose();
-    if (!dose || !inhaledReassessment) return '';
-    return inhaledReassessment === 'sim'
-      ? `Após o ${cycleOrdinal(dose.cycles)}, paciente apresentou melhora do quadro: sim. Encaminhado para prescrição para casa.`
-      : `Após o ${cycleOrdinal(dose.cycles)}, paciente apresentou melhora do quadro: não. Alta e prescrição para casa não indicadas nesta etapa.`;
+    if (dose && inhaledReassessment) {
+      return inhaledReassessment === 'sim'
+        ? `Após o ${cycleOrdinal(dose.cycles)}, paciente apresentou melhora do quadro: sim.`
+        : `Após o ${cycleOrdinal(dose.cycles)}, paciente apresentou melhora do quadro: não. Alta e prescrição para casa não indicadas nesta etapa.`;
+    }
+    if (pathway.reassessment && clinicalReassessment) {
+      return clinicalReassessment === 'sim'
+        ? `${pathway.reassessment.label}: melhora clínica confirmada.`
+        : `${pathway.reassessment.label}: sem melhora suficiente nesta etapa.`;
+    }
+    return '';
   }
 
-  function renderInhaledReassessment () {
+  function outcomeSummaryText () {
+    if (!selectedOutcome) return '';
+    return outcomeLabels[selectedOutcome] || selectedOutcome;
+  }
+
+  function improvementAnswer () {
+    if (selectedGuidedDose()) return inhaledReassessment;
+    if (pathway.reassessment) return clinicalReassessment;
+    return 'n/a';
+  }
+
+  function needsImprovementGate () {
+    if (selectedGuidedDose()) return true;
+    return !!(pathway.requiresImprovementForDischarge && pathway.reassessment);
+  }
+
+  function renderClinicalPathwayPanel () {
     const dose = selectedGuidedDose();
-    if (!dose) return '';
-    return `
-      <section class="ps-rx-reassessment" data-ps-reassessment>
-        <div class="ps-rx-reassessment-head">
-          <strong>Prescrição para administração imediata</strong>
-          <p>${dose.label} — ${dose.text}.</p>
-        </div>
-        <button type="button" class="btn ps-rx-cycle-prescription" data-ps-cycle-prescription>
-          Gerar prescrição dos ${dose.cycles} ciclo(s)
-        </button>
-        <div class="ps-rx-reassessment-question">
-          <strong>Reavaliar após o ${cycleOrdinal(dose.cycles)}</strong>
-          <p>O paciente apresentou melhora do quadro?</p>
-          <div class="ps-rx-reassessment-options">
-            <button type="button" data-ps-improved="sim">Sim</button>
-            <button type="button" data-ps-improved="nao">Não</button>
+    const parts = [];
+
+    if (dose) {
+      parts.push(`
+        <section class="ps-rx-reassessment" data-ps-reassessment data-ps-reassessment-kind="inhaled">
+          <div class="ps-rx-reassessment-head">
+            <strong>Prescrição para administração imediata</strong>
+            <p>${dose.label} — ${dose.text}.</p>
           </div>
-          <p class="ps-rx-reassessment-outcome" data-ps-reassessment-outcome hidden></p>
-          <div class="ps-rx-reassessment-next" data-ps-reassessment-next hidden>
-            <strong>O que você quer fazer agora?</strong>
-            <div class="ps-rx-reassessment-next-actions">
-              <button type="button" data-ps-next="receituario">Prescrever medicação para casa</button>
-              <button type="button" data-ps-next="encerrar">Finalizar atendimento do paciente</button>
+          <button type="button" class="btn ps-rx-cycle-prescription" data-ps-cycle-prescription>
+            Gerar prescrição dos ${dose.cycles} ciclo(s)
+          </button>
+          <div class="ps-rx-reassessment-question">
+            <strong>Reavaliar após o ${cycleOrdinal(dose.cycles)}</strong>
+            <p>O paciente apresentou melhora do quadro?</p>
+            <div class="ps-rx-reassessment-options">
+              <button type="button" data-ps-improved="sim">Sim</button>
+              <button type="button" data-ps-improved="nao">Não</button>
+            </div>
+            <p class="ps-rx-reassessment-outcome" data-ps-reassessment-outcome hidden></p>
+            <div class="ps-rx-reassessment-next" data-ps-reassessment-next hidden>
+              <strong>O que você quer fazer agora?</strong>
+              <div class="ps-rx-reassessment-next-actions">
+                ${pathway.homeRx === 'curated'
+                  ? '<button type="button" data-ps-next="receituario">Prescrever medicação para casa</button>'
+                  : ''}
+                <button type="button" data-ps-next="encerrar">Finalizar ficha e salvar paciente</button>
+              </div>
             </div>
           </div>
-        </div>
-      </section>`;
+        </section>`);
+    } else if (pathway.reassessment) {
+      parts.push(`
+        <section class="ps-rx-reassessment" data-ps-reassessment data-ps-reassessment-kind="clinical">
+          <div class="ps-rx-reassessment-question">
+            <strong>${pathway.reassessment.label}</strong>
+            <p>${pathway.reassessment.question}</p>
+            <div class="ps-rx-reassessment-options">
+              <button type="button" data-ps-improved="sim">Sim</button>
+              <button type="button" data-ps-improved="nao">Não</button>
+            </div>
+            <p class="ps-rx-reassessment-outcome" data-ps-reassessment-outcome hidden></p>
+            <div class="ps-rx-reassessment-next" data-ps-reassessment-next hidden>
+              <strong>O que você quer fazer agora?</strong>
+              <div class="ps-rx-reassessment-next-actions">
+                ${pathway.homeRx === 'curated'
+                  ? '<button type="button" data-ps-next="receituario">Prescrever medicação para casa</button>'
+                  : ''}
+                <button type="button" data-ps-next="encerrar">Finalizar ficha e salvar paciente</button>
+              </div>
+            </div>
+          </div>
+        </section>`);
+    }
+
+    return parts.join('');
   }
 
-  function bindInhaledReassessment () {
+  function bindClinicalPathwayPanel () {
     const panel = resultEl.querySelector('[data-ps-reassessment]');
     if (!panel) return;
+    const kind = panel.dataset.psReassessmentKind || 'clinical';
 
     panel.querySelector('[data-ps-cycle-prescription]')?.addEventListener('click', () => {
       const dose = selectedGuidedDose();
@@ -1003,22 +1108,34 @@ function psRenderInteractiveRx (conditionId, container) {
 
     panel.querySelectorAll('[data-ps-improved]').forEach(button => {
       button.addEventListener('click', () => {
-        inhaledReassessment = button.dataset.psImproved;
+        const answer = button.dataset.psImproved;
+        if (kind === 'inhaled') inhaledReassessment = answer;
+        else clinicalReassessment = answer;
+
         panel.querySelectorAll('[data-ps-improved]').forEach(option => {
           option.classList.toggle('is-selected', option === button);
         });
         const outcome = panel.querySelector('[data-ps-reassessment-outcome]');
         const next = panel.querySelector('[data-ps-reassessment-next]');
         outcome.hidden = false;
-        outcome.className = `ps-rx-reassessment-outcome is-${inhaledReassessment}`;
-        next.hidden = inhaledReassessment !== 'sim';
-        if (inhaledReassessment === 'sim') {
+        outcome.className = `ps-rx-reassessment-outcome is-${answer}`;
+        next.hidden = answer !== 'sim';
+        if (answer === 'sim') {
           outcome.textContent = 'Melhora confirmada ✓ Escolha o próximo passo abaixo.';
-          showClosure();
+          if (!selectedOutcome && pathway.outcomes.includes('alta')) {
+            selectedOutcome = 'alta';
+            syncOutcomeButtons();
+          }
         } else {
-          outcome.textContent = 'Sem melhora ✗ Não encaminhar para casa. Mantenha o paciente em atendimento e reavalie escalonamento da conduta.';
-          showClosure();
+          outcome.textContent = pathway.hospitalOnly
+            ? 'Sem melhora ✗ Manter observação, internar ou transferir.'
+            : 'Sem melhora ✗ Não encaminhar para casa. Reavalie escalonamento da conduta.';
+          if (selectedOutcome === 'alta') {
+            selectedOutcome = '';
+            syncOutcomeButtons();
+          }
         }
+        showClosure();
       });
     });
 
@@ -1033,26 +1150,60 @@ function psRenderInteractiveRx (conditionId, container) {
     });
   }
 
+  function syncOutcomeButtons () {
+    const labels = typeof CLINICAL_OUTCOME_LABELS !== 'undefined' ? CLINICAL_OUTCOME_LABELS : outcomeLabels;
+    closureEl?.querySelectorAll('[data-ps-outcome]').forEach(button => {
+      button.classList.toggle('is-selected', button.dataset.psOutcome === selectedOutcome);
+    });
+    const selected = closureEl?.querySelector('[data-ps-outcome-selected]');
+    if (selected) {
+      selected.hidden = !selectedOutcome;
+      selected.textContent = selectedOutcome
+        ? `Desfecho escolhido: ${labels[selectedOutcome] || selectedOutcome}`
+        : '';
+    }
+  }
+
   function showClosure () {
     if (!closureEl) return;
     const escolhas = selectedLabels();
     const count = closureEl.querySelector('[data-ps-closure-count]');
     if (count) {
       count.textContent = escolhas.length
-        ? `${escolhas.length} medicação(ões) marcada(s) — prescreva, peça exames ou finalize o atendimento.`
-        : 'Nenhuma medicação marcada — você ainda pode prescrever, pedir exames ou finalizar.';
+        ? `${escolhas.length} medicação(ões) marcada(s) — reavalie, escolha o desfecho e finalize a ficha.`
+        : 'Nenhuma medicação marcada — você ainda pode pedir exames, escolher desfecho ou finalizar.';
     }
+
     const homeButton = closureEl.querySelector('[data-ps-closure-action="receituario"]');
-    const needsReassessment = !!selectedGuidedDose();
+    const improved = improvementAnswer();
+    const improvementGate = needsImprovementGate() && improved !== 'sim';
+    const curatedHome = pathway.homeRx === 'curated';
     if (homeButton) {
-      homeButton.disabled = needsReassessment && inhaledReassessment !== 'sim';
+      homeButton.disabled = !curatedHome || improvementGate;
       const detail = homeButton.querySelector('span');
       if (detail) {
-        detail.textContent = homeButton.disabled
-          ? 'Disponível após confirmar melhora na reavaliação'
-          : 'Abre o receituário com a conduta';
+        if (!curatedHome) {
+          detail.textContent = pathway.homeRx === 'none'
+            ? 'Esta condição não gera receita domiciliar automática'
+            : 'Bloqueado até existir receita ambulatorial curada';
+        } else if (improvementGate) {
+          detail.textContent = 'Disponível após confirmar melhora na reavaliação';
+        } else {
+          detail.textContent = 'Abre a receita ambulatorial curada';
+        }
       }
     }
+
+    /* Alta exige melhora quando o schema pede */
+    const altaBtn = closureEl.querySelector('[data-ps-outcome="alta"]');
+    if (altaBtn) {
+      const blockAlta = pathway.hospitalOnly || (needsImprovementGate() && improved === 'nao');
+      altaBtn.disabled = blockAlta;
+      if (blockAlta && selectedOutcome === 'alta') {
+        selectedOutcome = '';
+      }
+    }
+    syncOutcomeButtons();
   }
 
   function setClosureStatus (text) {
@@ -1064,19 +1215,39 @@ function psRenderInteractiveRx (conditionId, container) {
 
   async function finishEncounter () {
     if (!requireGuidedDoses()) return;
-    if (selectedGuidedDose() && !inhaledReassessment) {
-      setClosureStatus('Informe se o paciente apresentou melhora após o último ciclo antes de finalizar.');
+    if (needsImprovementGate() && !improvementAnswer()) {
+      setClosureStatus('Informe se o paciente apresentou melhora antes de finalizar a ficha.');
       resultEl.querySelector('[data-ps-reassessment]')?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       return;
     }
+    if (!selectedOutcome) {
+      setClosureStatus('Escolha o desfecho do atendimento (alta, observação, internação ou transferência).');
+      closureEl?.querySelector('[data-ps-pathway-outcome]')?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      return;
+    }
+    if (selectedOutcome === 'alta' && needsImprovementGate() && improvementAnswer() !== 'sim') {
+      setClosureStatus('Alta só após confirmar melhora clínica.');
+      return;
+    }
+    if (selectedOutcome === 'alta' && pathway.hospitalOnly) {
+      setClosureStatus('Esta condição é hospitalar — escolha observação, internação ou transferência.');
+      return;
+    }
+
     const draft = psClosureContextText();
     const nome = draft?.nome ? ` de ${draft.nome}` : '';
     if (!window.confirm(
       `Tem certeza que quer finalizar o protocolo ${conditionName} e o atendimento${nome}?\n\n` +
-      'O atendimento deixará de aparecer como “em andamento”.'
+      `Desfecho: ${outcomeSummaryText()}.\n` +
+      'O atendimento deixará de aparecer como “em andamento” e será salvo em Atendimentos realizados.'
     )) return;
 
-    const html = psBuildClosureSummary(conditionName, selectedLabels(), reassessmentSummaryText());
+    const html = psBuildClosureSummary(
+      conditionName,
+      selectedLabels(),
+      reassessmentSummaryText(),
+      outcomeSummaryText()
+    );
     const holder = document.createElement('div');
     holder.innerHTML = html;
     const summaryText = (holder.innerText || holder.textContent || '').replace(/\n{3,}/g, '\n\n').trim();
@@ -1090,27 +1261,52 @@ function psRenderInteractiveRx (conditionId, container) {
         queixa: (draft?.queixas || []).join(' · '),
         summaryHtml: html,
         summaryText,
-        notas: 'Atendimento finalizado pelas Prescrições de PS.'
+        desfecho: selectedOutcome,
+        notas: `Atendimento finalizado pelas Prescrições de PS · desfecho: ${outcomeSummaryText()}.`
       });
     }
 
     if (typeof novoAtendimentoFinishEncounter === 'function') novoAtendimentoFinishEncounter();
 
     setClosureStatus(saved?.cloudSaved
-      ? 'Protocolo finalizado · atendimento salvo na nuvem ✓'
+      ? 'Ficha finalizada · paciente salvo na nuvem ✓'
       : (saved?.ok
-          ? 'Protocolo finalizado · salvo localmente (sincronização pendente)'
-          : 'Protocolo finalizado ✓'));
+          ? 'Ficha finalizada · salvo localmente (sincronização pendente)'
+          : 'Ficha finalizada ✓'));
   }
+
+  closureEl?.querySelectorAll('[data-ps-outcome]').forEach(button => {
+    button.addEventListener('click', () => {
+      if (button.disabled) return;
+      selectedOutcome = button.dataset.psOutcome;
+      showClosure();
+      setClosureStatus('');
+    });
+  });
 
   closureEl?.querySelectorAll('[data-ps-closure-action]').forEach(button => {
     button.addEventListener('click', () => {
       const action = button.dataset.psClosureAction;
 
+      if (action === 'score') {
+        const scoreId = button.dataset.psScore;
+        if (typeof showSection === 'function') showSection('calculadoras');
+        window.setTimeout(() => {
+          const search = document.getElementById('calc-search');
+          if (search && scoreId) {
+            search.value = scoreId;
+            search.dispatchEvent(new Event('input', { bubbles: true }));
+          }
+          const openBtn = document.querySelector(`[data-calc-id="${scoreId}"]`);
+          openBtn?.click?.();
+        }, 80);
+        return;
+      }
+
       if (action === 'receituario') {
         if (!requireGuidedDoses()) return;
-        if (selectedGuidedDose() && inhaledReassessment !== 'sim') {
-          setClosureStatus('Reavalie o paciente após o último ciclo e confirme melhora antes da prescrição para casa.');
+        if (needsImprovementGate() && improvementAnswer() !== 'sim') {
+          setClosureStatus('Reavalie o paciente e confirme melhora antes da prescrição para casa.');
           resultEl.querySelector('[data-ps-reassessment]')?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
           return;
         }
@@ -1123,7 +1319,12 @@ function psRenderInteractiveRx (conditionId, container) {
       }
       if (action === 'resumo') {
         if (!requireGuidedDoses()) return;
-        const html = psBuildClosureSummary(conditionName, selectedLabels(), reassessmentSummaryText());
+        const html = psBuildClosureSummary(
+          conditionName,
+          selectedLabels(),
+          reassessmentSummaryText(),
+          outcomeSummaryText()
+        );
         const out = closureEl.querySelector('[data-ps-closure-summary]');
         out.hidden = false;
         out.innerHTML = `
@@ -1157,6 +1358,7 @@ function psRenderInteractiveRx (conditionId, container) {
     const entry = event.target.closest?.('.ps-rx-med-entry');
     if (event.target.classList?.contains('ps-rx-med-check')) {
       inhaledReassessment = '';
+      clinicalReassessment = '';
       syncGuidedDoseVisibility(entry, true);
       resultEl.hidden = true;
       showClosure();
@@ -1164,6 +1366,7 @@ function psRenderInteractiveRx (conditionId, container) {
     }
     if (event.target.matches?.('[data-ps-dose-route], [data-ps-dose-amount], [data-ps-dose-cycles]')) {
       inhaledReassessment = '';
+      clinicalReassessment = '';
       updateGuidedDose(entry?.querySelector('[data-ps-dose-guide]'));
       resultEl.hidden = true;
       showClosure();

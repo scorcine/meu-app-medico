@@ -35,6 +35,7 @@ const files = [
   'pronto-socorro-interactive-drugs.js',
   'pronto-socorro-interactive-data.js',
   'pronto-socorro-interactive-etiology.js',
+  'clinical-pathway-meta.js',
   'pronto-socorro-interactive-core.js',
   ...fs.readdirSync(ROOT).filter(f => /^pronto-socorro-content.*\.js$/.test(f)).sort(),
   'pronto-socorro.js',

@@ -12,6 +12,7 @@
     "test:opcoes:todas": "node scripts/test-opcoes-todas-telas.js",
     "test:ps:fechamento": "node scripts/test-ps-fechamento-conduta.js",
     "test:rx:alta": "node scripts/test-receita-alta-ambulatorial.js",
+    "test:fluxo": "node scripts/test-fluxo-clinico-cobertura.js",
     "test:emerg": "node scripts/test-emerg-escores-encaminhamento.js",
     "test:atendimentos": "node scripts/test-atendimentos-realizados.js",
     "test:mercadopago": "node scripts/test-mercadopago.js",

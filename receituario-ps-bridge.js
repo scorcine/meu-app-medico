@@ -311,49 +311,77 @@ function rxBuildConditionFromPs (psCondition) {
   };
 }
 
+function rxHomeRxMode (conditionId) {
+  if (typeof clinicalPathwayGet === 'function') {
+    return clinicalPathwayGet(conditionId).homeRx || 'none';
+  }
+  return RX_MANUAL_PRIORITY_IDS.has(conditionId) ? 'curated' : 'blocked';
+}
+
+function rxBuildReferenceCondition (ps) {
+  const shortName = ps.name.split('—')[0].split('(')[0].trim();
+  const mode = rxHomeRxMode(ps.id);
+  const text = mode === 'none'
+    ? 'Esta condição não gera receita automática para casa. Documente orientações no resumo e finalize o atendimento.'
+    : 'Receita de alta ainda não curada para esta condição. Não copie doses EV/IM/nebulização/bolus do protocolo hospitalar — adapte VO manualmente ou finalize sem receita.';
+  return {
+    id: ps.id,
+    name: shortName,
+    icon: ps.icon,
+    aliases: rxGenerateAliasesFromPs(ps),
+    source: 'reference',
+    homeRxMode: mode,
+    groups: [{
+      id: 'protocolo',
+      label: 'Tratamento para casa',
+      options: [{
+        id: `rxref-${ps.id}`,
+        tier: 'Referência',
+        label: mode === 'none'
+          ? 'Sem receita domiciliar automática'
+          : 'Modelo ambulatorial pendente — não copiar dose hospitalar',
+        classes: [],
+        items: [],
+        noVoExpand: true,
+        meds: [{
+          id: `rxref-${ps.id}-m0`,
+          text,
+          classes: []
+        }],
+        orientacoes: 'Barreira de segurança: o protocolo de PS permanece na unidade. Receita de casa só entra quando houver modelo curado.'
+      }]
+    }]
+  };
+}
+
 function rxBuildFullCatalog () {
   const manual = (typeof RX_CATALOG_MANUAL !== 'undefined' ? RX_CATALOG_MANUAL : []).map(c => ({
     ...c,
-    source: 'complete'
+    source: 'complete',
+    homeRxMode: 'curated'
   }));
   const manualIds = new Set(manual.map(c => c.id));
   const full = [...manual];
 
   if (typeof PS_CONDITIONS !== 'undefined') {
     PS_CONDITIONS.forEach(ps => {
+      /* Receita curada tem prioridade absoluta sobre qualquer extração do PS */
       if (manualIds.has(ps.id) && RX_MANUAL_PRIORITY_IDS.has(ps.id)) return;
-      const built = rxBuildConditionFromPs(ps);
-      if (built) full.push(built);
-    });
 
-    const covered = new Set(full.map(c => c.id));
-    PS_CONDITIONS.forEach(ps => {
-      if (covered.has(ps.id)) return;
-      const shortName = ps.name.split('—')[0].split('(')[0].trim();
-      full.push({
-        id: ps.id,
-        name: shortName,
-        icon: ps.icon,
-        aliases: rxGenerateAliasesFromPs(ps),
-        source: 'reference',
-        groups: [{
-          id: 'protocolo',
-          label: 'Protocolo PS',
-          options: [{
-            id: `rxref-${ps.id}`,
-            tier: 'Referência',
-            label: 'Ver protocolo completo em Prescrições PS',
-            classes: [],
-            items: [],
-            meds: [{
-              id: `rxref-${ps.id}-m0`,
-              text: 'Consulte o protocolo PS MedHub desta condição e transcreva/adapte a prescrição VO aqui.',
-              classes: []
-            }],
-            orientacoes: ''
-          }]
-        }]
-      });
+      const mode = rxHomeRxMode(ps.id);
+      /* Rigor: nunca transformar conduta hospitalar em receita de casa */
+      if (mode !== 'curated') {
+        full.push(rxBuildReferenceCondition(ps));
+        return;
+      }
+
+      const built = rxBuildConditionFromPs(ps);
+      if (built) {
+        built.homeRxMode = 'curated';
+        full.push(built);
+      } else {
+        full.push(rxBuildReferenceCondition(ps));
+      }
     });
   }
 

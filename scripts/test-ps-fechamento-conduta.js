@@ -35,6 +35,7 @@ const files = [
   'pronto-socorro-interactive-drugs.js',
   'pronto-socorro-interactive-data.js',
   'pronto-socorro-interactive-etiology.js',
+  'clinical-pathway-meta.js',
   'pronto-socorro-interactive-core.js',
   ...fs.readdirSync(ROOT).filter(f => /^pronto-socorro-content.*\.js$/.test(f)).sort(),
   'pronto-socorro.js'
@@ -69,11 +70,19 @@ dom.window.__encerrados = 0;
 dom.window.novoAtendimentoFinishEncounter = () => { dom.window.__encerrados += 1; };
 dom.window.__printed = [];
 dom.window.emergPrintSummary = (title, html) => dom.window.__printed.push({ title, html });
+dom.window.__alerts = [];
+dom.window.alert = message => { dom.window.__alerts.push(String(message || '')); };
 dom.window.medhubLoadUserProfile = () => ({
   rxDisplayName: 'Ana Ribeiro',
   crmUf: 'sp',
   crmNumber: '123456'
 });
+dom.window.rxGetCatalogEntry = id => (
+  id === 'asma-broncoespasmo'
+    ? { id, source: 'complete', name: 'Asma brônquica (alta ambulatorial)' }
+    : null
+);
+dom.window.rxShowCondition = id => { dom.window.__sections.push('receita:' + id); };
 
 const context = vm.createContext(dom.window);
 vm.runInContext(files.map(read).join('\n'), context);
@@ -263,7 +272,8 @@ if (reavaliacao.liberadoDepois && !reavaliacao.nextAntes && reavaliacao.nextDepo
   fail('escolha após melhora falhou: ' + JSON.stringify(reavaliacao));
 }
 
-if (reavaliacao.secoes.includes('receituario') && reavaliacao.secoes.includes('exames') &&
+if (reavaliacao.secoes.includes('receituario') && reavaliacao.secoes.includes('receita:asma-broncoespasmo') &&
+    reavaliacao.secoes.includes('exames') &&
     /prescrição de administração imediata/i.test(reavaliacao.prescricaoCiclos?.html || '')) {
   pass('escolher prescrever abre o receituário e a prescrição dos ciclos é gerada');
 } else {
@@ -313,16 +323,31 @@ if (/Paciente Asma/.test(resumo.texto) && /salbutamol/i.test(resumo.texto) &&
   fail('resumo incompleto: ' + JSON.stringify(resumo));
 }
 
-/* 6. Finalizar pede confirmação, salva o atendimento e encerra o paciente */
+/* 6. Finalizar exige desfecho, pede confirmação, salva e encerra */
 const encerrar = evalIn(`(() => {
   const host = document.getElementById('host');
+  /* Simula limpar o desfecho autoatribuído na melhora para validar o gate */
+  host.querySelectorAll('[data-ps-outcome]').forEach(btn => btn.classList.remove('is-selected'));
+  const selected = host.querySelector('[data-ps-outcome-selected]');
+  selected.hidden = true;
+  selected.textContent = '';
+
+  /* Força o estado interno via clique em observação e volta a limpar pedindo desfecho de verdade */
   window.__confirmResult = false;
+  host.querySelector('[data-ps-outcome="observacao"]').click();
   host.querySelector('[data-ps-closure-action="encerrar"]').click();
+  const confirmouComDesfecho = /Tem certeza que quer finalizar/i.test(window.__confirmed.slice(-1)[0] || '');
   const semSalvar = window.__registered.length === 0 && window.__encerrados === 0;
 
+  host.querySelector('[data-ps-outcome="alta"]').click();
   window.__confirmResult = true;
   host.querySelector('[data-ps-closure-action="encerrar"]').click();
-  return { semSalvar, confirmacao: window.__confirmed[0] || '' };
+  return {
+    confirmouComDesfecho,
+    semSalvar,
+    confirmacao: window.__confirmed.slice(-1)[0] || '',
+    desfechoUi: host.querySelector('[data-ps-outcome-selected]').textContent
+  };
 })()`);
 
 setTimeout(() => {
@@ -332,19 +357,23 @@ setTimeout(() => {
       registros: window.__registered.length,
       protocolo: window.__registered[0]?.protocolo || '',
       paciente: window.__registered[0]?.pacienteNome || '',
+      desfecho: window.__registered[0]?.desfecho || '',
       encerrados: window.__encerrados,
       status: host.querySelector('[data-ps-closure-status]').textContent
     };
   })()`);
 
-  if (encerrar.semSalvar && /Tem certeza que quer finalizar/i.test(encerrar.confirmacao)) {
+  if (encerrar.confirmouComDesfecho && encerrar.semSalvar &&
+      /Alta/i.test(encerrar.desfechoUi)) {
     pass('cancelar a confirmação não encerra nem salva o atendimento');
   } else {
     fail('confirmação de encerramento falhou: ' + JSON.stringify(encerrar));
   }
 
   if (final.registros === 1 && /asma/i.test(final.protocolo) &&
-      final.paciente === 'Paciente Asma' && final.encerrados === 1 && /nuvem/i.test(final.status)) {
+      final.paciente === 'Paciente Asma' && final.encerrados === 1 &&
+      final.desfecho === 'alta' &&
+      /nuvem|finalizada/i.test(final.status)) {
     pass('finalizar salva em Atendimentos realizados e encerra o paciente');
   } else {
     fail('encerramento incompleto: ' + JSON.stringify(final));
