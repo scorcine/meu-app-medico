@@ -557,26 +557,39 @@ const PS_CONTENT_1 = {
       <ol class="emerg-steps">
         <li><strong>Classificar gravidade</strong> — fala entrecortada, SpO₂ &lt; 90%, PEF &lt; 50%, silêncio auscultatório = grave.</li>
         <li><strong>O₂</strong> — alvo SpO₂ 94–98%; monitorizar.</li>
-        <li><strong>Broncodilatador</strong> — repetir a cada 20 min × 3 ciclos:
+        <li><strong>Broncodilatador β₂ de curta ação</strong> — escolher o que houver na unidade e repetir a cada 20 min × 3 ciclos:
           <ul class="ps-med-options">
-            <li><strong>1ª linha:</strong> salbutamol (Aerolin®) 4–8 puffs MDI ou nebulização 5 mg + 3 mL SF</li>
-            <li><strong>Alternativa / resistência:</strong> salbutamol + brometo de ipratrópio 0,5 mg nebulização (crise moderada-grave)</li>
-            <li><strong>Refratário / grave:</strong> sulfato de magnésio 2 g IV em 20 min; adrenalina SC 0,3–0,5 mg se iminência de parada; IOT se fadiga/hipoxemia refratária</li>
+            <li><strong>1ª linha:</strong> salbutamol (Aerolin®) nebulização 2,5–5 mg + 3 mL SF 0,9% ou MDI 100 mcg 4–8 puffs com espaçador</li>
+            <li><strong>Alternativa:</strong> fenoterol (Berotec®) 10–20 gotas nebulização + 3 mL SF 0,9%</li>
+            <li><strong>Alternativa:</strong> terbutalina 0,5 mg SC quando não houver via inalatória</li>
           </ul>
         </li>
-        <li><strong>Corticoide sistêmico precoce</strong>:
+        <li><strong>Anticolinérgico associado</strong> — somar ao β₂ na crise moderada-grave, não substitui:
           <ul class="ps-med-options">
-            <li><strong>1ª linha:</strong> prednisona 40–60 mg VO ou metilprednisolona 60–125 mg IV</li>
-            <li><strong>Alternativa / resistência:</strong> hidrocortisona 200 mg IV se choque associado</li>
-            <li><strong>Refratário / grave:</strong> manter prednisona 40 mg/dia × 5 dias na alta; considerar internação</li>
+            <li><strong>Adjuvante:</strong> brometo de ipratrópio (Atrovent®) 0,5 mg (40 gotas) nebulização junto do β₂ ou MDI 20 mcg 4–8 puffs — até 3 ciclos</li>
           </ul>
         </li>
+        <li><strong>Corticoide sistêmico precoce</strong> — na 1ª hora, escolher uma via:
+          <ul class="ps-med-options">
+            <li><strong>1ª linha:</strong> prednisona 40–60 mg VO dose única diária</li>
+            <li><strong>1ª linha:</strong> prednisolona 40 mg VO (solução — 1–2 mg/kg em pediatria, máx. 40 mg)</li>
+            <li><strong>Alternativa:</strong> metilprednisolona 60–125 mg EV se VO impossível, vômitos ou crise grave</li>
+            <li><strong>Alternativa:</strong> hidrocortisona 200 mg EV se choque associado</li>
+          </ul>
+        </li>
+        <li><strong>Crise grave ou refratária ao 3º ciclo</strong> — associar ao broncodilatador em curso:
+          <ul class="ps-med-options">
+            <li><strong>Refratário:</strong> sulfato de magnésio 2 g EV em 20 min (pediatria 40 mg/kg, máx. 2 g)</li>
+            <li><strong>Refratário:</strong> adrenalina 0,3–0,5 mg IM 1:1000 se iminência de parada ou anafilaxia associada</li>
+          </ul>
+        </li>
+        <li><strong>Suporte ventilatório</strong> — VNI em ambiente monitorizado; IOT se fadiga, rebaixamento ou hipoxemia refratária.</li>
         <li><strong>Investigar gatilho</strong> — infecção, pneumotórax, TEP, anafilaxia, aspiração.</li>
       </ol>
       <h4>Alta / ambulatorial</h4>
       <ul>
         <li>PEF &gt; 70% do previsto, SpO₂ &gt; 94% em ar ambiente, fala frases completas</li>
-        <li>Prescrever β₂ de resgate + corticoide curto + revisar preventivo (CI + LABA ou dose ICS adequada)</li>
+        <li>Prescrever β₂ de resgate + corticoide VO por 5 dias (prednisona 40 mg/dia) + revisar preventivo (CI + LABA ou dose ICS adequada)</li>
         <li>Plano de ação escrito; retorno em 24–48 h se crise grave</li>
       </ul>
       <p class="emerg-note">Referência: GINA 2024 · SBPT. Pediatria: salbutamol 2,5–5 mg nebul ou 4–8 puffs MDI com espaçador. Conteúdo educacional — não substitui julgamento clínico.</p>`,

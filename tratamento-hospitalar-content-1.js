@@ -80,21 +80,22 @@ const TH_CONTENT_1 = {
     <p class="muted">Crise asmática / broncoespasmo — broncodilatador + corticoide sistêmico precoce.</p>
     <h4>Medicação IM / EV</h4>
     <ul class="ps-med-options">
-      <li><strong>1ª linha:</strong> salbutamol nebulização 5 mg + SF · hidrocortisona 1 amp (500 mg) EV ou metilprednisolona 1 amp (125 mg) EV</li>
-      <li><strong>Corticoides alternativos:</strong> metilprednisolona 125 mg EV 6/6 h · hidrocortisona 500 mg EV 6/6 h · dexametasona 1 amp (10 mg) IM ou EV dose única (ambulatorial/leve) · prednisolona 40 mg VO após estabilização</li>
-      <li><strong>Broncodilatador alternativo:</strong> fenoterol nebulização · salbutamol MDI com espaçador 4–8 jatos · sulfato de magnésio 2 g/10 mL EV em 20 min (grave refratária)</li>
-      <li><strong>Refractário:</strong> adrenalina 0,3–0,5 mg IM (1:1000) se instabilidade · repetir 5–15 min · considerar VNI/intubação</li>
-      <li><strong>Manutenção 24–48 h:</strong> metilprednisolona 125 mg EV 6/6 h ou hidrocortisona 500 mg EV 6/6 h → transição VO</li>
-    </ul>`,
+      <li><strong>Broncodilatador β₂ (escolher o disponível):</strong> salbutamol nebulização 5 mg + 3 mL SF a cada 20 min × 3 · salbutamol MDI 100 mcg 4–8 jatos com espaçador · fenoterol (Berotec®) 10–20 gotas nebulização</li>
+      <li><strong>Anticolinérgico associado (crise moderada-grave):</strong> brometo de ipratrópio 0,5 mg (40 gotas) nebulização junto do β₂ 6/6 h</li>
+      <li><strong>Corticoide sistêmico (escolher 1):</strong> metilprednisolona 1 amp (125 mg) EV 6/6 h · hidrocortisona 1 amp (500 mg) EV 6/6 h · dexametasona 1 amp (10 mg) IM ou EV dose única (crise leve) · prednisolona 40 mg VO após estabilização</li>
+      <li><strong>Refractário:</strong> sulfato de magnésio 2 g/10 mL EV em 20 min · adrenalina 0,3–0,5 mg IM (1:1000) se instabilidade — repetir 5–15 min</li>
+    </ul>
+    <p class="emerg-note">Manter o corticoide escolhido 6/6 h por 24–48 h e transicionar para VO (prednisona 40 mg/dia) na melhora. VNI/IOT se fadiga ou hipoxemia refratária. Conteúdo educacional.</p>`,
 
   'dpoc-exacerbada': `
     <p class="muted">DPOC exacerbada — broncodilatador + corticoide + ATB se infecção suspeita.</p>
     <h4>Medicação IM / EV</h4>
     <ul class="ps-med-options">
-      <li><strong>1ª linha:</strong> salbutamol + ipratrópio nebulização · metilprednisolona 1 amp (125 mg) EV ou hidrocortisona 500 mg EV</li>
-      <li><strong>Corticoides alternativos:</strong> dexametasona 1 amp (10 mg) IM ou EV · metilprednisolona 125 mg EV 6/6 h × 48 h · hidrocortisona 500 mg EV 6/6 h · prednisona 40 mg VO após melhora</li>
-      <li><strong>ATB (infecção suspeita):</strong> ceftriaxona 1 amp (1 g) IM ou EV 24/24 h + azitromicina 500 mg VO · ampicilina-sulbactam 3 g EV 6/6 h · levofloxacino 750 mg EV (alérgico penicilina)</li>
-      <li><strong>Refractário / acidose:</strong> sulfato de magnésio 2 g EV em 20 min · VNI · considerar aminofilina EV (2ª linha · monitorizar)</li>
+      <li><strong>Broncodilatador β₂ (escolher o disponível):</strong> salbutamol nebulização 2,5–5 mg a cada 20 min × 3 · salbutamol MDI 100 mcg 4–10 jatos com espaçador · fenoterol (Berotec®) 10–20 gotas nebulização</li>
+      <li><strong>Anticolinérgico associado (padrão na DPOC):</strong> brometo de ipratrópio 0,5 mg (40 gotas) nebulização 6/6 h junto do β₂</li>
+      <li><strong>Corticoide sistêmico (escolher 1):</strong> metilprednisolona 1 amp (125 mg) EV 6/6 h · hidrocortisona 1 amp (500 mg) EV 6/6 h · dexametasona 1 amp (10 mg) IM ou EV · prednisona 40 mg VO 24/24 h × 5 dias</li>
+      <li><strong>ATB (Anthonisen ≥ 2 critérios):</strong> ceftriaxona 1 amp (1 g) IM ou EV 24/24 h · ampicilina-sulbactam 3 g EV 6/6 h · azitromicina 500 mg VO 24/24 h · levofloxacino 750 mg EV (alérgico à penicilina)</li>
+      <li><strong>Refractário / acidose:</strong> sulfato de magnésio 2 g EV em 20 min · aminofilina EV somente monitorizado (2ª linha)</li>
       <li><strong>Sintomáticos:</strong> dipirona 1 amp IM ou EV · paracetamol 750 mg VO/EV</li>
     </ul>`,
 

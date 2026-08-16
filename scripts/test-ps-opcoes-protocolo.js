@@ -104,8 +104,53 @@ const analise = evalIn(`(() => {
 if (analise.status === 'warning') pass(`1ª linha + alternativa em "${analise.etapa}" gera aviso (antes era erro)`);
 else fail(`status inesperado ao combinar linhas: ${analise.status} — ${JSON.stringify(analise.textos)}`);
 
-if (analise.textos.some(t => /salbutamol/i.test(t))) pass('aviso aponta a droga repetida nas duas opções');
-else fail('sem aviso de droga repetida: ' + JSON.stringify(analise.textos));
+if (analise.textos.some(t => /uma linha por vez/i.test(t))) {
+  pass('aviso explica que se usa uma linha por vez na mesma etapa');
+} else {
+  fail('sem aviso de linhas combinadas: ' + JSON.stringify(analise.textos));
+}
+
+/* 3b. Nenhuma etapa deve oferecer a mesma droga em duas opções (salbutamol repetido) */
+const repetidas = evalIn(`(() => {
+  const problemas = [];
+  PS_CONDITIONS.forEach(cond => {
+    const config = psGetInteractiveConfig(cond.id);
+    (config?.groups || []).forEach(group => {
+      const vistos = new Map();
+      (group.medications || []).forEach(med => {
+        (med.drugs || []).forEach(drug => {
+          const ids = vistos.get(drug.id) || new Set();
+          ids.add(med.id);
+          vistos.set(drug.id, ids);
+        });
+      });
+      [...vistos.entries()].forEach(([drugId, medIds]) => {
+        if (medIds.size < 2) return;
+        /* O extrator casa por substring (prednisolona dentro de metilprednisolona) */
+        const nome = (PS_DRUG_META[drugId] && PS_DRUG_META[drugId].name) || drugId;
+        const solto = new RegExp('(^|[^a-zà-ú])' + nome.replace(/[.*+?^\${}()|[\\]\\\\]/g, '\\\\$&'), 'i');
+        const citacoes = (group.medications || [])
+          .filter(med => solto.test(med.label || '')).length;
+        if (citacoes > 1) problemas.push(cond.id + ' · ' + group.label + ' · ' + nome);
+      });
+    });
+  });
+  return problemas;
+})()`);
+
+const asmaRepetida = repetidas.filter(item => item.startsWith('asma-broncoespasmo'));
+if (!asmaRepetida.length) {
+  pass('asma não repete a mesma droga em duas opções da etapa');
+} else {
+  fail('droga repetida na asma: ' + JSON.stringify(asmaRepetida));
+}
+
+const respiratorias = repetidas.filter(item => /^(dpoc-exacerbada|edema-agudo-pulmao)/.test(item));
+if (!respiratorias.length) {
+  pass('DPOC e edema agudo de pulmão também escolhem cada droga uma única vez');
+} else {
+  fail('droga repetida nas condutas respiratórias: ' + JSON.stringify(respiratorias));
+}
 
 /* 4. Uma opção por etapa em etapas diferentes não deve virar aviso de excesso */
 const combinado = evalIn(`(() => {

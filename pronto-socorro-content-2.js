@@ -464,23 +464,40 @@ const PS_CONTENT_2 = {
 
   'dpoc-exacerbada': `
     <p class="muted">Exacerbação de DPOC — dispneia ↑, volume/purulência do escarro; <strong>1ª linha: broncodilatador + corticoide sistêmico</strong>; antibiótico só se ≥ 2 critérios Anthonisen.</p>
-    <ul class="ps-med-options">
-      <li><strong>1ª linha (base):</strong> salbutamol 4–10 puffs q20 min × 3 + ipratrópio 6/6 h + prednisona 40 mg VO 24/24 h · 5 dias.</li>
-      <li><strong>Com ATB (Anthonisen ≥ 2):</strong> amoxicilina + clavulanato 875/125 mg VO 12/12 h · 5–7 dias (Clavulin®).</li>
-      <li><strong>Alternativa (ATB):</strong> levofloxacino 500 mg VO/EV 24/24 h · 5 dias.</li>
-    </ul>
     <h4>Prescrições de pronto-socorro</h4>
     <ol class="emerg-steps">
       <li><strong>ABC</strong> · oximetria · O₂ titulado (SpO₂ 88–92% se hipercápnico conhecido) · gasometria se rebaixamento ou SpO₂ &lt; 88% em O₂.</li>
-      <li><strong>Broncodilatador inalatório:</strong> salbutamol 100 mcg/puff — 4–10 puffs a cada 20 min × 3 ciclos (nebul: 2,5–5 mg) + ipratrópio 20 mcg/puff 4–8 puffs ou nebul 0,5 mg 6/6 h (Atrovent®).</li>
-      <li><strong>Corticoide sistêmico:</strong> prednisona 40 mg VO 24/24 h · 5 dias <em>ou</em> metilprednisolona 40 mg EV 24/24 h se VO impossível.</li>
-      <li><strong>Antibiótico</strong> se ↑ escarro purulento + dispneia (Anthonisen ≥ 2 critérios) ou ventilação mecânica:
-        <ul>
-          <li><strong>Amoxicilina + clavulanato</strong> 875/125 mg VO 12/12 h · 5–7 dias (Clavulin®).</li>
-          <li><strong>Alternativa/alergia:</strong> levofloxacino 500 mg VO/EV 24/24 h · 5 dias.</li>
+      <li><strong>Broncodilatador β₂ de curta ação</strong> — escolher o que houver e repetir a cada 20 min × 3 ciclos:
+        <ul class="ps-med-options">
+          <li><strong>1ª linha:</strong> salbutamol 100 mcg/puff 4–10 puffs com espaçador ou nebulização 2,5–5 mg + 3 mL SF 0,9%</li>
+          <li><strong>Alternativa:</strong> fenoterol (Berotec®) 10–20 gotas nebulização</li>
         </ul>
       </li>
-      <li><strong>Suporte:</strong> VNI (BiPAP) se acidose respiratória (pH &lt; 7,35 + PaCO₂ &gt; 45) — contraindicar se instabilidade hemodinâmica ou rebaixamento sem proteção de via aérea.</li>
+      <li><strong>Anticolinérgico associado</strong> — padrão na exacerbação de DPOC:
+        <ul class="ps-med-options">
+          <li><strong>Adjuvante:</strong> brometo de ipratrópio (Atrovent®) 0,5 mg nebulização 6/6 h junto do β₂ ou MDI 20 mcg 4–8 puffs</li>
+        </ul>
+      </li>
+      <li><strong>Corticoide sistêmico</strong> — 5 dias, escolher uma via:
+        <ul class="ps-med-options">
+          <li><strong>1ª linha:</strong> prednisona 40 mg VO 24/24 h · 5 dias</li>
+          <li><strong>Alternativa:</strong> metilprednisolona 40 mg EV 24/24 h se VO impossível</li>
+          <li><strong>Alternativa:</strong> hidrocortisona 200 mg EV 8/8 h se sem metilprednisolona</li>
+        </ul>
+      </li>
+      <li><strong>Antibiótico</strong> — só se ↑ escarro purulento + dispneia (Anthonisen ≥ 2 critérios) ou ventilação mecânica:
+        <ul class="ps-med-options">
+          <li><strong>1ª linha:</strong> amoxicilina + clavulanato 875/125 mg VO 12/12 h · 5–7 dias (Clavulin®)</li>
+          <li><strong>Alternativa:</strong> azitromicina 500 mg VO 24/24 h · 3–5 dias</li>
+          <li><strong>Alérgico à penicilina:</strong> levofloxacino 500 mg VO/EV 24/24 h · 5 dias</li>
+        </ul>
+      </li>
+      <li><strong>Acidose respiratória ou falha do tratamento inicial</strong>:
+        <ul class="ps-med-options">
+          <li><strong>Refratário:</strong> sulfato de magnésio 2 g EV em 20 min como adjuvante do broncodilatador</li>
+        </ul>
+      </li>
+      <li><strong>Suporte:</strong> VNI (BiPAP) se acidose respiratória (pH &lt; 7,35 + PaCO₂ &gt; 45) — contraindicar se instabilidade hemodinâmica ou rebaixamento sem proteção de via aérea; IOT se falha da VNI.</li>
       <li><strong>Evitar:</strong> sedação excessiva; morfina de rotina (risco de retenção CO₂).</li>
     </ol>
     <h4>Alta / ambulatorial</h4>
@@ -500,18 +517,28 @@ const PS_CONTENT_2 = {
 
   'edema-agudo-pulmao': `
     <p class="muted">Edema agudo de pulmão cardiogênico — dispneia súbita, estertores, SpO₂ baixa; reduzir pré/pós-carga, diurese e suporte ventilatório.</p>
-    <ul class="ps-med-options">
-      <li><strong>1ª linha:</strong> furosemida 40–80 mg EV (duplicar se uso crônico) + nitroglicerina EV 10–20 mcg/min titulada <em>ou</em> SL 0,4 mg q5 min.</li>
-      <li><strong>Alternativa:</strong> CPAP/VNI 5–10 cmH₂O precoce se dispneia intensa e SpO₂ refratária.</li>
-      <li><strong>Alérgico / contraindicação:</strong> morfina 2–4 mg EV lento com cautela (evitar rotina); PA sistólica &lt; 90 mmHg → priorizar suporte hemodinâmico sem vasodilatador. Crise hipertensiva associada → ver lote 3 (nitroprussiato).</li>
-    </ul>
     <h4>Prescrições de pronto-socorro</h4>
     <ol class="emerg-steps">
       <li><strong>ABC</strong> · posição sentada · O₂ alto fluxo · monitor · acesso venoso.</li>
-      <li><strong>Diurético de alça:</strong> furosemida 40–80 mg EV (duplicar se uso crônico de furosemida) — repetir conforme diurese e clínica.</li>
-      <li><strong>Vasodilatador:</strong> nitroglicerina EV titulada 10–20 mcg/min → ↑ 5–10 mcg/min q5 min (meta PA sistólica &gt; 90 mmHg) <em>ou</em> nitroglicerina SL 0,4 mg q5 min (máx. 3) se PA permitir.</li>
-      <li><strong>CPAP/VNI</strong> 5–10 cmH₂O precoce se dispneia intensa e SpO₂ refratária — reduz intubação.</li>
-      <li><strong>Morfina</strong> com cautela: 2–4 mg EV lento se ansiedade/dispneia refratária e PA estável — monitorar depressão respiratória (evitar rotina).</li>
+      <li><strong>Diurético de alça</strong> — escolher o que houver na unidade:
+        <ul class="ps-med-options">
+          <li><strong>1ª linha:</strong> furosemida 40–80 mg EV em bólus (duplicar a dose habitual de quem já usa) ou 10–20 mg/h em infusão contínua se resposta insuficiente</li>
+        </ul>
+      </li>
+      <li><strong>Vasodilatador</strong> — só se PA sistólica &gt; 110 mmHg; escolher uma apresentação:
+        <ul class="ps-med-options">
+          <li><strong>1ª linha:</strong> nitroglicerina EV 10–20 mcg/min → ↑ 5–10 mcg/min q5 min (meta PA sistólica &gt; 90 mmHg); SL 0,4 mg q5 min (máx. 3) enquanto prepara a bomba</li>
+          <li><strong>Alternativa:</strong> isossorbida 5 mg SL quando não houver nitrato EV</li>
+          <li><strong>Alternativa:</strong> nitroprussiato 0,3–0,5 mcg/kg/min EV se crise hipertensiva associada (monitorizado)</li>
+        </ul>
+      </li>
+      <li><strong>Suporte ventilatório:</strong> CPAP/VNI 5–10 cmH₂O precoce se dispneia intensa e SpO₂ refratária — reduz intubação.</li>
+      <li><strong>Adjuvantes com cautela</strong> — não usar de rotina:
+        <ul class="ps-med-options">
+          <li><strong>Adjuvante:</strong> morfina 2–4 mg EV lento se ansiedade/dispneia refratária e PA estável — monitorar depressão respiratória</li>
+          <li><strong>Evitar:</strong> vasodilatador se PA sistólica &lt; 90 mmHg — priorizar suporte hemodinâmico (ver choque cardiogênico)</li>
+        </ul>
+      </li>
       <li><strong>Tratar precipitante:</strong> crise hipertensiva, IAM, arritmia, valvopatia; não usar betabloqueador na fase aguda instável.</li>
       <li><strong>Intubação</strong> se falha VNI, rebaixamento ou instabilidade hemodinâmica.</li>
     </ol>

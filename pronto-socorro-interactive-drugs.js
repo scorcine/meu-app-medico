@@ -373,11 +373,17 @@ function psExtractDrugsFromText (text) {
   return found;
 }
 
+/* Conteúdo antigo grava "Refractário"; a tela mostra sempre a grafia correta */
+function psTierLabel (tier) {
+  const value = String(tier || '').trim();
+  return /refract/i.test(value) ? 'Refratário' : value;
+}
+
 function psParseTier (text) {
   const m = text.match(/^(1ª linha|Alternativa(?:[^:]*)?|Alérgico(?:[^:]*)?|Refractário|Refratário|Evitar(?:[^:]*)?|Sintomático|Adjuvante|Profilaxia|2ª linha|ATB|Analgesia)[^:]*:\s*/i);
   if (!m) return { tier: 'Opção', label: text };
   let tier = m[1].split('/')[0].trim();
-  if (/refrat/i.test(tier)) tier = 'Refractário';
+  if (/refrat/i.test(tier)) tier = 'Refratário';
   if (/alerg/i.test(tier)) tier = 'Alérgico';
   if (/1ª/i.test(tier)) tier = '1ª linha';
   const label = text.replace(m[0], '').trim() || text;
@@ -440,7 +446,7 @@ function psParseMedOptionsFromHtml (conditionId, html) {
 
 const PS_TIER_GROUP_ORDER = [
   '1ª linha', '2ª linha', 'Alternativa', 'Alérgico', 'Adjuvante',
-  'Sintomático', 'Analgesia', 'ATB', 'Profilaxia', 'Refractário', 'Opção', 'Evitar'
+  'Sintomático', 'Analgesia', 'ATB', 'Profilaxia', 'Refratário', 'Opção', 'Evitar'
 ];
 
 /** Condutas curadas sem etapas: agrupa por linha para escolher a alternativa disponível */
@@ -449,7 +455,7 @@ function psGroupMedsByTier (medications) {
   const byTier = new Map();
 
   medications.forEach(med => {
-    const tier = med.tier || 'Opção';
+    const tier = psTierLabel(med.tier) || 'Opção';
     let group = byTier.get(tier);
     if (!group) {
       group = {

@@ -725,7 +725,8 @@ function psRenderContextField (field) {
 }
 
 function psRenderMedOption (med, checked) {
-  const tier = med.tier ? `<span class="ps-rx-tier ps-rx-tier--${med.tier.replace(/\s+/g, '')}">${med.tier}</span>` : '';
+  const tierLabel = typeof psTierLabel === 'function' ? psTierLabel(med.tier) : med.tier;
+  const tier = tierLabel ? `<span class="ps-rx-tier ps-rx-tier--${tierLabel.replace(/\s+/g, '')}">${tierLabel}</span>` : '';
   const isChecked = checked ? ' checked' : '';
   return `
     <label class="ps-rx-med-card">
