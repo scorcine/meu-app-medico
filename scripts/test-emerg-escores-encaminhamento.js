@@ -274,6 +274,11 @@ function testGraceStaysEarly () {
 function testClosureSummary () {
   const ui = buildUi();
   const result = ui.run(`(() => {
+    window.__savedEncounters = [];
+    window.consultasRegisterEmergencyProtocol = async data => {
+      window.__savedEncounters.push(data);
+      return { ok: true, cloudSaved: true };
+    };
     sessionStorage.setItem('medhub-new-encounter-draft', JSON.stringify({
       nome: 'Maria Teste', idade: '61 anos', sexo: 'Feminino', queixas: ['Dor torácica']
     }));
@@ -311,7 +316,8 @@ function testClosureSummary () {
       proximoVisivel: !document.querySelector('.emerg-protocol-next').hidden,
       cancelou,
       atendimentoEncerrado: !sessionStorage.getItem('medhub-new-encounter-draft'),
-      confirmacao: window.__confirmMessages[0] || ''
+      confirmacao: window.__confirmMessages[0] || '',
+      salvo: window.__savedEncounters[0] || null
     };
   })()`);
 
@@ -344,6 +350,11 @@ function testClosureSummary () {
     pass('Fechamento pede confirmação e remove o atendimento da lista de retomada');
   } else {
     fail('Confirmação de encerramento falhou: ' + JSON.stringify(result));
+  }
+  if (result.salvo?.pacienteNome === 'Maria Teste' && /NSTEMI/i.test(result.salvo.protocolo || '') && result.salvo.summaryText) {
+    pass('Fechar protocolo grava o paciente em Atendimentos realizados');
+  } else {
+    fail('Atendimento não foi salvo na lista: ' + JSON.stringify(result.salvo));
   }
 }
 

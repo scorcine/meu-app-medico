@@ -3643,8 +3643,36 @@ function emergConfirmProtocolFinish (protocolName) {
   const patient = patientName ? ` do paciente ${patientName}` : ' deste paciente';
   return window.confirm(
     `Tem certeza que quer finalizar o atendimento${patient} e o protocolo ${protocolName}?\n\n` +
-    'O atendimento deixará de aparecer como “em andamento”.'
+    'O atendimento deixará de aparecer como “em andamento” e será salvo em Atendimentos realizados.'
   );
+}
+
+function emergPersistFinishedProtocol (protocol, html, extra) {
+  const context = emergSummaryContext();
+  const textHolder = document.createElement('div');
+  textHolder.innerHTML = html || '';
+  const summaryText = (textHolder.innerText || textHolder.textContent || '')
+    .replace(/\n{3,}/g, '\n\n')
+    .trim();
+
+  if (typeof consultasRegisterEmergencyProtocol !== 'function') {
+    return Promise.resolve(null);
+  }
+
+  return consultasRegisterEmergencyProtocol({
+    sourceId: `emergency:${protocol.id}:${context.startedIso || context.patientNameRaw || Date.now()}`,
+    protocolo: protocol.name,
+    pacienteId: context.patientIdRaw,
+    pacienteNome: context.patientNameRaw || 'Paciente não informado',
+    data: context.startedAt,
+    queixa: context.complaintRaw,
+    medico: context.doctorRaw,
+    crm: context.crmRaw,
+    reperfusao: extra?.reperfusao || '',
+    summaryHtml: html || '',
+    summaryText: summaryText || protocol.name,
+    notas: extra?.notas || 'Atendimento finalizado automaticamente pelo Guia de emergência.'
+  });
 }
 
 function emergEndActiveEncounter () {
@@ -4158,33 +4186,13 @@ function initEmergProtocolExperience (root, topicId, protocol) {
       emergPrintSummary(`${protocol.name} — resumo do atendimento`, html);
 
       finalizeButton.disabled = true;
-      const context = emergSummaryContext();
-      const textHolder = document.createElement('div');
-      textHolder.innerHTML = html;
-      const summaryText = (textHolder.innerText || textHolder.textContent || '')
-        .replace(/\n{3,}/g, '\n\n')
-        .trim();
-
-      let savePromise = null;
-      if (typeof consultasRegisterEmergencyProtocol === 'function') {
-        savePromise = consultasRegisterEmergencyProtocol({
-          sourceId: `emergency:${protocol.id}:${context.startedIso || context.patientNameRaw}`,
-          protocolo: protocol.name,
-          pacienteId: context.patientIdRaw,
-          pacienteNome: context.patientNameRaw || 'Paciente não informado',
-          data: context.startedAt,
-          queixa: context.complaintRaw,
-          medico: context.doctorRaw,
-          crm: context.crmRaw,
-          reperfusao: state.picks['stemi-reperfusion'],
-          summaryHtml: html,
-          summaryText,
-          notas: 'Atendimento finalizado automaticamente pelo Guia de emergência.'
-        });
-      }
+      const savePromise = emergPersistFinishedProtocol(protocol, html, {
+        reperfusao: state.picks['stemi-reperfusion'],
+        notas: 'Atendimento finalizado automaticamente pelo Guia de emergência.'
+      });
 
       emergEndActiveEncounter();
-      const saved = savePromise ? await savePromise : null;
+      const saved = await savePromise;
       finalizedStatus.textContent = saved?.cloudSaved
         ? 'Protocolo STEMI finalizado · PDF gerado · atendimento salvo na nuvem ✓'
         : (saved?.ok
@@ -4218,8 +4226,20 @@ function initEmergProtocolExperience (root, topicId, protocol) {
       return;
     }
     if (!emergConfirmProtocolFinish(protocol.name)) return;
-    renderSummary();
+    const html = renderSummary();
+    const persist = emergPersistFinishedProtocol(protocol, html);
     emergEndActiveEncounter();
+    persist.then(saved => {
+      if (!summaryOut || summaryOut.hidden) return;
+      const note = document.createElement('p');
+      note.className = 'emerg-summary-pending';
+      note.textContent = saved?.cloudSaved
+        ? 'Atendimento salvo em Pacientes atendidos e sincronizado com a nuvem ✓'
+        : (saved?.ok
+            ? 'Atendimento salvo em Pacientes atendidos (sincronização com a nuvem pendente)'
+            : 'Não foi possível salvar em Pacientes atendidos. Exporte o PDF e registre manualmente se necessário.');
+      summaryOut.appendChild(note);
+    }).catch(() => {});
   });
 
   updateStatus = () => {

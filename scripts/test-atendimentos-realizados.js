@@ -78,6 +78,20 @@ async function run () {
     fail('Paciente não apareceu no histórico: ' + rendered);
   }
 
+  const emptySearch = await vm.runInContext(`(() => {
+    document.getElementById('cons-filter').value = 'angela';
+    return consultasRenderList().then(() => ({
+      list: document.getElementById('cons-list').textContent,
+      empty: document.getElementById('cons-empty').textContent,
+      hidden: document.getElementById('cons-empty').hidden
+    }));
+  })()`, context);
+  if (!emptySearch.hidden && /Nenhum paciente atendido corresponde/i.test(emptySearch.empty) && !/Paciente Nuvem/.test(emptySearch.list)) {
+    pass('Busca sem resultado explica que não há paciente correspondente');
+  } else {
+    fail('Busca vazia não avisou o usuário: ' + JSON.stringify(emptySearch));
+  }
+
   const appHtml = fs.readFileSync(path.join(ROOT, 'app.html'), 'utf8');
   const css = fs.readFileSync(path.join(ROOT, 'style.css'), 'utf8');
   const siteConfig = fs.readFileSync(path.join(ROOT, 'medhub-site-config.js'), 'utf8');

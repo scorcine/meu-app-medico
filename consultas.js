@@ -236,10 +236,18 @@ async function consultasRenderList () {
 
   listEl.innerHTML = '';
   if (!list.length) {
-    if (emptyEl) emptyEl.hidden = !!q;
+    if (emptyEl) {
+      emptyEl.hidden = false;
+      emptyEl.textContent = q
+        ? 'Nenhum paciente atendido corresponde à busca.'
+        : 'Nenhuma consulta registrada.';
+    }
     return;
   }
-  if (emptyEl) emptyEl.hidden = true;
+  if (emptyEl) {
+    emptyEl.hidden = true;
+    emptyEl.textContent = 'Nenhuma consulta registrada.';
+  }
 
   list.forEach(c => {
     const tipo = consultasLabel(CONSULTA_TIPOS, c.tipo);
