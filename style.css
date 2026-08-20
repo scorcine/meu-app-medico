@@ -3991,6 +3991,18 @@ body.app-page {
   line-height: 1.45;
 }
 
+.emerg-summary-body .doc-sign {
+  margin-top: 1.4rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--border);
+}
+
+.emerg-summary-body .doc-sign p {
+  margin: 0.2rem 0;
+  color: var(--text-primary);
+  font-size: 0.82rem;
+}
+
 .emerg-summary-actions {
   display: grid;
   grid-template-columns: 1fr 1fr;

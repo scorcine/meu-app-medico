@@ -4069,7 +4069,13 @@ function initEmergProtocolExperience (root, topicId, protocol) {
       ${summaryBlock('Confirmações de fechamento', confirmacoes)}
       <p class="meta">${pendentes > 0
         ? `${pendentes} conduta(s) do fluxo não foram marcadas.`
-        : 'Todas as condutas do fluxo foram marcadas.'}</p>`;
+        : 'Todas as condutas do fluxo foram marcadas.'}</p>
+      <div class="doc-sign">
+        <p>______________________________</p>
+        <p><strong>Médico(a) responsável</strong></p>
+        <p>${context.doctor}</p>
+        <p><strong>CRM:</strong> ${context.crm}</p>
+      </div>`;
   }
 
   function renderSummary () {

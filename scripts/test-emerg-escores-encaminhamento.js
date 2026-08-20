@@ -417,7 +417,8 @@ function testStemiReperfusionBeforeFinalize () {
       result.pdf.html.includes('Paciente PDF') &&
       result.pdf.html.includes('Dra. Ana Médica') &&
       result.pdf.html.includes('CRM-SP 123456') &&
-      result.pdf.html.includes('Data do atendimento')) {
+      result.pdf.html.includes('Data do atendimento') &&
+      /doc-sign[\s\S]*Dra\. Ana Médica[\s\S]*CRM-SP 123456/i.test(result.pdf.html)) {
     pass('Finalizar STEMI abre PDF com paciente, médico, CRM e data do atendimento');
   } else {
     fail('PDF automático incompleto: ' + JSON.stringify(result.pdf));
