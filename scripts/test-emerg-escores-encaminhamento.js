@@ -621,6 +621,35 @@ function testAvcTromboliseGuidedFlow () {
   }
 }
 
+function testAvcClosureNotCardiac () {
+  const ui = buildUi();
+  const result = ui.run(`(() => {
+    showEmergenciaTopic('avc');
+    showEmergenciaProtocol('fast');
+    const next = document.querySelector('.emerg-page-next');
+    const pages = document.querySelectorAll('.emerg-protocol-page').length;
+    for (let i = 0; i < pages; i++) next.click();
+    const confirmacoes = [...document.querySelectorAll('[data-emerg-closure]')].map(btn => ({
+      id: btn.dataset.emergClosure,
+      text: btn.textContent.replace(/\\s+/g, ' ').trim()
+    }));
+    const nextLabels = [...document.querySelectorAll('.emerg-next-btn')].map(btn => btn.textContent.replace(/\\s+/g, ' ').trim());
+    return { confirmacoes, nextLabels };
+  })()`);
+
+  if (result.confirmacoes.some(item => item.id === 'codigo-avc') &&
+      !result.confirmacoes.some(item => item.id === 'hemodinamica' || /Cateterismo|ICP/i.test(item.text))) {
+    pass('Fechamento do AVC não reutiliza cartões de hemodinâmica/ICP do IAM');
+  } else {
+    fail('Fechamento do AVC ainda copia o IAM: ' + JSON.stringify(result.confirmacoes));
+  }
+  if (!result.nextLabels.some(label => /TC sem sangramento \+ NIHSS/i.test(label))) {
+    pass('Continuar o atendimento não repete TC/NIHSS já feitos na admissão');
+  } else {
+    fail('Próximo protocolo ainda repete TC/NIHSS: ' + JSON.stringify(result.nextLabels));
+  }
+}
+
 console.log('=== MedHub — escores prioritários e encaminhamento clínico ===\n');
 testScorePriorityChest();
 testScoreEarlyNstemiSepse();
@@ -635,5 +664,6 @@ testNoInventedScoresOnBls();
 testReorderMtpTromboliseDka();
 testAvcFastIntraHospital();
 testAvcTromboliseGuidedFlow();
+testAvcClosureNotCardiac();
 console.log('\n' + (failures ? `FALHAS: ${failures}` : 'TODOS OS TESTES PASSARAM'));
 process.exit(failures ? 1 : 0);

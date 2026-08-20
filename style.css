@@ -3302,10 +3302,19 @@ body.app-page {
   box-shadow: none;
 }
 
-.emerg-avc-gates {
-  display: grid;
-  gap: 0.9rem;
-  margin: 0.95rem 0 1.15rem;
+.emerg-avc-gates.is-recap .emerg-avc-gate {
+  display: none;
+}
+
+.emerg-avc-recap {
+  margin: 0;
+  color: var(--text-primary);
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+
+.emerg-avc-recap button {
+  margin-left: 0.45rem;
 }
 
 .emerg-avc-gate {

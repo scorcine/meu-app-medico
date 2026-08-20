@@ -2534,8 +2534,8 @@ const EMERG_NEXT_PROTOCOLS = {
   ],
   'sca:nstemi-ua': [{ id: 'ecg-modelos', label: 'Revisar o padrão eletrocardiográfico → modelos de ECG na SCA' }],
   'avc:fast': [
-    { id: 'trombolise', label: 'TC sem sangramento + NIHSS pontuado → abrir trombólise', require: 'avc-lise' },
-    { id: 'trombectomia', label: 'Suspeita de LVO ou janela > 4 h 30 → trombectomia' }
+    { id: 'trombolise', label: 'Abrir trombólise', require: 'avc-lise' },
+    { id: 'trombectomia', label: 'Abrir trombectomia (LVO / janela estendida)' }
   ],
   'sepse:bundle-hora1': [
     { id: 'norepi-map', label: 'Hipotensão após volume → titular noradrenalina' },
@@ -3354,7 +3354,7 @@ const EMERG_AVC_TC_OPTIONS = [
   }
 ];
 
-function initEmergAvcTromboliseWorkflow (root, state, persist) {
+function initEmergAvcTromboliseWorkflow (root, state, persist, protocolId) {
   if (!root?.querySelector('[data-avc-panel]')) return () => {};
 
   emergHydrateAvcPicks(state);
@@ -3362,6 +3362,8 @@ function initEmergAvcTromboliseWorkflow (root, state, persist) {
   const panels = [...root.querySelectorAll('[data-avc-panel]')];
   const tcGate = root.querySelector('[data-avc-gate="tc"]');
   const nihssGate = root.querySelector('[data-avc-gate="nihss"]');
+  const gates = root.querySelector('.emerg-avc-gates');
+  let gatesExpanded = protocolId !== 'trombolise' || !state.picks['avc-tc-result'];
 
   function markChosen (panel, selector, value) {
     panel.querySelectorAll(selector).forEach(button => {
@@ -3395,10 +3397,10 @@ function initEmergAvcTromboliseWorkflow (root, state, persist) {
   }
 
   function nihssCta (html) {
-    if (!emergAvcLiseReady(state.picks)) return html;
+    if (protocolId === 'trombolise' || !emergAvcLiseReady(state.picks)) return html;
     return `${html}
       <p><button type="button" class="emerg-avc-open-lise" data-avc-goto="trombolise">Abrir protocolo de trombólise</button></p>
-      <p class="muted">Confira janela ≤ 4 h 30 e contraindicações ABS/REL na próxima tela antes da alteplase.</p>`;
+      <p class="muted">Na próxima tela: contraindicações e dose — sem repetir TC/NIHSS.</p>`;
   }
 
   function renderNihss () {
@@ -3432,6 +3434,27 @@ function initEmergAvcTromboliseWorkflow (root, state, persist) {
     tcGate?.classList.toggle('is-blocked', tc === 'hemorragia' || tc === 'incerto');
     nihssGate?.classList.toggle('is-locked', tc !== 'sem-sangramento');
     nihssGate?.classList.toggle('is-done', emergAvcLiseReady(state.picks));
+    syncRecap();
+  }
+
+  function syncRecap () {
+    if (!gates || protocolId !== 'trombolise') return;
+    const canRecap = !!state.picks['avc-tc-result'] && !gatesExpanded;
+    gates.classList.toggle('is-recap', canRecap);
+    let recap = gates.querySelector('[data-avc-recap]');
+    if (!canRecap) {
+      recap?.remove();
+      return;
+    }
+    const nihss = state.picks['avc-nihss-total'];
+    const html = `<strong>Já definido na admissão:</strong> ${state.picks['avc-tc-label'] || state.picks['avc-tc-result']}${nihss ? ` · NIHSS ${nihss}/42` : ''} <button type="button" data-avc-expand-gates>Alterar TC ou NIHSS</button>`;
+    if (!recap) {
+      recap = document.createElement('p');
+      recap.className = 'emerg-avc-recap';
+      recap.dataset.avcRecap = '1';
+      gates.prepend(recap);
+    }
+    recap.innerHTML = html;
   }
 
   function persistAvc () {
@@ -3440,6 +3463,12 @@ function initEmergAvcTromboliseWorkflow (root, state, persist) {
   }
 
   root.addEventListener('click', event => {
+    const expand = event.target.closest('[data-avc-expand-gates]');
+    if (expand) {
+      gatesExpanded = true;
+      refreshAvcState();
+      return;
+    }
     const gotoLise = event.target.closest('[data-avc-goto="trombolise"]');
     if (gotoLise) {
       if (!emergAvcLiseReady(state.picks)) return;
@@ -3506,12 +3535,37 @@ function initEmergAvcTromboliseWorkflow (root, state, persist) {
 }
 
 /* Fechamento do protocolo: o que precisa estar confirmado antes de documentar */
-const EMERG_CLOSING_CONFIRMATIONS = [
+const EMERG_CLOSING_CONFIRMATIONS_SCA = [
   { id: 'medicacao', label: 'Medicações administradas', hint: 'Antiagregante, anticoagulante e sintomáticos conforme escolhido' },
   { id: 'hemodinamica', label: 'Hemodinâmica acionada', hint: 'Cateterismo/ICP comunicado, com horário registrado' },
   { id: 'transferencia', label: 'Transferência acionada', hint: 'Unidade de destino, transporte e vaga confirmados' },
   { id: 'reavaliacao', label: 'Monitorização e reavaliação definidas', hint: 'Monitor, exames seriados e horário da reavaliação' }
 ];
+
+const EMERG_CLOSING_CONFIRMATIONS_AVC = [
+  { id: 'codigo-avc', label: 'Código AVC acionado', hint: 'Neurologia/radiologia avisados e TC priorizada' },
+  { id: 'destino-avc', label: 'Destino definido', hint: 'UTI, unidade de AVC ou transferência se o serviço não trombolisa' },
+  { id: 'neurochecks', label: 'Neurochecks definidos', hint: 'Reavaliação neurológica e horário registrados' }
+];
+
+const EMERG_CLOSING_CONFIRMATIONS_AVC_LISE = [
+  { id: 'alteplase', label: 'Alteplase decidida', hint: 'Infusão iniciada ou lise formalmente não indicada' },
+  { id: 'destino-avc', label: 'Internação UTI / unidade AVC', hint: 'Destino e horário de transferência interna' },
+  { id: 'neurochecks', label: 'Neurochecks na infusão', hint: 'q 15 min durante a lise; depois conforme protocolo' }
+];
+
+const EMERG_CLOSING_CONFIRMATIONS_DEFAULT = [
+  { id: 'medicacao', label: 'Medicações administradas', hint: 'Doses e horários conforme o protocolo' },
+  { id: 'transferencia', label: 'Destino definido', hint: 'Internação, observação ou transferência confirmadas' },
+  { id: 'reavaliacao', label: 'Reavaliação definida', hint: 'Monitorização e horário da próxima avaliação' }
+];
+
+function emergClosingConfirmations (topicId, protocolId) {
+  if (topicId === 'sca') return EMERG_CLOSING_CONFIRMATIONS_SCA;
+  if (topicId === 'avc' && protocolId === 'trombolise') return EMERG_CLOSING_CONFIRMATIONS_AVC_LISE;
+  if (topicId === 'avc') return EMERG_CLOSING_CONFIRMATIONS_AVC;
+  return EMERG_CLOSING_CONFIRMATIONS_DEFAULT;
+}
 
 function emergConfirmProtocolFinish (protocolName) {
   let patientName = '';
@@ -3651,6 +3705,7 @@ function initEmergProtocolExperience (root, topicId, protocol) {
   root.dataset.emergInteractive = '1';
 
   const state = emergReadProtocolProgress(topicId, protocol.id);
+  const closingItems = emergClosingConfirmations(topicId, protocol.id);
   initEmergOptionGroups(root);
 
   /* Sequência do fluxo (A → B → C), sem grids/listas de alternativas */
@@ -3805,7 +3860,7 @@ function initEmergProtocolExperience (root, topicId, protocol) {
       <p>Toque no que já foi feito. O resumo sai pronto para imprimir ou colar no prontuário.</p>
     </div>
     <div class="emerg-closure-grid">
-      ${EMERG_CLOSING_CONFIRMATIONS.map(item => `
+      ${closingItems.map(item => `
         <button type="button" class="emerg-closure-btn" data-emerg-closure="${item.id}" aria-pressed="false">
           <strong>${item.label}</strong><span>${item.hint}</span>
         </button>`).join('')}
@@ -3920,7 +3975,7 @@ function initEmergProtocolExperience (root, topicId, protocol) {
         : 'Resultado: falha ou suspeita de falha — indicada ICP de resgate/reavaliação hemodinâmica imediata.');
     }
 
-    const confirmacoes = EMERG_CLOSING_CONFIRMATIONS
+    const confirmacoes = closingItems
       .filter(item => state.picks[`close:${item.id}`] === true)
       .map(item => item.label);
 
@@ -4136,7 +4191,7 @@ function initEmergProtocolExperience (root, topicId, protocol) {
   };
   const clearPickers = initEmergProtocolPickers(root, state, persistProtocol);
   const clearStemiWorkflow = initEmergStemiWorkflow(root, state, persistProtocol);
-  const clearAvcWorkflow = initEmergAvcTromboliseWorkflow(root, state, persistProtocol);
+  const clearAvcWorkflow = initEmergAvcTromboliseWorkflow(root, state, persistProtocol, protocol.id);
 
   if (resetButton) {
     resetButton.addEventListener('click', () => {
