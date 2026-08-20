@@ -486,10 +486,10 @@ const SCA_PROTOCOLS = [
 const AVC_PROTOCOLS = [
   {
     id: 'fast',
-    icon: '🚑',
+    icon: '🧠',
     name: 'Fluxo FAST',
     html: `
-      <p>Reconhecimento <strong>pré-hospitalar</strong> — identificar AVC, anotar horário e acionar SAMU. Meta: <strong>porta-agulha ≤ 60 min</strong> / <strong>porta-puncao ≤ 90 min</strong> no hospital de referência.</p>
+      <p>Reconhecimento <strong>intra-hospitalar</strong> — triagem/admissão no PS com suspeita de AVC. Meta: <strong>porta-imagem ≤ 25 min</strong> · <strong>porta-agulha ≤ 60 min</strong> · <strong>porta-puncao ≤ 90 min</strong>.</p>
 
       <h4>Mnemônico FAST</h4>
       <div class="emerg-rhythm-grid emerg-rhythm-grid-2">
@@ -507,7 +507,7 @@ const AVC_PROTOCOLS = [
         </div>
         <div class="emerg-rhythm-card emerg-rhythm-card-shock">
           <span class="emerg-rhythm-tag emerg-rhythm-tag-shock">T — Time</span>
-          <p><strong>Tempo é cérebro</strong> — anotar <strong>horário exato</strong> do início dos sintomas ou último momento conhecido bem (LKW). Ligar <strong>192 (SAMU)</strong> imediatamente.</p>
+          <p><strong>Tempo é cérebro</strong> — anotar <strong>horário exato</strong> do início dos sintomas ou último momento conhecido bem (LKW) e acionar imediatamente o fluxo de AVC no serviço.</p>
         </div>
       </div>
 
@@ -518,11 +518,13 @@ const AVC_PROTOCOLS = [
       </ul>
 
       <div class="emerg-flow-v">
-        <span class="emerg-flow-step">Suspeita FAST/BE-FAST positivo</span>
+        <span class="emerg-flow-step">Suspeita FAST/BE-FAST positivo na triagem ou admissão</span>
         <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
         <span class="emerg-flow-step">Anotar horário dos sintomas / LKW</span>
         <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
-        <span class="emerg-flow-step">Acionar SAMU — informar suspeita de <strong>AVC</strong></span>
+        <span class="emerg-flow-step emerg-flow-shock">Acionar <strong>código AVC</strong> / neurologia / radiologia — priorizar TC</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">Admissão — ABC, PA, glicemia, SpO₂, ECG, acesso venoso</span>
         <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
         <span class="emerg-flow-step">Posicionar paciente (decúbito lateral se rebaixamento), manter VA pérvia</span>
         <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
@@ -530,16 +532,17 @@ const AVC_PROTOCOLS = [
         <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
         <span class="emerg-flow-step">Oxigênio se SpO₂ &lt; 94%; evitar hiper/hipotensão</span>
         <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
-        <span class="emerg-flow-step emerg-flow-shock">Transporte direto ao centro com capacidade de <strong>TC + trombólise/trombectomia</strong></span>
+        <span class="emerg-flow-step emerg-flow-shock"><strong>TC crânio sem contraste em ≤ 25 min</strong> — não atrasar para exames de rotina</span>
       </div>
 
-      <h4>Não fazer no pré-hospitalar</h4>
+      <h4>Não fazer antes da TC</h4>
       <ul>
         <li>Não administrar AAS ou anticoagulante antes da TC</li>
-        <li>Não atrasar transporte para exame no local</li>
+        <li>Não atrasar imagem para laboratório completo ou exames eletivos</li>
         <li>Não dar alimentação ou líquidos (risco de broncoaspiração)</li>
+        <li>Não perder tempo com condutas pré-hospitalares — o paciente já está no serviço</li>
       </ul>
-      <p class="emerg-note">LKW = Last Known Well — último momento em que o paciente estava assintomático. Despertar com déficit: horário do despertar = início.</p>
+      <p class="emerg-note">LKW = Last Known Well — último momento em que o paciente estava assintomático. Despertar com déficit: horário do despertar = início. Se o serviço não dispuser de TC/trombólise/trombectomia, acionar transferência imediata <em>após</em> estabilização inicial — não substitui o fluxo intra-hospitalar.</p>
     `
   },
   {

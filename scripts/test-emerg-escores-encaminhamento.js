@@ -529,6 +529,30 @@ function testReorderMtpTromboliseDka () {
   else fail('DKA/HHS ainda trata antes de classificar: ' + JSON.stringify(dka));
 }
 
+function testAvcFastIntraHospital () {
+  const ui = buildUi();
+  const result = ui.run(`(() => {
+    showEmergenciaTopic('avc');
+    showEmergenciaProtocol('fast');
+    const text = document.getElementById('emerg-topic-content').textContent || '';
+    const steps = [...document.querySelectorAll('.emerg-flow-step')].map(node => node.textContent.replace(/\\s+/g, ' ').trim());
+    return { text, steps };
+  })()`);
+
+  if (/intra-hospitalar/i.test(result.text) && !/SAMU|192 \(SAMU\)/i.test(result.text) &&
+      !result.steps.some(step => /SAMU|Transporte direto ao centro/i.test(step))) {
+    pass('Fluxo FAST remove condutas pré-hospitalares (SAMU/transporte)');
+  } else {
+    fail('FAST ainda contém condutas pré-hospitalares: ' + JSON.stringify({ steps: result.steps, intro: result.text.slice(0, 240) }));
+  }
+  if (result.steps.some(step => /c[oó]digo AVC|TC cr[aâ]nio/i.test(step)) &&
+      !result.steps.some(step => /SAMU|transporte direto/i.test(step))) {
+    pass('FAST prioriza código AVC e TC imediata no serviço');
+  } else {
+    fail('Passos do FAST intra-hospitalar incorretos: ' + JSON.stringify(result.steps));
+  }
+}
+
 function testAvcTromboliseGuidedFlow () {
   const ui = buildUi();
   const result = ui.run(`(() => {
@@ -594,6 +618,7 @@ testBranchingHandoff();
 testNoArrayFallbackAutoOpen();
 testNoInventedScoresOnBls();
 testReorderMtpTromboliseDka();
+testAvcFastIntraHospital();
 testAvcTromboliseGuidedFlow();
 console.log('\n' + (failures ? `FALHAS: ${failures}` : 'TODOS OS TESTES PASSARAM'));
 process.exit(failures ? 1 : 0);
