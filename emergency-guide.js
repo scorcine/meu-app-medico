@@ -547,16 +547,24 @@ const AVC_PROTOCOLS = [
     icon: '💉',
     name: 'Protocolo Trombólise',
     html: `
-      <p>Alteplase IV (rt-PA) — janela terapêutica <strong>0–4 h 30 min</strong> do início dos sintomas ou LKW. Exige <strong>TC de crânio sem sangramento</strong> antes da infusão.</p>
+      <p>Protocolo <strong>intra-hospitalar</strong> — PS/sala de emergência após admissão. Alteplase IV (rt-PA) — janela terapêutica <strong>0–4 h 30 min</strong> do início dos sintomas ou LKW. Exige <strong>TC de crânio sem sangramento</strong> antes da infusão.</p>
 
       <div class="emerg-flow-v">
-        <span class="emerg-flow-step">Chegada — ABC, PA, glicemia, SpO₂, ECG</span>
+        <span class="emerg-flow-step">Admissão — ABC, PA, glicemia, SpO₂, ECG, anotar LKW</span>
         <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
-        <span class="emerg-flow-step"><strong>TC crânio sem contraste em ≤ 25 min</strong> (porta-imagem)</span>
+        <button type="button" class="emerg-stemi-trigger emerg-stemi-trigger-critical" data-emerg-picker data-avc-open="tc-result">
+          <strong>TC crânio sem contraste em ≤ 25 min</strong>
+          <small>Confirmar resultado da imagem — sem sangramento para seguir</small>
+        </button>
+        <div class="emerg-stemi-panel" data-avc-panel="tc-result" hidden></div>
         <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
         <span class="emerg-flow-step">Confirmar AVC isquêmico + janela ≤ 4 h 30</span>
         <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
-        <span class="emerg-flow-step emerg-flow-decision">NIHSS + revisar contraindicações ABS/REL antes da dose</span>
+        <button type="button" class="emerg-stemi-trigger" data-emerg-picker data-avc-open="nihss" aria-disabled="true">
+          <strong>NIHSS + revisar contraindicações ABS/REL</strong>
+          <small>Pontuar o déficit e ver conduta sugerida</small>
+        </button>
+        <div class="emerg-stemi-panel" data-avc-panel="nihss" hidden></div>
       </div>
 
       <table class="emerg-table">
@@ -2502,7 +2510,7 @@ const EMERG_PROTOCOL_SCORES = {
   'sca:nstemi-ua': ['grace'],
   'sepse:bundle-hora1': ['qsofa', 'sofa'],
   'trauma:atls-abcde': ['gcs', 'rts', 'iss'],
-  'avc:trombolise': ['nihss'],
+  'avc:trombolise': [],
   'avc:trombectomia': ['nihss'],
   'reacoes-metabolicas:dka-hhs': ['dka'],
   'obstetricia:preeclampsia-eclampsia': ['hellp']
@@ -3291,6 +3299,194 @@ function initEmergStemiWorkflow (root, state, persist) {
   };
 }
 
+const EMERG_AVC_TC_OPTIONS = [
+  {
+    id: 'sem-sangramento',
+    label: 'TC sem sangramento',
+    note: 'Sem hemorragia intraparenquimatosa ou extra-axial — pode avaliar trombólise se demais critérios ok',
+    safe: true
+  },
+  {
+    id: 'hemorragia',
+    label: 'Hemorragia intracraniana',
+    note: 'Contraindicação absoluta — não trombolisar; tratar como AVC hemorrágico',
+    safe: false
+  },
+  {
+    id: 'incerto',
+    label: 'Achado incerto / repetir imagem',
+    note: 'Suspeita de sangramento ou artefato — repetir TC ou RM antes de decidir reperfusão',
+    safe: false
+  }
+];
+
+function initEmergAvcTromboliseWorkflow (root, state, persist) {
+  if (!root?.querySelector('[data-avc-open]')) return () => {};
+
+  const triggers = [...root.querySelectorAll('[data-avc-open]')];
+  const panels = [...root.querySelectorAll('[data-avc-panel]')];
+
+  const closePanels = except => {
+    panels.forEach(panel => {
+      if (panel !== except) panel.hidden = true;
+    });
+  };
+
+  function renderTcResult (panel) {
+    const current = state.picks['avc-tc-result'] || '';
+    panel.innerHTML = `
+      <div class="emerg-stemi-panel-head">
+        <strong>Resultado da TC de crânio</strong>
+        <button type="button" data-avc-close aria-label="Fechar">×</button>
+      </div>
+      <p>Confirme o achado da <strong>TC sem contraste</strong> antes de pontuar NIHSS ou preparar alteplase.</p>
+      <div class="emerg-stemi-drug-grid">
+        ${EMERG_AVC_TC_OPTIONS.map(option => `
+          <button type="button" data-avc-tc="${option.id}" class="${option.safe ? 'emerg-stemi-safe' : 'emerg-stemi-block'}">
+            <strong>${option.label}</strong><span>${option.note}</span>
+          </button>`).join('')}
+      </div>
+      <p class="emerg-stemi-inline-status ${current ? `is-${current === 'sem-sangramento' ? 'clear' : 'present'}` : ''}" aria-live="polite">
+        ${current === 'sem-sangramento'
+          ? 'TC sem sangramento confirmada — pode pontuar NIHSS e revisar contraindicações.'
+          : ''}
+        ${current === 'hemorragia'
+          ? 'Hemorragia na TC — trombólise contraindicada. Acionar neurocirurgia/neurologia conforme protocolo.'
+          : ''}
+        ${current === 'incerto'
+          ? 'Imagem incerta — repetir TC/RM antes de qualquer reperfusão.'
+          : ''}
+      </p>`;
+    markChosen(panel, '[data-avc-tc]', { attr: 'avcTc', chosen: current });
+  }
+
+  function renderNihss (panel) {
+    const savedTotal = state.picks['avc-nihss-total'];
+    const savedHtml = state.picks['avc-nihss-result-html'] || '';
+    panel.innerHTML = `
+      <div class="emerg-stemi-panel-head">
+        <strong>NIH Stroke Scale (NIHSS)</strong>
+        <button type="button" data-avc-close aria-label="Fechar">×</button>
+      </div>
+      <p>Pontue cada item. O total (0–42) orienta gravidade e conduta aguda sugerida.</p>
+      <form class="calc-form emerg-avc-nihss-form" data-avc-nihss-form>
+        ${typeof NIHSS_FORM_HTML !== 'undefined'
+          ? NIHSS_FORM_HTML
+          : '<p class="muted">Recarregue a página para carregar a calculadora NIHSS.</p>'}
+        <button type="submit">Calcular NIHSS</button>
+      </form>
+      <div class="calc-result emerg-avc-nihss-result" ${savedHtml ? '' : 'hidden'}>${savedHtml}</div>
+      ${savedTotal !== undefined && savedTotal !== ''
+        ? `<p class="emerg-stemi-inline-status is-clear" aria-live="polite">NIHSS registrado: <strong>${savedTotal}/42</strong></p>`
+        : ''}`;
+  }
+
+  function refreshAvcState () {
+    const tc = state.picks['avc-tc-result'] || '';
+    const tcTrigger = root.querySelector('[data-avc-open="tc-result"]');
+    tcTrigger?.classList.toggle('is-done', tc === 'sem-sangramento');
+    tcTrigger?.classList.toggle('is-blocked', tc === 'hemorragia' || tc === 'incerto');
+
+    const nihssTrigger = root.querySelector('[data-avc-open="nihss"]');
+    const nihssReady = tc === 'sem-sangramento';
+    nihssTrigger?.setAttribute('aria-disabled', nihssReady ? 'false' : 'true');
+    nihssTrigger?.classList.toggle('is-locked', !nihssReady);
+    nihssTrigger?.classList.toggle('is-done', state.picks['avc-nihss-total'] !== undefined &&
+      state.picks['avc-nihss-total'] !== '');
+  }
+
+  function markChosen (panel, selector, value) {
+    panel.querySelectorAll(selector).forEach(button => {
+      button.classList.toggle('is-chosen', button.dataset[value.attr] === value.chosen);
+    });
+  }
+
+  triggers.forEach(trigger => {
+    trigger.addEventListener('click', () => {
+      const id = trigger.dataset.avcOpen;
+      if (id === 'nihss' && state.picks['avc-tc-result'] !== 'sem-sangramento') {
+        const tcPanel = root.querySelector('[data-avc-panel="tc-result"]');
+        renderTcResult(tcPanel);
+        closePanels(tcPanel);
+        tcPanel.hidden = false;
+        tcPanel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        return;
+      }
+      const panel = root.querySelector(`[data-avc-panel="${id}"]`);
+      if (!panel) return;
+      if (id === 'tc-result') renderTcResult(panel);
+      if (id === 'nihss') renderNihss(panel);
+      closePanels(panel);
+      panel.hidden = false;
+      panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    });
+  });
+
+  root.addEventListener('click', event => {
+    const close = event.target.closest('[data-avc-close]');
+    if (close) {
+      close.closest('[data-avc-panel]').hidden = true;
+      return;
+    }
+
+    const tcBtn = event.target.closest('[data-avc-tc]');
+    if (tcBtn) {
+      const value = tcBtn.dataset.avcTc;
+      const option = EMERG_AVC_TC_OPTIONS.find(entry => entry.id === value);
+      state.picks['avc-tc-result'] = value;
+      state.picks['avc-tc-label'] = option ? option.label : value;
+      if (value !== 'sem-sangramento') {
+        delete state.picks['avc-nihss-total'];
+        delete state.picks['avc-nihss-result-html'];
+      }
+      persist();
+      const panel = tcBtn.closest('[data-avc-panel]');
+      renderTcResult(panel);
+      refreshAvcState();
+      return;
+    }
+  });
+
+  root.addEventListener('submit', event => {
+    const form = event.target.closest('[data-avc-nihss-form]');
+    if (!form) return;
+    event.preventDefault();
+    if (typeof calculateNihssResult !== 'function') return;
+
+    const formLookup = {};
+    form.querySelectorAll('[name]').forEach(el => {
+      formLookup[el.name] = el;
+    });
+    const html = calculateNihssResult(formLookup);
+    const totalMatch = html.match(/NIHSS total:<\/strong>\s*(\d+)\/42/i);
+    state.picks['avc-nihss-total'] = totalMatch ? totalMatch[1] : '';
+    state.picks['avc-nihss-result-html'] = html;
+    persist();
+
+    const panel = form.closest('[data-avc-panel]');
+    const resultEl = panel.querySelector('.emerg-avc-nihss-result');
+    if (resultEl) {
+      resultEl.innerHTML = html;
+      resultEl.hidden = false;
+      resultEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+    refreshAvcState();
+  });
+
+  refreshAvcState();
+  return () => {
+    Object.keys(state.picks)
+      .filter(key => key.startsWith('avc-'))
+      .forEach(key => delete state.picks[key]);
+    panels.forEach(panel => {
+      panel.hidden = true;
+      panel.innerHTML = '';
+    });
+    triggers.forEach(trigger => trigger.classList.remove('is-done', 'is-blocked', 'is-locked'));
+    refreshAvcState();
+  };
+}
+
 /* Fechamento do protocolo: o que precisa estar confirmado antes de documentar */
 const EMERG_CLOSING_CONFIRMATIONS = [
   { id: 'medicacao', label: 'Medicações administradas', hint: 'Antiagregante, anticoagulante e sintomáticos conforme escolhido' },
@@ -3680,6 +3876,13 @@ function initEmergProtocolExperience (root, topicId, protocol) {
       .filter(key => key.startsWith('stemi-dose-'))
       .forEach(key => decisoes.push(state.picks[key]));
 
+    if (state.picks['avc-tc-label']) {
+      decisoes.push(`TC de crânio: ${state.picks['avc-tc-label']}.`);
+    }
+    if (state.picks['avc-nihss-total'] !== undefined && state.picks['avc-nihss-total'] !== '') {
+      decisoes.push(`NIHSS na admissão: ${state.picks['avc-nihss-total']}/42.`);
+    }
+
     const reperfusion = [];
     if (state.picks['stemi-reperfusion']) {
       if (state.picks['stemi-fibrinolytic']) {
@@ -3911,6 +4114,11 @@ function initEmergProtocolExperience (root, topicId, protocol) {
     state,
     () => emergSaveProtocolProgress(topicId, protocol.id, state)
   );
+  const clearAvcWorkflow = initEmergAvcTromboliseWorkflow(
+    root,
+    state,
+    () => emergSaveProtocolProgress(topicId, protocol.id, state)
+  );
 
   if (resetButton) {
     resetButton.addEventListener('click', () => {
@@ -3920,6 +4128,7 @@ function initEmergProtocolExperience (root, topicId, protocol) {
       resetHandlers.forEach(reset => reset());
       clearPickers();
       clearStemiWorkflow();
+      clearAvcWorkflow();
       summaryOut.hidden = true;
       summaryOut.innerHTML = '';
       if (reperfusionSection) reperfusionSection.hidden = true;

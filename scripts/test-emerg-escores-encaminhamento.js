@@ -529,6 +529,59 @@ function testReorderMtpTromboliseDka () {
   else fail('DKA/HHS ainda trata antes de classificar: ' + JSON.stringify(dka));
 }
 
+function testAvcTromboliseGuidedFlow () {
+  const ui = buildUi();
+  const result = ui.run(`(() => {
+    showEmergenciaTopic('avc');
+    showEmergenciaProtocol('trombolise');
+
+    const intro = document.querySelector('.emerg-protocol-page')?.textContent || '';
+    const calcForms = [...document.querySelectorAll('form[data-emerg-calc="nihss"]')].length;
+    const tcTrigger = document.querySelector('[data-avc-open="tc-result"]');
+    const nihssTrigger = document.querySelector('[data-avc-open="nihss"]');
+    const nihssLocked = nihssTrigger?.getAttribute('aria-disabled') === 'true';
+
+    tcTrigger.click();
+    document.querySelector('[data-avc-tc="sem-sangramento"]').click();
+    const tcDone = tcTrigger.classList.contains('is-done');
+    const nihssUnlocked = nihssTrigger.getAttribute('aria-disabled') === 'false';
+
+    nihssTrigger.click();
+    const form = document.querySelector('[data-avc-nihss-form]');
+    form.querySelectorAll('select').forEach(sel => { sel.value = '0'; });
+    form.querySelector('[name="face"]').value = '2';
+    form.querySelector('[name="armL"]').value = '2';
+    form.querySelector('[name="lang"]').value = '1';
+    form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+
+    const nihssResult = document.querySelector('.emerg-avc-nihss-result')?.textContent || '';
+    const nihssDone = nihssTrigger.classList.contains('is-done');
+
+    return { intro, calcForms, nihssLocked, tcDone, nihssUnlocked, nihssResult, nihssDone };
+  })()`);
+
+  if (/intra-hospitalar/i.test(result.intro)) {
+    pass('Trombólise deixa claro que o fluxo é intra-hospitalar');
+  } else {
+    fail('Intro da trombólise não marca contexto intra-hospitalar: ' + JSON.stringify(result.intro));
+  }
+  if (result.calcForms === 0) {
+    pass('NIHSS não duplica calculadora solta — fica no passo interativo');
+  } else {
+    fail('Trombólise ainda injeta NIHSS duplicado: ' + JSON.stringify(result.calcForms));
+  }
+  if (result.nihssLocked && result.tcDone && result.nihssUnlocked) {
+    pass('NIHSS só libera após confirmar TC sem sangramento');
+  } else {
+    fail('Gate TC → NIHSS falhou: ' + JSON.stringify(result));
+  }
+  if (/NIHSS total/i.test(result.nihssResult) && /5\/42|Conduta aguda sugerida/i.test(result.nihssResult) && result.nihssDone) {
+    pass('NIHSS abre painel, calcula pontos e mostra conduta sugerida');
+  } else {
+    fail('Painel NIHSS não calculou corretamente: ' + JSON.stringify(result));
+  }
+}
+
 console.log('=== MedHub — escores prioritários e encaminhamento clínico ===\n');
 testScorePriorityChest();
 testScoreEarlyNstemiSepse();
@@ -541,5 +594,6 @@ testBranchingHandoff();
 testNoArrayFallbackAutoOpen();
 testNoInventedScoresOnBls();
 testReorderMtpTromboliseDka();
+testAvcTromboliseGuidedFlow();
 console.log('\n' + (failures ? `FALHAS: ${failures}` : 'TODOS OS TESTES PASSARAM'));
 process.exit(failures ? 1 : 0);
