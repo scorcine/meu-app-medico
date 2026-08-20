@@ -573,7 +573,11 @@ const AVC_PROTOCOLS = [
       <div class="emerg-flow-v">
         <span class="emerg-flow-step">Confirmar AVC isquêmico + janela ≤ 4 h 30</span>
         <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
-        <span class="emerg-flow-step">Revisar contraindicações ABS/REL abaixo antes da dose</span>
+        <button type="button" class="emerg-stemi-trigger emerg-stemi-trigger-critical" data-emerg-picker data-avc-open="contra">
+          <strong>Revisar contraindicações ABS/REL antes da dose</strong>
+          <small>Toque para abrir o quadro e confirmar se pode trombolisar</small>
+        </button>
+        <div class="emerg-stemi-panel" data-avc-panel="contra" hidden></div>
       </div>
 
       <table class="emerg-table">
@@ -582,37 +586,6 @@ const AVC_PROTOCOLS = [
         <tr><td><strong>3 – 4 h 30</strong></td><td>Indicação estendida — aplicar exclusões adicionais (REL 3–4,5 h)</td></tr>
         <tr><td>&gt; 4 h 30</td><td><strong>Não trombolisar</strong> — avaliar trombectomia se LVO + critérios de imagem</td></tr>
       </table>
-
-      <h4>Contraindicações absolutas (ABS)</h4>
-      <ul>
-        <li>TC: hemorragia intracraniana ou sangramento ativo</li>
-        <li>AVC isquêmico nos <strong>últimos 3 meses</strong></li>
-        <li>Trauma craniano grave ou AVC hemorrágico prévio</li>
-        <li>Neoplasia intracraniana ou MAV conhecida</li>
-        <li>Cirurgia intracraniana / espinhal recente</li>
-        <li>PA &gt; 185/110 mmHg refratária ao tratamento</li>
-        <li>Plaquetas &lt; 100 000/mm³ · INR &gt; 1,7 · TP &gt; 15 s (varfarina)</li>
-        <li>Uso de DOAC com efeito anticoagulante relevante (conforme protocolo local)</li>
-        <li>Glicemia &lt; 50 ou &gt; 400 mg/dL</li>
-        <li>Infarto multilobar (&gt; 1/3 território ACM na TC)</li>
-        <li>Dissecção aórtica · endocardite · plaquetopenia / coagulopatia grave</li>
-      </ul>
-
-      <h4>Contraindicações relativas (REL)</h4>
-      <ul>
-        <li>AVC leve com recuperação rápida (TIA) — não indicar lise</li>
-        <li>Gravidez · cirurgia maior recente · sangramento GI/URINário &lt; 21 dias</li>
-        <li>IAM recente · punção arterial não compressível &lt; 7 dias</li>
-        <li>Convulsão no início se déficit persiste</li>
-      </ul>
-
-      <h4>Exclusões adicionais na janela 3 – 4 h 30 (REL)</h4>
-      <ul>
-        <li>Idade <strong>&gt; 80 anos</strong></li>
-        <li>Anticoagulação oral (independente do INR)</li>
-        <li><strong>NIHSS &gt; 25</strong></li>
-        <li>História prévia de <strong>AVC + diabetes mellitus</strong></li>
-      </ul>
 
       <h4>Dose e monitorização (só se elegível)</h4>
       <div class="emerg-flow-v">
@@ -3333,6 +3306,34 @@ function initEmergStemiWorkflow (root, state, persist) {
   };
 }
 
+const EMERG_AVC_ABS = [
+  'TC: hemorragia intracraniana ou sangramento ativo',
+  'AVC isquêmico nos últimos 3 meses',
+  'Trauma craniano grave ou AVC hemorrágico prévio',
+  'Neoplasia intracraniana ou MAV conhecida',
+  'Cirurgia intracraniana / espinhal recente',
+  'PA > 185/110 mmHg refratária ao tratamento',
+  'Plaquetas < 100 000/mm³ · INR > 1,7 · TP > 15 s (varfarina)',
+  'Uso de DOAC com efeito anticoagulante relevante (protocolo local)',
+  'Glicemia < 50 ou > 400 mg/dL',
+  'Infarto multilobar (> 1/3 território ACM na TC)',
+  'Dissecção aórtica · endocardite · plaquetopenia / coagulopatia grave'
+];
+
+const EMERG_AVC_REL = [
+  'AVC leve com recuperação rápida (TIA) — não indicar lise de rotina',
+  'Gravidez · cirurgia maior recente · sangramento GI/urinário < 21 dias',
+  'IAM recente · punção arterial não compressível < 7 dias',
+  'Convulsão no início se o déficit persiste'
+];
+
+const EMERG_AVC_REL_EXTENDED = [
+  'Idade > 80 anos',
+  'Anticoagulação oral (independente do INR)',
+  'NIHSS > 25',
+  'História prévia de AVC + diabetes mellitus'
+];
+
 const EMERG_AVC_TC_OPTIONS = [
   {
     id: 'sem-sangramento',
@@ -3434,6 +3435,10 @@ function initEmergAvcTromboliseWorkflow (root, state, persist, protocolId) {
     tcGate?.classList.toggle('is-blocked', tc === 'hemorragia' || tc === 'incerto');
     nihssGate?.classList.toggle('is-locked', tc !== 'sem-sangramento');
     nihssGate?.classList.toggle('is-done', emergAvcLiseReady(state.picks));
+    const contraTrigger = root.querySelector('[data-avc-open="contra"]');
+    const contra = state.picks['avc-contra'] || '';
+    contraTrigger?.classList.toggle('is-done', contra === 'clear');
+    contraTrigger?.classList.toggle('is-blocked', contra === 'abs');
     syncRecap();
   }
 
@@ -3457,6 +3462,44 @@ function initEmergAvcTromboliseWorkflow (root, state, persist, protocolId) {
     recap.innerHTML = html;
   }
 
+  function renderContra () {
+    const panel = root.querySelector('[data-avc-panel="contra"]');
+    if (!panel) return;
+    const status = state.picks['avc-contra'] || '';
+    const nihss = Number(state.picks['avc-nihss-total']);
+    const nihssNote = Number.isFinite(nihss)
+      ? `<p>NIHSS desta admissão: <strong>${nihss}/42</strong>${nihss > 25 ? ' — exclusão relativa extra na janela 3–4 h 30.' : ''}.</p>`
+      : '';
+    panel.innerHTML = `
+      <div class="emerg-stemi-panel-head">
+        <strong>Contraindicações da trombólise IV</strong>
+        <button type="button" data-avc-close aria-label="Fechar">×</button>
+      </div>
+      ${nihssNote}
+      <p><strong>Absolutas (ABS)</strong> — qualquer item presente impede alteplase.</p>
+      <ul class="emerg-stemi-contra-list">
+        ${EMERG_AVC_ABS.map(item => `<li>${item}</li>`).join('')}
+      </ul>
+      <p><strong>Relativas (REL)</strong> — individualizar; não são bloqueio automático.</p>
+      <ul class="emerg-stemi-contra-list emerg-avc-rel-list">
+        ${EMERG_AVC_REL.map(item => `<li>${item}</li>`).join('')}
+      </ul>
+      <p><strong>Exclusões extras só na janela 3 – 4 h 30</strong></p>
+      <ul class="emerg-stemi-contra-list emerg-avc-rel-list">
+        ${EMERG_AVC_REL_EXTENDED.map(item => `<li>${item}</li>`).join('')}
+      </ul>
+      <div class="emerg-stemi-confirm-actions">
+        <button type="button" class="emerg-stemi-safe" data-avc-contra="clear">✓ Sem ABS — pode avaliar a dose</button>
+        <button type="button" class="emerg-stemi-block" data-avc-contra="abs">Há ABS — não trombolisar</button>
+        <button type="button" data-avc-contra="rel">Só REL — decidir com neurologia</button>
+      </div>
+      <p class="emerg-stemi-inline-status ${status ? `is-${status === 'abs' ? 'present' : 'clear'}` : ''}" aria-live="polite">
+        ${status === 'clear' ? 'Sem contraindicação absoluta. Siga para a dose se a janela e a TC permitirem.' : ''}
+        ${status === 'abs' ? 'Trombólise contraindicada. Não infundir alteplase. Avaliar trombectomia se LVO.' : ''}
+        ${status === 'rel' ? 'Há contraindicação relativa — individualizar; não avançar a dose automaticamente.' : ''}
+      </p>`;
+  }
+
   function persistAvc () {
     emergWriteAvcPathway(state.picks);
     persist();
@@ -3466,6 +3509,29 @@ function initEmergAvcTromboliseWorkflow (root, state, persist, protocolId) {
     const expand = event.target.closest('[data-avc-expand-gates]');
     if (expand) {
       gatesExpanded = true;
+      refreshAvcState();
+      return;
+    }
+    const openContra = event.target.closest('[data-avc-open="contra"]');
+    if (openContra) {
+      renderContra();
+      const panel = root.querySelector('[data-avc-panel="contra"]');
+      if (panel) {
+        panel.hidden = false;
+        panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+      return;
+    }
+    const closePanel = event.target.closest('[data-avc-close]');
+    if (closePanel) {
+      closePanel.closest('[data-avc-panel]').hidden = true;
+      return;
+    }
+    const contraPick = event.target.closest('[data-avc-contra]');
+    if (contraPick) {
+      state.picks['avc-contra'] = contraPick.dataset.avcContra;
+      persistAvc();
+      renderContra();
       refreshAvcState();
       return;
     }
@@ -3961,6 +4027,15 @@ function initEmergProtocolExperience (root, topicId, protocol) {
     }
     if (state.picks['avc-nihss-total'] !== undefined && state.picks['avc-nihss-total'] !== '') {
       decisoes.push(`NIHSS na admissão: ${state.picks['avc-nihss-total']}/42.`);
+    }
+    if (state.picks['avc-contra'] === 'clear') {
+      decisoes.push('Contraindicações ABS revisadas: nenhuma absoluta; dose liberada para avaliação.');
+    }
+    if (state.picks['avc-contra'] === 'abs') {
+      decisoes.push('Contraindicação absoluta presente — alteplase não indicada.');
+    }
+    if (state.picks['avc-contra'] === 'rel') {
+      decisoes.push('Apenas contraindicação relativa — decisão individualizada com neurologia.');
     }
 
     const reperfusion = [];

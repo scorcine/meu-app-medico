@@ -3366,8 +3366,14 @@ body.app-page {
   border-radius: 6px;
 }
 
-.emerg-avc-open-lise {
-  margin-top: 0.45rem;
+.emerg-avc-rel-list li {
+  border-left-color: color-mix(in srgb, var(--state-wait) 80%, var(--border));
+  background: color-mix(in srgb, var(--state-wait) 8%, var(--bg-surface-alt));
+}
+
+.emerg-avc-rel-list li::before {
+  content: "~";
+  color: var(--state-wait);
 }
 
 .emerg-section-label {

@@ -507,14 +507,23 @@ function testReorderMtpTromboliseDka () {
   const lise = ui.run(`(() => {
     showEmergenciaTopic('avc');
     showEmergenciaProtocol('trombolise');
+    const trigger = document.querySelector('[data-avc-open="contra"]');
+    trigger.click();
+    const absItems = document.querySelectorAll('[data-avc-panel="contra"] .emerg-stemi-contra-list li').length;
+    document.querySelector('[data-avc-contra="clear"]').click();
     const pages = [...document.querySelectorAll('.emerg-protocol-page')];
     return {
-      abs: pages.findIndex(p => /Contraindicações absolutas/i.test(p.textContent)),
+      absItems,
+      opened: /Absolutas/i.test(document.querySelector('[data-avc-panel="contra"]').textContent),
+      done: trigger.classList.contains('is-done'),
       dose: pages.findIndex(p => /Dose e monitorização/i.test(p.textContent))
     };
   })()`);
-  if (lise.abs >= 0 && lise.abs < lise.dose) pass('Trombólise revisa ABS/REL antes da dose de alteplase');
-  else fail('Trombólise ainda doseia antes das CI: ' + JSON.stringify(lise));
+  if (lise.opened && lise.absItems >= 8 && lise.done && lise.dose >= 0) {
+    pass('Trombólise abre o quadro de ABS/REL antes da dose de alteplase');
+  } else {
+    fail('Quadro de contraindicações da trombólise falhou: ' + JSON.stringify(lise));
+  }
 
   const dka = ui.run(`(() => {
     showEmergenciaTopic('reacoes-metabolicas');
