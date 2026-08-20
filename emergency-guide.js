@@ -483,15 +483,31 @@ const SCA_PROTOCOLS = [
   }
 ];
 
+const EMERG_AVC_GATES_HTML = `
+      <div class="emerg-avc-gates">
+        <section class="emerg-avc-gate" data-avc-gate="tc">
+          <p class="emerg-avc-gate-kicker">Obrigatório 1 de 2</p>
+          <strong>Confirme o resultado da TC de crânio</strong>
+          <p>Toque em uma opção. Sem confirmar <em>TC sem sangramento</em>, o NIHSS e a trombólise ficam bloqueados.</p>
+          <div class="emerg-stemi-panel is-inline" data-avc-panel="tc-result"></div>
+        </section>
+        <section class="emerg-avc-gate" data-avc-gate="nihss">
+          <p class="emerg-avc-gate-kicker">Obrigatório 2 de 2</p>
+          <strong>Pontue o NIHSS</strong>
+          <p>Preencha cada item e calcule. Os pontos e a conduta aparecem aqui — só então o protocolo de trombólise é liberado.</p>
+          <div class="emerg-stemi-panel is-inline" data-avc-panel="nihss"></div>
+        </section>
+      </div>`;
+
 const AVC_PROTOCOLS = [
   {
     id: 'fast',
     icon: '🧠',
-    name: 'Fluxo FAST',
+    name: 'Admissão AVC',
     html: `
-      <p>Reconhecimento <strong>intra-hospitalar</strong> — triagem/admissão no PS com suspeita de AVC. Meta: <strong>porta-imagem ≤ 25 min</strong> · <strong>porta-agulha ≤ 60 min</strong> · <strong>porta-puncao ≤ 90 min</strong>.</p>
+      <p>Fluxo <strong>intra-hospitalar</strong> no PS — o paciente já está no serviço. Reconhecer FAST, estabilizar, confirmar <strong>TC sem sangramento</strong> e pontuar o <strong>NIHSS</strong> antes de abrir a trombólise. Metas: porta-imagem ≤ 25 min · porta-agulha ≤ 60 min.</p>
 
-      <h4>Mnemônico FAST</h4>
+      <p class="emerg-section-label"><strong>Reconhecer FAST / BE-FAST</strong></p>
       <div class="emerg-rhythm-grid emerg-rhythm-grid-2">
         <div class="emerg-rhythm-card">
           <span class="emerg-rhythm-tag emerg-rhythm-tag-shock">F — Face</span>
@@ -507,42 +523,42 @@ const AVC_PROTOCOLS = [
         </div>
         <div class="emerg-rhythm-card emerg-rhythm-card-shock">
           <span class="emerg-rhythm-tag emerg-rhythm-tag-shock">T — Time</span>
-          <p><strong>Tempo é cérebro</strong> — anotar <strong>horário exato</strong> do início dos sintomas ou último momento conhecido bem (LKW) e acionar imediatamente o fluxo de AVC no serviço.</p>
+          <p><strong>Tempo é cérebro</strong> — anotar o horário do início ou LKW e acionar o código AVC no serviço. Não chamar SAMU — o paciente já está no hospital.</p>
+        </div>
+        <div class="emerg-rhythm-card">
+          <span class="emerg-rhythm-tag">B — Balance</span>
+          <p>Perda súbita de equilíbrio, vertigem ou ataxia.</p>
+        </div>
+        <div class="emerg-rhythm-card">
+          <span class="emerg-rhythm-tag">E — Eyes</span>
+          <p>Perda visual súbita unilateral ou diplopia.</p>
         </div>
       </div>
 
-      <h4>BE-FAST (extensão recomendada)</h4>
-      <ul>
-        <li><strong>B — Balance:</strong> perda súbita de equilíbrio, vertigem, ataxia</li>
-        <li><strong>E — Eyes:</strong> perda visual súbita unilateral ou diplopia</li>
-      </ul>
-
       <div class="emerg-flow-v">
-        <span class="emerg-flow-step">Suspeita FAST/BE-FAST positivo na triagem ou admissão</span>
+        <span class="emerg-flow-step">Suspeita FAST/BE-FAST na triagem ou admissão</span>
         <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
         <span class="emerg-flow-step">Anotar horário dos sintomas / LKW</span>
         <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
         <span class="emerg-flow-step emerg-flow-shock">Acionar <strong>código AVC</strong> / neurologia / radiologia — priorizar TC</span>
         <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
-        <span class="emerg-flow-step">Admissão — ABC, PA, glicemia, SpO₂, ECG, acesso venoso</span>
+        <span class="emerg-flow-step">ABC, PA, glicemia, SpO₂, ECG, acesso venoso</span>
         <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
-        <span class="emerg-flow-step">Posicionar paciente (decúbito lateral se rebaixamento), manter VA pérvia</span>
+        <span class="emerg-flow-step">Posicionar (decúbito lateral se rebaixamento) e manter VA pérvia</span>
         <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
-        <span class="emerg-flow-step">Glicemia capilar — hipoglicemia mimetiza AVC</span>
-        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
-        <span class="emerg-flow-step">Oxigênio se SpO₂ &lt; 94%; evitar hiper/hipotensão</span>
-        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
-        <span class="emerg-flow-step emerg-flow-shock"><strong>TC crânio sem contraste em ≤ 25 min</strong> — não atrasar para exames de rotina</span>
+        <span class="emerg-flow-step">Oxigênio se SpO₂ &lt; 94%; não atrasar imagem para laboratório</span>
       </div>
+
+      ${EMERG_AVC_GATES_HTML}
 
       <h4>Não fazer antes da TC</h4>
       <ul>
         <li>Não administrar AAS ou anticoagulante antes da TC</li>
         <li>Não atrasar imagem para laboratório completo ou exames eletivos</li>
         <li>Não dar alimentação ou líquidos (risco de broncoaspiração)</li>
-        <li>Não perder tempo com condutas pré-hospitalares — o paciente já está no serviço</li>
+        <li>Não acionar SAMU nem “transporte ao centro” — o paciente já está no serviço</li>
       </ul>
-      <p class="emerg-note">LKW = Last Known Well — último momento em que o paciente estava assintomático. Despertar com déficit: horário do despertar = início. Se o serviço não dispuser de TC/trombólise/trombectomia, acionar transferência imediata <em>após</em> estabilização inicial — não substitui o fluxo intra-hospitalar.</p>
+      <p class="emerg-note">LKW = Last Known Well. Despertar com déficit: horário do despertar = início. Sem TC/trombólise no serviço: transferir após estabilização, sem substituir este fluxo.</p>
     `
   },
   {
@@ -550,24 +566,14 @@ const AVC_PROTOCOLS = [
     icon: '💉',
     name: 'Protocolo Trombólise',
     html: `
-      <p>Protocolo <strong>intra-hospitalar</strong> — PS/sala de emergência após admissão. Alteplase IV (rt-PA) — janela terapêutica <strong>0–4 h 30 min</strong> do início dos sintomas ou LKW. Exige <strong>TC de crânio sem sangramento</strong> antes da infusão.</p>
+      <p>Protocolo <strong>intra-hospitalar</strong> de alteplase IV (rt-PA). Janela <strong>0–4 h 30 min</strong> do início ou LKW. Só segue se a <strong>TC estiver sem sangramento</strong> e o <strong>NIHSS estiver pontuado</strong>.</p>
+
+      ${EMERG_AVC_GATES_HTML}
 
       <div class="emerg-flow-v">
-        <span class="emerg-flow-step">Admissão — ABC, PA, glicemia, SpO₂, ECG, anotar LKW</span>
-        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
-        <button type="button" class="emerg-stemi-trigger emerg-stemi-trigger-critical" data-emerg-picker data-avc-open="tc-result">
-          <strong>TC crânio sem contraste em ≤ 25 min</strong>
-          <small>Confirmar resultado da imagem — sem sangramento para seguir</small>
-        </button>
-        <div class="emerg-stemi-panel" data-avc-panel="tc-result" hidden></div>
-        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
         <span class="emerg-flow-step">Confirmar AVC isquêmico + janela ≤ 4 h 30</span>
         <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
-        <button type="button" class="emerg-stemi-trigger" data-emerg-picker data-avc-open="nihss" aria-disabled="true">
-          <strong>NIHSS + revisar contraindicações ABS/REL</strong>
-          <small>Pontuar o déficit e ver conduta sugerida</small>
-        </button>
-        <div class="emerg-stemi-panel" data-avc-panel="nihss" hidden></div>
+        <span class="emerg-flow-step">Revisar contraindicações ABS/REL abaixo antes da dose</span>
       </div>
 
       <table class="emerg-table">
@@ -689,7 +695,7 @@ const AVC_PROTOCOLS = [
   {
     id: 'nihss',
     icon: '📋',
-    name: 'NIHSS',
+    name: 'NIHSS (reavaliação)',
     html: `
       <p><strong>NIH Stroke Scale</strong> — padroniza gravidade do déficit neurológico (0–42). Preencha cada item e calcule para ver classificação e conduta sugerida.</p>
 
@@ -2528,8 +2534,8 @@ const EMERG_NEXT_PROTOCOLS = {
   ],
   'sca:nstemi-ua': [{ id: 'ecg-modelos', label: 'Revisar o padrão eletrocardiográfico → modelos de ECG na SCA' }],
   'avc:fast': [
-    { id: 'trombolise', label: 'Isquêmico elegível → abrir protocolo de trombólise' },
-    { id: 'nihss', label: 'Quantificar o déficit → abrir NIHSS' }
+    { id: 'trombolise', label: 'TC sem sangramento + NIHSS pontuado → abrir trombólise', require: 'avc-lise' },
+    { id: 'trombectomia', label: 'Suspeita de LVO ou janela > 4 h 30 → trombectomia' }
   ],
   'sepse:bundle-hora1': [
     { id: 'norepi-map', label: 'Hipotensão após volume → titular noradrenalina' },
@@ -2594,10 +2600,35 @@ function emergMergeProtocolWithScores (topicId, protocol) {
   return html + scores;
 }
 
-function emergProtocolNextOptions (topicId, protocolId) {
+function emergAvcLiseReady (picks) {
+  const total = picks && picks['avc-nihss-total'];
+  return picks && picks['avc-tc-result'] === 'sem-sangramento' && total !== undefined && total !== '';
+}
+
+function emergWriteAvcPathway (picks) {
+  try {
+    sessionStorage.setItem('medhub-avc-pathway', JSON.stringify({
+      'avc-tc-result': picks['avc-tc-result'] || '',
+      'avc-tc-label': picks['avc-tc-label'] || '',
+      'avc-nihss-total': picks['avc-nihss-total'] || '',
+      'avc-nihss-result-html': picks['avc-nihss-result-html'] || ''
+    }));
+  } catch { /* sessão indisponível */ }
+}
+
+function emergHydrateAvcPicks (state) {
+  if (state.picks['avc-tc-result']) return;
+  try {
+    const saved = JSON.parse(sessionStorage.getItem('medhub-avc-pathway') || '{}');
+    if (saved['avc-tc-result']) Object.assign(state.picks, saved);
+  } catch { /* sessão indisponível */ }
+}
+
+function emergProtocolNextOptions (topicId, protocolId, picks) {
   const curated = EMERG_NEXT_PROTOCOLS[`${topicId}:${protocolId}`];
 
   const resolve = entry => {
+    if (entry.require === 'avc-lise' && !emergAvcLiseReady(picks || {})) return null;
     if (entry.action === 'nao-sca') {
       return {
         action: 'nao-sca',
@@ -3324,25 +3355,25 @@ const EMERG_AVC_TC_OPTIONS = [
 ];
 
 function initEmergAvcTromboliseWorkflow (root, state, persist) {
-  if (!root?.querySelector('[data-avc-open]')) return () => {};
+  if (!root?.querySelector('[data-avc-panel]')) return () => {};
 
-  const triggers = [...root.querySelectorAll('[data-avc-open]')];
+  emergHydrateAvcPicks(state);
+
   const panels = [...root.querySelectorAll('[data-avc-panel]')];
+  const tcGate = root.querySelector('[data-avc-gate="tc"]');
+  const nihssGate = root.querySelector('[data-avc-gate="nihss"]');
 
-  const closePanels = except => {
-    panels.forEach(panel => {
-      if (panel !== except) panel.hidden = true;
+  function markChosen (panel, selector, value) {
+    panel.querySelectorAll(selector).forEach(button => {
+      button.classList.toggle('is-chosen', button.dataset[value.attr] === value.chosen);
     });
-  };
+  }
 
-  function renderTcResult (panel) {
+  function renderTcResult () {
+    const panel = root.querySelector('[data-avc-panel="tc-result"]');
+    if (!panel) return;
     const current = state.picks['avc-tc-result'] || '';
     panel.innerHTML = `
-      <div class="emerg-stemi-panel-head">
-        <strong>Resultado da TC de crânio</strong>
-        <button type="button" data-avc-close aria-label="Fechar">×</button>
-      </div>
-      <p>Confirme o achado da <strong>TC sem contraste</strong> antes de pontuar NIHSS ou preparar alteplase.</p>
       <div class="emerg-stemi-drug-grid">
         ${EMERG_AVC_TC_OPTIONS.map(option => `
           <button type="button" data-avc-tc="${option.id}" class="${option.safe ? 'emerg-stemi-safe' : 'emerg-stemi-block'}">
@@ -3351,34 +3382,45 @@ function initEmergAvcTromboliseWorkflow (root, state, persist) {
       </div>
       <p class="emerg-stemi-inline-status ${current ? `is-${current === 'sem-sangramento' ? 'clear' : 'present'}` : ''}" aria-live="polite">
         ${current === 'sem-sangramento'
-          ? 'TC sem sangramento confirmada — pode pontuar NIHSS e revisar contraindicações.'
+          ? 'TC sem sangramento confirmada — pontue o NIHSS abaixo.'
           : ''}
         ${current === 'hemorragia'
-          ? 'Hemorragia na TC — trombólise contraindicada. Acionar neurocirurgia/neurologia conforme protocolo.'
+          ? 'Hemorragia na TC — trombólise contraindicada. Não pontuar NIHSS para lise; acionar neurocirurgia/neurologia.'
           : ''}
         ${current === 'incerto'
-          ? 'Imagem incerta — repetir TC/RM antes de qualquer reperfusão.'
+          ? 'Imagem incerta — repetir TC/RM antes de pontuar para trombólise.'
           : ''}
       </p>`;
     markChosen(panel, '[data-avc-tc]', { attr: 'avcTc', chosen: current });
   }
 
-  function renderNihss (panel) {
+  function nihssCta (html) {
+    if (!emergAvcLiseReady(state.picks)) return html;
+    return `${html}
+      <p><button type="button" class="emerg-avc-open-lise" data-avc-goto="trombolise">Abrir protocolo de trombólise</button></p>
+      <p class="muted">Confira janela ≤ 4 h 30 e contraindicações ABS/REL na próxima tela antes da alteplase.</p>`;
+  }
+
+  function renderNihss () {
+    const panel = root.querySelector('[data-avc-panel="nihss"]');
+    if (!panel) return;
+    const ready = state.picks['avc-tc-result'] === 'sem-sangramento';
+    if (!ready) {
+      panel.innerHTML = `
+        <p class="emerg-avc-locked">Confirme <strong>TC sem sangramento</strong> acima para liberar os campos de pontuação.</p>`;
+      return;
+    }
+
     const savedTotal = state.picks['avc-nihss-total'];
     const savedHtml = state.picks['avc-nihss-result-html'] || '';
     panel.innerHTML = `
-      <div class="emerg-stemi-panel-head">
-        <strong>NIH Stroke Scale (NIHSS)</strong>
-        <button type="button" data-avc-close aria-label="Fechar">×</button>
-      </div>
-      <p>Pontue cada item. O total (0–42) orienta gravidade e conduta aguda sugerida.</p>
       <form class="calc-form emerg-avc-nihss-form" data-avc-nihss-form>
         ${typeof NIHSS_FORM_HTML !== 'undefined'
           ? NIHSS_FORM_HTML
           : '<p class="muted">Recarregue a página para carregar a calculadora NIHSS.</p>'}
-        <button type="submit">Calcular NIHSS</button>
+        <button type="submit">Calcular NIHSS e ver conduta</button>
       </form>
-      <div class="calc-result emerg-avc-nihss-result" ${savedHtml ? '' : 'hidden'}>${savedHtml}</div>
+      <div class="calc-result emerg-avc-nihss-result" ${savedHtml ? '' : 'hidden'}>${nihssCta(savedHtml)}</div>
       ${savedTotal !== undefined && savedTotal !== ''
         ? `<p class="emerg-stemi-inline-status is-clear" aria-live="polite">NIHSS registrado: <strong>${savedTotal}/42</strong></p>`
         : ''}`;
@@ -3386,68 +3428,40 @@ function initEmergAvcTromboliseWorkflow (root, state, persist) {
 
   function refreshAvcState () {
     const tc = state.picks['avc-tc-result'] || '';
-    const tcTrigger = root.querySelector('[data-avc-open="tc-result"]');
-    tcTrigger?.classList.toggle('is-done', tc === 'sem-sangramento');
-    tcTrigger?.classList.toggle('is-blocked', tc === 'hemorragia' || tc === 'incerto');
-
-    const nihssTrigger = root.querySelector('[data-avc-open="nihss"]');
-    const nihssReady = tc === 'sem-sangramento';
-    nihssTrigger?.setAttribute('aria-disabled', nihssReady ? 'false' : 'true');
-    nihssTrigger?.classList.toggle('is-locked', !nihssReady);
-    nihssTrigger?.classList.toggle('is-done', state.picks['avc-nihss-total'] !== undefined &&
-      state.picks['avc-nihss-total'] !== '');
+    tcGate?.classList.toggle('is-done', tc === 'sem-sangramento');
+    tcGate?.classList.toggle('is-blocked', tc === 'hemorragia' || tc === 'incerto');
+    nihssGate?.classList.toggle('is-locked', tc !== 'sem-sangramento');
+    nihssGate?.classList.toggle('is-done', emergAvcLiseReady(state.picks));
   }
 
-  function markChosen (panel, selector, value) {
-    panel.querySelectorAll(selector).forEach(button => {
-      button.classList.toggle('is-chosen', button.dataset[value.attr] === value.chosen);
-    });
+  function persistAvc () {
+    emergWriteAvcPathway(state.picks);
+    persist();
   }
-
-  triggers.forEach(trigger => {
-    trigger.addEventListener('click', () => {
-      const id = trigger.dataset.avcOpen;
-      if (id === 'nihss' && state.picks['avc-tc-result'] !== 'sem-sangramento') {
-        const tcPanel = root.querySelector('[data-avc-panel="tc-result"]');
-        renderTcResult(tcPanel);
-        closePanels(tcPanel);
-        tcPanel.hidden = false;
-        tcPanel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        return;
-      }
-      const panel = root.querySelector(`[data-avc-panel="${id}"]`);
-      if (!panel) return;
-      if (id === 'tc-result') renderTcResult(panel);
-      if (id === 'nihss') renderNihss(panel);
-      closePanels(panel);
-      panel.hidden = false;
-      panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    });
-  });
 
   root.addEventListener('click', event => {
-    const close = event.target.closest('[data-avc-close]');
-    if (close) {
-      close.closest('[data-avc-panel]').hidden = true;
+    const gotoLise = event.target.closest('[data-avc-goto="trombolise"]');
+    if (gotoLise) {
+      if (!emergAvcLiseReady(state.picks)) return;
+      persistAvc();
+      showEmergenciaProtocol('trombolise');
       return;
     }
 
     const tcBtn = event.target.closest('[data-avc-tc]');
-    if (tcBtn) {
-      const value = tcBtn.dataset.avcTc;
-      const option = EMERG_AVC_TC_OPTIONS.find(entry => entry.id === value);
-      state.picks['avc-tc-result'] = value;
-      state.picks['avc-tc-label'] = option ? option.label : value;
-      if (value !== 'sem-sangramento') {
-        delete state.picks['avc-nihss-total'];
-        delete state.picks['avc-nihss-result-html'];
-      }
-      persist();
-      const panel = tcBtn.closest('[data-avc-panel]');
-      renderTcResult(panel);
-      refreshAvcState();
-      return;
+    if (!tcBtn) return;
+    const value = tcBtn.dataset.avcTc;
+    const option = EMERG_AVC_TC_OPTIONS.find(entry => entry.id === value);
+    state.picks['avc-tc-result'] = value;
+    state.picks['avc-tc-label'] = option ? option.label : value;
+    if (value !== 'sem-sangramento') {
+      delete state.picks['avc-nihss-total'];
+      delete state.picks['avc-nihss-result-html'];
     }
+    persistAvc();
+    renderTcResult();
+    renderNihss();
+    refreshAvcState();
   });
 
   root.addEventListener('submit', event => {
@@ -3464,28 +3478,29 @@ function initEmergAvcTromboliseWorkflow (root, state, persist) {
     const totalMatch = html.match(/NIHSS total:<\/strong>\s*(\d+)\/42/i);
     state.picks['avc-nihss-total'] = totalMatch ? totalMatch[1] : '';
     state.picks['avc-nihss-result-html'] = html;
-    persist();
+    persistAvc();
 
-    const panel = form.closest('[data-avc-panel]');
-    const resultEl = panel.querySelector('.emerg-avc-nihss-result');
+    const resultEl = form.closest('[data-avc-panel]')?.querySelector('.emerg-avc-nihss-result');
     if (resultEl) {
-      resultEl.innerHTML = html;
+      resultEl.innerHTML = nihssCta(html);
       resultEl.hidden = false;
       resultEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
     refreshAvcState();
   });
 
+  renderTcResult();
+  renderNihss();
   refreshAvcState();
+
   return () => {
     Object.keys(state.picks)
       .filter(key => key.startsWith('avc-'))
       .forEach(key => delete state.picks[key]);
-    panels.forEach(panel => {
-      panel.hidden = true;
-      panel.innerHTML = '';
-    });
-    triggers.forEach(trigger => trigger.classList.remove('is-done', 'is-blocked', 'is-locked'));
+    try { sessionStorage.removeItem('medhub-avc-pathway'); } catch { /* ignore */ }
+    panels.forEach(panel => { panel.innerHTML = ''; });
+    renderTcResult();
+    renderNihss();
     refreshAvcState();
   };
 }
@@ -3737,11 +3752,17 @@ function initEmergProtocolExperience (root, topicId, protocol) {
     <button type="button" class="secondary emerg-page-prev">← Anterior</button>
     <button type="button" class="emerg-page-next"></button>`;
 
-  const nextOptions = emergProtocolNextOptions(topicId, protocol.id);
+  let nextOptions = emergProtocolNextOptions(topicId, protocol.id, state.picks);
   const nextPanel = document.createElement('div');
   nextPanel.className = 'emerg-protocol-next';
   nextPanel.hidden = true;
-  if (nextOptions.length) {
+
+  function bindNextPanel () {
+    nextOptions = emergProtocolNextOptions(topicId, protocol.id, state.picks);
+    if (!nextOptions.length) {
+      nextPanel.innerHTML = '';
+      return;
+    }
     nextPanel.innerHTML = `
       <strong>Continuar o atendimento em:</strong>
       <div class="emerg-next-grid">
@@ -3773,6 +3794,7 @@ function initEmergProtocolExperience (root, topicId, protocol) {
       });
     });
   }
+  bindNextPanel();
 
   const closurePanel = document.createElement('section');
   closurePanel.className = 'emerg-protocol-closure';
@@ -4088,6 +4110,7 @@ function initEmergProtocolExperience (root, topicId, protocol) {
       ? (state.finished ? 'Condutas em confirmação ✓' : 'Concluir e confirmar condutas')
       : `Próximo: ${groups[state.page + 1].title} →`;
     nextButton.classList.toggle('is-finished', isLast && state.finished);
+    bindNextPanel();
     closurePanel.hidden = !(isLast && state.finished);
     nextPanel.hidden = !(isLast && state.finished && nextOptions.length > 0);
     updateStatus();
@@ -4107,21 +4130,13 @@ function initEmergProtocolExperience (root, topicId, protocol) {
     /* Nada abre sozinho: o protocolo fecha com confirmação e resumo documentável */
     closurePanel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   });
-  const clearPickers = initEmergProtocolPickers(
-    root,
-    state,
-    () => emergSaveProtocolProgress(topicId, protocol.id, state)
-  );
-  const clearStemiWorkflow = initEmergStemiWorkflow(
-    root,
-    state,
-    () => emergSaveProtocolProgress(topicId, protocol.id, state)
-  );
-  const clearAvcWorkflow = initEmergAvcTromboliseWorkflow(
-    root,
-    state,
-    () => emergSaveProtocolProgress(topicId, protocol.id, state)
-  );
+  const persistProtocol = () => {
+    emergSaveProtocolProgress(topicId, protocol.id, state);
+    bindNextPanel();
+  };
+  const clearPickers = initEmergProtocolPickers(root, state, persistProtocol);
+  const clearStemiWorkflow = initEmergStemiWorkflow(root, state, persistProtocol);
+  const clearAvcWorkflow = initEmergAvcTromboliseWorkflow(root, state, persistProtocol);
 
   if (resetButton) {
     resetButton.addEventListener('click', () => {

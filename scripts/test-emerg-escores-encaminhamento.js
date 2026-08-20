@@ -534,22 +534,50 @@ function testAvcFastIntraHospital () {
   const result = ui.run(`(() => {
     showEmergenciaTopic('avc');
     showEmergenciaProtocol('fast');
-    const text = document.getElementById('emerg-topic-content').textContent || '';
+    const page = document.querySelector('.emerg-protocol-page');
+    const text = page?.textContent || '';
     const steps = [...document.querySelectorAll('.emerg-flow-step')].map(node => node.textContent.replace(/\\s+/g, ' ').trim());
-    return { text, steps };
+    const tcOptions = [...document.querySelectorAll('[data-avc-tc]')].map(btn => btn.dataset.avcTc);
+    const locked = document.querySelector('.emerg-avc-locked')?.textContent || '';
+    const nextLabels = [...document.querySelectorAll('.emerg-next-btn')].map(btn => btn.textContent);
+
+    const nihssBefore = !!document.querySelector('[data-avc-nihss-form]');
+    document.querySelector('[data-avc-tc="sem-sangramento"]').click();
+    const form = document.querySelector('[data-avc-nihss-form]');
+    form.querySelectorAll('select').forEach(sel => { sel.value = '0'; });
+    form.querySelector('[name="face"]').value = '2';
+    form.querySelector('[name="armL"]').value = '2';
+    form.querySelector('[name="lang"]').value = '1';
+    form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+    const nihssResult = document.querySelector('.emerg-avc-nihss-result')?.textContent || '';
+    const openLise = !!document.querySelector('[data-avc-goto="trombolise"]');
+
+    return {
+      text, steps, tcOptions, locked, nextLabels, nihssBefore,
+      nihssUnlocked: !!form, nihssResult, openLise
+    };
   })()`);
 
-  if (/intra-hospitalar/i.test(result.text) && !/SAMU|192 \(SAMU\)/i.test(result.text) &&
+  if (/intra-hospitalar/i.test(result.text) &&
       !result.steps.some(step => /SAMU|Transporte direto ao centro/i.test(step))) {
-    pass('Fluxo FAST remove condutas pré-hospitalares (SAMU/transporte)');
+    pass('Admissão AVC remove condutas pré-hospitalares (SAMU/transporte)');
   } else {
-    fail('FAST ainda contém condutas pré-hospitalares: ' + JSON.stringify({ steps: result.steps, intro: result.text.slice(0, 240) }));
+    fail('FAST ainda contém condutas pré-hospitalares: ' + JSON.stringify(result.steps));
   }
-  if (result.steps.some(step => /c[oó]digo AVC|TC cr[aâ]nio/i.test(step)) &&
-      !result.steps.some(step => /SAMU|transporte direto/i.test(step))) {
-    pass('FAST prioriza código AVC e TC imediata no serviço');
+  if (result.tcOptions.includes('sem-sangramento') && /TC sem sangramento/i.test(result.locked)) {
+    pass('TC sem sangramento aparece na primeira tela e bloqueia o NIHSS até confirmar');
   } else {
-    fail('Passos do FAST intra-hospitalar incorretos: ' + JSON.stringify(result.steps));
+    fail('Confirmação de TC ausente ou NIHSS não bloqueado: ' + JSON.stringify(result));
+  }
+  if (!result.nihssBefore && result.nihssUnlocked && /5\/42|Conduta aguda sugerida/i.test(result.nihssResult) && result.openLise) {
+    pass('NIHSS abre campos de pontuação após TC e libera a trombólise');
+  } else {
+    fail('Fluxo NIHSS → trombólise falhou: ' + JSON.stringify(result));
+  }
+  if (!result.nextLabels.some(label => /abrir NIHSS/i.test(label))) {
+    pass('NIHSS deixa de ser um protocolo opcional no fim do FAST');
+  } else {
+    fail('NIHSS ainda aparece como próximo protocolo: ' + JSON.stringify(result.nextLabels));
   }
 }
 
@@ -561,16 +589,10 @@ function testAvcTromboliseGuidedFlow () {
 
     const intro = document.querySelector('.emerg-protocol-page')?.textContent || '';
     const calcForms = [...document.querySelectorAll('form[data-emerg-calc="nihss"]')].length;
-    const tcTrigger = document.querySelector('[data-avc-open="tc-result"]');
-    const nihssTrigger = document.querySelector('[data-avc-open="nihss"]');
-    const nihssLocked = nihssTrigger?.getAttribute('aria-disabled') === 'true';
+    const tcOptions = [...document.querySelectorAll('[data-avc-tc]')].map(btn => btn.dataset.avcTc);
+    const locked = !!document.querySelector('.emerg-avc-locked');
 
-    tcTrigger.click();
     document.querySelector('[data-avc-tc="sem-sangramento"]').click();
-    const tcDone = tcTrigger.classList.contains('is-done');
-    const nihssUnlocked = nihssTrigger.getAttribute('aria-disabled') === 'false';
-
-    nihssTrigger.click();
     const form = document.querySelector('[data-avc-nihss-form]');
     form.querySelectorAll('select').forEach(sel => { sel.value = '0'; });
     form.querySelector('[name="face"]').value = '2';
@@ -579,30 +601,23 @@ function testAvcTromboliseGuidedFlow () {
     form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
 
     const nihssResult = document.querySelector('.emerg-avc-nihss-result')?.textContent || '';
-    const nihssDone = nihssTrigger.classList.contains('is-done');
-
-    return { intro, calcForms, nihssLocked, tcDone, nihssUnlocked, nihssResult, nihssDone };
+    return { intro, calcForms, tcOptions, locked, nihssResult, hasForm: !!form };
   })()`);
 
-  if (/intra-hospitalar/i.test(result.intro)) {
-    pass('Trombólise deixa claro que o fluxo é intra-hospitalar');
+  if (/intra-hospitalar/i.test(result.intro) && result.tcOptions.includes('sem-sangramento')) {
+    pass('Trombólise mostra confirmação de TC sem sangramento na primeira tela');
   } else {
-    fail('Intro da trombólise não marca contexto intra-hospitalar: ' + JSON.stringify(result.intro));
+    fail('Trombólise sem gate de TC visível: ' + JSON.stringify(result));
   }
   if (result.calcForms === 0) {
     pass('NIHSS não duplica calculadora solta — fica no passo interativo');
   } else {
     fail('Trombólise ainda injeta NIHSS duplicado: ' + JSON.stringify(result.calcForms));
   }
-  if (result.nihssLocked && result.tcDone && result.nihssUnlocked) {
-    pass('NIHSS só libera após confirmar TC sem sangramento');
+  if (result.locked && result.hasForm && /NIHSS total/i.test(result.nihssResult) && /Conduta aguda sugerida/i.test(result.nihssResult)) {
+    pass('NIHSS só libera após TC e mostra pontos com conduta sugerida');
   } else {
-    fail('Gate TC → NIHSS falhou: ' + JSON.stringify(result));
-  }
-  if (/NIHSS total/i.test(result.nihssResult) && /5\/42|Conduta aguda sugerida/i.test(result.nihssResult) && result.nihssDone) {
-    pass('NIHSS abre painel, calcula pontos e mostra conduta sugerida');
-  } else {
-    fail('Painel NIHSS não calculou corretamente: ' + JSON.stringify(result));
+    fail('Gate TC → NIHSS da trombólise falhou: ' + JSON.stringify(result));
   }
 }
 

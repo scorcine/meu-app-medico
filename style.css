@@ -3297,8 +3297,72 @@ body.app-page {
   box-shadow: 0 8px 24px rgb(0 0 0 / 16%);
 }
 
-.emerg-stemi-panel[hidden] {
-  display: none !important;
+.emerg-stemi-panel.is-inline {
+  margin-top: 0.65rem;
+  box-shadow: none;
+}
+
+.emerg-avc-gates {
+  display: grid;
+  gap: 0.9rem;
+  margin: 0.95rem 0 1.15rem;
+}
+
+.emerg-avc-gate {
+  padding: 0.85rem 0.9rem;
+  background: color-mix(in srgb, var(--accent) 10%, var(--bg-surface));
+  border: 1px solid color-mix(in srgb, var(--accent) 42%, var(--border));
+  border-radius: 10px;
+}
+
+.emerg-avc-gate.is-done {
+  border-color: color-mix(in srgb, #3d9a6a 70%, var(--border));
+}
+
+.emerg-avc-gate.is-blocked {
+  border-color: color-mix(in srgb, var(--state-blocked) 70%, var(--border));
+}
+
+.emerg-avc-gate.is-locked {
+  opacity: 0.78;
+}
+
+.emerg-avc-gate-kicker {
+  margin: 0 0 0.2rem;
+  color: var(--text-muted);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.emerg-avc-gate > strong {
+  display: block;
+  color: var(--text-primary);
+  font-size: 0.95rem;
+}
+
+.emerg-avc-gate > p {
+  margin: 0.3rem 0 0;
+  color: var(--text-muted);
+  font-size: 0.76rem;
+  line-height: 1.45;
+}
+
+.emerg-avc-locked {
+  margin: 0.55rem 0 0;
+  padding: 0.65rem 0.7rem;
+  background: color-mix(in srgb, var(--state-blocked) 10%, var(--bg-surface-alt));
+  border-left: 3px solid var(--state-blocked);
+  border-radius: 6px;
+}
+
+.emerg-avc-open-lise {
+  margin-top: 0.45rem;
+}
+
+.emerg-section-label {
+  margin: 0.85rem 0 0.45rem;
 }
 
 .emerg-stemi-panel-head {
