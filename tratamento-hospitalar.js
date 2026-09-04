@@ -18,6 +18,7 @@ const TH_CONDITIONS = [
   { id: 'agitacao-psiquiatrica', name: 'Agitação psicomotora / delirium', icon: '🧠', aliases: ['agitacao', 'agitacao psicomotora', 'delirium'] },
   { id: 'apendicite', name: 'Apendicite aguda (pré-operatório)', icon: '🩹', aliases: ['apendicite'] },
   { id: 'artralgia-dor-msk', name: 'Artralgia / dor musculoesquelética', icon: '🦴', aliases: ['artralgia', 'dor musculoesqueletica', 'dor muscular', 'dor articular', 'ombro', 'dor ombro', 'dor no ombro', 'omalgia', 'dor de ombro', 'joelho', 'dor joelho', 'cervicalgia', 'dor cervical', 'msk'] },
+  { id: 'ascite', name: 'Ascite (cirrose / hipertensão portal)', icon: '🫃', aliases: ['ascite', 'ascites', 'barriga dagua', 'barriga d agua', 'liquido na barriga', 'cirrose com ascite', 'peritonite bacteriana espontanea', 'pbe', 'paracentese'] },
   { id: 'asma-broncoespasmo', name: 'Asma / broncoespasmo', icon: '🌬️', aliases: ['asma', 'broncoespasmo', 'crise asmatica'] },
   { id: 'celulite-erisipela', name: 'Celulite / erisipela', icon: '🦠', aliases: ['celulite', 'erisipela'] },
   { id: 'cetoacidose-dm', name: 'Cetoacidose diabética', icon: '🩸', aliases: ['cetoacidose', 'cad'] },

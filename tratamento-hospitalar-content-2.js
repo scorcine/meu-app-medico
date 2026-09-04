@@ -203,6 +203,44 @@ const TH_CONTENT_2 = {
       <li><strong>Refractário / infecção:</strong> ceftriaxona 1 g EV + vancomicina se MRSA · sulfadiazina de prata tópica</li>
     </ul>`,
 
+  'ascite': `
+    <p class="muted">Ascite por cirrose / hipertensão portal — restrição de sódio, diuréticos, paracentese se tensão/sintomática; excluir PBE antes de alta.</p>
+    <h4>Condutas iniciais</h4>
+    <ul class="ps-med-options">
+      <li><strong>Avaliação:</strong> USG ou exame clínico · albumina, bilirrubina, creatinina, Na+, K+ · Child-Pugh / MELD se disponível</li>
+      <li><strong>Paracentese diagnóstica (sempre se febre, dor, encefalopatia ou 1ª ascite):</strong> celularidade + cultura em frasco de hemocultura · Gram · albumina no líquido (gradiente SAAG)</li>
+      <li><strong>Restrição de sódio:</strong> &lt; 2 g/dia · evitar AINE, aminoglicosídeo e IECA/BRA se creatinina ↑</li>
+    </ul>
+    <h4>Diuréticos (preferir VO; EV se jejum / má absorção)</h4>
+    <ul class="ps-med-options">
+      <li><strong>1ª linha:</strong> espironolactona 100 mg VO 24/24 h (titular até 400 mg/dia) + furosemida 40 mg VO 24/24 h (titular até 160 mg/dia) — manter razão ~100:40</li>
+      <li><strong>Alternativa (hipercalemia / ginecomastia):</strong> amilorida 5–10 mg VO 24/24 h (titular) · ou reduzir espironolactona e manter furosemida</li>
+      <li><strong>Diurético EV (internado, sem VO):</strong> furosemida 20–40 mg EV · repetir conforme diurese e Na+/K+</li>
+      <li><strong>Meta de perda de peso:</strong> ≈ 0,5 kg/dia sem edema · até 1 kg/dia com edema periférico</li>
+    </ul>
+    <h4>Paracentese de grande volume + albumina</h4>
+    <ul class="ps-med-options">
+      <li><strong>Indicação:</strong> ascite tensa, desconforto respiratório, refratária ou diagnóstico de PBE</li>
+      <li><strong>Albumina 20%:</strong> 8 g por litro removido se &gt; 5 L (ex.: 5 L → 40 g = 200 mL de albumina 20%)</li>
+      <li><strong>Alternativa se albumina indisponível:</strong> cristaloides conforme protocolo local — preferir albumina</li>
+    </ul>
+    <h4>Peritonite bacteriana espontânea (PBE) — ATB EV</h4>
+    <ul class="ps-med-options">
+      <li><strong>Critério líquido:</strong> PMN ≥ 250/mm³ (mesmo sem cultura positiva)</li>
+      <li><strong>1ª linha:</strong> ceftriaxona 1–2 g EV 24/24 h × 5–7 dias · ou cefotaxima 2 g EV 8/8 h</li>
+      <li><strong>Alternativa / nosocomial / falha:</strong> piperacilina-tazobactam 4,5 g EV 6/6 h · meropenem 1 g EV 8/8 h</li>
+      <li><strong>Albumina na PBE (creatinina ↑ ou bilirrubina ↑):</strong> 1,5 g/kg EV no D1 + 1 g/kg no D3</li>
+      <li><strong>Profilaxia secundária (após PBE):</strong> norfloxacino 400 mg VO 24/24 h ou sulfametoxazol-trimetoprima VO (protocolo local)</li>
+    </ul>
+    <h4>Sintomáticos / suporte</h4>
+    <ul class="ps-med-options">
+      <li><strong>Dor / desconforto:</strong> dipirona 1 amp EV 6/6 h · paracetamol 750 mg–1 g EV — <strong>evitar AINE</strong></li>
+      <li><strong>Náusea:</strong> ondansetrona 1 amp EV · metoclopramida 1 amp EV (cautela em Parkinson)</li>
+      <li><strong>Encefalopatia associada:</strong> lactulose VO/SNG (titular 2–3 evacuações/dia) · rifaximina se disponível</li>
+      <li><strong>Refractária / hepatorrenal:</strong> albumina EV + vasoconstritor (terlipressina / noradrenalina) · nefrologia · transplant referral</li>
+    </ul>
+    <p class="emerg-note">AASG/EASL · SBH. Adaptar às diretrizes e formulário institucional. Conteúdo educacional.</p>`,
+
   'malaria-grave': `
     <p class="muted">Malária grave (P. falciparum) — artesunato EV preferido; internação UTI; excluir complicações.</p>
     <h4>Medicação IM / EV</h4>
