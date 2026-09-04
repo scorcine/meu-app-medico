@@ -263,58 +263,46 @@ const SCA_PROTOCOLS = [
   {
     id: 'dor-inicial',
     icon: '🩺',
-    name: 'Dor torácica inicial',
+    name: 'IAM — ECG + HEART',
     html: `
-      <p>Suspeita de SCA até prova em contrário — <strong>ECG em ≤ 10 min</strong> do primeiro contato médico.</p>
+      <p><strong>Fluxo direto (2–3 toques):</strong> ECG ≤ 10 min → calcular HEART → abrir o protocolo pelo ECG. Com supra = STEMI e medicações. Sem supra = troponina + dual therapy.</p>
 
       <div class="emerg-flow-v">
-        <span class="emerg-flow-step">Avaliar estabilidade — ABC, SpO₂, PA, FC, ritmo</span>
-        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
-        <span class="emerg-flow-step emerg-flow-decision">Dor torácica sugestiva de isquemia?</span>
-        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
         <span class="emerg-flow-step"><strong>ECG 12 derivações em ≤ 10 min</strong></span>
         <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
-        <span class="emerg-flow-step">Acesso venoso + troponina (serial) + eletrólitos + função renal</span>
+        <span class="emerg-flow-step">Calcular HEART (abaixo)</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step emerg-flow-decision">Com supra → STEMI · Sem supra → NSTEMI</span>
       </div>
 
-      <h4>Classificar antes da conduta específica</h4>
-      <p>Se o ECG mostrar supra de ST ou equivalente, <strong>não aguarde o HEART</strong>: siga imediatamente para STEMI. Sem supra, use o HEART na dor torácica ainda indiferenciada.</p>
       <div class="calc-block calc-block-single emerg-calc-block emerg-calc-wide emerg-score-block">
-        <p class="emerg-score-title"><strong>HEART Score</strong> — estima risco de evento cardíaco; não confirma sozinho IAM nem diagnostica dor muscular.</p>
+        <p class="emerg-score-title"><strong>HEART Score</strong> — estima risco de MACE. O ECG (não o HEART) escolhe o ramo.</p>
         <form class="calc-form" data-emerg-calc="heart" data-emerg-calc-inject="1">
           <button type="submit">Calcular HEART Score</button>
         </form>
         <div class="calc-result" hidden></div>
       </div>
-      <ul class="emerg-steps">
-        <li><strong>HEART 0–3</strong> + ECG sem isquemia + troponinas seriadas negativas → baixo risco; considerar causas não cardíacas e protocolo institucional de alta/seguimento.</li>
-        <li><strong>HEART 4–6</strong> → risco intermediário; observação, troponina seriada e avaliação cardiológica.</li>
-        <li><strong>HEART 7–10</strong>, troponina positiva ou alteração isquêmica → alto risco; tratar como SCA e definir o ramo abaixo.</li>
-      </ul>
-
-      <h4>Conduta após a classificação</h4>
-      <div class="emerg-flow-v">
-        <span class="emerg-flow-step">Monitor contínuo + oxigênio se SpO₂ &lt; 90%</span>
-        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
-        <span class="emerg-flow-step">Se SCA provável: ácido acetilsalicílico 150–300 mg VO (mastigar) — se não contraindicado</span>
-        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
-        <span class="emerg-flow-step emerg-flow-decision">Classificar pelo ECG/troponina: STEMI · NSTEMI · angina instável · baixo risco/não cardíaca</span>
-      </div>
-
-      <h4>Sinais de alerta — instabilidade</h4>
       <ul>
-        <li>Hipotensão, choque, arritmia maligna</li>
-        <li>Dor refratária, ICC aguda, alteração de consciência</li>
-        <li>→ estabilizar e acionar hemodinâmica / UTI</li>
+        <li><strong>0–3:</strong> baixo risco · <strong>4–6:</strong> intermediário · <strong>7–10:</strong> alto risco</li>
+        <li>Se SCA provável: ácido acetilsalicílico 150–300 mg VO (mastigar) se não contraindicado</li>
       </ul>
 
-      <table class="emerg-table">
-        <tr><th>Conduta</th><th>Indicação</th></tr>
-        <tr><td>Nitrato SL</td><td>Dor persistente, PA sistólica &gt; 90 mmHg, sem suspeita de VD / estenose aórtica</td></tr>
-        <tr><td>Morfina</td><td>Dor refratária (usar com cautela — pode mascarar evolução)</td></tr>
-        <tr><td>Anticoagulação</td><td>Conforme tipo de SCA (heparina / enoxaparina)</td></tr>
-      </table>
-      <p class="emerg-note">Repetir ECG se dor recorrer ou instabilidade — supra ST pode ser intermitente.</p>
+      <p class="emerg-section-label"><strong>Abrir o protocolo agora</strong> — um toque, sem fechar checklist</p>
+      <div class="emerg-sca-branch" role="group" aria-label="Ramo SCA pelo ECG">
+        <button type="button" class="emerg-stemi-trigger emerg-stemi-trigger-critical" data-sca-goto="stemi">
+          <strong>Com supra de ST (ou BRE novo)</strong>
+          <small>Abrir STEMI — reperfusão + AAS / P2Y12 / anticoagulação</small>
+        </button>
+        <button type="button" class="emerg-stemi-trigger" data-sca-goto="nstemi-ua">
+          <strong>Sem supra de ST</strong>
+          <small>Abrir NSTEMI — troponina + dual therapy + anticoagulação</small>
+        </button>
+        <button type="button" class="emerg-stemi-trigger" data-sca-goto="nao-sca">
+          <strong>Baixo risco / não cardíaca</strong>
+          <small>Voltar ao atendimento sem protocolo de IAM</small>
+        </button>
+      </div>
+      <p class="emerg-note">Instabilidade (choque, arritmia, dor refratária): estabilizar e acionar hemodinâmica. Repetir ECG se a dor voltar.</p>
     `
   },
   {
@@ -322,28 +310,26 @@ const SCA_PROTOCOLS = [
     icon: '🚨',
     name: 'STEMI',
     html: `
-      <p>Supra de ST ou equivalente — reperfusão <strong>imediata</strong>. Metas: <strong>porta-balão ≤ 90 min</strong> ou <strong>fibrinólise ≤ 30 min</strong> se ICP indisponível.</p>
+      <p><strong>Supra de ST:</strong> medicações agora + reperfusão. Meta <strong>porta-balão ≤ 90 min</strong>; fibrinólise só se ICP inviável (<strong>porta-agulha ≤ 30 min</strong>).</p>
 
-      <h4>Critérios ECG (resumo)</h4>
       <ul>
-        <li>Supra ST ≥ 1 mm em ≥ 2 derivações contíguas (exceto V2–V3: ≥ 2 mm homens &gt;40 a; ≥ 1,5 mm homens &lt;40 a; ≥ 1 mm mulheres)</li>
-        <li>Bloqueio de ramo esquerdo <strong>novo</strong> ou presumivelmente novo</li>
-        <li>Equivalentes: de Winter, Wellens, supra ST em aVR com difuso ST↓</li>
+        <li>Supra ST ≥ 1 mm em ≥ 2 derivações contíguas (V2–V3: ≥ 2 mm Homem &gt;40 a; ≥ 1,5 mm Homem &lt;40 a; ≥ 1 mm Mulher) · BRE novo · equivalentes (de Winter, aVR+ST↓ difuso)</li>
+        <li>AAS 150–300 mg VO (mastigar) se ainda não feito · O₂ só se SpO₂ &lt; 90%</li>
       </ul>
 
       <div class="emerg-flowcharts-row">
         <div class="emerg-flow-col emerg-flow-col-shock">
-          <h4>ICP primária (preferencial)</h4>
+          <h4>ICP primária — medicações</h4>
           <div class="emerg-flow-v">
-            <span class="emerg-flow-step">Confirmar STEMI + acionar equipe / hemodinâmica</span>
+            <span class="emerg-flow-step">Acionar hemodinâmica agora</span>
             <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
             <button type="button" class="emerg-stemi-trigger" data-emerg-picker data-stemi-open="p2y12-pci">
               <strong>AAS 150–300 mg + escolher P2Y12</strong>
-              <small>Toque para escolher a droga e ver a dose</small>
+              <small>Toque para dose e preparo</small>
             </button>
             <div class="emerg-stemi-panel" data-stemi-panel="p2y12-pci" hidden></div>
             <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
-            <span class="emerg-flow-step">Anticoagulante (heparina ou enoxaparina)</span>
+            <span class="emerg-flow-step">Anticoagulante (heparina 60 U/kg IV máx. 4000 U ou enoxaparina)</span>
             <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
             <span class="emerg-flow-step emerg-flow-shock">Cateterismo + angioplastia</span>
             <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
@@ -352,33 +338,33 @@ const SCA_PROTOCOLS = [
         </div>
 
         <div class="emerg-flow-col emerg-flow-col-noshock">
-          <h4>Fibrinólise (se ICP indisponível)</h4>
+          <h4>Fibrinólise — se ICP indisponível</h4>
           <div class="emerg-flow-v">
             <button type="button" class="emerg-stemi-trigger emerg-stemi-trigger-critical" data-emerg-picker data-stemi-open="contra">
-              <strong>1. Confirmar janela &lt;12 h e ausência de contraindicações</strong>
-              <small>Revisão obrigatória antes de liberar a fibrinólise</small>
+              <strong>1. Janela &lt;12 h e sem contraindicações</strong>
+              <small>Revisão obrigatória antes da lise</small>
             </button>
             <div class="emerg-stemi-panel" data-stemi-panel="contra" hidden></div>
             <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
             <button type="button" class="emerg-stemi-trigger" data-emerg-picker data-stemi-open="p2y12-lysis">
-              <strong>2. AAS + anticoagulante + escolher P2Y12</strong>
-              <small>Toque para ver a opção indicada e a dose</small>
+              <strong>2. AAS + anticoagulante + P2Y12</strong>
+              <small>Toque para dose (clopidogrel na lise)</small>
             </button>
             <div class="emerg-stemi-panel" data-stemi-panel="p2y12-lysis" hidden></div>
             <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
             <button type="button" class="emerg-stemi-trigger" data-emerg-picker data-stemi-open="fibrinolytic" aria-disabled="true">
-              <strong>3. Escolher fibrinolítico disponível</strong>
-              <small>Calcula automaticamente dose, preparo e administração</small>
+              <strong>3. Escolher fibrinolítico</strong>
+              <small>Dose e preparo automáticos por peso</small>
             </button>
             <div class="emerg-stemi-panel" data-stemi-panel="fibrinolytic" hidden></div>
             <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
-            <span class="emerg-flow-step emerg-flow-shock">Transferir para ICP após lise (estratégia farmaco-invasiva)</span>
+            <span class="emerg-flow-step emerg-flow-shock">Transferir para ICP (farmaco-invasiva)</span>
             <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
             <span class="emerg-flow-step emerg-flow-loop"><strong>Porta-agulha ≤ 30 min</strong></span>
           </div>
         </div>
       </div>
-      <p class="emerg-note">Porta-balão = tempo da chegada ao hospital até inflação do balão. Porta-agulha = chegada até início da fibrinólise.</p>
+      <p class="emerg-note">Porta-balão = chegada → balão. Porta-agulha = chegada → início da fibrinólise.</p>
     `
   },
   {
@@ -386,22 +372,24 @@ const SCA_PROTOCOLS = [
     icon: '📊',
     name: 'NSTEMI / Angina instável',
     html: `
-      <p>Sem supra ST — estratificar risco (GRACE) e definir estratégia invasiva precoce ou conservadora.</p>
+      <p><strong>Sem supra:</strong> peça troponina e demais exames, inicie dual therapy + anticoagulação. O GRACE define só o <em>tempo</em> da invasão.</p>
 
       <div class="emerg-flow-v">
-        <span class="emerg-flow-step">Confirmar ausência de STEMI no ECG</span>
+        <span class="emerg-flow-step">Confirmar ECG sem supra de ST</span>
         <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
-        <span class="emerg-flow-step">Troponina elevada (NSTEMI) ou normal com alta suspeita (AI)</span>
+        <span class="emerg-flow-step"><strong>Solicitar:</strong> troponina (0 e 1–3 h) + eletrólitos + creatinina + hemograma</span>
         <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
-        <span class="emerg-flow-step emerg-flow-decision">Calcular escore GRACE antes de definir o tempo da invasão</span>
+        <span class="emerg-flow-step">AAS + P2Y12 + anticoagulação (abaixo)</span>
       </div>
 
       <table class="emerg-table">
-        <tr><th>GRACE (mortalidade hospitalar)</th><th>Estratégia sugerida</th></tr>
-        <tr><td><strong>≥ 140</strong></td><td>Muito alto risco — cateterismo &lt; <strong>24 h</strong></td></tr>
-        <tr><td>109 – 139</td><td>Alto risco — invasiva &lt; 72 h</td></tr>
-        <tr><td>&lt; 109</td><td>Risco intermediário/baixo — individualizar</td></tr>
+        <tr><th>Agora</th><th>Dose / nota</th></tr>
+        <tr><td><strong>AAS</strong></td><td>150–300 mg VO (mastigar) → 75–100 mg/dia</td></tr>
+        <tr><td><strong>P2Y12</strong></td><td>Ticagrelor 180 mg → 90 mg 12/12 h (preferencial) · ou clopidogrel 300–600 mg → 75 mg/dia</td></tr>
+        <tr><td><strong>Anticoagulante</strong></td><td>Enoxaparina 1 mg/kg SC 12/12 h · ou fondaparinux 2,5 mg SC/dia · ou HNF 60 U/kg IV (máx. 4000 U)</td></tr>
+        <tr><td>Adjuntos</td><td>Estatina alta intensidade (ex.: atorvastatina 80 mg); betabloqueador se PA/FC altas e sem IC aguda; evitar AINE</td></tr>
       </table>
+      <p class="emerg-note">Troponina ↑ = NSTEMI · troponina − com clínica/ECG de isquemia = angina instável.</p>
 
       <h4>Indicadores de invasão imediata (&lt; 2 h) — independente do GRACE</h4>
       <ul>
@@ -412,16 +400,13 @@ const SCA_PROTOCOLS = [
       </ul>
 
       <h4>Conduta após a estratificação</h4>
-      <div class="emerg-flow-v">
-        <span class="emerg-flow-step">AAS + P2Y12 + anticoagulação</span>
-        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
-        <span class="emerg-flow-step emerg-flow-shock"><strong>GRACE ≥ 140</strong> → estratégia invasiva &lt; <strong>24 h</strong></span>
-        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
-        <span class="emerg-flow-step">GRACE 109–139 → invasiva &lt; 72 h (alto risco)</span>
-        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
-        <span class="emerg-flow-step">GRACE &lt; 109 → avaliar estratégia conservadora / invasiva eletiva</span>
-      </div>
-      <p class="emerg-note">Use o GRACE nesta tela para estratificação. Adaptar ao protocolo institucional e contra-indicações.</p>
+      <table class="emerg-table">
+        <tr><th>GRACE</th><th>Tempo da coronariografia</th></tr>
+        <tr><td><strong>≥ 140</strong></td><td>Invasiva &lt; <strong>24 h</strong></td></tr>
+        <tr><td>109 – 139</td><td>Invasiva &lt; 72 h</td></tr>
+        <tr><td>&lt; 109</td><td>Individualizar (conservadora / eletiva)</td></tr>
+      </table>
+      <p class="emerg-note">GRACE (acima) + critérios de &lt; 2 h definem <em>quando</em> invadir; AAS + P2Y12 + anticoagulante já estão na primeira etapa.</p>
     `
   },
   {
@@ -2501,9 +2486,9 @@ const EMERG_PROTOCOL_SCORES = {
 /* Próximo protocolo depois de concluir (ramos clínicos, não sequência cega) */
 const EMERG_NEXT_PROTOCOLS = {
   'sca:dor-inicial': [
-    { id: 'stemi', label: 'Supra de ST (ou BRE novo) → abrir STEMI' },
-    { id: 'nstemi-ua', label: 'Sem supra + SCA provável → abrir NSTEMI / Angina instável' },
-    { action: 'nao-sca', label: 'Baixo risco / causa não cardíaca → voltar às queixas (sem protocolo de IAM)' }
+    { id: 'stemi', label: 'Com supra de ST → STEMI' },
+    { id: 'nstemi-ua', label: 'Sem supra → NSTEMI / Angina instável' },
+    { action: 'nao-sca', label: 'Baixo risco / causa não cardíaca → voltar às queixas' }
   ],
   'sca:nstemi-ua': [{ id: 'ecg-modelos', label: 'Revisar o padrão eletrocardiográfico → modelos de ECG na SCA' }],
   'avc:fast': [
@@ -2632,6 +2617,31 @@ function emergRememberChestClassification (value) {
   try {
     sessionStorage.setItem('medhub-chest-classification', value);
   } catch { /* sessão indisponível */ }
+}
+
+function emergOpenScaBranch (target) {
+  if (target === 'nao-sca') {
+    emergRememberChestClassification('nao-sca');
+    if (typeof showSection === 'function') showSection('novo-atendimento');
+    if (typeof novoAtendimentoShowStep === 'function') {
+      window.setTimeout(() => novoAtendimentoShowStep('tratamento'), 80);
+    }
+    return;
+  }
+  emergRememberChestClassification(target);
+  showEmergenciaProtocol(target);
+}
+
+function initEmergScaEntryWorkflow (root) {
+  if (!root || !root.querySelector('[data-sca-goto]')) return () => {};
+  const onClick = event => {
+    const btn = event.target.closest('[data-sca-goto]');
+    if (!btn || !root.contains(btn)) return;
+    emergOpenScaBranch(btn.dataset.scaGoto);
+  };
+  root.addEventListener('click', onClick);
+  /* Sem estado local — reset do protocolo não remove o atalho dos ramos */
+  return () => {};
 }
 
 function initGuiaEmergencia () {
@@ -3926,11 +3936,7 @@ function initEmergProtocolExperience (root, topicId, protocol) {
         const option = nextOptions[Number(btn.dataset.emergNext)];
         if (!option) return;
         if (option.action === 'nao-sca') {
-          emergRememberChestClassification('nao-sca');
-          if (typeof showSection === 'function') showSection('novo-atendimento');
-          if (typeof novoAtendimentoShowStep === 'function') {
-            window.setTimeout(() => novoAtendimentoShowStep('tratamento'), 80);
-          }
+          emergOpenScaBranch('nao-sca');
           return;
         }
         if (topicId === 'sca' && protocol.id === 'dor-inicial') {
@@ -4293,6 +4299,7 @@ function initEmergProtocolExperience (root, topicId, protocol) {
   const clearPickers = initEmergProtocolPickers(root, state, persistProtocol);
   const clearStemiWorkflow = initEmergStemiWorkflow(root, state, persistProtocol);
   const clearAvcWorkflow = initEmergAvcTromboliseWorkflow(root, state, persistProtocol, protocol.id);
+  const clearScaEntry = initEmergScaEntryWorkflow(root);
 
   if (resetButton) {
     resetButton.addEventListener('click', () => {
@@ -4303,6 +4310,7 @@ function initEmergProtocolExperience (root, topicId, protocol) {
       clearPickers();
       clearStemiWorkflow();
       clearAvcWorkflow();
+      clearScaEntry();
       summaryOut.hidden = true;
       summaryOut.innerHTML = '';
       if (reperfusionSection) reperfusionSection.hidden = true;

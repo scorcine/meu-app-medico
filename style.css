@@ -3288,6 +3288,16 @@ body.app-page {
   content: "🔒 ";
 }
 
+.emerg-sca-branch {
+  display: grid;
+  gap: 0.55rem;
+  margin: 0.75rem 0 0.35rem;
+}
+
+.emerg-sca-branch .emerg-stemi-trigger {
+  min-height: 3.1rem;
+}
+
 .emerg-stemi-panel {
   margin: 0.35rem 0;
   padding: 0.75rem;

@@ -471,6 +471,36 @@ function testBranchingHandoff () {
   }
 }
 
+function testScaDirectBranchButtons () {
+  const ui = buildUi();
+  const result = ui.run(`(() => {
+    showEmergenciaTopic('sca');
+    showEmergenciaProtocol('dor-inicial');
+    const buttons = [...document.querySelectorAll('[data-sca-goto]')].map(btn => btn.dataset.scaGoto);
+    const heartReady = !!document.querySelector('form[data-emerg-calc="heart"]');
+    document.querySelector('[data-sca-goto="nstemi-ua"]').click();
+    return {
+      buttons,
+      heartReady,
+      title: document.getElementById('emerg-topic-title').textContent,
+      classification: sessionStorage.getItem('medhub-chest-classification'),
+      hasTrop: /troponina/i.test(document.getElementById('emerg-topic-content').textContent),
+      hasAas: /AAS|acetilsalicílico/i.test(document.getElementById('emerg-topic-content').textContent)
+    };
+  })()`);
+
+  if (result.heartReady && result.buttons.join(',') === 'stemi,nstemi-ua,nao-sca') {
+    pass('Entrada IAM mostra HEART e três ramos diretos');
+  } else {
+    fail('Botões diretos da entrada IAM ausentes: ' + JSON.stringify(result));
+  }
+  if (/NSTEMI/i.test(result.title) && result.classification === 'nstemi-ua' && result.hasTrop && result.hasAas) {
+    pass('Um toque em sem supra abre NSTEMI com troponina e dual therapy');
+  } else {
+    fail('Ramo direto NSTEMI falhou: ' + JSON.stringify(result));
+  }
+}
+
 function testNoArrayFallbackAutoOpen () {
   const ui = buildUi();
   ui.run(`showEmergenciaTopic('sepse'); showEmergenciaProtocol('norepi-map');`);
@@ -680,6 +710,7 @@ testGraceStaysEarly();
 testClosureSummary();
 testStemiReperfusionBeforeFinalize();
 testBranchingHandoff();
+testScaDirectBranchButtons();
 testNoArrayFallbackAutoOpen();
 testNoInventedScoresOnBls();
 testReorderMtpTromboliseDka();
