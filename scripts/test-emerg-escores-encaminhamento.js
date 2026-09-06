@@ -326,7 +326,7 @@ function testClosureSummary () {
   } else {
     fail('Etapa de confirmação ausente: ' + JSON.stringify(result));
   }
-  if (/NSTEMI/i.test(result.titulo) && !/ECG/i.test(result.titulo)) {
+  if (/Sem supra|NSTEMI/i.test(result.titulo) && !/ECG/i.test(result.titulo)) {
     pass('Concluir não pula sozinho para outro protocolo');
   } else {
     fail('Protocolo avançou sem confirmação: ' + JSON.stringify(result.titulo));
@@ -346,12 +346,12 @@ function testClosureSummary () {
   }
   if (result.cancelou && result.atendimentoEncerrado &&
       /Tem certeza que quer finalizar/i.test(result.confirmacao) &&
-      /Maria Teste/.test(result.confirmacao) && /NSTEMI/i.test(result.confirmacao)) {
+      /Maria Teste/.test(result.confirmacao) && /Sem supra|NSTEMI/i.test(result.confirmacao)) {
     pass('Fechamento pede confirmação e remove o atendimento da lista de retomada');
   } else {
     fail('Confirmação de encerramento falhou: ' + JSON.stringify(result));
   }
-  if (result.salvo?.pacienteNome === 'Maria Teste' && /NSTEMI/i.test(result.salvo.protocolo || '') && result.salvo.summaryText) {
+  if (result.salvo?.pacienteNome === 'Maria Teste' && /Sem supra|NSTEMI/i.test(result.salvo.protocolo || '') && result.salvo.summaryText) {
     pass('Fechar protocolo grava o paciente em Atendimentos realizados');
   } else {
     fail('Atendimento não foi salvo na lista: ' + JSON.stringify(result.salvo));
@@ -479,13 +479,15 @@ function testScaDirectBranchButtons () {
     const buttons = [...document.querySelectorAll('[data-sca-goto]')].map(btn => btn.dataset.scaGoto);
     const heartReady = !!document.querySelector('form[data-emerg-calc="heart"]');
     document.querySelector('[data-sca-goto="nstemi-ua"]').click();
+    const content = document.getElementById('emerg-topic-content').textContent;
     return {
       buttons,
       heartReady,
       title: document.getElementById('emerg-topic-title').textContent,
       classification: sessionStorage.getItem('medhub-chest-classification'),
-      hasTrop: /troponina/i.test(document.getElementById('emerg-topic-content').textContent),
-      hasAas: /AAS|acetilsalicílico/i.test(document.getElementById('emerg-topic-content').textContent)
+      hasTrop: /troponina/i.test(content),
+      hasRuleOut: /Descarte seguro|sem indicação de cateterismo|sem cateterismo/i.test(content),
+      hasDiscardBtn: !!document.querySelector('[data-sca-goto="nao-sca"]')
     };
   })()`);
 
@@ -494,10 +496,43 @@ function testScaDirectBranchButtons () {
   } else {
     fail('Botões diretos da entrada IAM ausentes: ' + JSON.stringify(result));
   }
-  if (/NSTEMI/i.test(result.title) && result.classification === 'nstemi-ua' && result.hasTrop && result.hasAas) {
-    pass('Um toque em sem supra abre NSTEMI com troponina e dual therapy');
+  if (/investigar|descarte|NSTEMI/i.test(result.title) && result.classification === 'nstemi-ua' &&
+      result.hasTrop && result.hasRuleOut && result.hasDiscardBtn) {
+    pass('Um toque em sem supra abre investigação com descarte seguro (sem forçar cateterismo)');
   } else {
-    fail('Ramo direto NSTEMI falhou: ' + JSON.stringify(result));
+    fail('Ramo direto sem supra / descarte falhou: ' + JSON.stringify(result));
+  }
+}
+
+function testNstemiRuleOutPath () {
+  const ui = buildUi();
+  const result = ui.run(`(() => {
+    showEmergenciaTopic('sca');
+    showEmergenciaProtocol('nstemi-ua');
+    const content = document.getElementById('emerg-topic-content').textContent;
+    const pages = [...document.querySelectorAll('.emerg-protocol-page')];
+    const ruleOutPage = pages.findIndex(p => /Descarte seguro/i.test(p.textContent));
+    const drugPage = pages.findIndex(p => /Se SCA \\(NSTEMI|Conduta após a estratificação/i.test(p.textContent));
+    document.querySelector('[data-sca-goto="nao-sca"]')?.click();
+    return {
+      ruleOutPage,
+      drugPage,
+      blocksCath: /não.*cateterismo|sem cateterismo|não indique cateterismo/i.test(content),
+      needsScaForGrace: /somente.*NSTEMI|só se SCA|somente se NSTEMI/i.test(content),
+      classification: sessionStorage.getItem('medhub-chest-classification')
+    };
+  })()`);
+
+  if (result.ruleOutPage >= 0 && (result.drugPage < 0 || result.ruleOutPage <= result.drugPage) &&
+      result.blocksCath && result.needsScaForGrace) {
+    pass('NSTEMI/sem supra coloca descarte antes da invasão e bloqueia cateterismo sem SCA');
+  } else {
+    fail('Descarte seguro no sem supra falhou: ' + JSON.stringify(result));
+  }
+  if (result.classification === 'nao-sca') {
+    pass('Botão de descarte grava classificação sem IAM/cateterismo');
+  } else {
+    fail('Descarte não gravou nao-sca: ' + JSON.stringify(result));
   }
 }
 
@@ -711,6 +746,7 @@ testClosureSummary();
 testStemiReperfusionBeforeFinalize();
 testBranchingHandoff();
 testScaDirectBranchButtons();
+testNstemiRuleOutPath();
 testNoArrayFallbackAutoOpen();
 testNoInventedScoresOnBls();
 testReorderMtpTromboliseDka();

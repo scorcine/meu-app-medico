@@ -661,8 +661,8 @@ function novoAtendimentoChestScores () {
 
 const NOVO_ATENDIMENTO_CHEST_STEPS = [
   { value: 'stemi', protocol: 'stemi', label: 'Supra de ST ou BRE novo', hint: 'Abrir STEMI — reperfusão imediata' },
-  { value: 'nstemi-ua', protocol: 'nstemi-ua', label: 'Sem supra, SCA provável', hint: 'Abrir NSTEMI / Angina instável' },
-  { value: 'nao-sca', label: 'Baixo risco / causa não cardíaca', hint: 'Seguir para o tratamento do atendimento' }
+  { value: 'nstemi-ua', protocol: 'nstemi-ua', label: 'Sem supra — investigar', hint: 'Troponina seriada, descarte ou NSTEMI/AI' },
+  { value: 'nao-sca', label: 'Descartado / não cardíaca', hint: 'Sem IAM e sem cateterismo — seguir atendimento' }
 ];
 
 /* A calculadora aberta pelo atendimento precisa devolver o usuário ao fluxo */

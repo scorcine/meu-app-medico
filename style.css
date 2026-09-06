@@ -3298,6 +3298,28 @@ body.app-page {
   min-height: 3.1rem;
 }
 
+.emerg-sca-ruleout {
+  margin: 0.85rem 0 0.5rem;
+  padding: 0.85rem 0.9rem;
+  border: 1px solid color-mix(in srgb, var(--state-done) 55%, var(--border));
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--state-done) 10%, var(--bg-surface-active));
+}
+
+.emerg-sca-ruleout > strong {
+  display: block;
+  margin-bottom: 0.35rem;
+  font-size: 0.92rem;
+}
+
+.emerg-sca-ruleout ul {
+  margin: 0.35rem 0 0.55rem;
+}
+
+.emerg-sca-ruleout .emerg-stemi-trigger {
+  margin-top: 0.35rem;
+}
+
 .emerg-stemi-panel {
   margin: 0.35rem 0;
   padding: 0.75rem;

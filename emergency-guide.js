@@ -265,41 +265,42 @@ const SCA_PROTOCOLS = [
     icon: '🩺',
     name: 'IAM — ECG + HEART',
     html: `
-      <p><strong>Fluxo direto (2–3 toques):</strong> ECG ≤ 10 min → calcular HEART → abrir o protocolo pelo ECG. Com supra = STEMI e medicações. Sem supra = troponina + dual therapy.</p>
+      <p><strong>Fluxo direto:</strong> ECG ≤ 10 min → HEART → escolher o ramo. <em>Sem supra não significa cateterismo</em> — primeiro investigue e só trate como SCA se houver critério.</p>
 
       <div class="emerg-flow-v">
         <span class="emerg-flow-step"><strong>ECG 12 derivações em ≤ 10 min</strong></span>
         <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
         <span class="emerg-flow-step">Calcular HEART (abaixo)</span>
         <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
-        <span class="emerg-flow-step emerg-flow-decision">Com supra → STEMI · Sem supra → NSTEMI</span>
+        <span class="emerg-flow-step emerg-flow-decision">Supra → STEMI · Sem supra → investigar / descarte · Já descartado</span>
       </div>
 
       <div class="calc-block calc-block-single emerg-calc-block emerg-calc-wide emerg-score-block">
-        <p class="emerg-score-title"><strong>HEART Score</strong> — estima risco de MACE. O ECG (não o HEART) escolhe o ramo.</p>
+        <p class="emerg-score-title"><strong>HEART Score</strong> — estima risco de MACE. Não indica cateterismo sozinho.</p>
         <form class="calc-form" data-emerg-calc="heart" data-emerg-calc-inject="1">
           <button type="submit">Calcular HEART Score</button>
         </form>
         <div class="calc-result" hidden></div>
       </div>
       <ul>
-        <li><strong>0–3:</strong> baixo risco · <strong>4–6:</strong> intermediário · <strong>7–10:</strong> alto risco</li>
-        <li>Se SCA provável: ácido acetilsalicílico 150–300 mg VO (mastigar) se não contraindicado</li>
+        <li><strong>0–3:</strong> baixo risco — candidata a descarte se troponinas negativas e ECG sem isquemia</li>
+        <li><strong>4–6:</strong> intermediário — observação + troponina seriada; não forçar invasão</li>
+        <li><strong>7–10:</strong> alto risco — investigar SCA; cateterismo só se NSTEMI/AI com critério</li>
       </ul>
 
-      <p class="emerg-section-label"><strong>Abrir o protocolo agora</strong> — um toque, sem fechar checklist</p>
+      <p class="emerg-section-label"><strong>Abrir o protocolo agora</strong></p>
       <div class="emerg-sca-branch" role="group" aria-label="Ramo SCA pelo ECG">
         <button type="button" class="emerg-stemi-trigger emerg-stemi-trigger-critical" data-sca-goto="stemi">
           <strong>Com supra de ST (ou BRE novo)</strong>
-          <small>Abrir STEMI — reperfusão + AAS / P2Y12 / anticoagulação</small>
+          <small>STEMI — reperfusão + medicações</small>
         </button>
         <button type="button" class="emerg-stemi-trigger" data-sca-goto="nstemi-ua">
           <strong>Sem supra de ST</strong>
-          <small>Abrir NSTEMI — troponina + dual therapy + anticoagulação</small>
+          <small>Investigar — troponina seriada, descarte ou NSTEMI/AI</small>
         </button>
         <button type="button" class="emerg-stemi-trigger" data-sca-goto="nao-sca">
-          <strong>Baixo risco / não cardíaca</strong>
-          <small>Voltar ao atendimento sem protocolo de IAM</small>
+          <strong>Já descartado / não cardíaca</strong>
+          <small>Sem indicação de IAM nem de cateterismo — voltar ao atendimento</small>
         </button>
       </div>
       <p class="emerg-note">Instabilidade (choque, arritmia, dor refratária): estabilizar e acionar hemodinâmica. Repetir ECG se a dor voltar.</p>
@@ -370,18 +371,42 @@ const SCA_PROTOCOLS = [
   {
     id: 'nstemi-ua',
     icon: '📊',
-    name: 'NSTEMI / Angina instável',
+    name: 'Sem supra — descarte ou NSTEMI',
     html: `
-      <p><strong>Sem supra:</strong> peça troponina e demais exames, inicie dual therapy + anticoagulação. O GRACE define só o <em>tempo</em> da invasão.</p>
+      <p><strong>Sem supra ≠ cateterismo automático.</strong> Peça troponina seriada e só avance para dual therapy / GRACE / invasão se houver NSTEMI ou angina instável. Troponinas negativas sem isquemia = descarte — <em>sem cateterismo</em>.</p>
 
       <div class="emerg-flow-v">
-        <span class="emerg-flow-step">Confirmar ECG sem supra de ST</span>
+        <span class="emerg-flow-step">ECG sem supra (repetir se dor recorrente)</span>
         <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
-        <span class="emerg-flow-step"><strong>Solicitar:</strong> troponina (0 e 1–3 h) + eletrólitos + creatinina + hemograma</span>
+        <span class="emerg-flow-step"><strong>Troponina</strong> 0 h + 1–3 h (ideal 2–3 amostras) + eletrólitos + creatinina + hemograma</span>
         <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
-        <span class="emerg-flow-step">AAS + P2Y12 + anticoagulação (abaixo)</span>
+        <span class="emerg-flow-step emerg-flow-decision">Classificar: descarte · NSTEMI · angina instável</span>
       </div>
 
+      <div class="emerg-sca-ruleout" role="region" aria-label="Descarte seguro de SCA">
+        <strong>Descarte seguro — sem indicação de cateterismo</strong>
+        <p>Marque quando <strong>todos</strong> forem verdadeiros:</p>
+        <ul>
+          <li>≥ 2 troponinas de alta sensibilidade <strong>negativas</strong> (ideal 3 amostras / protocolo local 0–1–3 h ou 0–3–6 h)</li>
+          <li>ECG <strong>sem</strong> supra, sem infra dinâmico e sem inversão isquêmica nova</li>
+          <li>Sem dor refratária, choque, arritmia maligna ou ICC isquêmica</li>
+          <li>HEART ≤ 3 (ou ≤ 6 após observação institucional sem novos eventos)</li>
+        </ul>
+        <p class="emerg-note">Neste cenário <strong>não</strong> indique cateterismo de urgência, <strong>não</strong> inicie dual therapy de SCA e <strong>não</strong> use GRACE para forçar invasão.</p>
+        <button type="button" class="emerg-stemi-trigger" data-sca-goto="nao-sca">
+          <strong>Descartar SCA / sem cateterismo</strong>
+          <small>Voltar ao atendimento — causa não cardíaca ou baixo risco</small>
+        </button>
+      </div>
+
+      <p class="emerg-section-label"><strong>Só continue abaixo se NÃO houver descarte</strong></p>
+      <ul>
+        <li><strong>NSTEMI:</strong> troponina ↑ (com ou sem alteração de ST/T)</li>
+        <li><strong>Angina instável:</strong> troponina − <em>mas</em> ECG isquêmico, dor refratária ou alta suspeita clínica</li>
+        <li>Se só dor atípica + troponinas − + ECG normal → volte ao <em>Descarte seguro</em> (acima)</li>
+      </ul>
+
+      <h4>Se SCA (NSTEMI / AI) — medicações</h4>
       <table class="emerg-table">
         <tr><th>Agora</th><th>Dose / nota</th></tr>
         <tr><td><strong>AAS</strong></td><td>150–300 mg VO (mastigar) → 75–100 mg/dia</td></tr>
@@ -389,7 +414,6 @@ const SCA_PROTOCOLS = [
         <tr><td><strong>Anticoagulante</strong></td><td>Enoxaparina 1 mg/kg SC 12/12 h · ou fondaparinux 2,5 mg SC/dia · ou HNF 60 U/kg IV (máx. 4000 U)</td></tr>
         <tr><td>Adjuntos</td><td>Estatina alta intensidade (ex.: atorvastatina 80 mg); betabloqueador se PA/FC altas e sem IC aguda; evitar AINE</td></tr>
       </table>
-      <p class="emerg-note">Troponina ↑ = NSTEMI · troponina − com clínica/ECG de isquemia = angina instável.</p>
 
       <h4>Indicadores de invasão imediata (&lt; 2 h) — independente do GRACE</h4>
       <ul>
@@ -398,15 +422,16 @@ const SCA_PROTOCOLS = [
         <li>Complicações mecânicas (IAM com choque, MR aguda, VSR)</li>
         <li>Arritmias ventriculares recorrentes</li>
       </ul>
+      <p class="emerg-note">Troponinas seriadas negativas <strong>sem</strong> esses critérios <strong>não</strong> indicam cateterismo de urgência.</p>
 
       <h4>Conduta após a estratificação</h4>
+      <p>Use o GRACE <strong>somente</strong> se NSTEMI/AI estiver confirmado (acima). Não aplique GRACE para decidir cateterismo em dor com troponinas negativas e ECG sem isquemia.</p>
       <table class="emerg-table">
-        <tr><th>GRACE</th><th>Tempo da coronariografia</th></tr>
+        <tr><th>GRACE (só se SCA)</th><th>Tempo da coronariografia</th></tr>
         <tr><td><strong>≥ 140</strong></td><td>Invasiva &lt; <strong>24 h</strong></td></tr>
         <tr><td>109 – 139</td><td>Invasiva &lt; 72 h</td></tr>
         <tr><td>&lt; 109</td><td>Individualizar (conservadora / eletiva)</td></tr>
       </table>
-      <p class="emerg-note">GRACE (acima) + critérios de &lt; 2 h definem <em>quando</em> invadir; AAS + P2Y12 + anticoagulante já estão na primeira etapa.</p>
     `
   },
   {
@@ -2487,10 +2512,13 @@ const EMERG_PROTOCOL_SCORES = {
 const EMERG_NEXT_PROTOCOLS = {
   'sca:dor-inicial': [
     { id: 'stemi', label: 'Com supra de ST → STEMI' },
-    { id: 'nstemi-ua', label: 'Sem supra → NSTEMI / Angina instável' },
-    { action: 'nao-sca', label: 'Baixo risco / causa não cardíaca → voltar às queixas' }
+    { id: 'nstemi-ua', label: 'Sem supra → investigar / descarte ou NSTEMI' },
+    { action: 'nao-sca', label: 'Já descartado / não cardíaca → voltar às queixas' }
   ],
-  'sca:nstemi-ua': [{ id: 'ecg-modelos', label: 'Revisar o padrão eletrocardiográfico → modelos de ECG na SCA' }],
+  'sca:nstemi-ua': [
+    { action: 'nao-sca', label: 'Troponinas negativas + ECG sem isquemia → descarte / sem cateterismo' },
+    { id: 'ecg-modelos', label: 'Revisar o padrão eletrocardiográfico → modelos de ECG' }
+  ],
   'avc:fast': [
     { id: 'trombolise', label: 'Abrir trombólise', require: 'avc-lise' },
     { id: 'trombectomia', label: 'Abrir trombectomia (LVO / janela estendida)' }
