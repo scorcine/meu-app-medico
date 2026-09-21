@@ -284,5 +284,91 @@ const CALC_NEFRO = {
               ${doseNota}
               <p class="calc-note">Koyner et al., 2013; validado em IRA com creatinina em ascensão. Aplicar após euvolemia/restauração de volume.</p>`;
     }
+  },
+
+  'na-reposicao': {
+    title: 'Reposição de sódio (hiponatremia)',
+    html: `
+      <label>Sexo</label>
+      <select name="sexo" required>
+        <option value="M">Masculino</option>
+        <option value="F">Feminino</option>
+      </select>
+      <label>Idade (anos)</label>
+      <input name="idade" type="number" min="1" max="120" required>
+      <label>Peso (kg)</label>
+      <input name="peso" type="number" step="0.1" min="1" required>
+      <label>Na⁺ atual (mEq/L)</label>
+      <input name="na" type="number" step="0.1" min="80" max="160" required>
+      <label>Na⁺ alvo (mEq/L)</label>
+      <input name="naAlvo" type="number" step="0.1" min="110" max="145" value="130" required>
+      <label>Solução de infusão</label>
+      <select name="infusao" required>
+        <option value="nacl3">NaCl 3% (513 mEq/L)</option>
+        <option value="nacl09">SF 0,9% (154 mEq/L)</option>
+        <option value="nacl045">SF 0,45% (77 mEq/L)</option>
+        <option value="ringer">Ringer lactato (130 mEq/L)</option>
+        <option value="sg5">SG 5% (0 mEq/L) — água livre</option>
+      </select>
+      <label class="calc-check"><input type="checkbox" name="ods"> Alto risco de mielinólise (etilismo, desnutrição, cirrose, Na⁺ &lt; 105)</label>
+    `,
+    calculate (form) {
+      const sexo = nSel(form, 'sexo');
+      const idade = nNum(form, 'idade');
+      const peso = nNum(form, 'peso');
+      const na = nNum(form, 'na');
+      const naAlvo = nNum(form, 'naAlvo');
+      const infusao = nSel(form, 'infusao');
+      const ods = nChk(form, 'ods');
+
+      if (![idade, peso, na, naAlvo].every(Number.isFinite)) {
+        return alert('Preencha sexo, idade, peso, Na⁺ atual e Na⁺ alvo.');
+      }
+      if (naAlvo <= na) return alert('O Na⁺ alvo deve ser maior que o Na⁺ atual.');
+
+      const infusates = {
+        nacl3: { na: 513, label: 'NaCl 3%' },
+        nacl09: { na: 154, label: 'SF 0,9%' },
+        nacl045: { na: 77, label: 'SF 0,45%' },
+        ringer: { na: 130, label: 'Ringer lactato' },
+        sg5: { na: 0, label: 'SG 5%' }
+      };
+      const inf = infusates[infusao] || infusates.nacl3;
+      const idoso = idade >= 65;
+      const frac = sexo === 'M' ? (idoso ? 0.5 : 0.6) : (idoso ? 0.45 : 0.5);
+      const tbw = frac * peso;
+      const deficit = tbw * (naAlvo - na);
+      const deltaPerL = (inf.na - na) / (tbw + 1);
+      const limite24 = ods || na < 105 ? 6 : 8;
+      const deltaSeguro = Math.min(naAlvo, na + limite24) - na;
+      const litros24 = deltaPerL > 0 ? deltaSeguro / deltaPerL : NaN;
+      const ml24 = litros24 * 1000;
+      const mlH = ml24 / 24;
+      const deltaBolus100 = ((513 - na) / (tbw + 1)) * 0.1;
+      const deltaBolus150 = ((513 - na) / (tbw + 1)) * 0.15;
+
+      let alerta = '';
+      if (na >= 135) alerta = '<p class="calc-note">Na⁺ ≥ 135 mEq/L — não é hiponatremia; revise o valor.</p>';
+      else if (na < 120) alerta = '<p><strong>Na⁺ &lt; 120:</strong> se encefalopatia/convulsão — bolus de NaCl 3% antes de infusão contínua.</p>';
+
+      let fluidoNota = '';
+      if (deltaPerL <= 0) {
+        fluidoNota = `<p><strong>Atenção:</strong> ${inf.label} tende a <em>baixar</em> o Na⁺ neste paciente (Na da infusão ≤ Na sérico). Em hiponatremia, use NaCl 3% se sintomático ou SF 0,9% se hipovolêmico.</p>`;
+      }
+
+      const volumeBlock = Number.isFinite(litros24) && litros24 > 0
+        ? `<p><strong>Volume estimado em 24 h</strong> (↑ ${deltaSeguro.toFixed(1)} mEq/L com ${inf.label}): <strong>${ml24.toFixed(0)} mL</strong> (~${mlH.toFixed(0)} mL/h)</p>`
+        : '';
+
+      return `${alerta}
+              <p><strong>Água corporal total (TBW):</strong> ${tbw.toFixed(1)} L (fração ${frac} × ${peso} kg)</p>
+              <p><strong>Déficit de Na⁺ até ${naAlvo} mEq/L:</strong> ${deficit.toFixed(0)} mEq</p>
+              <p><strong>Adrogué-Madias</strong> (ΔNa por 1 L de ${inf.label}): <strong>${deltaPerL.toFixed(2)} mEq/L</strong></p>
+              ${volumeBlock}
+              ${fluidoNota}
+              <p><strong>Bolus NaCl 3% 100 mL:</strong> ↑ Na⁺ estimado ${deltaBolus100.toFixed(1)} mEq/L · <strong>150 mL:</strong> ${deltaBolus150.toFixed(1)} mEq/L</p>
+              <p><strong>Limite de correção 24 h:</strong> ≤ ${limite24} mEq/L${ods || na < 105 ? ' (alto risco de mielinólise)' : ''} · não ultrapassar 18 mEq/L em 48 h</p>
+              <p class="calc-note">Adrogué HJ, Madias NE. NEJM 2000. Estimativa — dosar Na⁺ 1–2 h após bolus e q4–6 h na infusão. SIADH: SF 0,9% pode piorar se Na+K urinários &gt; 154.</p>`;
+    }
   }
 };

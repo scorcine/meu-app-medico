@@ -441,7 +441,7 @@ const PS_CONTENT_2 = {
     <ol class="emerg-steps">
       <li><strong>Hipercalemia</strong> (K+ ≥ 6,5 ou ECG alterado): cálcio EV (gluconato 10% 10 mL) → insulina 10 U + SG 25 g → salbutamol nebul 10–20 mg; diálise se refratária.</li>
       <li><strong>Hipocalemia</strong> (K+ &lt; 3,0 ou arritmia): KCl EV máx. 10–20 mEq/h em acesso central se K+ &lt; 2,5; oral 40–80 mEq/dia se leve.</li>
-      <li><strong>Hiponatremia grave</strong> (Na+ &lt; 120 + sintomas — convulsão, rebaixamento): SF 3% 100 mL EV em 10 min — repetir 2× se necessário; meta ↑ Na+ ≤ 8 mEq/L em 24 h (≤ 18 mEq/L em 48 h).</li>
+      <li><strong>Hiponatremia grave</strong> (Na+ &lt; 120 + sintomas — convulsão, rebaixamento): protocolo dedicado <em>Hiponatremia — reposição de sódio</em> — SF 3% 100–150 mL EV em 10–20 min; meta ↑ Na+ ≤ 8 mEq/L em 24 h.</li>
       <li><strong>Hiponatremia crônica assintomática:</strong> restrição hídrica; correção lenta — evitar mielinólise.</li>
       <li><strong>Hipernatremia:</strong> SF 0,45% ou SG 5% — meta ↓ Na+ ≤ 10 mEq/L em 24 h; tratar causa (perdas, diabetes insípido).</li>
       <li><strong>Hipocalcemia sintomática</strong> (tetania, QT longo): gluconato de cálcio 10% 10 mL EV lento; manutenção e vitamina D conforme causa.</li>

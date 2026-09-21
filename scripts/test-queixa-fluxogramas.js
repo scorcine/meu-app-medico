@@ -120,6 +120,7 @@ const variacoes = [
   ['bateu a cabeça', 'emerg:trauma:pecarn-tce'],
   ['pressão alta', 'emerg:pressao-arritmias:crise-hipertensiva'],
   ['açúcar baixo', 'emerg:reacoes-metabolicas:hipoglicemia-grave'],
+  ['hiponatremia', 'emerg:reacoes-metabolicas:hiponatremia'],
   ['perda de força de um lado', 'emerg:avc:fast'],
   ['sangue nas fezes', 'ps:hda'],
   ['picada de cobra', 'ps:acidente-ofidico'],

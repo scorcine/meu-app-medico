@@ -289,7 +289,7 @@ const CALC_AREAS = [
     id: 'nefrologia',
     icon: '💧',
     name: 'Nefrologia',
-    calculators: ['cockcroft', 'egfr', 'fena', 'rifle-kdigo', 'anion-osm', 'fst']  },
+    calculators: ['cockcroft', 'egfr', 'fena', 'rifle-kdigo', 'anion-osm', 'fst', 'na-reposicao']  },
   {
     id: 'hepatologia',
     icon: '🧪',
@@ -571,6 +571,7 @@ const CALC_META = {
   'rifle-kdigo': { icon: '🏥' },
   'anion-osm': { icon: '🧪' },
   fst: { icon: '💉' },
+  'na-reposicao': { icon: '🧂' },
   'child-pugh': { icon: '📋' },
   meld: { icon: '🫀' },
   maddrey: { icon: '🍺' },

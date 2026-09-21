@@ -92,7 +92,7 @@ try {
     'pronto-socorro-content-1.js', 'pronto-socorro-content-2.js', 'pronto-socorro-content-3.js',
     'pronto-socorro-content-4.js', 'pronto-socorro-content-5.js', 'pronto-socorro.js'
   ], ['PS_CONDITIONS', 'PS_CONTENT']);
-  if (ps.PS_CONDITIONS?.length === 106) pass('Pronto-socorro', '106 condições');
+  if (ps.PS_CONDITIONS?.length === 107) pass('Pronto-socorro', '107 condições');
   else fail('Pronto-socorro', (ps.PS_CONDITIONS?.length || 0) + ' condições');
   const sepse = ps.PS_CONDITIONS?.find(c => c.id === 'sepse-choque-septico');
   if (sepse && ps.PS_CONTENT?.['sepse-choque-septico']?.length > 50) pass('PS · sepse', 'conteúdo OK');

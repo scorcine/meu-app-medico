@@ -22,7 +22,7 @@
   <script defer src="calculators-risco.js"></script>
   <script defer src="calculators-cardio.js"></script>
   <script defer src="calculators-pneumo.js?v=rsi-patient"></script>
-  <script defer src="calculators-nefro.js"></script>
+  <script defer src="calculators-nefro.js?v=na-reposicao-v1"></script>
   <script defer src="calculators-hepato.js"></script>
   <script defer src="calculators-endocrino.js"></script>
   <script defer src="calculators-onco.js"></script>
@@ -36,23 +36,23 @@
   <script defer src="calculators-derma.js"></script>
   <script defer src="calculators-orto.js"></script>
   <script defer src="calculators-extras.js?v=procedimentos"></script>
-  <script defer src="emergency-guide.js?v=sca-ruleout-v1"></script>
+  <script defer src="emergency-guide.js?v=hiponatremia-v1"></script>
   <script defer src="ventilacao-mecanica.js?v=vm-calc-v2"></script>
   <script defer src="tratamento-hospitalar-content-1.js?v=respiratorio-opcoes-v1"></script>
-  <script defer src="tratamento-hospitalar-content-2.js?v=ascite-v1"></script>
-  <script defer src="tratamento-hospitalar.js?v=ascite-v1"></script>
+  <script defer src="tratamento-hospitalar-content-2.js?v=hiponatremia-v1"></script>
+  <script defer src="tratamento-hospitalar.js?v=hiponatremia-v1"></script>
   <script defer src="pronto-socorro-content-1.js?v=fechar-conduta-ps-v1"></script>
-  <script defer src="pronto-socorro-content-2.js?v=respiratorio-opcoes-v1"></script>
+  <script defer src="pronto-socorro-content-2.js?v=hiponatremia-v1"></script>
   <script defer src="pronto-socorro-content-3.js?v=ps-etiology-v4"></script>
   <script defer src="pronto-socorro-content-4.js?v=ps-etiology-v4"></script>
-  <script defer src="pronto-socorro-content-5.js?v=ps-etiology-v4"></script>
+  <script defer src="pronto-socorro-content-5.js?v=hiponatremia-v1"></script>
   <script defer src="ps-drug-meta-gaps.js?v=med-v2-gaps"></script>
   <script defer src="med-promoted-meta.js?v=med-v6-batch2"></script>
-  <script defer src="pronto-socorro-interactive-drugs.js?v=respiratorio-opcoes-v1"></script>
+  <script defer src="pronto-socorro-interactive-drugs.js?v=hiponatremia-v1"></script>
   <script defer src="pronto-socorro-interactive-data.js?v=opcoes-etapa-v1"></script>
-  <script defer src="clinical-pathway-meta.js?v=alta-review-v2"></script>
+  <script defer src="clinical-pathway-meta.js?v=hiponatremia-v1"></script>
   <script defer src="pronto-socorro-interactive-core.js?v=fluxo-clinico-v3"></script>
-  <script defer src="pronto-socorro.js?v=ps-etiology-v4"></script>
+  <script defer src="pronto-socorro.js?v=hiponatremia-v1"></script>
   <script defer src="medicacoes-classes.js?v=med-v2-gaps"></script>
   <script defer src="medicacoes-data.js?v=med-v6-batch2"></script>
   <script defer src="medicacoes-rename-loader.js?v=med-v6-batch2"></script>
@@ -70,12 +70,12 @@
   <script defer src="clinical-allergies.js?v=allergy-gate-v2"></script>
   <script defer src="exames-data.js?v=atendimento-v3"></script>
   <script defer src="exames.js?v=atendimento-v3"></script>
-  <script defer src="interpretacao-exame-data.js?v=atendimento-v3"></script>
+  <script defer src="interpretacao-exame-data.js?v=hiponatremia-v1"></script>
   <script defer src="interpretacao-exame.js?v=atendimento-v3"></script>
   <script defer src="pacientes.js?v=atendimento-v4"></script>
   <script defer src="consultas.js?v=atend-save-v1"></script>
   <script defer src="medhub-config.js?v=site-v1"></script>
-  <script defer src="ferramentas.js?v=atendimentos-menu-v1"></script>
+  <script defer src="ferramentas.js?v=hiponatremia-v1"></script>
   <script defer src="flashcards/deck-sepse.js?v=fc-v11"></script>
   <script defer src="flashcards/deck-iam.js?v=fc-v11"></script>
   <script defer src="flashcards/deck-avc.js?v=fc-v11"></script>
@@ -93,11 +93,11 @@
   <script defer src="clinical-cloud.js?v=cloud-sync-v1"></script>
   <script defer src="subscription.js?v=access-v1"></script>
   <script defer src="auth-cloud.js?v=cloud-v21"></script>
-  <script defer src="app-search.js?v=search-v3"></script>
+  <script defer src="app-search.js?v=hiponatremia-v1"></script>
   <script defer src="medhub-site-config.js?v=atendimentos-menu-v1"></script>
-  <script defer src="novo-atendimento.js?v=sca-ruleout-v1"></script>
+  <script defer src="novo-atendimento.js?v=hiponatremia-v1"></script>
   <script defer src="app-update-check.js?v=update-check-v1"></script>
-  <script defer src="app.js?v=ps-nav-v1"></script>
+  <script defer src="app.js?v=hiponatremia-v1"></script>
   <script defer src="auth.js?v=compliance-v1"></script>
   <script defer src="pwa-install.js?v=pwa-v5"></script>
 </head>
@@ -373,6 +373,7 @@
                 <option value="Trauma"></option>
                 <option value="Anafilaxia"></option>
                 <option value="Hipoglicemia"></option>
+                <option value="Hiponatremia"></option>
                 <option value="Hipercalemia"></option>
                 <option value="Cetoacidose diabética"></option>
                 <option value="Crise hipertensiva"></option>
@@ -821,7 +822,7 @@
             <h2>Prescrições de Pronto Socorro</h2>
             <p class="muted">Condutas de plantão — medicações disponíveis no Brasil (ANVISA/SUS). Revisado jun/2026.</p>
             <label class="ps-search-label" for="ps-search">Buscar condição</label>
-            <input id="ps-search" class="ps-search" type="search" placeholder="Ex.: dengue, asma, sepse, ITU…" autocomplete="off">
+            <input id="ps-search" class="ps-search" type="search" placeholder="Ex.: dengue, asma, sepse, hiponatremia…" autocomplete="off">
             <p id="ps-count" class="ps-count muted"></p>
             <div id="ps-condition-grid" class="calc-category-grid ps-condition-grid"></div>
             <p id="ps-empty" class="ps-placeholder" hidden>Nenhuma condição encontrada para esta busca.</p>

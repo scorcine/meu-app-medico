@@ -1,6 +1,6 @@
 /* Prescrições de Pronto Socorro — condições e navegação */
 
-const MEDHUB_PS_BUILD = 'ps-etiology-v4';
+const MEDHUB_PS_BUILD = 'ps-hiponatremia-v1';
 
 const PS_CONTENT = Object.assign(
   {},
@@ -54,7 +54,7 @@ const PS_CONDITIONS = [
   { id: 'diarreia-gastroenterite', name: 'Diarreia aguda / gastroenterite', icon: '🚽' },
   { id: 'dispepsia-drge', name: 'Dispepsia, gastrite aguda, DRGE', icon: '🫃' },
   { id: 'diverticulite', name: 'Diverticulite aguda (classificação Hinchey)', icon: '🩹' },
-  { id: 'disturbios-eletroliticos', name: 'Distúrbios hidroeletrolíticos (hipo/hiper-natremia, ‑calemia, ‑calcemia)', icon: '⚗️', emerg: { topic: 'reacoes-metabolicas', protocol: 'hipercalemia' } },
+  { id: 'disturbios-eletroliticos', name: 'Distúrbios hidroeletrolíticos (hipo/hiper-natremia, ‑calemia, ‑calcemia)', icon: '⚗️', aliases: ['hiponatremia', 'hipernatremia', 'hipocalemia', 'hipercalemia', 'sodio', 'potassio', 'eletrolito'], emerg: { topic: 'reacoes-metabolicas', protocol: 'hipercalemia' } },
   { id: 'dpoc-exacerbada', name: 'DPOC exacerbada', icon: '🫁' },
   { id: 'edema-agudo-pulmao', name: 'Edema agudo de pulmão', icon: '🫁' },
   { id: 'edema-angioneurotico', name: 'Edema angioneurótico', icon: '🐝' },
@@ -78,6 +78,7 @@ const PS_CONDITIONS = [
   { id: 'herpes-zoster', name: 'Herpes simples labial & herpes zóster', icon: '🔬' },
   { id: 'crise-hipertensiva', name: 'Hipertensão — crise hipertensiva (urgência & emergência)', icon: '🔴', emerg: { topic: 'pressao-arritmias', protocol: 'crise-hipertensiva' } },
   { id: 'hipoglicemia-grave', name: 'Hipoglicemia grave', icon: '🍬', emerg: { topic: 'reacoes-metabolicas', protocol: 'hipoglicemia-grave' } },
+  { id: 'hiponatremia', name: 'Hiponatremia — reposição de sódio (NaCl 3%)', icon: '🧂', aliases: ['hiponatremia', 'sodio baixo', 'nacl 3%', 'salina hipertonica', 'siadh', 'reposicao de sodio'], emerg: { topic: 'reacoes-metabolicas', protocol: 'hiponatremia' } },
   { id: 'hordeolo', name: 'Hordéolo (terçol)', icon: '👁️' },
   { id: 'impetigo', name: 'Impetigo', icon: '🦠' },
   { id: 'insolacao', name: 'Insolação / queimadura solar', icon: '☀️', emerg: { topic: 'toxicologia', protocol: 'hipertermia-maligna-calor' } },
@@ -144,6 +145,27 @@ PS_CONDITIONS.forEach(c => {
 
 let currentPsConditionId = null;
 
+function psNormSearch (text) {
+  return String(text || '')
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9\s]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function psConditionMatchesQuery (condition, query) {
+  const q = psNormSearch(query);
+  if (!q) return true;
+  const hay = psNormSearch([
+    condition.name,
+    condition.id.replace(/-/g, ' '),
+    ...(condition.aliases || [])
+  ].join(' '));
+  return hay.includes(q);
+}
+
 function initProntoSocorro () {
   const grid = document.getElementById('ps-condition-grid');
   if (!grid || grid.dataset.psBound) return;
@@ -154,9 +176,9 @@ function initProntoSocorro () {
   const search = document.getElementById('ps-search');
   if (search) {
     search.addEventListener('input', () => {
-      const q = search.value.trim().toLowerCase();
+      const q = search.value.trim();
       const filtered = q
-        ? PS_CONDITIONS.filter(c => c.name.toLowerCase().includes(q))
+        ? PS_CONDITIONS.filter(c => psConditionMatchesQuery(c, q))
         : PS_CONDITIONS;
       renderPsGrid(filtered);
     });

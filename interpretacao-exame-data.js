@@ -76,11 +76,13 @@ const INTERP_CONTENT = {
     </ul>`,
 
   sodio: `
-    <h4>Hiponatremia</h4>
+    <h4>Hiponatremia (Na⁺ &lt; 135 mEq/L)</h4>
     <ul>
-      <li>Classificar: hipovolêmica, euvolêmica (SIADH), hipervolêmica (IC, cirrose)</li>
+      <li>Classificar tonicidade (osm. efetiva = 2×Na + glicose/18) e volume: hipovolêmica, euvolêmica (SIADH), hipervolêmica (IC, cirrose)</li>
       <li>Na osmolar, Na urinário, ácido úrico, TSH/cortisol se euvolêmica</li>
-      <li>Corrigir lentamente — risco mielinólise se &gt; 8–10 mEq/L/24 h</li>
+      <li><strong>Grave sintomática:</strong> NaCl 3% 100–150 mL EV em 10–20 min — meta ↑ 4–6 mEq/L e cessar sintomas</li>
+      <li>Corrigir lentamente depois — teto ↑ 8 mEq/L/24 h (6 se etilismo, desnutrição, cirrose, Na⁺ &lt; 105) — risco de mielinólise</li>
+      <li>Ver protocolo <em>Hiponatremia — reposição de sódio</em> e calculadora de déficit / Adrogué-Madias</li>
     </ul>
     <h4>Hipernatremia</h4>
     <ul>

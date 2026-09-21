@@ -494,5 +494,64 @@ const PS_CONTENT_5 = {
     <ul>
       <li>Proteinúria (relacao ou 24 h) · hemograma · TGO/TGP · creatinina · ácido úrico · USG obstétrico</li>
     </ul>
-    <p class="emerg-note">MS/FEbrasgo · ACOG pré-eclâmpsia. Conteúdo educacional.</p>`
+    <p class="emerg-note">MS/FEbrasgo · ACOG pré-eclâmpsia. Conteúdo educacional.</p>`,
+
+  'hiponatremia': `
+    <p class="muted">Na⁺ &lt; 135 mEq/L — gravidade clínica (encefalopatia, convulsão) manda mais que o número. Confirmar hipotonicidade efetiva; repor conforme volume e sintomas. Correção rápida demais → mielinólise.</p>
+    <h4>Prescrições de pronto-socorro</h4>
+    <ol class="emerg-steps">
+      <li><strong>ABC e confirmação</strong> — glicemia capilar, osmolaridade efetiva (2×Na + glicose/18), volume (hipo/eu/hipervolemia), Na⁺ urinário.</li>
+      <li><strong>Grave sintomática</strong> (convulsão, coma, rebaixamento, herniação)
+        <ul class="ps-med-options">
+          <li><strong>1ª linha:</strong> NaCl 3% 100–150 mL EV em 10–20 min (ou 2 mL/kg) — repetir 1–2× se persistir; meta ↑ Na⁺ 4–6 mEq/L e cessar sintomas.</li>
+          <li><strong>Alternativa (sem NaCl 3% pronto):</strong> preparar 100 mL a 3% com 15 mL NaCl 20% + 85 mL água destilada; infundir em 10–20 min.</li>
+          <li><strong>Alérgico / contraindicação:</strong> não há substituto da hipertônica na encefalopatia; se sobrecarga grave, associar furosemida 20–40 mg EV após o bolus.</li>
+          <li><strong>Refractário:</strong> 3º bolus NaCl 3% 100 mL · via aérea se rebaixamento · UTI / nefrologia.</li>
+        </ul>
+      </li>
+      <li><strong>Hipovolêmica</strong> (vômitos, diarreia, diurético, 3º espaço)
+        <ul class="ps-med-options">
+          <li><strong>1ª linha:</strong> SF 0,9% 20 mL/kg EV se choque ou desidratação; depois manutenção 1–1,5 mL/kg/h com Na⁺ seriado.</li>
+          <li><strong>Alternativa:</strong> SF 0,9% 500–1000 mL EV em 1–2 h se hipovolemia sem choque; repor K⁺ se hipocalemia associada.</li>
+          <li><strong>Alérgico:</strong> Ringer lactato se SF indisponível (Na 130 — menos eficaz para subir Na⁺).</li>
+          <li><strong>Refractário:</strong> NaCl 3% se evoluir com sintomas neurológicos apesar da reposição isotônica.</li>
+        </ul>
+      </li>
+      <li><strong>Euvolêmica / SIADH</strong>
+        <ul class="ps-med-options">
+          <li><strong>1ª linha:</strong> restrição hídrica 800–1000 mL/dia + suspender causa (tiazídico, ISRS, carbamazepina, AINE); NaCl 3% só se sintomático.</li>
+          <li><strong>Alternativa:</strong> furosemida 20–40 mg EV + reposição de NaCl se SIADH com Na⁺ &lt; 125 e sobrecarga leve.</li>
+          <li><strong>Alérgico:</strong> restrição isolada se diurético contraindicado; hidrocortisona 100 mg EV 8/8 h se suspeita de insuficiência adrenal.</li>
+          <li><strong>Refractário:</strong> ureia VO ou vaptano (tolvaptano) com nefrologia — <em>não</em> usar vaptano na forma grave sintomática.</li>
+        </ul>
+      </li>
+      <li><strong>Hipervolêmica</strong> (IC, cirrose, DRC)
+        <ul class="ps-med-options">
+          <li><strong>1ª linha:</strong> restrição de água e sódio + furosemida 40–80 mg EV (titular diurese).</li>
+          <li><strong>Alternativa:</strong> furosemida 20 mg EV se DRC leve / risco de ototoxicidade; restrição hídrica 800–1000 mL/dia.</li>
+          <li><strong>Alérgico:</strong> restrição isolada se anúria — diálise se Na⁺ grave ou sobrecarga refratária.</li>
+          <li><strong>Refractário:</strong> NaCl 3% 100 mL só se encefalopatia + furosemida concomitante; transferência / diálise.</li>
+        </ul>
+      </li>
+      <li><strong>Infusão contínua após estabilizar</strong> — NaCl 3% 0,5–1 mL/kg/h EV com bomba; dosar Na⁺ q4–6 h. Meta ↑ ≤ 8 mEq/L em 24 h (≤ 6 se etilismo, desnutrição, cirrose ou Na⁺ &lt; 105). Calculadora de déficit / Adrogué-Madias abaixo.</li>
+    </ol>
+    <div class="calc-block calc-block-single emerg-calc-block emerg-calc-wide emerg-score-block">
+      <p class="emerg-score-title"><strong>Déficit de Na⁺ e Adrogué-Madias</strong> — volume estimado; confirmar com Na⁺ seriado.</p>
+      <form class="calc-form" data-emerg-calc="na-reposicao" data-emerg-calc-inject="1">
+        <button type="submit">Calcular reposição de sódio</button>
+      </form>
+      <div class="calc-result" hidden></div>
+    </div>
+    <h4>Alta / ambulatorial</h4>
+    <ul>
+      <li>Não alta se Na⁺ &lt; 125, sintomas neurológicos ou causa não definida.</li>
+      <li>Leve assintomática com causa clara (tiazídico): suspender droga, orientação hídrica, retorno com Na⁺ em 24–72 h.</li>
+    </ul>
+    <h4>Exames / investigação</h4>
+    <ul>
+      <li>Na⁺, K⁺, Cl⁻, glicemia, ureia, creatinina, osmolaridade sérica e urinária, Na urinário, TSH, cortisol se euvolêmica.</li>
+      <li>TC crânio se déficit focal ou primeira convulsão.</li>
+    </ul>
+    <p class="emerg-note">ERA / European Society of Endocrinology 2014 · Adrogué-Madias. Conteúdo educacional — não substitui julgamento clínico.</p>
+  `
 };

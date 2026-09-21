@@ -1,6 +1,6 @@
 /* Tratamento hospitalar — condições com medicação IM/EV e navegação */
 
-const MEDHUB_TH_BUILD = 'th-auto-v9';
+const MEDHUB_TH_BUILD = 'th-hiponatremia-v1';
 
 const TH_CONTENT = Object.assign(
   {},
@@ -29,7 +29,7 @@ const TH_CONDITIONS = [
   { id: 'crise-tireotoxica', name: 'Crise tireotóxica / tempestade tiroidiana', icon: '🦋', aliases: ['crise tireotoxica', 'tempestade tiroidiana'] },
   { id: 'dengue-dor', name: 'Dengue — analgesia hospitalar', icon: '🦟', aliases: ['dengue'] },
   { id: 'diverticulite', name: 'Diverticulite aguda complicada', icon: '🩹', aliases: ['diverticulite'] },
-  { id: 'disturbios-eletroliticos', name: 'Distúrbios hidroeletrolíticos sintomáticos', icon: '⚗️', aliases: ['hiponatremia', 'hipercalemia', 'eletrolito'] },
+  { id: 'disturbios-eletroliticos', name: 'Distúrbios hidroeletrolíticos sintomáticos', icon: '⚗️', aliases: ['hipercalemia', 'hipocalemia', 'eletrolito', 'hipernatremia'] },
   { id: 'dor-abdominal', name: 'Dor abdominal aguda', icon: '🫃', aliases: ['dor abdominal', 'abdomen agudo', 'dor de barriga'] },
   { id: 'dor-toracica', name: 'Dor torácica / SCA suspeita', icon: '❤️‍🔥', aliases: ['dor toracica', 'dor no peito', 'sca', 'infarto'] },
   { id: 'dpoc-exacerbada', name: 'DPOC exacerbada', icon: '🫁', aliases: ['dpoc', 'exacerbacao dpoc'] },
@@ -40,6 +40,7 @@ const TH_CONDITIONS = [
   { id: 'hda', name: 'Hemorragia digestiva alta', icon: '🩸', aliases: ['hda', 'hemorragia digestiva'] },
   { id: 'herpes-zoster', name: 'Herpes zóster (internação / imunossuprimido)', icon: '🔬', aliases: ['herpes zoster', 'zoster'] },
   { id: 'hipoglicemia', name: 'Hipoglicemia', icon: '🍬', aliases: ['hipoglicemia'] },
+  { id: 'hiponatremia', name: 'Hiponatremia — reposição de sódio', icon: '🧂', aliases: ['hiponatremia', 'sodio baixo', 'nacl 3%', 'salina hipertonica', 'siadh', 'reposicao de sodio', 'sodio'] },
   { id: 'influenza-gripe', name: 'Influenza / gripe com complicação', icon: '🤧', aliases: ['influenza', 'gripe'] },
   { id: 'intoxicacoes-exogenas', name: 'Intoxicações exógenas', icon: '☠️', aliases: ['intoxicacao', 'intoxicacao exogena'] },
   { id: 'leptospirose', name: 'Leptospirose — forma grave', icon: '🦠', aliases: ['leptospirose'] },

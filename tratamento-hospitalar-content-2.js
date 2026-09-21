@@ -255,5 +255,18 @@ const TH_CONTENT_2 = {
       <li><strong>Febril:</strong> dipirona 1 amp EV 6/6 h · paracetamol 1 g EV (preferir se plaquetopenia)</li>
       <li><strong>Náusea/vômitos:</strong> ondansetrona 1 amp EV · metoclopramida 1 amp EV</li>
       <li><strong>Convulsão/coma:</strong> diazepam 10 mg EV · glicose 50% EV se hipoglicemia</li>
-    </ul>`
+    </ul>`,
+
+  'hiponatremia': `
+    <p class="muted">Hiponatremia hospitalar — reposição conforme gravidade, volemia e velocidade de instalação; Na⁺ seriado obrigatório.</p>
+    <h4>Medicação IM / EV</h4>
+    <ul class="ps-med-options">
+      <li><strong>1ª linha (encefalopatia / convulsão):</strong> NaCl 3% 100–150 mL EV em 10–20 min — repetir 1–2×; meta ↑ 4–6 mEq/L e cessar sintomas</li>
+      <li><strong>Infusão contínua:</strong> NaCl 3% 0,5–1 mL/kg/h EV em bomba · Na⁺ q4–6 h · teto ↑ 8 mEq/L/24 h (6 se alto risco de mielinólise)</li>
+      <li><strong>Hipovolêmica:</strong> SF 0,9% 500–1000 mL EV + manutenção · repor KCl se hipocalemia</li>
+      <li><strong>SIADH / euvolêmica:</strong> restrição 800–1000 mL/dia · furosemida 20–40 mg EV se sobrecarga leve · hidrocortisona 100 mg EV 8/8 h se adrenal</li>
+      <li><strong>Hipervolêmica (IC / cirrose):</strong> furosemida 40–80 mg EV + restrição hídrica · NaCl 3% só se encefalopatia, com diurético concomitante</li>
+      <li><strong>Preparar NaCl 3%:</strong> 15 mL NaCl 20% + 85 mL água destilada = 100 mL a 3%</li>
+    </ul>
+    <p class="emerg-note">ERA 2014 · Adrogué-Madias. Não usar vaptano na forma grave sintomática. Conteúdo educacional.</p>`
 };

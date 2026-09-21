@@ -273,9 +273,14 @@ const NOVO_ATENDIMENTO_EMERGENCY_ROUTES = [
     alert: 'Hipercalemia grave ou com alteração no ECG: estabilizar membrana e iniciar medidas de redução do potássio.'
   },
   {
-    topic: 'reacoes-metabolicas', protocol: 'dka-hhs', icon: '🧪',
+    topic: 'reacoes-metabolicas',     protocol: 'dka-hhs', icon: '🧪',
     aliases: ['cetoacidose diabetica', 'cad', 'estado hiperosmolar', 'ehh', 'coma hiperosmolar', 'hiperglicemia', 'descompensacao diabetica'],
     alert: 'Crise hiperglicêmica: avaliar volume, potássio, cetonas, gasometria e osmolaridade antes da insulina.'
+  },
+  {
+    topic: 'reacoes-metabolicas', protocol: 'hiponatremia', icon: '🧂',
+    aliases: ['hiponatremia', 'sodio baixo', 'salina hipertonica', 'nacl 3%', 'reposicao de sodio', 'siadh', 'sodio'],
+    alert: 'Hiponatremia grave sintomática: NaCl 3% em bolus; não corrigir mais de 8 mEq/L em 24 h (risco de mielinólise).'
   },
 
   { topic: 'obstetricia', protocol: 'preeclampsia-eclampsia', icon: '🤰', aliases: ['pre eclampsia', 'preeclampsia', 'eclampsia', 'convulsao na gestante', 'crise convulsiva na gestante', 'hipertensao gestacional', 'cefaleia na gravidez', 'gravidez com hipertensao'] },
@@ -314,8 +319,8 @@ const NOVO_ATENDIMENTO_PS_ROUTES = [
   { aliases: ['palpitacao', 'taquicardia', 'arritmia'], ps: ['arritmias', 'crise-tireotoxica', 'ansiedade-crise', 'cardioversao-eletrica'] },
   { aliases: ['disuria', 'polaciuria', 'urina com sangue', 'hematuria', 'infeccao urinaria', 'itu'], ps: ['cistite-itu-baixa', 'pielonefrite', 'colica-renal', 'gonorreia-clamidia'] },
   { aliases: ['lombalgia', 'ciatalgia', 'dor cervical', 'torcicolo'], ps: ['lombalgia-ciatalgia', 'colica-renal', 'pielonefrite', 'artralgia-dor-msk'] },
-  { aliases: ['crise convulsiva', 'estado de mal epileptico', 'epilepsia'], ps: ['crise-convulsiva-em', 'hipoglicemia-grave', 'meningite-bacteriana', 'eclampsia-pre-eclampsia'] },
-  { aliases: ['confusao aguda', 'delirium', 'agitacao psicomotora', 'desorientacao'], ps: ['delirium', 'hipoglicemia-grave', 'disturbios-eletroliticos', 'pielonefrite', 'intoxicacoes-exogenas'] },
+  { aliases: ['crise convulsiva', 'estado de mal epileptico', 'epilepsia'], ps: ['crise-convulsiva-em', 'hipoglicemia-grave', 'hiponatremia', 'meningite-bacteriana', 'eclampsia-pre-eclampsia'] },
+  { aliases: ['confusao aguda', 'delirium', 'agitacao psicomotora', 'desorientacao'], ps: ['delirium', 'hipoglicemia-grave', 'hiponatremia', 'disturbios-eletroliticos', 'pielonefrite', 'intoxicacoes-exogenas'] },
   { aliases: ['odinofagia', 'faringite', 'amigdalite'], ps: ['amigdalite-bacteriana', 'mononucleose', 'gripe-influenza', 'afta-estomatite'] },
   { aliases: ['otalgia', 'otite', 'secrecao no ouvido'], ps: ['otite-media', 'otite-externa'] },
   { aliases: ['obstrucao nasal', 'coriza', 'espirros', 'rinite', 'sinusite'], ps: ['rinite-alergica', 'sinusite-aguda', 'gripe-influenza'] },
@@ -332,6 +337,7 @@ const NOVO_ATENDIMENTO_PS_ROUTES = [
   { aliases: ['lesao genital', 'ferida genital', 'ist', 'dst'], ps: ['ulceras-genitais', 'gonorreia-clamidia', 'balanopostite', 'violencia-sexual-pep'] },
   { aliases: ['artralgia', 'artrite', 'dor articular', 'gota'], ps: ['gota', 'artralgia-dor-msk', 'chikungunya', 'anemia-falciforme'] },
   { aliases: ['hipoglicemia'], ps: ['hipoglicemia-grave', 'diabetes-insulina-hipo'] },
+  { aliases: ['hiponatremia', 'sodio baixo', 'reposicao de sodio', 'nacl 3%', 'siadh'], ps: ['hiponatremia', 'disturbios-eletroliticos'] },
   { aliases: ['hiperglicemia', 'cetoacidose', 'estado hiperosmolar'], ps: ['cetoacidose-diabetica', 'estado-hiperosmolar', 'diabetes-insulina-hipo'] },
   { aliases: ['crise hipertensiva', 'hipertensao'], ps: ['crise-hipertensiva', 'edema-agudo-pulmao', 'sca-iam'] },
   { aliases: ['intoxicacao alcoolica', 'abstinencia alcoolica', 'alcoolismo'], ps: ['alcoolismo-intox-abstinencia', 'abstinencia-alcoolica', 'intoxicacoes-exogenas'] },
@@ -467,7 +473,7 @@ function novoAtendimentoPsCondition (conditionId) {
   return PS_CONDITIONS.find(condition => condition.id === conditionId) || null;
 }
 
-/** Condutas de PS ligadas à queixa: mapa curado + nome de todas as 106 condições */
+/** Condutas de PS ligadas à queixa: mapa curado + nome de todas as condições */
 function novoAtendimentoPsMatches (queixas) {
   const lista = queixas || novoAtendimentoQueixas;
   const matches = [];

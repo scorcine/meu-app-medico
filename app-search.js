@@ -10,6 +10,7 @@ const MEDHUB_SEARCH_EXTRAS = {
   itu: 'cistite pielonefrite urina',
   tep: 'embolia pulmonar tromboembolismo',
   tvp: 'trombose venosa profunda',
+  hiponatremia: 'sodio baixo nacl 3% salina hipertonica siadh mielinolise reposicao de sodio',
   anafilaxia: 'alergia urticaria epinefrina adrenalina'
 };
 
@@ -114,7 +115,7 @@ function medhubSearchBuildIndex () {
         moduleOrder: 2,
         icon: c.icon || '🏥',
         title: c.name,
-        keywords: medhubSearchExtras(c.id, c.name),
+        keywords: medhubSearchExtras(c.id, c.name) + ' ' + medhubSearchNorm((c.aliases || []).join(' ')),
         go: (function (id) {
           return function () {
             showSection('pronto-socorro');
@@ -132,7 +133,7 @@ function medhubSearchBuildIndex () {
         moduleOrder: 3,
         icon: c.icon || '🏨',
         title: c.name,
-        keywords: medhubSearchExtras(c.id, c.name),
+        keywords: medhubSearchExtras(c.id, c.name) + ' ' + medhubSearchNorm((c.aliases || []).join(' ')),
         go: (function (id) {
           return function () {
             showSection('tratamento-hospitalar');

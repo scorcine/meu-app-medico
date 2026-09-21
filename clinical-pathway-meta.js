@@ -736,6 +736,18 @@ const CLINICAL_PATHWAY_BY_ID = {
     homeRx: 'none',
     hospitalOnly: true
   },
+  hiponatremia: {
+    scores: ['na-reposicao', 'osm-efetiva'],
+    reassessment: {
+      trigger: 'after-initial-therapy',
+      label: 'Reavaliar Na⁺ e estado neurológico após a correção inicial',
+      question: 'Houve melhora neurológica com correção dentro do limite de segurança?'
+    },
+    outcomes: ['observacao', 'internacao', 'transferencia'],
+    homeRx: 'none',
+    hospitalOnly: true,
+    notes: 'Hiponatremia sintomática não fecha com alta. Correção lenta — risco de mielinólise.'
+  },
   'crise-tireotoxica': {
     scores: [],
     reassessment: null,
@@ -917,6 +929,7 @@ const CLINICAL_TH_TO_PS = {
   'dengue-dor': 'dengue',
   diverticulite: 'diverticulite',
   'disturbios-eletroliticos': 'disturbios-eletroliticos',
+  hiponatremia: 'hiponatremia',
   'dor-abdominal': 'abdome-agudo',
   'dor-toracica': 'sca-iam',
   'dpoc-exacerbada': 'dpoc-exacerbada',

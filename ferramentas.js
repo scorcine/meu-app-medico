@@ -3,7 +3,7 @@
 const FERRAMENTAS_ITEMS = [
   { section: 'calc-essenciais', icon: '🧮', name: 'Calculadoras essenciais', desc: 'Escalas, scores e doses por especialidade.' },
   { section: 'guia-emergencia', icon: '⚡', name: 'Guia rápido de emergência', desc: 'ACLS, AVC, sepse, trauma e fluxogramas.' },
-  { section: 'pronto-socorro', icon: '🏥', name: 'Prescrições PS', desc: '106 condições com prescrição interativa.' },
+  { section: 'pronto-socorro', icon: '🏥', name: 'Prescrições PS', desc: '107 condições com prescrição interativa.' },
   { section: 'tratamento-hospitalar', icon: '💉', name: 'Tratamento hospitalar', desc: 'Posologias IM/EV e internação.' },
   { section: 'ventilacao-mecanica', icon: '🫁', name: 'Ventilação mecânica', desc: 'Calculadora: PBW, Vt, PEEP e ajustes automáticos.' },
   { section: 'receituario', icon: '🏠', name: 'Tratamento para casa', desc: 'Sugestões VO · receita ambulatorial · CRM na Minha conta.' },

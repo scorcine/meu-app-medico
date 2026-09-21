@@ -1,6 +1,6 @@
 /* Guia rápido de emergência — tópicos e conteúdo — build 98041d1 */
 
-const MEDHUB_EMERG_BUILD = 'queda-tce-v1';
+const MEDHUB_EMERG_BUILD = 'hiponatremia-v1';
 
 const PARADA_PROTOCOLS = [
   {
@@ -1518,6 +1518,67 @@ const REACOES_METABOLICAS_PROTOCOLS = [
     `
   },
   {
+    id: 'hiponatremia',
+    icon: '🧂',
+    name: 'Hiponatremia — reposição de sódio',
+    html: `
+      <p>Na⁺ &lt; <strong>135 mEq/L</strong>. Gravidade clínica (encefalopatia, convulsão) manda mais que o número. Confirmar hipotonicidade efetiva antes de repor. Correção rápida demais → mielinólise pontina.</p>
+
+      <div class="emerg-flow-v">
+        <span class="emerg-flow-step">ABC · glicemia · osmolaridade efetiva · volume (hipo / eu / hipervolemia)</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step emerg-flow-decision">Sintomas graves? (convulsão, coma, rebaixamento, herniação)</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step emerg-flow-shock"><strong>Sim → NaCl 3% 100–150 mL EV em 10–20 min</strong> (ou 2 mL/kg)</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">Repetir 1–2× se persistir · meta ↑ Na⁺ <strong>4–6 mEq/L</strong> e cessar sintomas</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step">Na⁺ 1–2 h após cada bolus · depois q4–6 h</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <span class="emerg-flow-step emerg-flow-loop">Após estabilizar: infusão lenta · tratar causa · <strong>não</strong> ultrapassar o limite de 24 h</span>
+      </div>
+
+      <table class="emerg-table">
+        <tr><th>Apresentação</th><th>Conduta</th></tr>
+        <tr><td><strong>Grave sintomática</strong></td><td>NaCl 3% 100–150 mL EV em 10–20 min · repetir até 3 bolus · meta ↑ 4–6 mEq/L</td></tr>
+        <tr><td><strong>Hipovolêmica</strong></td><td>SF 0,9% 20 mL/kg se choque; depois manutenção · tratar perdas (vômito, diurético)</td></tr>
+        <tr><td><strong>Euvolêmica (SIADH)</strong></td><td>Restrição hídrica 800–1000 mL/dia · suspender droga causa · NaCl 3% só se sintomático</td></tr>
+        <tr><td><strong>Hipervolêmica</strong> (IC, cirrose)</td><td>Restrição de água e sódio · furosemida EV · não infundir volume isotônico de rotina</td></tr>
+        <tr><td><strong>Insuf. adrenal</strong></td><td>Hidrocortisona 100 mg EV 8/8 h · não atrasar se suspeita</td></tr>
+      </table>
+
+      <h4>Limites de correção (evitar mielinólise)</h4>
+      <ul>
+        <li>Meta usual: ↑ Na⁺ ≤ <strong>8 mEq/L em 24 h</strong> (≤ 18 em 48 h)</li>
+        <li>Alto risco (etilismo, desnutrição, cirrose, Na⁺ &lt; 105): ≤ <strong>6 mEq/L em 24 h</strong></li>
+        <li>Se superou o limite: desacelerar / DDAVP + SG 5% — nefrologia/UTI</li>
+      </ul>
+
+      <h4>Como preparar NaCl 3% (se não houver pronto)</h4>
+      <table class="emerg-table">
+        <tr><th>Volume final</th><th>Receita</th></tr>
+        <tr><td>100 mL a 3%</td><td><strong>15 mL NaCl 20%</strong> + 85 mL água destilada</td></tr>
+        <tr><td>250 mL a 3%</td><td><strong>37,5 mL NaCl 20%</strong> + 212,5 mL água destilada</td></tr>
+      </table>
+      <p>Ampola NaCl 20% 10 mL = 2 g = 34 mEq. Infusão contínua típica: <strong>0,5–1 mL/kg/h</strong> de NaCl 3% com Na⁺ seriado.</p>
+
+      <div class="calc-block calc-block-single emerg-calc-block emerg-calc-wide emerg-score-block">
+        <p class="emerg-score-title"><strong>Déficit de Na⁺ e Adrogué-Madias</strong> — volume estimado; confirmar com Na⁺ seriado.</p>
+        <form class="calc-form" data-emerg-calc="na-reposicao" data-emerg-calc-inject="1">
+          <button type="submit">Calcular reposição de sódio</button>
+        </form>
+        <div class="calc-result" hidden></div>
+      </div>
+
+      <h4>Exames no PS</h4>
+      <ul>
+        <li>Na⁺, K⁺, Cl⁻, glicemia, ureia, creatinina, osmolaridade sérica e urinária, Na urinário</li>
+        <li>TSH / cortisol se euvolêmica sem causa óbvia · TC crânio se déficit focal</li>
+      </ul>
+      <p class="emerg-note">ERA / European Society of Endocrinology 2014 · Adrogué-Madias. Não usar vaptano na hiponatremia grave sintomática — a 1ª linha é NaCl 3%.</p>
+    `
+  },
+  {
     id: 'dka-hhs',
     icon: '🩸',
     name: 'Cetoacidose Diabética / Estado Hiperosmolar',
@@ -2505,6 +2566,7 @@ const EMERG_PROTOCOL_SCORES = {
   'avc:trombolise': [],
   'avc:trombectomia': ['nihss'],
   'reacoes-metabolicas:dka-hhs': ['dka'],
+  'reacoes-metabolicas:hiponatremia': ['na-reposicao'],
   'obstetricia:preeclampsia-eclampsia': ['hellp']
 };
 
@@ -2744,7 +2806,7 @@ function showEmergenciaTopic (topicId) {
     return;
   }
 
-  const expectedProtocols = { 'parada-cardio': 6, 'sca': 4, 'avc': 4, 'sepse': 3, 'trauma': 5, 'via-aerea': 4, 'reacoes-metabolicas': 4, 'obstetricia': 3, 'pediatrica': 3, 'toxicologia': 4, 'pressao-arritmias': 2, 'procedimentos': 3 };
+  const expectedProtocols = { 'parada-cardio': 6, 'sca': 4, 'avc': 4, 'sepse': 3, 'trauma': 5, 'via-aerea': 4, 'reacoes-metabolicas': 5, 'obstetricia': 3, 'pediatrica': 3, 'toxicologia': 4, 'pressao-arritmias': 2, 'procedimentos': 3 };
   if (expectedProtocols[topicId]) {
     contentEl.innerHTML = `
       <p class="coming-soon"><strong>Arquivo desatualizado no navegador.</strong> Os protocolos de <em>${topic.name}</em> já existem no projeto, mas o navegador carregou uma versão antiga de <code>emergency-guide.js</code>.</p>
