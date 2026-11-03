@@ -11717,3 +11717,165 @@ body.app-page .app-content {
   color: rgba(214, 229, 255, 0.75);
   font-size: 1rem;
 }
+
+/* Plantão / suporte ao assinante */
+.suporte-plantao-card {
+  max-width: 40rem;
+}
+
+.suporte-hero {
+  margin-bottom: 1.1rem;
+}
+
+.suporte-hero h2 {
+  margin: 0.35rem 0 0.4rem;
+  font-size: 1.55rem;
+}
+
+.suporte-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0;
+  padding: 0.28rem 0.65rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, #16a34a 14%, var(--bg-surface-active));
+  border: 1px solid color-mix(in srgb, #16a34a 35%, var(--border));
+  color: color-mix(in srgb, #16a34a 80%, var(--text-primary));
+  font-size: 0.78rem;
+  font-weight: 650;
+}
+
+.suporte-badge-dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: #22c55e;
+  box-shadow: 0 0 0 3px color-mix(in srgb, #22c55e 28%, transparent);
+}
+
+.suporte-channels {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.suporte-channel {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 0.75rem;
+  align-items: center;
+  padding: 0.85rem 0.95rem;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--bg-surface);
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.15s ease, transform 0.15s ease;
+}
+
+.suporte-channel:hover,
+.suporte-channel:focus-visible {
+  border-color: color-mix(in srgb, #16a34a 55%, var(--border));
+  transform: translateY(-1px);
+}
+
+.suporte-channel-icon {
+  font-size: 1.35rem;
+  line-height: 1;
+}
+
+.suporte-channel-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.suporte-channel-body strong {
+  font-size: 0.95rem;
+}
+
+.suporte-channel-body small {
+  color: var(--text-muted, #64748b);
+  font-size: 0.8rem;
+}
+
+.suporte-channel-cta {
+  font-size: 0.8rem;
+  font-weight: 650;
+  color: #16a34a;
+  white-space: nowrap;
+}
+
+.suporte-channel--whatsapp {
+  border-color: color-mix(in srgb, #25d366 40%, var(--border));
+  background: color-mix(in srgb, #25d366 10%, var(--bg-surface));
+}
+
+.suporte-note {
+  margin-top: 1.1rem;
+  padding: 0.75rem 0.85rem;
+  border-radius: 10px;
+  border: 1px dashed var(--border);
+  font-size: 0.84rem;
+  line-height: 1.4;
+  color: var(--text-muted, #64748b);
+}
+
+.suporte-empty {
+  margin: 0.5rem 0 0;
+}
+
+.medhub-support-fab {
+  position: fixed;
+  right: max(1rem, env(safe-area-inset-right));
+  bottom: max(1rem, env(safe-area-inset-bottom));
+  z-index: 40;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.7rem 0.95rem;
+  border: none;
+  border-radius: 999px;
+  background: #16a34a;
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.9rem;
+  box-shadow: 0 10px 28px rgb(22 163 74 / 35%);
+  cursor: pointer;
+}
+
+.medhub-support-fab:hover,
+.medhub-support-fab:focus-visible {
+  background: #15803d;
+}
+
+.medhub-support-fab[hidden] {
+  display: none !important;
+}
+
+.medhub-support-fab-label {
+  letter-spacing: 0.01em;
+}
+
+@media (max-width: 640px) {
+  .suporte-channel {
+    grid-template-columns: auto 1fr;
+  }
+
+  .suporte-channel-cta {
+    grid-column: 2;
+  }
+
+  .medhub-support-fab-label {
+    display: none;
+  }
+
+  .medhub-support-fab {
+    width: 3.2rem;
+    height: 3.2rem;
+    padding: 0;
+    justify-content: center;
+    font-size: 1.25rem;
+  }
+}

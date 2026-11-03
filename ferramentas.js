@@ -19,6 +19,12 @@ const FERRAMENTAS_ITEMS = [
     name: 'Calculadora pediátrica',
     desc: 'Complemento rápido por peso/idade — o MedHub principal é voltado ao adulto.',
     pediatricAux: true
+  },
+  {
+    section: 'suporte-plantao',
+    icon: '💬',
+    name: 'Plantão / Suporte',
+    desc: 'Dúvidas do app — WhatsApp e e-mail, como um plantão ao assinante.'
   }
 ];
 

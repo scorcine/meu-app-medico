@@ -58,10 +58,23 @@ function initLinksPage () {
     ig.hidden = false;
   }
 
-  if (support && marketing?.supportEmail) {
-    support.href = 'mailto:' + marketing.supportEmail;
-    support.textContent = 'Suporte por e-mail';
-    support.hidden = false;
+  if (support && marketing) {
+    const phone = String(marketing.supportWhatsapp || '').replace(/\D/g, '');
+    if (phone) {
+      const digits = phone.startsWith('55') ? phone : '55' + phone;
+      support.href = 'https://wa.me/' + digits + '?text=' +
+        encodeURIComponent('Olá! Quero falar com o plantão MedHub.');
+      support.textContent = 'Plantão WhatsApp';
+      support.target = '_blank';
+      support.rel = 'noopener noreferrer';
+      support.hidden = false;
+    } else if (marketing.supportEmail) {
+      support.href = 'mailto:' + marketing.supportEmail;
+      support.textContent = 'Suporte por e-mail';
+      support.removeAttribute('target');
+      support.removeAttribute('rel');
+      support.hidden = false;
+    }
   }
 
   const wrap = document.getElementById('links-support-wrap');

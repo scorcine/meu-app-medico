@@ -1,7 +1,7 @@
 /* Painel administrativo MedHub — completo */
 
 const ADMIN_SESSION_UNTIL = 'medhubAdminSessionUntil';
-const ADMIN_PIN_STORAGE = 'medhubAdminPin';
+const ADMIN_PIN_STORAGE = 'medhubAdminSessionToken';
 const ADMIN_SESSION_MS = 60 * 60 * 1000;
 
 let adminAllUsers = [];
@@ -76,6 +76,24 @@ async function adminCloudLogin (email, password) {
     if (!res.ok) {
       return { ok: false, error: data.error || 'Credenciais inválidas.' };
     }
+    return { ok: true, data };
+  } catch {
+    return { ok: false, error: 'Não foi possível contactar o servidor. Verifique sua conexão.' };
+  }
+}
+
+async function adminMasterLogin (email, masterPassword) {
+  try {
+    const res = await fetch('/api/admin?action=unlock', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email: adminNormalizeEmail(email),
+        masterPassword: String(masterPassword || '')
+      })
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) return { ok: false, error: data.error || 'Credenciais administrativas inválidas.' };
     return { ok: true, data };
   } catch {
     return { ok: false, error: 'Não foi possível contactar o servidor. Verifique sua conexão.' };
@@ -237,6 +255,7 @@ async function adminFetch (path, options, fetchOptions) {
 
 async function adminApiRequest (path, options, fetchOptions) {
   const skipSessionCheck = !!(fetchOptions && fetchOptions.skipSessionCheck);
+  const masterPassword = String(fetchOptions?.masterPassword || '');
 
   if (!skipSessionCheck && !adminSessionValid()) {
     adminClearAdminSession();
@@ -247,12 +266,13 @@ async function adminApiRequest (path, options, fetchOptions) {
 
   if (!skipSessionCheck) adminTouchSession();
 
-  const pin = adminGetPin();
+  const adminSessionToken = adminGetPin();
   const headers = {
     ...(options?.headers || {}),
     ...medhubAuthHeaders()
   };
-  if (pin) headers['X-Medhub-Admin-Pin'] = pin;
+  if (adminSessionToken) headers['X-Medhub-Admin-Session'] = adminSessionToken;
+  if (masterPassword) headers['X-Medhub-Admin-Pin'] = masterPassword;
 
   let res;
   try {
@@ -298,10 +318,15 @@ function escapeAttr (str) {
 
 function adminGrantPayload () {
   const grantType = document.getElementById('grant-type')?.value || 'lifetime';
+  const accessScope = document.querySelector('input[name="grant-scope"]:checked')?.value || 'full';
   const payload = {
     email: document.getElementById('grant-email')?.value?.trim(),
     name: document.getElementById('grant-name')?.value?.trim(),
-    password: document.getElementById('grant-password')?.value || ''
+    password: document.getElementById('grant-password')?.value || '',
+    accessScope,
+    sections: accessScope === 'partial'
+      ? [...document.querySelectorAll('#grant-modules input[type="checkbox"]:checked')].map(input => input.value)
+      : []
   };
   if (grantType === 'lifetime') payload.lifetime = true;
   else if (grantType === 'year') payload.accessType = 'year';
@@ -310,6 +335,12 @@ function adminGrantPayload () {
     payload.months = Number(grantType) || 1;
   }
   return payload;
+}
+
+function adminUpdateGrantScope () {
+  const scope = document.querySelector('input[name="grant-scope"]:checked')?.value || 'full';
+  const picker = document.getElementById('grant-modules');
+  if (picker) picker.hidden = scope !== 'partial';
 }
 
 function adminOrientationText (email) {
@@ -398,6 +429,9 @@ function adminRenderUserCard (user) {
   if (user.neverReturned) pills.push('<span class="admin-pill admin-pill--muted">Nunca voltou</span>');
   if (user.hasUsedApp) pills.push('<span class="admin-pill admin-pill--ok">Usou app</span>');
   else if (user.hasAccount) pills.push('<span class="admin-pill admin-pill--muted">Só cadastro</span>');
+  if (user.access?.active && user.access.mode === 'partial') {
+    pills.push('<span class="admin-pill admin-pill--warn">' + user.access.sections.length + ' módulo(s)</span>');
+  }
 
   const endLabel = user.currentPeriodEnd
     ? adminFormatDate(user.currentPeriodEnd) + (user.daysUntilEnd != null ? ' (' + user.daysUntilEnd + 'd)' : '')
@@ -490,7 +524,7 @@ async function adminLoadUsers () {
 function adminShowPinError () {
   adminClearAdminSession();
   adminShow('admin-login-panel');
-  adminSetStatus(document.getElementById('admin-login-error'), 'PIN administrativo inválido ou ausente.', 'error');
+  adminSetStatus(document.getElementById('admin-login-error'), 'Senha master inválida ou ausente.', 'error');
   const pinRow = document.getElementById('admin-pin-row');
   if (pinRow) pinRow.hidden = false;
 }
@@ -585,9 +619,17 @@ async function adminOpenUserModal (email) {
   const u = data.user;
   const profile = u.profile || {};
   const stripe = u.stripe;
+  const accessLabel = u.access?.mode === 'partial'
+    ? 'Parcial — ' + (u.access.sections || []).join(', ')
+    : u.access?.mode === 'none'
+      ? 'Revogado'
+      : u.access?.mode === 'full'
+        ? 'Site completo'
+        : 'Conforme assinatura';
 
   body.innerHTML =
     '<dl class="admin-detail-grid">' +
+      '<div><dt>Conteúdo liberado</dt><dd>' + escapeHtml(accessLabel) + '</dd></div>' +
       '<div><dt>Plano</dt><dd>' + escapeHtml(u.planLabel || u.plan) + '</dd></div>' +
       '<div><dt>Status KV</dt><dd>' + escapeHtml(u.status || '—') + '</dd></div>' +
       '<div><dt>Stripe status</dt><dd>' + escapeHtml(stripe?.status || u.stripeStatus || '—') + '</dd></div>' +
@@ -682,6 +724,10 @@ async function adminGrantAccess (e) {
   const btn = document.getElementById('admin-grant-btn');
   const payload = adminGrantPayload();
   if (!payload.email) return;
+  if (payload.accessScope === 'partial' && !payload.sections.length) {
+    adminSetStatus(statusEl, 'Selecione pelo menos um módulo para o acesso parcial.', 'error');
+    return;
+  }
 
   if (btn) btn.disabled = true;
   adminSetStatus(statusEl, 'Salvando…', 'muted');
@@ -699,6 +745,7 @@ async function adminGrantAccess (e) {
   }
 
   let msg = 'Acesso liberado para ' + data.email + ' (' + (data.planLabel || data.plan) + ').';
+  if (data.access?.mode === 'partial') msg += ' ' + data.access.sections.length + ' módulo(s) liberado(s).';
   if (data.currentPeriodEnd) msg += ' Até ' + adminFormatDate(data.currentPeriodEnd) + '.';
   if (data.accountCreated) msg += ' Conta criada.';
   else if (!data.hasAccount) msg += ' Usuário pode cadastrar com este e-mail.';
@@ -707,6 +754,7 @@ async function adminGrantAccess (e) {
   adminSetStatus(statusEl, msg, 'ok');
   document.getElementById('admin-grant-form')?.reset();
   if (document.getElementById('grant-type')) document.getElementById('grant-type').value = 'lifetime';
+  adminUpdateGrantScope();
   await adminLoadUsers();
   await adminLoadLog();
 }
@@ -742,12 +790,15 @@ async function adminCreateCoupon (e) {
 async function adminCheckAccess (fetchOptions) {
   const { res, data } = await adminApiRequest('/api/admin?action=me', null, fetchOptions);
   if (res.status === 403 && data.code === 'not_admin') return { ok: false, forbidden: true, email: data.email || '' };
-  if (res.status === 403 && data.code === 'invalid_pin') return { ok: false, invalidPin: true };
+  if (res.status === 403 && (data.code === 'invalid_pin' || data.code === 'invalid_master_password')) {
+    return { ok: false, invalidPin: true };
+  }
   if (res.status === 503 && data.code === 'admin_not_configured') {
     return { ok: false, misconfigured: true, error: data.error };
   }
   if (!res.ok) return { ok: false, error: data.error || 'Sessão inválida.' };
   adminPinRequired = !!data.pinRequired;
+  if (data.adminSessionToken) adminSetPin(data.adminSessionToken);
   return { ok: true, email: data.email, name: data.name, pinRequired: adminPinRequired };
 }
 
@@ -770,13 +821,12 @@ async function adminHandleLogin (e) {
   const errEl = document.getElementById('admin-login-error');
   const btn = document.getElementById('admin-login-btn');
   const email = document.getElementById('admin-email')?.value?.trim();
-  const password = document.getElementById('admin-password')?.value;
   const pin = document.getElementById('admin-pin')?.value || '';
 
-  if (!email || !password) return;
+  if (!email || !pin) return;
 
   if (adminPinRequired && !pin) {
-    adminSetStatus(errEl, 'Informe o PIN administrativo.', 'error');
+    adminSetStatus(errEl, 'Informe a senha master.', 'error');
     adminUpdatePinRow(true);
     return;
   }
@@ -784,9 +834,7 @@ async function adminHandleLogin (e) {
   adminSetStatus(errEl, '', '');
   if (btn) btn.disabled = true;
 
-  adminSetPin(pin);
-
-  let result = await adminCloudLogin(email, password);
+  const result = await adminMasterLogin(email, pin);
 
   if (!result.ok) {
     if (btn) btn.disabled = false;
@@ -794,14 +842,7 @@ async function adminHandleLogin (e) {
     return;
   }
 
-  try {
-    await adminApplyLoginSession(result.data, password);
-  } catch {
-    if (btn) btn.disabled = false;
-    adminSetStatus(errEl, 'Login ok, mas falha ao salvar sessão local.', 'error');
-    return;
-  }
-
+  adminSetPin(result.data.adminSessionToken);
   adminTouchSession();
 
   const access = await adminCheckAccess({ skipSessionCheck: true });
@@ -817,7 +858,7 @@ async function adminHandleLogin (e) {
     return;
   }
   if (access.invalidPin) {
-    adminSetStatus(errEl, 'PIN administrativo inválido.', 'error');
+    adminSetStatus(errEl, 'Senha master inválida.', 'error');
     adminClearAdminSession();
     adminUpdatePinRow(true);
     return;
@@ -873,6 +914,8 @@ async function adminLoadMarketing () {
   set('mkt-instagram-url', m.instagramUrl);
   set('mkt-instagram-handle', m.instagramHandle);
   set('mkt-support-email', m.supportEmail);
+  set('mkt-support-whatsapp', m.supportWhatsapp);
+  set('mkt-support-hours', m.supportHours || 'Plantão 24 horas');
   set('mkt-links-bio', m.linksBio);
   set('mkt-links-estudantes', m.linksEstudantes);
   set('mkt-landing-estudantes', m.landingEstudantes);
@@ -895,6 +938,8 @@ async function adminSaveMarketing (e) {
     instagramUrl: document.getElementById('mkt-instagram-url')?.value?.trim(),
     instagramHandle: document.getElementById('mkt-instagram-handle')?.value?.trim(),
     supportEmail: document.getElementById('mkt-support-email')?.value?.trim(),
+    supportWhatsapp: document.getElementById('mkt-support-whatsapp')?.value?.trim().replace(/\D/g, ''),
+    supportHours: document.getElementById('mkt-support-hours')?.value?.trim() || 'Plantão 24 horas',
     linksBio: document.getElementById('mkt-links-bio')?.value?.trim(),
     linksEstudantes: document.getElementById('mkt-links-estudantes')?.value?.trim(),
     landingEstudantes: document.getElementById('mkt-landing-estudantes')?.value?.trim(),
@@ -1506,6 +1551,10 @@ async function initAdminPage () {
 
   document.getElementById('admin-login-form')?.addEventListener('submit', adminHandleLogin);
   document.getElementById('admin-grant-form')?.addEventListener('submit', adminGrantAccess);
+  document.querySelectorAll('input[name="grant-scope"]').forEach(input => {
+    input.addEventListener('change', adminUpdateGrantScope);
+  });
+  adminUpdateGrantScope();
   document.getElementById('admin-coupon-form')?.addEventListener('submit', adminCreateCoupon);
   document.getElementById('admin-marketing-form')?.addEventListener('submit', adminSaveMarketing);
   document.getElementById('admin-appearance-form')?.addEventListener('submit', adminSaveAppearance);
@@ -1547,7 +1596,7 @@ async function initAdminPage () {
   if (access.invalidPin) {
     adminShow('admin-login-panel');
     adminUpdatePinRow(true);
-    adminSetStatus(document.getElementById('admin-login-error'), 'Informe o PIN administrativo.', 'error');
+    adminSetStatus(document.getElementById('admin-login-error'), 'Informe a senha master.', 'error');
     return;
   }
   if (access.forbidden) {

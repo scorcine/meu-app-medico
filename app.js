@@ -85,6 +85,9 @@ function initAppCore (user) {
       }
 
       const hashSection = window.location.hash.replace('#', '') || 'inicio';
+      if (typeof medhubApplyRemoteMarketing === 'function') {
+        await medhubApplyRemoteMarketing();
+      }
       if (typeof medhubInitSiteConfig === 'function') {
         await medhubInitSiteConfig(hashSection);
       } else {
@@ -112,6 +115,7 @@ function initAppCore (user) {
       initNovoAtendimento();
       initFerramentas();
       initFlashcards();
+      if (typeof initSuportePlantao === 'function') initSuportePlantao();
       initBackup();
       if (typeof initCloudSyncPanel === 'function') initCloudSyncPanel();
       if (typeof initUserProfilePage === 'function') initUserProfilePage();
@@ -188,6 +192,7 @@ function showSection (sectionId) {
   if (sectionId === 'anamnese' && typeof anamneseOnSectionShow === 'function') anamneseOnSectionShow();
   if (sectionId === 'novo-atendimento' && typeof novoAtendimentoOnSectionShow === 'function') novoAtendimentoOnSectionShow();
   if (sectionId === 'perfil' && typeof backupMaybePromptFirstUse === 'function') backupMaybePromptFirstUse();
+  if (sectionId === 'suporte-plantao' && typeof medhubOnSupportSectionShow === 'function') medhubOnSupportSectionShow();
   if (sectionId === 'calc-pediatrica' && typeof initPediatricCalcPanel === 'function') {
     initPediatricCalcPanel();
     if (typeof medhubRenderPedAppPromo === 'function') {

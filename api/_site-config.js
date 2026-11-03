@@ -8,7 +8,7 @@ const ALLOWED_SECTIONS = new Set([
   'inicio', 'novo-atendimento', 'pacientes', 'anamnese', 'consultas', 'receituario', 'medicacoes',
   'exames', 'interpretacao-exame', 'guia-emergencia', 'pronto-socorro',
   'tratamento-hospitalar', 'ventilacao-mecanica', 'calc-essenciais',
-  'calc-pediatrica', 'perfil'
+  'calc-pediatrica', 'perfil', 'suporte-plantao'
 ]);
 
 const FUTURE_SECTIONS = new Set([
@@ -44,6 +44,7 @@ function defaultSidebar () {
     { type: 'group', label: 'Conteúdo (em breve)' },
     { type: 'item', id: 'videoaulas', label: 'Videoaulas', visible: false, enabled: false, comingSoon: true, icon: '🎬', color: '#7c3aed' },
     { type: 'group', label: 'Sistema' },
+    { type: 'item', id: 'suporte-plantao', label: 'Plantão / Suporte', visible: true, enabled: true, icon: '💬', color: '#16a34a' },
     { type: 'item', id: 'perfil', label: 'Minha conta', visible: true, enabled: true, icon: '⚙️', color: '#64748b' }
   ];
 }
@@ -63,7 +64,8 @@ function defaultActiveHomeCards () {
     { section: 'anamnese', icon: '📝', name: 'Anamnese', desc: 'Guia clínico: queixa → protocolo → prescrição.', visible: true, enabled: true, comingSoon: false, pediatricAux: false, color: '#8b5cf6', colorBg: '#f5f3ff' },
     { section: 'consultas', icon: '📅', name: 'Atendimentos realizados', desc: 'Pacientes finalizados com resumo, PDF e sincronização criptografada.', visible: true, enabled: true, comingSoon: false, pediatricAux: false, color: '#a855f7', colorBg: '#faf5ff' },
     { section: 'calc-pediatrica', icon: '👶', name: 'Calculadora pediátrica', desc: 'Complemento por peso/idade — adulto é o foco.', visible: true, enabled: true, comingSoon: false, pediatricAux: true, color: '#14b8a6', colorBg: '#f0fdfa' },
-    { section: 'flashcards', icon: '🃏', name: 'Flashcards', desc: 'Cardiologia em 7 subtemas (150) + 10 baralhos de emergência, PS e exames.', visible: true, enabled: true, comingSoon: false, pediatricAux: false, color: '#db2777', colorBg: '#fdf2f8' }
+    { section: 'flashcards', icon: '🃏', name: 'Flashcards', desc: 'Cardiologia em 7 subtemas (150) + 10 baralhos de emergência, PS e exames.', visible: true, enabled: true, comingSoon: false, pediatricAux: false, color: '#db2777', colorBg: '#fdf2f8' },
+    { section: 'suporte-plantao', icon: '💬', name: 'Plantão / Suporte', desc: 'Dúvidas do app — WhatsApp e e-mail, como um plantão ao assinante.', visible: true, enabled: true, comingSoon: false, pediatricAux: false, color: '#16a34a', colorBg: '#f0fdf4' }
   ];
 }
 

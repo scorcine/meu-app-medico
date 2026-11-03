@@ -12,7 +12,7 @@ function medhubGetUserAccess () {
 
 function medhubCanAccessSection (sectionId) {
   const id = String(sectionId || '').trim();
-  if (!id || id === 'inicio' || id === 'perfil') return true;
+  if (!id || id === 'inicio' || id === 'perfil' || id === 'suporte-plantao') return true;
 
   const access = medhubGetUserAccess();
   if (!access) return true;

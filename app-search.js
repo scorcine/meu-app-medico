@@ -241,6 +241,17 @@ function medhubSearchBuildIndex () {
     }
   });
 
+  medhubSearchAdd(items, {
+    module: 'Sistema',
+    moduleOrder: 9,
+    icon: '💬',
+    title: 'Plantão / Suporte MedHub',
+    keywords: medhubSearchNorm('plantao suporte whatsapp email duvida ajuda contato atendimento cliente'),
+    go: function () {
+      showSection('suporte-plantao');
+    }
+  });
+
   if (typeof medGetSearchCatalog === 'function') {
     medGetSearchCatalog().forEach(function (drug) {
       medhubSearchAdd(items, {

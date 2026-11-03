@@ -8,11 +8,11 @@
   <title>Admin • MedHub</title>
   <link rel="icon" href="assets/medhub-logo.png?v=logo-v2" type="image/png">
   <script src="theme.js"></script>
-  <link rel="stylesheet" href="style.css?v=admin-v9">
+  <link rel="stylesheet" href="style.css?v=admin-access-v1">
   <script defer src="security-crypto.js?v=session-v1"></script>
   <script defer src="auth.js?v=auth-v7"></script>
   <script defer src="auth-cloud.js?v=cloud-v21"></script>
-  <script defer src="admin.js?v=15"></script>
+  <script defer src="admin.js?v=support-plantao-v1"></script>
 </head>
 <body class="auth-body admin-page" onload="initAdminPage()">
   <header class="auth-page-header admin-page-header">
@@ -25,18 +25,15 @@
   <main class="admin-main">
     <section id="admin-login-panel" class="card auth-card admin-card" hidden>
       <h1>Painel administrativo</h1>
-      <p class="auth-hint muted">Entre com o e-mail em <code>MEDHUB_OWNER_EMAIL</code> na Vercel.</p>
+      <p class="auth-hint muted">Entre com o e-mail do proprietário e a senha master administrativa.</p>
       <form id="admin-login-form" class="admin-login-form">
         <label for="admin-email">E-mail</label>
         <input id="admin-email" name="email" type="email" required autocomplete="username">
 
-        <label for="admin-password">Senha</label>
-        <input id="admin-password" name="password" type="password" required autocomplete="current-password">
-
         <div id="admin-pin-row" hidden>
-          <label for="admin-pin">PIN admin</label>
-          <input id="admin-pin" name="pin" type="password" inputmode="numeric" autocomplete="off" placeholder="Obrigatório se MEDHUB_ADMIN_PIN estiver na Vercel">
-          <p class="auth-hint muted admin-pin-hint">PIN extra de segurança (variável <code>MEDHUB_ADMIN_PIN</code>).</p>
+          <label for="admin-pin">Senha master</label>
+          <input id="admin-pin" name="pin" type="password" autocomplete="current-password" placeholder="Senha master administrativa">
+          <p class="auth-hint muted admin-pin-hint">Segundo fator protegido e validado no servidor.</p>
         </div>
 
         <button type="submit" class="btn" id="admin-login-btn">Entrar</button>
@@ -168,6 +165,32 @@
                     <option value="year">Anual (12 meses)</option>
                   </select>
                 </div>
+                <fieldset class="admin-access-scope">
+                  <legend>Conteúdo liberado</legend>
+                  <label class="admin-access-scope-option">
+                    <input type="radio" name="grant-scope" value="full" checked>
+                    <span><strong>Site completo</strong><small>Libera todos os módulos atuais.</small></span>
+                  </label>
+                  <label class="admin-access-scope-option">
+                    <input type="radio" name="grant-scope" value="partial">
+                    <span><strong>Somente módulos selecionados</strong><small>O usuário verá apenas os itens marcados abaixo.</small></span>
+                  </label>
+                </fieldset>
+                <fieldset id="grant-modules" class="admin-module-picker" hidden>
+                  <legend>Módulos permitidos</legend>
+                  <label><input type="checkbox" value="novo-atendimento"> Novo atendimento</label>
+                  <label><input type="checkbox" value="receituario"> Tratamento para casa</label>
+                  <label><input type="checkbox" value="medicacoes"> Medicações</label>
+                  <label><input type="checkbox" value="exames"> Exames</label>
+                  <label><input type="checkbox" value="interpretacao-exame"> Interpretação de exames</label>
+                  <label><input type="checkbox" value="guia-emergencia"> Guia rápido de emergência</label>
+                  <label><input type="checkbox" value="pronto-socorro"> Prescrições de Pronto Socorro</label>
+                  <label><input type="checkbox" value="tratamento-hospitalar"> Tratamento hospitalar</label>
+                  <label><input type="checkbox" value="ventilacao-mecanica"> Ventilação mecânica</label>
+                  <label><input type="checkbox" value="calc-essenciais"> Calculadoras essenciais</label>
+                  <label><input type="checkbox" value="calc-pediatrica"> Calculadora pediátrica</label>
+                  <label><input type="checkbox" value="flashcards"> Flashcards</label>
+                </fieldset>
                 <details class="admin-details">
                   <summary>Senha opcional (criar conta ou redefinir)</summary>
                   <label for="grant-password">Nova senha (mín. 8 caracteres)</label>
@@ -244,6 +267,14 @@
                 <div class="admin-grant-row">
                   <label for="mkt-support-email">E-mail de suporte</label>
                   <input id="mkt-support-email" type="email" placeholder="suporte@medhub.ia.br">
+                </div>
+                <div class="admin-grant-row">
+                  <label for="mkt-support-whatsapp">WhatsApp do plantão (DDD + número)</label>
+                  <input id="mkt-support-whatsapp" type="tel" inputmode="numeric" placeholder="11999998888 — só números">
+                </div>
+                <div class="admin-grant-row">
+                  <label for="mkt-support-hours">Horário do plantão</label>
+                  <input id="mkt-support-hours" type="text" placeholder="Plantão 24 horas">
                 </div>
                 <div class="admin-grant-row">
                   <label for="mkt-links-bio">Página links (bio)</label>

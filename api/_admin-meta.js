@@ -1,14 +1,19 @@
 const { kv } = require('@vercel/kv');
+const crypto = require('crypto');
 const { normalizeEmail } = require('./_auth');
 
 const ADMIN_LOG_KEY = 'medhub:admin-log';
 const SITE_MARKETING_KEY = 'medhub:site-marketing';
 const MAX_LOG = 200;
+const ADMIN_UNLOCK_MAX_ATTEMPTS = 5;
+const ADMIN_UNLOCK_WINDOW_SEC = 15 * 60;
 
 const MARKETING_FIELDS = [
   'instagramUrl',
   'instagramHandle',
   'supportEmail',
+  'supportWhatsapp',
+  'supportHours',
   'linksBio',
   'linksEstudantes',
   'landingEstudantes',
@@ -24,13 +29,88 @@ function normalizeAdminPin (value) {
 }
 
 function adminPinConfigured () {
-  return !!normalizeAdminPin(process.env.MEDHUB_ADMIN_PIN);
+  return !!normalizeAdminPin(
+    process.env.MEDHUB_ADMIN_MASTER_PASSWORD || process.env.MEDHUB_ADMIN_PIN
+  );
 }
 
 function verifyAdminPin (pin) {
-  const expected = normalizeAdminPin(process.env.MEDHUB_ADMIN_PIN);
+  const expected = normalizeAdminPin(
+    process.env.MEDHUB_ADMIN_MASTER_PASSWORD || process.env.MEDHUB_ADMIN_PIN
+  );
   if (!expected) return true;
-  return normalizeAdminPin(pin) === expected;
+  const received = normalizeAdminPin(pin);
+  const expectedHash = crypto.createHash('sha256').update(expected).digest();
+  const receivedHash = crypto.createHash('sha256').update(received).digest();
+  return crypto.timingSafeEqual(expectedHash, receivedHash);
+}
+
+function adminUnlockRateKey (email) {
+  const id = crypto.createHash('sha256').update(normalizeEmail(email)).digest('hex').slice(0, 24);
+  return 'medhub:admin-unlock-rate:' + id;
+}
+
+async function adminUnlockAllowed (email) {
+  const entry = await kv.get(adminUnlockRateKey(email));
+  return (Number(entry?.count) || 0) < ADMIN_UNLOCK_MAX_ATTEMPTS;
+}
+
+async function recordAdminUnlockFailure (email) {
+  const key = adminUnlockRateKey(email);
+  const entry = await kv.get(key);
+  await kv.set(key, {
+    count: (Number(entry?.count) || 0) + 1,
+    updatedAt: new Date().toISOString()
+  }, { ex: ADMIN_UNLOCK_WINDOW_SEC });
+}
+
+async function clearAdminUnlockFailures (email) {
+  await kv.del(adminUnlockRateKey(email));
+}
+
+function adminSessionSecret () {
+  return normalizeAdminPin(
+    process.env.MEDHUB_ADMIN_MASTER_PASSWORD || process.env.MEDHUB_ADMIN_PIN
+  );
+}
+
+function createAdminSessionToken (email) {
+  const secret = adminSessionSecret();
+  if (!secret) return '';
+  const payload = Buffer.from(JSON.stringify({
+    email: normalizeEmail(email),
+    exp: Date.now() + 60 * 60 * 1000
+  })).toString('base64url');
+  const signature = crypto.createHmac('sha256', secret).update(payload).digest('base64url');
+  return payload + '.' + signature;
+}
+
+function verifyAdminSessionToken (token, email) {
+  const payload = readAdminSessionToken(token);
+  return !!(payload && payload.email === normalizeEmail(email));
+}
+
+function readAdminSessionToken (token) {
+  const secret = adminSessionSecret();
+  const parts = String(token || '').split('.');
+  if (!secret || parts.length !== 2) return null;
+
+  const expected = crypto.createHmac('sha256', secret).update(parts[0]).digest();
+  let received;
+  try {
+    received = Buffer.from(parts[1], 'base64url');
+  } catch {
+    return null;
+  }
+  if (received.length !== expected.length || !crypto.timingSafeEqual(received, expected)) return null;
+
+  try {
+    const payload = JSON.parse(Buffer.from(parts[0], 'base64url').toString('utf8'));
+    if (!payload.email || Number(payload.exp) <= Date.now()) return null;
+    return { email: normalizeEmail(payload.email), exp: Number(payload.exp) };
+  } catch {
+    return null;
+  }
 }
 
 async function appendAdminLog (actorEmail, action, targetEmail, details) {
@@ -88,6 +168,8 @@ function defaultSiteMarketing () {
     instagramUrl: 'https://www.instagram.com/medhub_app/',
     instagramHandle: '@medhub_app',
     supportEmail: '',
+    supportWhatsapp: '',
+    supportHours: 'Plantão 24 horas',
     linksBio: site + '/links.html',
     linksEstudantes: site + '/links-estudantes.html',
     landingEstudantes: site + '/estudantes.html',
@@ -132,6 +214,12 @@ async function saveSiteMarketing (data, actorEmail) {
 module.exports = {
   adminPinConfigured,
   verifyAdminPin,
+  createAdminSessionToken,
+  verifyAdminSessionToken,
+  readAdminSessionToken,
+  adminUnlockAllowed,
+  recordAdminUnlockFailure,
+  clearAdminUnlockFailures,
   appendAdminLog,
   getAdminLog,
   getAdminNotes,

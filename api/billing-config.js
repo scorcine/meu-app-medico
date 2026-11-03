@@ -57,6 +57,8 @@ module.exports = async (req, res) => {
       instagramUrl: marketing.instagramUrl,
       instagramHandle: marketing.instagramHandle,
       supportEmail: marketing.supportEmail,
+      supportWhatsapp: marketing.supportWhatsapp,
+      supportHours: marketing.supportHours,
       linksBio: marketing.linksBio,
       linksEstudantes: marketing.linksEstudantes,
       landingEstudantes: marketing.landingEstudantes,

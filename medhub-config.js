@@ -6,6 +6,10 @@ const MEDHUB_MARKETING = {
   instagramUrl: 'https://www.instagram.com/medhub_app/',
   instagramHandle: '@medhub_app',
   supportEmail: '',
+  /** WhatsApp com DDD, só números — ex.: 11999998888 (Brasil; o app adiciona 55) */
+  supportWhatsapp: '',
+  /** Texto do plantão — ex.: "Plantão 24 horas" ou "Seg–Dom 8h–22h" */
+  supportHours: 'Plantão 24 horas',
   linksBio: 'https://www.medhub.ia.br/links.html',
   linksEstudantes: 'https://www.medhub.ia.br/links-estudantes.html',
   landingEstudantes: 'https://www.medhub.ia.br/estudantes.html'
@@ -93,10 +97,16 @@ async function medhubApplyRemoteMarketing () {
     if (m.instagramUrl) MEDHUB_MARKETING.instagramUrl = m.instagramUrl;
     if (m.instagramHandle) MEDHUB_MARKETING.instagramHandle = m.instagramHandle;
     if (m.supportEmail != null) MEDHUB_MARKETING.supportEmail = m.supportEmail;
+    if (m.supportWhatsapp != null) MEDHUB_MARKETING.supportWhatsapp = m.supportWhatsapp;
+    if (m.supportHours != null && String(m.supportHours).trim()) {
+      MEDHUB_MARKETING.supportHours = String(m.supportHours).trim();
+    }
     if (m.linksBio) MEDHUB_MARKETING.linksBio = m.linksBio;
     if (m.linksEstudantes) MEDHUB_MARKETING.linksEstudantes = m.linksEstudantes;
     if (m.landingEstudantes) MEDHUB_MARKETING.landingEstudantes = m.landingEstudantes;
     if (m.metaPixelId != null) MEDHUB_META.pixelId = m.metaPixelId;
+    if (typeof medhubRenderSupportPlantao === 'function') medhubRenderSupportPlantao();
+    if (typeof medhubRefreshSupportFab === 'function') medhubRefreshSupportFab();
   } catch {
     /* offline / API indisponível */
   }
