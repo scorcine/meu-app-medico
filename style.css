@@ -3288,6 +3288,16 @@ body.app-page {
   content: "🔒 ";
 }
 
+.emerg-quick-banner {
+  margin: 0 0 0.75rem;
+  padding: 0.65rem 0.8rem;
+  border-radius: 9px;
+  border: 1px solid color-mix(in srgb, var(--accent) 40%, var(--border));
+  background: color-mix(in srgb, var(--accent) 12%, var(--bg-surface-active));
+  font-size: 0.92rem;
+  line-height: 1.35;
+}
+
 .emerg-sca-branch {
   display: grid;
   gap: 0.55rem;

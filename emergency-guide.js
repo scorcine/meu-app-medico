@@ -1,6 +1,6 @@
 /* Guia rápido de emergência — tópicos e conteúdo — build 98041d1 */
 
-const MEDHUB_EMERG_BUILD = 'hiponatremia-v1';
+const MEDHUB_EMERG_BUILD = 'fluxo-rapido-avc-iam-v1';
 
 const PARADA_PROTOCOLS = [
   {
@@ -265,30 +265,9 @@ const SCA_PROTOCOLS = [
     icon: '🩺',
     name: 'IAM — ECG + HEART',
     html: `
-      <p><strong>Fluxo direto:</strong> ECG ≤ 10 min → HEART → escolher o ramo. <em>Sem supra não significa cateterismo</em> — primeiro investigue e só trate como SCA se houver critério.</p>
+      <p class="emerg-quick-banner"><strong>Modo rápido:</strong> ECG ≤ 10 min → tocar no ramo. HEART só para estratificar risco — <em>não indica cateterismo sozinho</em>.</p>
 
-      <div class="emerg-flow-v">
-        <span class="emerg-flow-step"><strong>ECG 12 derivações em ≤ 10 min</strong></span>
-        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
-        <span class="emerg-flow-step">Calcular HEART (abaixo)</span>
-        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
-        <span class="emerg-flow-step emerg-flow-decision">Supra → STEMI · Sem supra → investigar / descarte · Já descartado</span>
-      </div>
-
-      <div class="calc-block calc-block-single emerg-calc-block emerg-calc-wide emerg-score-block">
-        <p class="emerg-score-title"><strong>HEART Score</strong> — estima risco de MACE. Não indica cateterismo sozinho.</p>
-        <form class="calc-form" data-emerg-calc="heart" data-emerg-calc-inject="1">
-          <button type="submit">Calcular HEART Score</button>
-        </form>
-        <div class="calc-result" hidden></div>
-      </div>
-      <ul>
-        <li><strong>0–3:</strong> baixo risco — candidata a descarte se troponinas negativas e ECG sem isquemia</li>
-        <li><strong>4–6:</strong> intermediário — observação + troponina seriada; não forçar invasão</li>
-        <li><strong>7–10:</strong> alto risco — investigar SCA; cateterismo só se NSTEMI/AI com critério</li>
-      </ul>
-
-      <p class="emerg-section-label"><strong>Abrir o protocolo agora</strong></p>
+      <p class="emerg-section-label"><strong>1. Abrir o protocolo agora</strong></p>
       <div class="emerg-sca-branch" role="group" aria-label="Ramo SCA pelo ECG">
         <button type="button" class="emerg-stemi-trigger emerg-stemi-trigger-critical" data-sca-goto="stemi">
           <strong>Com supra de ST (ou BRE novo)</strong>
@@ -296,12 +275,20 @@ const SCA_PROTOCOLS = [
         </button>
         <button type="button" class="emerg-stemi-trigger" data-sca-goto="nstemi-ua">
           <strong>Sem supra de ST</strong>
-          <small>Investigar — troponina seriada, descarte ou NSTEMI/AI</small>
+          <small>Investigar — troponina, descarte ou NSTEMI/AI</small>
         </button>
         <button type="button" class="emerg-stemi-trigger" data-sca-goto="nao-sca">
           <strong>Já descartado / não cardíaca</strong>
-          <small>Sem indicação de IAM nem de cateterismo — voltar ao atendimento</small>
+          <small>Sem IAM nem cateterismo — voltar ao atendimento</small>
         </button>
+      </div>
+
+      <div class="calc-block calc-block-single emerg-calc-block emerg-calc-wide emerg-score-block">
+        <p class="emerg-score-title"><strong>HEART Score</strong> (opcional) — 0–3 baixo · 4–6 intermediário · 7–10 alto. Sem supra ≠ cateterismo.</p>
+        <form class="calc-form" data-emerg-calc="heart" data-emerg-calc-inject="1">
+          <button type="submit">Calcular HEART Score</button>
+        </form>
+        <div class="calc-result" hidden></div>
       </div>
       <p class="emerg-note">Instabilidade (choque, arritmia, dor refratária): estabilizar e acionar hemodinâmica. Repetir ECG se a dor voltar.</p>
     `
@@ -311,61 +298,52 @@ const SCA_PROTOCOLS = [
     icon: '🚨',
     name: 'STEMI',
     html: `
-      <p><strong>Supra de ST:</strong> medicações agora + reperfusão. Meta <strong>porta-balão ≤ 90 min</strong>; fibrinólise só se ICP inviável (<strong>porta-agulha ≤ 30 min</strong>).</p>
-
-      <ul>
-        <li>Supra ST ≥ 1 mm em ≥ 2 derivações contíguas (V2–V3: ≥ 2 mm Homem &gt;40 a; ≥ 1,5 mm Homem &lt;40 a; ≥ 1 mm Mulher) · BRE novo · equivalentes (de Winter, aVR+ST↓ difuso)</li>
-        <li>AAS 150–300 mg VO (mastigar) se ainda não feito · O₂ só se SpO₂ &lt; 90%</li>
-      </ul>
+      <p class="emerg-quick-banner"><strong>Modo rápido:</strong> AAS agora + escolher <em>ICP</em> ou <em>lise</em>. Meta porta-balão ≤ 90 min · porta-agulha ≤ 30 min.</p>
+      <p>AAS 150–300 mg VO (mastigar) se ainda não feito · O₂ só se SpO₂ &lt; 90% · acionar hemodinâmica.</p>
 
       <div class="emerg-flowcharts-row">
         <div class="emerg-flow-col emerg-flow-col-shock">
-          <h4>ICP primária — medicações</h4>
+          <h4>ICP primária — 1ª escolha</h4>
           <div class="emerg-flow-v">
             <span class="emerg-flow-step">Acionar hemodinâmica agora</span>
             <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
             <button type="button" class="emerg-stemi-trigger" data-emerg-picker data-stemi-open="p2y12-pci">
-              <strong>AAS 150–300 mg + escolher P2Y12</strong>
+              <strong>AAS + P2Y12</strong>
               <small>Toque para dose e preparo</small>
             </button>
             <div class="emerg-stemi-panel" data-stemi-panel="p2y12-pci" hidden></div>
             <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
-            <span class="emerg-flow-step">Anticoagulante (heparina 60 U/kg IV máx. 4000 U ou enoxaparina)</span>
+            <span class="emerg-flow-step">Anticoagulante (HNF 60 U/kg IV máx. 4000 U ou enoxaparina)</span>
             <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
-            <span class="emerg-flow-step emerg-flow-shock">Cateterismo + angioplastia</span>
-            <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
-            <span class="emerg-flow-step emerg-flow-loop"><strong>Porta-balão ≤ 90 min</strong></span>
+            <span class="emerg-flow-step emerg-flow-shock">Cateterismo + angioplastia · <strong>porta-balão ≤ 90 min</strong></span>
           </div>
         </div>
 
         <div class="emerg-flow-col emerg-flow-col-noshock">
-          <h4>Fibrinólise — se ICP indisponível</h4>
+          <h4>Fibrinólise — só se ICP inviável</h4>
           <div class="emerg-flow-v">
             <button type="button" class="emerg-stemi-trigger emerg-stemi-trigger-critical" data-emerg-picker data-stemi-open="contra">
-              <strong>1. Janela &lt;12 h e sem contraindicações</strong>
+              <strong>1. Janela &lt;12 h · sem contraindicações</strong>
               <small>Revisão obrigatória antes da lise</small>
             </button>
             <div class="emerg-stemi-panel" data-stemi-panel="contra" hidden></div>
             <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
             <button type="button" class="emerg-stemi-trigger" data-emerg-picker data-stemi-open="p2y12-lysis">
-              <strong>2. AAS + anticoagulante + P2Y12</strong>
-              <small>Toque para dose (clopidogrel na lise)</small>
+              <strong>2. AAS + anticoag + P2Y12</strong>
+              <small>Clopidogrel na lise — toque para dose</small>
             </button>
             <div class="emerg-stemi-panel" data-stemi-panel="p2y12-lysis" hidden></div>
             <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
             <button type="button" class="emerg-stemi-trigger" data-emerg-picker data-stemi-open="fibrinolytic" aria-disabled="true">
-              <strong>3. Escolher fibrinolítico</strong>
-              <small>Dose e preparo automáticos por peso</small>
+              <strong>3. Fibrinolítico</strong>
+              <small>Dose automática por peso</small>
             </button>
             <div class="emerg-stemi-panel" data-stemi-panel="fibrinolytic" hidden></div>
             <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
-            <span class="emerg-flow-step emerg-flow-shock">Transferir para ICP (farmaco-invasiva)</span>
-            <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
-            <span class="emerg-flow-step emerg-flow-loop"><strong>Porta-agulha ≤ 30 min</strong></span>
+            <span class="emerg-flow-step emerg-flow-shock">Transferir ICP (farmaco-invasiva) · <strong>porta-agulha ≤ 30 min</strong></span>
           </div>
         </div>
       </div>
-      <p class="emerg-note">Porta-balão = chegada → balão. Porta-agulha = chegada → início da fibrinólise.</p>
     `
   },
   {
@@ -373,64 +351,41 @@ const SCA_PROTOCOLS = [
     icon: '📊',
     name: 'Sem supra — descarte ou NSTEMI',
     html: `
-      <p><strong>Sem supra ≠ cateterismo automático.</strong> Peça troponina seriada e só avance para dual therapy / GRACE / invasão se houver NSTEMI ou angina instável. Troponinas negativas sem isquemia = descarte — <em>sem cateterismo</em>.</p>
+      <p class="emerg-quick-banner"><strong>Modo rápido:</strong> troponina → descarte <em>ou</em> SCA. Sem supra ≠ cateterismo automático.</p>
 
       <div class="emerg-flow-v">
-        <span class="emerg-flow-step">ECG sem supra (repetir se dor recorrente)</span>
+        <span class="emerg-flow-step">ECG sem supra (repetir se dor) · <strong>troponina</strong> 0 h + 1–3 h</span>
         <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
-        <span class="emerg-flow-step"><strong>Troponina</strong> 0 h + 1–3 h (ideal 2–3 amostras) + eletrólitos + creatinina + hemograma</span>
-        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
-        <span class="emerg-flow-step emerg-flow-decision">Classificar: descarte · NSTEMI · angina instável</span>
+        <span class="emerg-flow-step emerg-flow-decision">Descarte · NSTEMI (trop ↑) · AI (trop − + ECG/dor isquêmica)</span>
       </div>
 
       <div class="emerg-sca-ruleout" role="region" aria-label="Descarte seguro de SCA">
         <strong>Descarte seguro — sem indicação de cateterismo</strong>
-        <p>Marque quando <strong>todos</strong> forem verdadeiros:</p>
-        <ul>
-          <li>≥ 2 troponinas de alta sensibilidade <strong>negativas</strong> (ideal 3 amostras / protocolo local 0–1–3 h ou 0–3–6 h)</li>
-          <li>ECG <strong>sem</strong> supra, sem infra dinâmico e sem inversão isquêmica nova</li>
-          <li>Sem dor refratária, choque, arritmia maligna ou ICC isquêmica</li>
-          <li>HEART ≤ 3 (ou ≤ 6 após observação institucional sem novos eventos)</li>
-        </ul>
-        <p class="emerg-note">Neste cenário <strong>não</strong> indique cateterismo de urgência, <strong>não</strong> inicie dual therapy de SCA e <strong>não</strong> use GRACE para forçar invasão.</p>
+        <p>Todos verdadeiros: ≥ 2 troponinas hs <strong>negativas</strong> · ECG sem isquemia · sem dor refratária/choque/arritmia · HEART ≤ 3 (ou ≤ 6 após observação sem eventos).</p>
+        <p class="emerg-note">Neste cenário <strong>não</strong> indique cateterismo de urgência, <strong>não</strong> inicie dual therapy e <strong>não</strong> use GRACE para forçar invasão.</p>
         <button type="button" class="emerg-stemi-trigger" data-sca-goto="nao-sca">
           <strong>Descartar SCA / sem cateterismo</strong>
           <small>Voltar ao atendimento — causa não cardíaca ou baixo risco</small>
         </button>
       </div>
 
-      <p class="emerg-section-label"><strong>Só continue abaixo se NÃO houver descarte</strong></p>
-      <ul>
-        <li><strong>NSTEMI:</strong> troponina ↑ (com ou sem alteração de ST/T)</li>
-        <li><strong>Angina instável:</strong> troponina − <em>mas</em> ECG isquêmico, dor refratária ou alta suspeita clínica</li>
-        <li>Se só dor atípica + troponinas − + ECG normal → volte ao <em>Descarte seguro</em> (acima)</li>
-      </ul>
-
       <h4>Se SCA (NSTEMI / AI) — medicações</h4>
       <table class="emerg-table">
-        <tr><th>Agora</th><th>Dose / nota</th></tr>
+        <tr><th>Agora</th><th>Dose</th></tr>
         <tr><td><strong>AAS</strong></td><td>150–300 mg VO (mastigar) → 75–100 mg/dia</td></tr>
-        <tr><td><strong>P2Y12</strong></td><td>Ticagrelor 180 mg → 90 mg 12/12 h (preferencial) · ou clopidogrel 300–600 mg → 75 mg/dia</td></tr>
-        <tr><td><strong>Anticoagulante</strong></td><td>Enoxaparina 1 mg/kg SC 12/12 h · ou fondaparinux 2,5 mg SC/dia · ou HNF 60 U/kg IV (máx. 4000 U)</td></tr>
-        <tr><td>Adjuntos</td><td>Estatina alta intensidade (ex.: atorvastatina 80 mg); betabloqueador se PA/FC altas e sem IC aguda; evitar AINE</td></tr>
+        <tr><td><strong>P2Y12</strong></td><td>Ticagrelor 180 → 90 mg 12/12 h · ou clopidogrel 300–600 → 75 mg/dia</td></tr>
+        <tr><td><strong>Anticoagulante</strong></td><td>Enoxaparina 1 mg/kg SC 12/12 h · fondaparinux 2,5 mg/dia · ou HNF 60 U/kg IV (máx. 4000 U)</td></tr>
+        <tr><td>Adjuntos</td><td>Atorvastatina 80 mg · β-bloqueador se PA/FC altas sem IC aguda · evitar AINE</td></tr>
       </table>
-
-      <h4>Indicadores de invasão imediata (&lt; 2 h) — independente do GRACE</h4>
-      <ul>
-        <li>Instabilidade hemodinâmica ou arritmia ameaçadora à vida</li>
-        <li>Dor torácica refratária ao tratamento médico</li>
-        <li>Complicações mecânicas (IAM com choque, MR aguda, VSR)</li>
-        <li>Arritmias ventriculares recorrentes</li>
-      </ul>
-      <p class="emerg-note">Troponinas seriadas negativas <strong>sem</strong> esses critérios <strong>não</strong> indicam cateterismo de urgência.</p>
+      <p><strong>Invasão &lt; 2 h</strong> (sem esperar GRACE): choque, arritmia maligna, dor refratária, complicação mecânica. Trop negativas sem isso → <strong>sem</strong> cateterismo de urgência.</p>
 
       <h4>Conduta após a estratificação</h4>
-      <p>Use o GRACE <strong>somente</strong> se NSTEMI/AI estiver confirmado (acima). Não aplique GRACE para decidir cateterismo em dor com troponinas negativas e ECG sem isquemia.</p>
+      <p>Use o GRACE <strong>somente</strong> se NSTEMI/AI estiver confirmado. Não aplique GRACE para forçar cateterismo com trop negativas e ECG sem isquemia.</p>
       <table class="emerg-table">
-        <tr><th>GRACE (só se SCA)</th><th>Tempo da coronariografia</th></tr>
-        <tr><td><strong>≥ 140</strong></td><td>Invasiva &lt; <strong>24 h</strong></td></tr>
-        <tr><td>109 – 139</td><td>Invasiva &lt; 72 h</td></tr>
-        <tr><td>&lt; 109</td><td>Individualizar (conservadora / eletiva)</td></tr>
+        <tr><th>GRACE (só se SCA)</th><th>Coronariografia</th></tr>
+        <tr><td><strong>≥ 140</strong></td><td>&lt; 24 h</td></tr>
+        <tr><td>109 – 139</td><td>&lt; 72 h</td></tr>
+        <tr><td>&lt; 109</td><td>Individualizar</td></tr>
       </table>
     `
   },
@@ -496,15 +451,15 @@ const SCA_PROTOCOLS = [
 const EMERG_AVC_GATES_HTML = `
       <div class="emerg-avc-gates">
         <section class="emerg-avc-gate" data-avc-gate="tc">
-          <p class="emerg-avc-gate-kicker">Obrigatório 1 de 2</p>
-          <strong>Confirme o resultado da TC de crânio</strong>
-          <p>Toque em uma opção. Sem confirmar <em>TC sem sangramento</em>, o NIHSS e a trombólise ficam bloqueados.</p>
+          <p class="emerg-avc-gate-kicker">Passo 1</p>
+          <strong>TC de crânio</strong>
+          <p>Toque no resultado. Sem <em>TC sem sangramento</em>, o NIHSS fica bloqueado.</p>
           <div class="emerg-stemi-panel is-inline" data-avc-panel="tc-result"></div>
         </section>
         <section class="emerg-avc-gate" data-avc-gate="nihss">
-          <p class="emerg-avc-gate-kicker">Obrigatório 2 de 2</p>
-          <strong>Pontue o NIHSS</strong>
-          <p>Preencha cada item e calcule. Os pontos e a conduta aparecem aqui — só então o protocolo de trombólise é liberado.</p>
+          <p class="emerg-avc-gate-kicker">Passo 2</p>
+          <strong>NIHSS</strong>
+          <p>Pontue e calcule — a trombólise só libera depois.</p>
           <div class="emerg-stemi-panel is-inline" data-avc-panel="nihss"></div>
         </section>
       </div>`;
@@ -515,60 +470,25 @@ const AVC_PROTOCOLS = [
     icon: '🧠',
     name: 'Admissão AVC',
     html: `
-      <p>Fluxo <strong>intra-hospitalar</strong> no PS — o paciente já está no serviço. Reconhecer FAST, estabilizar, confirmar <strong>TC sem sangramento</strong> e pontuar o <strong>NIHSS</strong> antes de abrir a trombólise. Metas: porta-imagem ≤ 25 min · porta-agulha ≤ 60 min.</p>
+      <p class="emerg-quick-banner"><strong>Modo rápido · intra-hospitalar:</strong> LKW → código AVC → TC → NIHSS → lise. Metas: porta-imagem ≤ 25 min · porta-agulha ≤ 60 min.</p>
 
-      <p class="emerg-section-label"><strong>Reconhecer FAST / BE-FAST</strong></p>
-      <div class="emerg-rhythm-grid emerg-rhythm-grid-2">
-        <div class="emerg-rhythm-card">
-          <span class="emerg-rhythm-tag emerg-rhythm-tag-shock">F — Face</span>
-          <p><strong>Assimetria facial</strong> — pedir para sorrir. Queda de um canto da boca, paralisia facial.</p>
-        </div>
-        <div class="emerg-rhythm-card">
-          <span class="emerg-rhythm-tag emerg-rhythm-tag-shock">A — Arms</span>
-          <p><strong>Queda de um braço</strong> — pedir para elevar os dois braços por 10 s. Queda unilateral ou pronación.</p>
-        </div>
-        <div class="emerg-rhythm-card">
-          <span class="emerg-rhythm-tag emerg-rhythm-tag-shock">S — Speech</span>
-          <p><strong>Fala alterada</strong> — pedir para repetir frase simples. Disartria, afasia, mudança súbita da fala.</p>
-        </div>
-        <div class="emerg-rhythm-card emerg-rhythm-card-shock">
-          <span class="emerg-rhythm-tag emerg-rhythm-tag-shock">T — Time</span>
-          <p><strong>Tempo é cérebro</strong> — anotar o horário do início ou LKW e acionar o código AVC no serviço. Não chamar SAMU — o paciente já está no hospital.</p>
-        </div>
-        <div class="emerg-rhythm-card">
-          <span class="emerg-rhythm-tag">B — Balance</span>
-          <p>Perda súbita de equilíbrio, vertigem ou ataxia.</p>
-        </div>
-        <div class="emerg-rhythm-card">
-          <span class="emerg-rhythm-tag">E — Eyes</span>
-          <p>Perda visual súbita unilateral ou diplopia.</p>
-        </div>
-      </div>
+      <p><strong>BE-FAST:</strong> Balance · Eyes · Face · Arms · Speech · Time (anotar LKW e acionar código no serviço).</p>
 
       <div class="emerg-flow-v">
-        <span class="emerg-flow-step">Suspeita FAST/BE-FAST na triagem ou admissão</span>
+        <span class="emerg-flow-step">Suspeita FAST · anotar LKW / início</span>
         <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
-        <span class="emerg-flow-step">Anotar horário dos sintomas / LKW</span>
+        <span class="emerg-flow-step emerg-flow-shock">Código AVC + TC agora (não atrasar por lab)</span>
         <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
-        <span class="emerg-flow-step emerg-flow-shock">Acionar <strong>código AVC</strong> / neurologia / radiologia — priorizar TC</span>
-        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
-        <span class="emerg-flow-step">ABC, PA, glicemia, SpO₂, ECG, acesso venoso</span>
-        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
-        <span class="emerg-flow-step">Posicionar (decúbito lateral se rebaixamento) e manter VA pérvia</span>
-        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
-        <span class="emerg-flow-step">Oxigênio se SpO₂ &lt; 94%; não atrasar imagem para laboratório</span>
+        <span class="emerg-flow-step">ABC · PA · glicemia · SpO₂ · ECG · acesso · O₂ se SpO₂ &lt; 94%</span>
       </div>
 
       ${EMERG_AVC_GATES_HTML}
 
-      <h4>Não fazer antes da TC</h4>
+      <h4>Antes da TC — não fazer</h4>
       <ul>
-        <li>Não administrar AAS ou anticoagulante antes da TC</li>
-        <li>Não atrasar imagem para laboratório completo ou exames eletivos</li>
-        <li>Não dar alimentação ou líquidos (risco de broncoaspiração)</li>
-        <li>Não acionar SAMU nem “transporte ao centro” — o paciente já está no serviço</li>
+        <li>Não dar AAS / anticoagulante · não alimentar · não atrasar imagem por lab eletivo</li>
       </ul>
-      <p class="emerg-note">LKW = Last Known Well. Despertar com déficit: horário do despertar = início. Sem TC/trombólise no serviço: transferir após estabilização, sem substituir este fluxo.</p>
+      <p class="emerg-note">LKW = Last Known Well. Despertar com déficit: horário do despertar = início. Sem TC/lise no serviço: estabilizar e transferir.</p>
     `
   },
   {
@@ -576,44 +496,36 @@ const AVC_PROTOCOLS = [
     icon: '💉',
     name: 'Protocolo Trombólise',
     html: `
-      <p>Protocolo <strong>intra-hospitalar</strong> de alteplase IV (rt-PA). Janela <strong>0–4 h 30 min</strong> do início ou LKW. Só segue se a <strong>TC estiver sem sangramento</strong> e o <strong>NIHSS estiver pontuado</strong>.</p>
+      <p class="emerg-quick-banner"><strong>Modo rápido · intra-hospitalar:</strong> alteplase IV · janela <strong>0–4 h 30</strong>. Só com TC sem sangramento + NIHSS pontuado.</p>
 
       ${EMERG_AVC_GATES_HTML}
 
       <div class="emerg-flow-v">
-        <span class="emerg-flow-step">Confirmar AVC isquêmico + janela ≤ 4 h 30</span>
+        <span class="emerg-flow-step">AVC isquêmico + janela ≤ 4 h 30</span>
         <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
         <button type="button" class="emerg-stemi-trigger emerg-stemi-trigger-critical" data-emerg-picker data-avc-open="contra">
-          <strong>Revisar contraindicações ABS/REL antes da dose</strong>
-          <small>Toque para abrir o quadro e confirmar se pode trombolisar</small>
+          <strong>Contraindicações ABS/REL</strong>
+          <small>Toque — confirme se pode trombolisar</small>
         </button>
         <div class="emerg-stemi-panel" data-avc-panel="contra" hidden></div>
       </div>
 
       <table class="emerg-table">
-        <tr><th>Janela</th><th>Indicação</th></tr>
-        <tr><td><strong>0 – 3 h</strong></td><td>Indicação clássica — avaliar ABS/REL padrão</td></tr>
-        <tr><td><strong>3 – 4 h 30</strong></td><td>Indicação estendida — aplicar exclusões adicionais (REL 3–4,5 h)</td></tr>
-        <tr><td>&gt; 4 h 30</td><td><strong>Não trombolisar</strong> — avaliar trombectomia se LVO + critérios de imagem</td></tr>
+        <tr><th>Janela</th><th>Conduta</th></tr>
+        <tr><td><strong>0 – 3 h</strong></td><td>Lise se sem ABS</td></tr>
+        <tr><td><strong>3 – 4 h 30</strong></td><td>Lise + exclusões extras (idade &gt;80, DOAC, NIHSS &gt;25, AVC+DM)</td></tr>
+        <tr><td>&gt; 4 h 30</td><td><strong>Não trombolisar</strong> — avaliar trombectomia se LVO</td></tr>
       </table>
 
       <h4>Dose e monitorização (só se elegível)</h4>
       <div class="emerg-flow-v">
-        <span class="emerg-flow-step">PA &lt; 185/110 mmHg (tratar se necessário antes da lise)</span>
+        <span class="emerg-flow-step">PA &lt; 185/110 (tratar antes se necessário)</span>
         <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
-        <span class="emerg-flow-step emerg-flow-shock">Alteplase <strong>0,9 mg/kg</strong> IV (máx. 90 mg)</span>
+        <span class="emerg-flow-step emerg-flow-shock">Alteplase <strong>0,9 mg/kg</strong> IV (máx. 90 mg) — 10% bolus · 90% em 60 min</span>
         <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
-        <span class="emerg-flow-step">10% em bolus · 90% em infusão contínua <strong>60 min</strong></span>
-        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
-        <span class="emerg-flow-step">Internação UTI/AVC — neurochecks seriados</span>
+        <span class="emerg-flow-step">UTI/AVC · neurochecks q15 min na infusão · PA &lt; 180/105 · sem AAS/heparina 24 h</span>
       </div>
-      <ul>
-        <li>Neurochecks: <strong>q 15 min</strong> durante infusão; q 30 min × 6 h; depois q 1 h × 16 h</li>
-        <li>PA alvo geral: &lt; 180/105 mmHg nas primeiras 24 h</li>
-        <li>Evitar AAS, heparina ou anticoagulante nas <strong>24 h</strong> (salvo indicação formal)</li>
-        <li>TC de controle se deterioração neurológica</li>
-      </ul>
-      <p class="emerg-note">Referência: AHA/ASA 2019 · SBACV. Adaptar às diretrizes e formulário institucional. Meta porta-agulha ≤ 60 min.</p>
+      <p class="emerg-note">AHA/ASA 2019 · meta porta-agulha ≤ 60 min. TC de controle se deterioração.</p>
     `
   },
   {
@@ -621,58 +533,24 @@ const AVC_PROTOCOLS = [
     icon: '🔬',
     name: 'Trombectomia mecânica',
     html: `
-      <p>Retirada do trombo em <strong>oclusão de grande vaso (LVO)</strong>. Janela clássica <strong>0–6 h</strong>; selecionados até <strong>24 h</strong> com critérios de imagem avançada (DAWN / DEFUSE-3).</p>
+      <p class="emerg-quick-banner"><strong>Modo rápido:</strong> LVO (ACI / M1 / M2 proximal / basilar) → neurointervenção. Janela 0–6 h · selecionados até 24 h (DAWN/DEFUSE-3).</p>
 
       <div class="emerg-flow-v">
-        <span class="emerg-flow-step">AVC isquêmico + janela ≤ 24 h</span>
+        <span class="emerg-flow-step">TC + AngioTC (ou RM) · buscar LVO</span>
         <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
-        <span class="emerg-flow-step"><strong>TC crânio</strong> + <strong>AngioTC</strong> (ou RM) — buscar LVO</span>
+        <span class="emerg-flow-step">ASPECTS ≥ 6 (anterior) · lise IV se ≤ 4 h 30 e elegível</span>
         <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
-        <span class="emerg-flow-step emerg-flow-decision">LVO em grande vaso?</span>
-        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
-        <span class="emerg-flow-step">Calcular <strong>ASPECTS</strong> na TC sem contraste</span>
-        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
-        <span class="emerg-flow-step">Trombólise IV se ≤ 4 h 30 e elegível (antes ou paralelo à MT)</span>
-        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
-        <span class="emerg-flow-step emerg-flow-shock">Acionar neurointervenção — <strong>trombectomia</strong></span>
-        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
-        <span class="emerg-flow-step emerg-flow-loop">Meta porta-puncao ≤ 90 min · reperfusão TICI 2b–3</span>
+        <span class="emerg-flow-step emerg-flow-shock">Acionar neurointervenção · porta-punção ≤ 90 min · TICI 2b–3</span>
       </div>
 
-      <h4>LVO — vasos-alvo</h4>
+      <h4>Janela e critérios</h4>
       <table class="emerg-table">
-        <tr><th>Vaso</th><th>Localização</th></tr>
-        <tr><td><strong>ACI</strong></td><td>Carótida interna (cervical/intracraniana)</td></tr>
-        <tr><td><strong>M1</strong></td><td>Segmento M1 da ACM</td></tr>
-        <tr><td><strong>M2 proximal</strong></td><td>Divisão superior/inferior da ACM (proximal)</td></tr>
-        <tr><td><strong>Basilar</strong></td><td>Artéria basilar (AVC posterior — prioridade máxima)</td></tr>
+        <tr><th>Janela</th><th>Resumo</th></tr>
+        <tr><td><strong>0 – 6 h</strong></td><td>LVO + ASPECTS ≥ 6 + NIHSS tipicamente ≥ 6</td></tr>
+        <tr><td><strong>6 – 24 h</strong></td><td>Mismatch CTP/RM ou DAWN</td></tr>
+        <tr><td><strong>Basilar</strong></td><td>Emergência absoluta — não usar ASPECTS</td></tr>
       </table>
-
-      <h4>ASPECTS (Alberta Stroke Program Early CT Score)</h4>
-      <p>Escore na <strong>TC sem contraste</strong> — avalia extensão de isquemia precoce. Pontuação inicial <strong>10</strong>; subtrair <strong>1 ponto</strong> por região com alteração isquêmica precoce:</p>
-      <table class="emerg-table">
-        <tr><th>Região (território ACM)</th><th>Região (território ACM)</th></tr>
-        <tr><td>C · L · IC · I · M1 · M2</td><td>M3 · M4 · M5 · M6</td></tr>
-      </table>
-      <ul>
-        <li><strong>C</strong> = caudado · <strong>L</strong> = lentiforme · <strong>IC</strong> = cápsula interna · <strong>I</strong> = ínsula</li>
-        <li><strong>M1–M6</strong> = territórios corticais da ACM (anterior → posterior)</li>
-      </ul>
-
-      <table class="emerg-table">
-        <tr><th>Janela</th><th>Critérios resumidos</th></tr>
-        <tr><td><strong>0 – 6 h</strong></td><td>LVO + ASPECTS <strong>≥ 6</strong> + NIHSS tipicamente ≥ 6 (anterior)</td></tr>
-        <tr><td><strong>6 – 24 h</strong></td><td>LVO anterior: mismatch perfusão/núcleo (CTP/RM) ou critérios DAWN (NIHSS + idade + core infarct)</td></tr>
-        <tr><td><strong>Basilar</strong></td><td>LVO basilar — janela ampliada; não usar ASPECTS; tratar como emergência absoluta</td></tr>
-      </table>
-
-      <h4>Estratégias de rede</h4>
-      <ul>
-        <li><strong>Mothership:</strong> transporte direto ao centro com neurointervenção</li>
-        <li><strong>Drip-and-ship:</strong> trombólise no hospital periférico + transferência imediata para MT</li>
-        <li>Contato precoce com equipe de neurointervenção assim que LVO confirmado</li>
-      </ul>
-      <p class="emerg-note">ASPECTS ≤ 5 ou extensa área de infarto na TC basal sugere menor benefício — individualizar com imagem avançada. Basilar: considerar MT mesmo com NIHSS baixo se LVO confirmado.</p>
+      <p>ASPECTS: 10 − 1 por região isquêmica (C, L, IC, I, M1–M6). Rede: mothership ou drip-and-ship. ASPECTS ≤ 5 → individualizar com imagem avançada.</p>
     `
   },
   {
@@ -3438,19 +3316,19 @@ const EMERG_AVC_TC_OPTIONS = [
   {
     id: 'sem-sangramento',
     label: 'TC sem sangramento',
-    note: 'Sem hemorragia intraparenquimatosa ou extra-axial — pode avaliar trombólise se demais critérios ok',
+    note: 'Pode avaliar trombólise se demais critérios ok',
     safe: true
   },
   {
     id: 'hemorragia',
     label: 'Hemorragia intracraniana',
-    note: 'Contraindicação absoluta — não trombolisar; tratar como AVC hemorrágico',
+    note: 'ABS — não trombolisar',
     safe: false
   },
   {
     id: 'incerto',
-    label: 'Achado incerto / repetir imagem',
-    note: 'Suspeita de sangramento ou artefato — repetir TC ou RM antes de decidir reperfusão',
+    label: 'Achado incerto / repetir',
+    note: 'Repetir TC/RM antes de decidir',
     safe: false
   }
 ];
