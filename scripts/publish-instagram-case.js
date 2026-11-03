@@ -149,7 +149,7 @@ function readCaption (dir, captionFile) {
   for (const f of tries) {
     if (f && fs.existsSync(f)) return fs.readFileSync(f, 'utf8').trim();
   }
-  return 'Caso clínico da semana · MedHub\nhttps://www.medhub.ia.br\n@medhub_app';
+  return 'Caso clínico da semana · MedHub\nhttps://www.medhub.ia.br\n@medhubpro';
 }
 
 function slugFromDir (dir) {

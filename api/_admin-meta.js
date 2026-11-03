@@ -166,8 +166,8 @@ async function saveAdminNotes (email, note, actorEmail) {
 function defaultSiteMarketing () {
   const site = (process.env.MEDHUB_SITE_URL || 'https://www.medhub.ia.br').replace(/\/$/, '');
   return {
-    instagramUrl: 'https://www.instagram.com/medhub_app/',
-    instagramHandle: '@medhub_app',
+    instagramUrl: 'https://www.instagram.com/medhubpro/',
+    instagramHandle: '@medhubpro',
     supportEmail: '',
     supportWhatsapp: '13997929146',
     supportWhatsappAlt: '13996066146',
@@ -193,13 +193,20 @@ async function getSiteMarketing () {
   if (!stored || typeof stored !== 'object') {
     return { ...defaults, updatedAt: null, updatedBy: null, source: 'defaults' };
   }
-  return {
+  const merged = {
     ...defaults,
     ...pickMarketingFields(stored),
     updatedAt: stored.updatedAt || null,
     updatedBy: stored.updatedBy || null,
     source: 'kv'
   };
+  // Migração: handle antigo @medhub_app → @medhubpro
+  const igBlob = `${merged.instagramHandle || ''} ${merged.instagramUrl || ''}`;
+  if (/medhub_app/i.test(igBlob)) {
+    merged.instagramUrl = defaults.instagramUrl;
+    merged.instagramHandle = defaults.instagramHandle;
+  }
+  return merged;
 }
 
 async function saveSiteMarketing (data, actorEmail) {

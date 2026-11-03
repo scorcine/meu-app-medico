@@ -1,6 +1,6 @@
 ═══════════════════════════════════════════════════════════
 PUBLICAÇÃO AUTOMÁTICA INSTAGRAM — PASSO A PASSO (MedHub)
-Conta: @medhub_app já profissional e ligada ao Facebook
+Conta: @medhubpro já profissional e ligada ao Facebook
 ═══════════════════════════════════════════════════════════
 
 FAÇA SÓ UMA VEZ (configuração). Depois: 1 comando para postar.
@@ -62,7 +62,7 @@ Ainda no Graph API Explorer (com o token da Página):
 
 4. Confira se é o @ certo:
      {ESSE_ID}?fields=id,username
-   Deve retornar username medhub_app (ou o @ da MedHub)
+   Deve retornar username medhubpro (ou o @ da MedHub)
 
 
 ────────────────────────────────────────────────────────────

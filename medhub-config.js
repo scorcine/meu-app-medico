@@ -3,8 +3,8 @@ const MEDHUB_SITE_URL = 'https://www.medhub.ia.br';
 
 /** Divulgação — edite com o @ e link reais do Instagram */
 const MEDHUB_MARKETING = {
-  instagramUrl: 'https://www.instagram.com/medhub_app/',
-  instagramHandle: '@medhub_app',
+  instagramUrl: 'https://www.instagram.com/medhubpro/',
+  instagramHandle: '@medhubpro',
   supportEmail: '',
   /** WhatsApp com DDD, só números — ex.: 11999998888 (Brasil; o app adiciona 55) */
   supportWhatsapp: '13997929146',

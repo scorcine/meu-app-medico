@@ -20,7 +20,7 @@ function medhubSupportConfig () {
   const email = String(m.supportEmail || '').trim();
   const hours = String(m.supportHours || 'Plantão 24 horas').trim() || 'Plantão 24 horas';
   const igUrl = String(m.instagramUrl || '').trim();
-  const igHandle = String(m.instagramHandle || '@medhub_app').trim();
+  const igHandle = String(m.instagramHandle || '@medhubpro').trim();
   return { phone, phoneAlt, email, hours, igUrl, igHandle };
 }
 
