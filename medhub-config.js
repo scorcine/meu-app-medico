@@ -7,7 +7,9 @@ const MEDHUB_MARKETING = {
   instagramHandle: '@medhub_app',
   supportEmail: '',
   /** WhatsApp com DDD, só números — ex.: 11999998888 (Brasil; o app adiciona 55) */
-  supportWhatsapp: '',
+  supportWhatsapp: '13997929146',
+  /** Segundo WhatsApp do plantão (opcional) */
+  supportWhatsappAlt: '13996066146',
   /** Texto do plantão — ex.: "Plantão 24 horas" ou "Seg–Dom 8h–22h" */
   supportHours: 'Plantão 24 horas',
   linksBio: 'https://www.medhub.ia.br/links.html',
@@ -97,7 +99,12 @@ async function medhubApplyRemoteMarketing () {
     if (m.instagramUrl) MEDHUB_MARKETING.instagramUrl = m.instagramUrl;
     if (m.instagramHandle) MEDHUB_MARKETING.instagramHandle = m.instagramHandle;
     if (m.supportEmail != null) MEDHUB_MARKETING.supportEmail = m.supportEmail;
-    if (m.supportWhatsapp != null) MEDHUB_MARKETING.supportWhatsapp = m.supportWhatsapp;
+    if (String(m.supportWhatsapp || '').trim()) {
+      MEDHUB_MARKETING.supportWhatsapp = String(m.supportWhatsapp).replace(/\D/g, '');
+    }
+    if (String(m.supportWhatsappAlt || '').trim()) {
+      MEDHUB_MARKETING.supportWhatsappAlt = String(m.supportWhatsappAlt).replace(/\D/g, '');
+    }
     if (m.supportHours != null && String(m.supportHours).trim()) {
       MEDHUB_MARKETING.supportHours = String(m.supportHours).trim();
     }

@@ -915,6 +915,7 @@ async function adminLoadMarketing () {
   set('mkt-instagram-handle', m.instagramHandle);
   set('mkt-support-email', m.supportEmail);
   set('mkt-support-whatsapp', m.supportWhatsapp);
+  set('mkt-support-whatsapp-alt', m.supportWhatsappAlt);
   set('mkt-support-hours', m.supportHours || 'Plantão 24 horas');
   set('mkt-links-bio', m.linksBio);
   set('mkt-links-estudantes', m.linksEstudantes);
@@ -939,6 +940,7 @@ async function adminSaveMarketing (e) {
     instagramHandle: document.getElementById('mkt-instagram-handle')?.value?.trim(),
     supportEmail: document.getElementById('mkt-support-email')?.value?.trim(),
     supportWhatsapp: document.getElementById('mkt-support-whatsapp')?.value?.trim().replace(/\D/g, ''),
+    supportWhatsappAlt: document.getElementById('mkt-support-whatsapp-alt')?.value?.trim().replace(/\D/g, ''),
     supportHours: document.getElementById('mkt-support-hours')?.value?.trim() || 'Plantão 24 horas',
     linksBio: document.getElementById('mkt-links-bio')?.value?.trim(),
     linksEstudantes: document.getElementById('mkt-links-estudantes')?.value?.trim(),

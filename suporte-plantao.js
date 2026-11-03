@@ -1,15 +1,27 @@
 /* Plantão MedHub — suporte ao assinante (dúvidas do app) */
 
-function medhubSupportConfig () {
-  const m = typeof MEDHUB_MARKETING !== 'undefined' ? MEDHUB_MARKETING : {};
-  const phone = String(m.supportWhatsapp || '')
+function medhubSupportNormalizePhone (value) {
+  return String(value || '')
     .replace(/\D/g, '')
     .replace(/^0+/, '');
+}
+
+function medhubSupportFormatPhone (phone) {
+  const p = medhubSupportNormalizePhone(phone);
+  if (p.length === 11) return `(${p.slice(0, 2)}) ${p.slice(2, 7)}-${p.slice(7)}`;
+  if (p.length === 10) return `(${p.slice(0, 2)}) ${p.slice(2, 6)}-${p.slice(6)}`;
+  return p;
+}
+
+function medhubSupportConfig () {
+  const m = typeof MEDHUB_MARKETING !== 'undefined' ? MEDHUB_MARKETING : {};
+  const phone = medhubSupportNormalizePhone(m.supportWhatsapp);
+  const phoneAlt = medhubSupportNormalizePhone(m.supportWhatsappAlt);
   const email = String(m.supportEmail || '').trim();
   const hours = String(m.supportHours || 'Plantão 24 horas').trim() || 'Plantão 24 horas';
   const igUrl = String(m.instagramUrl || '').trim();
   const igHandle = String(m.instagramHandle || '@medhub_app').trim();
-  return { phone, email, hours, igUrl, igHandle };
+  return { phone, phoneAlt, email, hours, igUrl, igHandle };
 }
 
 function medhubSupportWhatsappUrl (phone, preset) {
@@ -30,25 +42,33 @@ function medhubSupportMailto (email) {
   return `mailto:${email}?subject=${subject}&body=${body}`;
 }
 
+function medhubSupportWhatsappCard (phone, label, hours) {
+  const wa = medhubSupportWhatsappUrl(phone);
+  if (!wa) return '';
+  return `
+    <a class="suporte-channel suporte-channel--whatsapp" href="${wa}" target="_blank" rel="noopener noreferrer">
+      <span class="suporte-channel-icon" aria-hidden="true">💬</span>
+      <span class="suporte-channel-body">
+        <strong>${label}</strong>
+        <small>${medhubSupportFormatPhone(phone)} · ${hours}</small>
+      </span>
+      <span class="suporte-channel-cta">Abrir conversa →</span>
+    </a>`;
+}
+
 function medhubRenderSupportPlantao () {
   const root = document.getElementById('suporte-plantao-content');
   if (!root) return;
 
-  const { phone, email, hours, igUrl, igHandle } = medhubSupportConfig();
-  const wa = medhubSupportWhatsappUrl(phone);
+  const { phone, phoneAlt, email, hours, igUrl, igHandle } = medhubSupportConfig();
   const mail = medhubSupportMailto(email);
   const channels = [];
 
-  if (wa) {
-    channels.push(`
-      <a class="suporte-channel suporte-channel--whatsapp" href="${wa}" target="_blank" rel="noopener noreferrer">
-        <span class="suporte-channel-icon" aria-hidden="true">💬</span>
-        <span class="suporte-channel-body">
-          <strong>WhatsApp — canal principal</strong>
-          <small>Resposta rápida · ${hours}</small>
-        </span>
-        <span class="suporte-channel-cta">Abrir conversa →</span>
-      </a>`);
+  if (phone) {
+    channels.push(medhubSupportWhatsappCard(phone, 'WhatsApp — canal principal', hours));
+  }
+  if (phoneAlt && phoneAlt !== phone) {
+    channels.push(medhubSupportWhatsappCard(phoneAlt, 'WhatsApp — alternativo', hours));
   }
 
   if (mail) {
@@ -112,9 +132,9 @@ function medhubEnsureSupportFab () {
 function medhubRefreshSupportFab () {
   const fab = document.getElementById('medhub-support-fab');
   if (!fab) return;
-  const { phone, email } = medhubSupportConfig();
-  fab.hidden = !(phone || email);
-  fab.classList.toggle('is-ready', !!(phone || email));
+  const { phone, phoneAlt, email } = medhubSupportConfig();
+  fab.hidden = !(phone || phoneAlt || email);
+  fab.classList.toggle('is-ready', !!(phone || phoneAlt || email));
 }
 
 function initSuportePlantao () {
