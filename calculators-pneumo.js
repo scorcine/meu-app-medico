@@ -393,7 +393,8 @@ const CALC_PNEUMO = {
       const cats = [
         { id: 'premedicacao', label: 'Pré-tratamento / sedação' },
         { id: 'inducao', label: 'Indução' },
-        { id: 'bnm', label: 'Bloqueio neuromuscular' }
+        { id: 'bnm', label: 'Bloqueio neuromuscular' },
+        { id: 'manutencao', label: 'Manutenção pós-IOT (sedação / analgesia)' }
       ];
 
       container.innerHTML = cats.map(cat => {
@@ -466,22 +467,25 @@ const CALC_PNEUMO = {
       const preRows = rows.filter(r => r.drug.cat === 'premedicacao');
       const indRows = rows.filter(r => r.drug.cat === 'inducao');
       const bnmRows = rows.filter(r => r.drug.cat === 'bnm');
+      const mantRows = rows.filter(r => r.drug.cat === 'manutencao');
 
       const flowHtml = fluxo === 'rsi'
-        ? rsiFlowHtmlRsi(preRows, indRows, bnmRows)
-        : rsiFlowHtmlPreox(preRows, indRows, bnmRows);
+        ? rsiFlowHtmlRsi(preRows, indRows, bnmRows, mantRows)
+        : rsiFlowHtmlPreox(preRows, indRows, bnmRows, mantRows);
 
       const sexoLabel = sexo === 'F' ? 'Feminino' : 'Masculino';
       const patientHtml = `<p class="rsi-patient-summary"><strong>Paciente:</strong> ${rsiFormatNum(peso, 1)} kg · ${sexoLabel} · ${Math.round(idade)} anos</p>`;
 
       const tableRows = rows.map(({ drug, pres, calc, dosePerKg, adjustNote }) => {
-        const unitLabel = drug.unit === 'mcg/kg' ? 'mcg/kg' : 'mg/kg';
+        const unitLabel = drug.unit;
+        const doseDecimals = /mcg/.test(drug.unit) ? 1 : 2;
+        const volumeLabel = drug.infusion ? `${calc.volumeMl} mL/h` : `${calc.volumeMl} mL`;
         const doseNote = adjustNote ? `<br><span class="rsi-drug-meta">${adjustNote}</span>` : '';
         return `<tr>
           <td><strong>${drug.name}</strong><br><span class="rsi-drug-meta">${drug.catLabel}</span></td>
-          <td>${rsiFormatNum(dosePerKg, drug.unit === 'mcg/kg' ? 1 : 2)} ${unitLabel}<br><strong>${calc.doseLabel}</strong>${doseNote}</td>
+          <td>${rsiFormatNum(dosePerKg, doseDecimals)} ${unitLabel}<br><strong>${calc.doseLabel}</strong>${doseNote}</td>
           <td>${pres.label}</td>
-          <td><strong>${calc.volumeMl} mL</strong>${calc.ampNote ? `<br>${calc.ampNote}` : ''}</td>
+          <td><strong>${volumeLabel}</strong>${calc.ampNote ? `<br>${calc.ampNote}` : ''}</td>
           <td>${drug.dilution}</td>
         </tr>`;
       }).join('');
@@ -489,6 +493,10 @@ const CALC_PNEUMO = {
       const alertsHtml = patientNotes.length
         ? `<ul class="emerg-calc-alerts">${patientNotes.map(n => `<li>${n}</li>`).join('')}</ul>`
         : '';
+
+      const mantAlert = mantRows.length
+        ? '<li>Manutenção pós-IOT: iniciar logo após confirmar a via — não deixe acordar sob paralisia. Titular pela RASS; reduzir se hipotensão.</li>'
+        : '<li>Nenhuma manutenção marcada — após a IOT, escolha sedação/analgesia contínua (propofol, midazolam, fentanil ou cetamina).</li>';
 
       return `${patientHtml}${flowHtml}
               <h4 class="rsi-result-title">Plano farmacológico — sequência rápida</h4>
@@ -498,7 +506,8 @@ const CALC_PNEUMO = {
               </table>
               ${alertsHtml}
               <ul class="emerg-calc-alerts">
-                <li>Ordem sugerida: pré-tratamento (3–5 min antes) → indução → BNM imediatamente após (ou simultâneo conforme protocolo local).</li>
+                <li>Ordem sugerida: pré-tratamento (3–5 min antes) → indução → BNM imediatamente após → manutenção pós-IOT.</li>
+                ${mantAlert}
                 <li>Adaptar ao choque, TCE, asma e comorbidades. Succinilcolina: evitar em hipercalemia, queimadura crônica, paralisia.</li>
                 <li>Sempre ter plano B/C de via aérea (Vortex) — ver Trauma &amp; Suporte Avançado.</li>
               </ul>`;
@@ -624,6 +633,70 @@ const RSI_DRUG_LIB = [
       { label: '10 mg/mL — ampola 5 mL (50 mg)', concMgMl: 10, ampMl: 5 },
       { label: '10 mg/mL — frasco 10 mL (100 mg)', concMgMl: 10, ampMl: 10 }
     ]
+  },
+  {
+    id: 'propofol-manut',
+    name: 'Propofol (manutenção)',
+    cat: 'manutencao',
+    catLabel: 'Sedação contínua pós-IOT',
+    infusion: true,
+    doseDefault: 1.5,
+    doseRange: '0,5–3',
+    unit: 'mg/kg/h',
+    dilution: 'Infusão contínua · titular RASS · reduzir se hipotensão',
+    presentations: [
+      { label: '10 mg/mL — frasco 20 mL (200 mg)', concMgMl: 10, ampMl: 20 },
+      { label: '10 mg/mL — frasco 50 mL (500 mg)', concMgMl: 10, ampMl: 50 },
+      { label: '10 mg/mL — frasco 100 mL (1000 mg)', concMgMl: 10, ampMl: 100 }
+    ]
+  },
+  {
+    id: 'midazolam-manut',
+    name: 'Midazolam (manutenção)',
+    cat: 'manutencao',
+    catLabel: 'Sedação contínua pós-IOT',
+    infusion: true,
+    doseDefault: 0.05,
+    doseRange: '0,02–0,1',
+    unit: 'mg/kg/h',
+    dilution: 'Diluir em SF 0,9% · infusão contínua · titular RASS',
+    presentations: [
+      { label: '5 mg/5 mL (1 mg/mL)', concMgMl: 1, ampMl: 5 },
+      { label: '15 mg/3 mL (5 mg/mL) — diluir conforme protocolo', concMgMl: 5, ampMl: 3 },
+      { label: '50 mg/10 mL (5 mg/mL) — diluir conforme protocolo', concMgMl: 5, ampMl: 10 }
+    ]
+  },
+  {
+    id: 'fentanil-manut',
+    name: 'Fentanil (manutenção)',
+    cat: 'manutencao',
+    catLabel: 'Analgesia contínua pós-IOT',
+    infusion: true,
+    doseDefault: 1,
+    doseRange: '0,5–2',
+    unit: 'mcg/kg/h',
+    dilution: 'Diluir em SF 0,9% · combinar com sedativo · titular dor/sincronia',
+    presentations: [
+      { label: '50 mcg/mL — ampola 2 mL (100 mcg)', concMcgMl: 50, ampMl: 2 },
+      { label: '50 mcg/mL — ampola 5 mL (250 mcg)', concMcgMl: 50, ampMl: 5 },
+      { label: '50 mcg/mL — ampola 10 mL (500 mcg)', concMcgMl: 50, ampMl: 10 }
+    ]
+  },
+  {
+    id: 'cetamina-manut',
+    name: 'Cetamina (manutenção)',
+    cat: 'manutencao',
+    catLabel: 'Sedação/analgesia adjuvante pós-IOT',
+    infusion: true,
+    doseDefault: 0.2,
+    doseRange: '0,1–0,5',
+    unit: 'mg/kg/h',
+    dilution: 'Diluir em SF 0,9% · útil em broncoespasmo / choque',
+    presentations: [
+      { label: '50 mg/mL — ampola 2 mL (100 mg)', concMgMl: 50, ampMl: 2 },
+      { label: '50 mg/mL — ampola 5 mL (250 mg)', concMgMl: 50, ampMl: 5 },
+      { label: '50 mg/mL — ampola 10 mL (500 mg)', concMgMl: 50, ampMl: 10 }
+    ]
   }
 ];
 
@@ -645,6 +718,15 @@ function rsiAdjustDoseForPatient (drug, dosePerKg, idade) {
     } else if (drug.id === 'fentanil' && adjusted > 1.5) {
       adjusted = 1.5;
       adjustNote = 'Reduzido — idoso (1,5 mcg/kg)';
+    } else if (drug.id === 'propofol-manut' && adjusted > 1) {
+      adjusted = 1;
+      adjustNote = 'Reduzido — idoso (começar ≤ 1 mg/kg/h)';
+    } else if (drug.id === 'midazolam-manut' && adjusted > 0.04) {
+      adjusted = 0.04;
+      adjustNote = 'Reduzido — idoso (≤ 0,04 mg/kg/h)';
+    } else if (drug.id === 'fentanil-manut' && adjusted > 1) {
+      adjusted = 1;
+      adjustNote = 'Reduzido — idoso (≤ 1 mcg/kg/h)';
     }
   }
 
@@ -673,6 +755,35 @@ function rsiPatientNotes (peso, idade, sexo) {
 }
 
 function rsiComputeDrugDose (drug, peso, dosePerKg, pres) {
+  if (drug.infusion) {
+    if (drug.unit === 'mcg/kg/h') {
+      const mcgH = peso * dosePerKg;
+      const volumeMlH = mcgH / pres.concMcgMl;
+      return {
+        doseLabel: `${rsiFormatNum(mcgH, 0)} mcg/h`,
+        volumeMl: rsiFormatNum(volumeMlH, 2),
+        ampNote: `Infusão contínua · ≈ ${rsiFormatNum(volumeMlH * 24 / Math.max(pres.ampMl, 0.1), 1)} ampolas/dia (estimativa)`
+      };
+    }
+    if (drug.unit === 'mcg/kg/min') {
+      const mcgMin = peso * dosePerKg;
+      const mcgH = mcgMin * 60;
+      const volumeMlH = mcgH / pres.concMcgMl;
+      return {
+        doseLabel: `${rsiFormatNum(mcgMin, 1)} mcg/min (${rsiFormatNum(mcgH, 0)} mcg/h)`,
+        volumeMl: rsiFormatNum(volumeMlH, 2),
+        ampNote: 'Infusão contínua'
+      };
+    }
+    const mgH = peso * dosePerKg;
+    const volumeMlH = mgH / pres.concMgMl;
+    return {
+      doseLabel: `${rsiFormatNum(mgH, 1)} mg/h`,
+      volumeMl: rsiFormatNum(volumeMlH, 2),
+      ampNote: `Infusão contínua · ≈ ${rsiFormatNum(volumeMlH, 1)} mL/h`
+    };
+  }
+
   if (drug.unit === 'mcg/kg') {
     let mcg = peso * dosePerKg;
     if (drug.maxDoseMcg) mcg = Math.min(mcg, drug.maxDoseMcg);
@@ -705,7 +816,15 @@ function rsiDrugListHtml (rows, prefix) {
   return rows.map(r => `${prefix}${r.drug.name} ${r.calc.doseLabel} (${r.calc.volumeMl} mL)`).join(' · ');
 }
 
-function rsiFlowHtmlRsi (preRows, indRows, bnmRows) {
+function rsiMantStepHtml (mantRows) {
+  const mant = rsiDrugListHtml(mantRows, '');
+  if (mant) {
+    return `<span class="emerg-flow-step emerg-flow-shock"><strong>Pós-IOT — manutenção</strong> — ${mant} · Rx · DOPE se dessaturação</span>`;
+  }
+  return `<span class="emerg-flow-step emerg-flow-shock"><strong>Pós-IOT</strong> — ventilador · iniciar sedação/analgesia de manutenção · Rx · DOPE se dessaturação</span>`;
+}
+
+function rsiFlowHtmlRsi (preRows, indRows, bnmRows, mantRows = []) {
   const pre = rsiDrugListHtml(preRows, '');
   const ind = rsiDrugListHtml(indRows, '');
   const bnm = rsiDrugListHtml(bnmRows, '');
@@ -730,12 +849,12 @@ function rsiFlowHtmlRsi (preRows, indRows, bnmRows) {
               <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
               <span class="emerg-flow-step emerg-flow-shock"><strong>6. IOT + capnografia</strong></span>
               <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
-              <span class="emerg-flow-step emerg-flow-shock"><strong>7. Pós-IOT</strong> — ventilador · sedação · Rx · DOPE se dessaturação</span>
+              ${rsiMantStepHtml(mantRows)}
             </div>
           </div>`;
 }
 
-function rsiFlowHtmlPreox (preRows, indRows, bnmRows) {
+function rsiFlowHtmlPreox (preRows, indRows, bnmRows, mantRows = []) {
   const pre = rsiDrugListHtml(preRows, '');
   const ind = rsiDrugListHtml(indRows, '');
   const bnm = rsiDrugListHtml(bnmRows, '');
@@ -762,7 +881,7 @@ function rsiFlowHtmlPreox (preRows, indRows, bnmRows) {
               <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
               <span class="emerg-flow-step emerg-flow-shock"><strong>5. Posicionamento + IOT + capnografia</strong></span>
               <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
-              <span class="emerg-flow-step emerg-flow-shock"><strong>6. Pós-IOT</strong> — ventilador · sedação · Rx · DOPE se dessaturação</span>
+              ${rsiMantStepHtml(mantRows)}
             </div>
           </div>`;
 }

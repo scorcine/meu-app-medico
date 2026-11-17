@@ -1112,7 +1112,7 @@ const VIA_AEREA_PROTOCOLS = [
         <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
         <span class="emerg-flow-step emerg-flow-shock"><strong>7. Pós-IOT</strong></span>
         <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
-        <span class="emerg-flow-step">Ventilador, sedação/analgesia, Rx tórax, DOPE se dessaturação</span>
+        <span class="emerg-flow-step">Ventilador · <strong>sedação/analgesia de manutenção</strong> · Rx tórax · DOPE se dessaturação</span>
       </div>
 
       <h4>Calculadora — doses, apresentações e fluxo</h4>
@@ -1163,7 +1163,18 @@ const VIA_AEREA_PROTOCOLS = [
         <tr><td>Cetamina</td><td>1–2 mg/kg</td><td>Hipotensão / asma / broncoespasmo</td></tr>
         <tr><td rowspan="2">BNM</td><td>Succinilcolina</td><td>1–1,5 mg/kg</td><td>Início rápido</td></tr>
         <tr><td>Rocurônio</td><td>1–1,2 mg/kg</td><td>Alternativa (via aérea difícil prevista)</td></tr>
+        <tr><td rowspan="4">Manutenção pós-IOT</td><td>Propofol (infusão)</td><td>0,5–3 mg/kg/h</td><td>Sedação contínua — titular pela RASS; reduzir se hipotensão</td></tr>
+        <tr><td>Midazolam (infusão)</td><td>0,02–0,1 mg/kg/h</td><td>Alternativa se propofol indisponível / hipotensão relativa</td></tr>
+        <tr><td>Fentanil (infusão)</td><td>0,5–2 mcg/kg/h</td><td>Analgesia contínua — combinar com sedativo</td></tr>
+        <tr><td>Cetamina (infusão)</td><td>0,1–0,5 mg/kg/h</td><td>Analgesia/sedação adjuvante; broncoespasmo / choque</td></tr>
       </table>
+      <h4>Pós-IOT — ponte até a infusão</h4>
+      <ul>
+        <li>Não deixe o paciente acordar sob paralisia: inicie sedação/analgesia <strong>logo após</strong> confirmar a via (capnografia).</li>
+        <li>Bolus de ponte se necessário: midazolam 2–5 mg IV · fentanil 50–100 mcg IV · ou propofol 20–40 mg IV — depois a infusão de manutenção.</li>
+        <li>Alvo prático: paciente confortável, sincronizado ao ventilador (RASS −2 a −3 no início; individualizar).</li>
+        <li>BNM contínuo só se refratário (ex.: hipoxemia grave / asincronia) — nunca sem sedação adequada.</li>
+      </ul>
       <p class="emerg-note">Adaptar doses ao choque, TCE, gravidez e idade. Sempre ter plano de via aérea difícil (Vortex) — ver Trauma &amp; Suporte Avançado.</p>
     `
   },
