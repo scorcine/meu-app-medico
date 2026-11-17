@@ -1,6 +1,6 @@
 /* Guia rápido de emergência — tópicos e conteúdo — build 98041d1 */
 
-const MEDHUB_EMERG_BUILD = 'fluxo-rapido-avc-iam-v1';
+const MEDHUB_EMERG_BUILD = 'meds-agora-avc-iam-v1';
 
 const PARADA_PROTOCOLS = [
   {
@@ -265,17 +265,16 @@ const SCA_PROTOCOLS = [
     icon: '🩺',
     name: 'IAM — ECG + HEART',
     html: `
-      <p class="emerg-quick-banner"><strong>Modo rápido:</strong> ECG ≤ 10 min → tocar no ramo. HEART só para estratificar risco — <em>não indica cateterismo sozinho</em>.</p>
+      <p class="emerg-quick-banner"><strong>Modo rápido:</strong> ECG → 1 toque no ramo → medicações na hora. HEART opcional.</p>
 
-      <p class="emerg-section-label"><strong>1. Abrir o protocolo agora</strong></p>
       <div class="emerg-sca-branch" role="group" aria-label="Ramo SCA pelo ECG">
         <button type="button" class="emerg-stemi-trigger emerg-stemi-trigger-critical" data-sca-goto="stemi">
           <strong>Com supra de ST (ou BRE novo)</strong>
-          <small>STEMI — reperfusão + medicações</small>
+          <small>STEMI — medicações + reperfusão agora</small>
         </button>
         <button type="button" class="emerg-stemi-trigger" data-sca-goto="nstemi-ua">
           <strong>Sem supra de ST</strong>
-          <small>Investigar — troponina, descarte ou NSTEMI/AI</small>
+          <small>Medicações se SCA · ou descarte se trop −</small>
         </button>
         <button type="button" class="emerg-stemi-trigger" data-sca-goto="nao-sca">
           <strong>Já descartado / não cardíaca</strong>
@@ -298,24 +297,32 @@ const SCA_PROTOCOLS = [
     icon: '🚨',
     name: 'STEMI',
     html: `
-      <p class="emerg-quick-banner"><strong>Modo rápido:</strong> AAS agora + escolher <em>ICP</em> ou <em>lise</em>. Meta porta-balão ≤ 90 min · porta-agulha ≤ 30 min.</p>
-      <p>AAS 150–300 mg VO (mastigar) se ainda não feito · O₂ só se SpO₂ &lt; 90% · acionar hemodinâmica.</p>
+      <p class="emerg-quick-banner"><strong>Medicações agora</strong> — AAS já · depois ICP (1ª escolha) ou lise se ICP inviável. Porta-balão ≤ 90 min · porta-agulha ≤ 30 min.</p>
+
+      <div class="emerg-now-meds" role="region" aria-label="Medicações STEMI">
+        <strong>Dar agora (antes de escolher a via)</strong>
+        <table class="emerg-table">
+          <tr><th>Fármaco</th><th>Dose</th></tr>
+          <tr><td><strong>AAS</strong></td><td>150–300 mg VO mastigar → 75–100 mg/dia</td></tr>
+          <tr><td><strong>P2Y12 · ICP</strong></td><td>Ticagrelor <strong>180</strong> → 90 mg 12/12 h · ou prasugrel <strong>60</strong> → 10 mg/dia · ou clopi <strong>600</strong> → 75 mg/dia</td></tr>
+          <tr><td><strong>P2Y12 · lise</strong></td><td>Só clopidogrel: &lt;75 a <strong>300</strong> mg · ≥75 a <strong>75</strong> mg (sem ataque)</td></tr>
+          <tr><td><strong>Anticoagulante</strong></td><td>HNF 60 U/kg IV (máx. 4000 U) · ou enoxaparina conforme protocolo</td></tr>
+          <tr><td>O₂</td><td>Só se SpO₂ &lt; 90%</td></tr>
+        </table>
+        <p class="emerg-now-meds-hint">Abaixo: escolha ICP ou lise. Toque só se precisar da dose por peso do fibrinolítico.</p>
+      </div>
 
       <div class="emerg-flowcharts-row">
         <div class="emerg-flow-col emerg-flow-col-shock">
           <h4>ICP primária — 1ª escolha</h4>
           <div class="emerg-flow-v">
-            <span class="emerg-flow-step">Acionar hemodinâmica agora</span>
+            <span class="emerg-flow-step emerg-flow-shock">Acionar hemodinâmica · <strong>porta-balão ≤ 90 min</strong></span>
             <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
             <button type="button" class="emerg-stemi-trigger" data-emerg-picker data-stemi-open="p2y12-pci">
-              <strong>AAS + P2Y12</strong>
-              <small>Toque para dose e preparo</small>
+              <strong>Confirmar P2Y12 (ICP)</strong>
+              <small>Opcional — dose e preparo</small>
             </button>
             <div class="emerg-stemi-panel" data-stemi-panel="p2y12-pci" hidden></div>
-            <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
-            <span class="emerg-flow-step">Anticoagulante (HNF 60 U/kg IV máx. 4000 U ou enoxaparina)</span>
-            <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
-            <span class="emerg-flow-step emerg-flow-shock">Cateterismo + angioplastia · <strong>porta-balão ≤ 90 min</strong></span>
           </div>
         </div>
 
@@ -323,20 +330,20 @@ const SCA_PROTOCOLS = [
           <h4>Fibrinólise — só se ICP inviável</h4>
           <div class="emerg-flow-v">
             <button type="button" class="emerg-stemi-trigger emerg-stemi-trigger-critical" data-emerg-picker data-stemi-open="contra">
-              <strong>1. Janela &lt;12 h · sem contraindicações</strong>
-              <small>Revisão obrigatória antes da lise</small>
+              <strong>Contraindicações</strong>
+              <small>Obrigatório antes do fibrinolítico</small>
             </button>
             <div class="emerg-stemi-panel" data-stemi-panel="contra" hidden></div>
             <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
             <button type="button" class="emerg-stemi-trigger" data-emerg-picker data-stemi-open="p2y12-lysis">
-              <strong>2. AAS + anticoag + P2Y12</strong>
-              <small>Clopidogrel na lise — toque para dose</small>
+              <strong>Clopidogrel (lise)</strong>
+              <small>Dose por idade</small>
             </button>
             <div class="emerg-stemi-panel" data-stemi-panel="p2y12-lysis" hidden></div>
             <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
             <button type="button" class="emerg-stemi-trigger" data-emerg-picker data-stemi-open="fibrinolytic" aria-disabled="true">
-              <strong>3. Fibrinolítico</strong>
-              <small>Dose automática por peso</small>
+              <strong>Fibrinolítico por peso</strong>
+              <small>Tenecteplase / alteplase / reteplase</small>
             </button>
             <div class="emerg-stemi-panel" data-stemi-panel="fibrinolytic" hidden></div>
             <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
@@ -351,12 +358,21 @@ const SCA_PROTOCOLS = [
     icon: '📊',
     name: 'Sem supra — descarte ou NSTEMI',
     html: `
-      <p class="emerg-quick-banner"><strong>Modo rápido:</strong> troponina → descarte <em>ou</em> SCA. Sem supra ≠ cateterismo automático.</p>
+      <p class="emerg-quick-banner"><strong>Modo rápido:</strong> se já é SCA → medicações abaixo. Trop negativas + ECG limpo → descarte (sem cateterismo).</p>
 
-      <div class="emerg-flow-v">
-        <span class="emerg-flow-step">ECG sem supra (repetir se dor) · <strong>troponina</strong> 0 h + 1–3 h</span>
-        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
-        <span class="emerg-flow-step emerg-flow-decision">Descarte · NSTEMI (trop ↑) · AI (trop − + ECG/dor isquêmica)</span>
+      <div class="emerg-now-meds" role="region" aria-label="Medicações NSTEMI">
+        <strong>Se SCA (NSTEMI / AI) — medicações agora</strong>
+        <table class="emerg-table">
+          <tr><th>Agora</th><th>Dose</th></tr>
+          <tr><td><strong>AAS</strong></td><td>150–300 mg VO (mastigar) → 75–100 mg/dia</td></tr>
+          <tr><td><strong>P2Y12</strong></td><td>Ticagrelor 180 → 90 mg 12/12 h · ou clopidogrel 300–600 → 75 mg/dia</td></tr>
+          <tr><td><strong>Anticoagulante</strong></td><td>Enoxaparina 1 mg/kg SC 12/12 h · fondaparinux 2,5 mg/dia · ou HNF 60 U/kg IV (máx. 4000 U)</td></tr>
+          <tr><td>Adjuntos</td><td>Atorvastatina 80 mg · β-bloqueador se PA/FC altas sem IC aguda · evitar AINE</td></tr>
+        </table>
+        <div class="emerg-flow-v">
+          <span class="emerg-flow-step emerg-flow-shock">AAS + P2Y12 + anticoagulação iniciados agora</span>
+        </div>
+        <p><strong>Invasão &lt; 2 h</strong> (sem esperar GRACE): choque, arritmia maligna, dor refratária, complicação mecânica.</p>
       </div>
 
       <div class="emerg-sca-ruleout" role="region" aria-label="Descarte seguro de SCA">
@@ -369,24 +385,22 @@ const SCA_PROTOCOLS = [
         </button>
       </div>
 
-      <h4>Se SCA (NSTEMI / AI) — medicações</h4>
-      <table class="emerg-table">
-        <tr><th>Agora</th><th>Dose</th></tr>
-        <tr><td><strong>AAS</strong></td><td>150–300 mg VO (mastigar) → 75–100 mg/dia</td></tr>
-        <tr><td><strong>P2Y12</strong></td><td>Ticagrelor 180 → 90 mg 12/12 h · ou clopidogrel 300–600 → 75 mg/dia</td></tr>
-        <tr><td><strong>Anticoagulante</strong></td><td>Enoxaparina 1 mg/kg SC 12/12 h · fondaparinux 2,5 mg/dia · ou HNF 60 U/kg IV (máx. 4000 U)</td></tr>
-        <tr><td>Adjuntos</td><td>Atorvastatina 80 mg · β-bloqueador se PA/FC altas sem IC aguda · evitar AINE</td></tr>
-      </table>
-      <p><strong>Invasão &lt; 2 h</strong> (sem esperar GRACE): choque, arritmia maligna, dor refratária, complicação mecânica. Trop negativas sem isso → <strong>sem</strong> cateterismo de urgência.</p>
-
-      <h4>Conduta após a estratificação</h4>
+      <h4>GRACE e tempo de invasão (só se SCA)</h4>
       <p>Use o GRACE <strong>somente</strong> se NSTEMI/AI estiver confirmado. Não aplique GRACE para forçar cateterismo com trop negativas e ECG sem isquemia.</p>
+      <div class="calc-block calc-block-single emerg-calc-block emerg-calc-wide emerg-score-block">
+        <p class="emerg-score-title"><strong>GRACE</strong> — estratifica tempo de coronariografia</p>
+        <form class="calc-form" data-emerg-calc="grace" data-emerg-calc-inject="1">
+          <button type="submit">Calcular GRACE</button>
+        </form>
+        <div class="calc-result" hidden></div>
+      </div>
       <table class="emerg-table">
         <tr><th>GRACE (só se SCA)</th><th>Coronariografia</th></tr>
         <tr><td><strong>≥ 140</strong></td><td>&lt; 24 h</td></tr>
         <tr><td>109 – 139</td><td>&lt; 72 h</td></tr>
         <tr><td>&lt; 109</td><td>Individualizar</td></tr>
       </table>
+      <p class="emerg-note">ECG sem supra · troponina 0 h + 1–3 h. Trop ↑ = NSTEMI · trop − + ECG/dor isquêmica = AI.</p>
     `
   },
   {
@@ -451,17 +465,35 @@ const SCA_PROTOCOLS = [
 const EMERG_AVC_GATES_HTML = `
       <div class="emerg-avc-gates">
         <section class="emerg-avc-gate" data-avc-gate="tc">
-          <p class="emerg-avc-gate-kicker">Passo 1</p>
-          <strong>TC de crânio</strong>
-          <p>Toque no resultado. Sem <em>TC sem sangramento</em>, o NIHSS fica bloqueado.</p>
+          <p class="emerg-avc-gate-kicker">TC</p>
+          <strong>Resultado da TC</strong>
+          <p>Confirme antes de infundir. NIHSS é opcional para ver a dose.</p>
           <div class="emerg-stemi-panel is-inline" data-avc-panel="tc-result"></div>
         </section>
         <section class="emerg-avc-gate" data-avc-gate="nihss">
-          <p class="emerg-avc-gate-kicker">Passo 2</p>
-          <strong>NIHSS</strong>
-          <p>Pontue e calcule — a trombólise só libera depois.</p>
+          <p class="emerg-avc-gate-kicker">NIHSS · opcional</p>
+          <strong>Pontuar gravidade</strong>
+          <p>Útil para documentar e janela 3–4 h 30 — não bloqueia a dose.</p>
           <div class="emerg-stemi-panel is-inline" data-avc-panel="nihss"></div>
         </section>
+      </div>`;
+
+const EMERG_AVC_DOSE_NOW_HTML = `
+      <div class="emerg-now-meds emerg-avc-dose-now" role="region" aria-label="Dose alteplase">
+        <strong>Alteplase — dose agora</strong>
+        <table class="emerg-table">
+          <tr><th>Item</th><th>Conduta</th></tr>
+          <tr><td><strong>Dose</strong></td><td><strong>0,9 mg/kg</strong> IV (máx. 90 mg) — 10% bolus · 90% em 60 min</td></tr>
+          <tr><td><strong>Antes</strong></td><td>TC sem sangramento · PA &lt; 185/110 · janela ≤ 4 h 30 · sem ABS</td></tr>
+          <tr><td><strong>Depois</strong></td><td>Neurochecks q15 min · PA &lt; 180/105 · sem AAS/heparina 24 h · UTI/AVC</td></tr>
+        </table>
+        <label class="emerg-stemi-weight">
+          Peso (kg)
+          <input type="number" min="30" max="200" step="0.1" inputmode="decimal" data-avc-weight placeholder="Ex.: 70">
+        </label>
+        <button type="button" class="emerg-avc-calc-dose" data-avc-calc-dose>Calcular bolus + infusão</button>
+        <div class="emerg-stemi-dose" data-avc-dose-out hidden role="status" aria-live="polite"></div>
+        <p class="emerg-now-meds-hint">Confirme TC e contraindicações abaixo antes de infundir — a dose já está pronta para o plantão.</p>
       </div>`;
 
 const AVC_PROTOCOLS = [
@@ -470,16 +502,19 @@ const AVC_PROTOCOLS = [
     icon: '🧠',
     name: 'Admissão AVC',
     html: `
-      <p class="emerg-quick-banner"><strong>Modo rápido · intra-hospitalar:</strong> LKW → código AVC → TC → NIHSS → lise. Metas: porta-imagem ≤ 25 min · porta-agulha ≤ 60 min.</p>
+      <p class="emerg-quick-banner"><strong>Modo rápido:</strong> código AVC + TC agora → abrir trombólise (dose na 1ª tela). Porta-imagem ≤ 25 min · porta-agulha ≤ 60 min.</p>
 
-      <p><strong>BE-FAST:</strong> Balance · Eyes · Face · Arms · Speech · Time (anotar LKW e acionar código no serviço).</p>
+      <p><strong>BE-FAST:</strong> Balance · Eyes · Face · Arms · Speech · Time — anotar LKW.</p>
 
       <div class="emerg-flow-v">
-        <span class="emerg-flow-step">Suspeita FAST · anotar LKW / início</span>
-        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
         <span class="emerg-flow-step emerg-flow-shock">Código AVC + TC agora (não atrasar por lab)</span>
         <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
-        <span class="emerg-flow-step">ABC · PA · glicemia · SpO₂ · ECG · acesso · O₂ se SpO₂ &lt; 94%</span>
+        <span class="emerg-flow-step">ABC · PA · glicemia · SpO₂ · acesso · O₂ se SpO₂ &lt; 94%</span>
+        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
+        <button type="button" class="emerg-stemi-trigger emerg-stemi-trigger-critical" data-avc-goto="trombolise">
+          <strong>Trombólise / dose de alteplase</strong>
+          <small>Abrir agora — sem esperar NIHSS</small>
+        </button>
       </div>
 
       ${EMERG_AVC_GATES_HTML}
@@ -496,19 +531,15 @@ const AVC_PROTOCOLS = [
     icon: '💉',
     name: 'Protocolo Trombólise',
     html: `
-      <p class="emerg-quick-banner"><strong>Modo rápido · intra-hospitalar:</strong> alteplase IV · janela <strong>0–4 h 30</strong>. Só com TC sem sangramento + NIHSS pontuado.</p>
+      <p class="emerg-quick-banner"><strong>Dose na 1ª tela</strong> — alteplase IV · janela <strong>0–4 h 30</strong>. Infundir só com TC sem sangramento e sem ABS.</p>
 
-      ${EMERG_AVC_GATES_HTML}
+      ${EMERG_AVC_DOSE_NOW_HTML}
 
-      <div class="emerg-flow-v">
-        <span class="emerg-flow-step">AVC isquêmico + janela ≤ 4 h 30</span>
-        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
-        <button type="button" class="emerg-stemi-trigger emerg-stemi-trigger-critical" data-emerg-picker data-avc-open="contra">
-          <strong>Contraindicações ABS/REL</strong>
-          <small>Toque — confirme se pode trombolisar</small>
-        </button>
-        <div class="emerg-stemi-panel" data-avc-panel="contra" hidden></div>
-      </div>
+      <button type="button" class="emerg-stemi-trigger emerg-stemi-trigger-critical" data-emerg-picker data-avc-open="contra">
+        <strong>Contraindicações ABS/REL</strong>
+        <small>Toque — confirme se pode trombolisar</small>
+      </button>
+      <div class="emerg-stemi-panel" data-avc-panel="contra" hidden></div>
 
       <table class="emerg-table">
         <tr><th>Janela</th><th>Conduta</th></tr>
@@ -517,15 +548,9 @@ const AVC_PROTOCOLS = [
         <tr><td>&gt; 4 h 30</td><td><strong>Não trombolisar</strong> — avaliar trombectomia se LVO</td></tr>
       </table>
 
-      <h4>Dose e monitorização (só se elegível)</h4>
-      <div class="emerg-flow-v">
-        <span class="emerg-flow-step">PA &lt; 185/110 (tratar antes se necessário)</span>
-        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
-        <span class="emerg-flow-step emerg-flow-shock">Alteplase <strong>0,9 mg/kg</strong> IV (máx. 90 mg) — 10% bolus · 90% em 60 min</span>
-        <span class="emerg-flow-arrow" aria-hidden="true">↓</span>
-        <span class="emerg-flow-step">UTI/AVC · neurochecks q15 min na infusão · PA &lt; 180/105 · sem AAS/heparina 24 h</span>
-      </div>
-      <p class="emerg-note">AHA/ASA 2019 · meta porta-agulha ≤ 60 min. TC de controle se deterioração.</p>
+      ${EMERG_AVC_GATES_HTML}
+
+      <p class="emerg-note">AHA/ASA 2019 · meta porta-agulha ≤ 60 min. TC de controle se deterioração. Dose e monitorização já estão no cartão acima.</p>
     `
   },
   {
@@ -2449,7 +2474,8 @@ const EMERG_SCORE_LIBRARY = [
 /* Escores citados no protocolo — nunca inventar associação */
 const EMERG_PROTOCOL_SCORES = {
   'sca:dor-inicial': ['heart'],
-  'sca:nstemi-ua': ['grace'],
+  /* GRACE embutido após as medicações — não injetar antes delas */
+  'sca:nstemi-ua': [],
   'sepse:bundle-hora1': ['qsofa', 'sofa'],
   'trauma:atls-abcde': ['gcs', 'rts', 'iss'],
   'avc:trombolise': [],
@@ -2471,7 +2497,7 @@ const EMERG_NEXT_PROTOCOLS = {
     { id: 'ecg-modelos', label: 'Revisar o padrão eletrocardiográfico → modelos de ECG' }
   ],
   'avc:fast': [
-    { id: 'trombolise', label: 'Abrir trombólise', require: 'avc-lise' },
+    { id: 'trombolise', label: 'Trombólise / dose de alteplase' },
     { id: 'trombectomia', label: 'Abrir trombectomia (LVO / janela estendida)' }
   ],
   'sepse:bundle-hora1': [
@@ -3374,38 +3400,37 @@ function initEmergAvcTromboliseWorkflow (root, state, persist, protocolId) {
       </div>
       <p class="emerg-stemi-inline-status ${current ? `is-${current === 'sem-sangramento' ? 'clear' : 'present'}` : ''}" aria-live="polite">
         ${current === 'sem-sangramento'
-          ? 'TC sem sangramento confirmada — pontue o NIHSS abaixo.'
+          ? 'TC sem sangramento — pode seguir para dose/ABS. NIHSS opcional.'
           : ''}
         ${current === 'hemorragia'
-          ? 'Hemorragia na TC — trombólise contraindicada. Não pontuar NIHSS para lise; acionar neurocirurgia/neurologia.'
+          ? 'Hemorragia na TC — trombólise contraindicada. Acionar neurocirurgia/neurologia.'
           : ''}
         ${current === 'incerto'
-          ? 'Imagem incerta — repetir TC/RM antes de pontuar para trombólise.'
+          ? 'Imagem incerta — repetir TC/RM antes de infundir alteplase.'
           : ''}
       </p>`;
     markChosen(panel, '[data-avc-tc]', { attr: 'avcTc', chosen: current });
   }
 
   function nihssCta (html) {
-    if (protocolId === 'trombolise' || !emergAvcLiseReady(state.picks)) return html;
+    if (protocolId === 'trombolise') return html;
     return `${html}
-      <p><button type="button" class="emerg-avc-open-lise" data-avc-goto="trombolise">Abrir protocolo de trombólise</button></p>
-      <p class="muted">Na próxima tela: contraindicações e dose — sem repetir TC/NIHSS.</p>`;
+      <p><button type="button" class="emerg-avc-open-lise" data-avc-goto="trombolise">Abrir trombólise / dose</button></p>
+      <p class="muted">Dose de alteplase na 1ª tela — TC e ABS ainda obrigatórios antes de infundir.</p>`;
   }
 
   function renderNihss () {
     const panel = root.querySelector('[data-avc-panel="nihss"]');
     if (!panel) return;
-    const ready = state.picks['avc-tc-result'] === 'sem-sangramento';
-    if (!ready) {
-      panel.innerHTML = `
-        <p class="emerg-avc-locked">Confirme <strong>TC sem sangramento</strong> acima para liberar os campos de pontuação.</p>`;
-      return;
-    }
+    const tc = state.picks['avc-tc-result'] || '';
+    const tcNote = tc === 'sem-sangramento'
+      ? ''
+      : `<p class="emerg-avc-locked">TC ainda não confirmada como sem sangramento — pode pontuar, mas <strong>não infunda</strong> alteplase sem TC ok.</p>`;
 
     const savedTotal = state.picks['avc-nihss-total'];
     const savedHtml = state.picks['avc-nihss-result-html'] || '';
     panel.innerHTML = `
+      ${tcNote}
       <form class="calc-form emerg-avc-nihss-form" data-avc-nihss-form>
         ${typeof NIHSS_FORM_HTML !== 'undefined'
           ? NIHSS_FORM_HTML
@@ -3418,12 +3443,36 @@ function initEmergAvcTromboliseWorkflow (root, state, persist, protocolId) {
         : ''}`;
   }
 
+  function renderAvcDose () {
+    const out = root.querySelector('[data-avc-dose-out]');
+    const input = root.querySelector('[data-avc-weight]');
+    if (!out || !input) return;
+    const weight = Number(state.picks['avc-weight'] || input.value);
+    if (Number.isFinite(weight) && weight >= 30 && weight <= 200) {
+      input.value = String(weight);
+    }
+    if (!Number.isFinite(weight) || weight < 30 || weight > 200) {
+      out.hidden = true;
+      out.innerHTML = '';
+      return;
+    }
+    const total = Math.min(90, Math.round(weight * 0.9 * 10) / 10);
+    const bolus = Math.round(total * 0.1 * 10) / 10;
+    const infusion = Math.round((total - bolus) * 10) / 10;
+    const fmt = n => String(n).replace('.', ',');
+    out.hidden = false;
+    out.innerHTML = `
+      <strong>Alteplase — ${fmt(weight)} kg</strong>
+      <p class="emerg-stemi-dose-main"><strong>${fmt(total)} mg</strong> total (máx. 90) · bolus <strong>${fmt(bolus)} mg</strong> · infusão <strong>${fmt(infusion)} mg</strong> em 60 min</p>
+      <p>Reconstituir 1 mg/mL. Bolus EV em 1 min; restante em bomba. PA &lt; 185/110 antes de iniciar.</p>`;
+  }
+
   function refreshAvcState () {
     const tc = state.picks['avc-tc-result'] || '';
     tcGate?.classList.toggle('is-done', tc === 'sem-sangramento');
     tcGate?.classList.toggle('is-blocked', tc === 'hemorragia' || tc === 'incerto');
-    nihssGate?.classList.toggle('is-locked', tc !== 'sem-sangramento');
-    nihssGate?.classList.toggle('is-done', emergAvcLiseReady(state.picks));
+    nihssGate?.classList.toggle('is-locked', false);
+    nihssGate?.classList.toggle('is-done', state.picks['avc-nihss-total'] !== undefined && state.picks['avc-nihss-total'] !== '');
     const contraTrigger = root.querySelector('[data-avc-open="contra"]');
     const contra = state.picks['avc-contra'] || '';
     contraTrigger?.classList.toggle('is-done', contra === 'clear');
@@ -3526,9 +3575,26 @@ function initEmergAvcTromboliseWorkflow (root, state, persist, protocolId) {
     }
     const gotoLise = event.target.closest('[data-avc-goto="trombolise"]');
     if (gotoLise) {
-      if (!emergAvcLiseReady(state.picks)) return;
       persistAvc();
       showEmergenciaProtocol('trombolise');
+      return;
+    }
+
+    const calcDose = event.target.closest('[data-avc-calc-dose]');
+    if (calcDose) {
+      const input = root.querySelector('[data-avc-weight]');
+      const weight = Number(input?.value);
+      if (!Number.isFinite(weight) || weight < 30 || weight > 200) {
+        const out = root.querySelector('[data-avc-dose-out]');
+        if (out) {
+          out.hidden = false;
+          out.innerHTML = '<strong>Informe o peso</strong><p class="emerg-stemi-dose-main">Use um valor entre 30 e 200 kg.</p>';
+        }
+        return;
+      }
+      state.picks['avc-weight'] = String(weight);
+      persistAvc();
+      renderAvcDose();
       return;
     }
 
@@ -3538,14 +3604,16 @@ function initEmergAvcTromboliseWorkflow (root, state, persist, protocolId) {
     const option = EMERG_AVC_TC_OPTIONS.find(entry => entry.id === value);
     state.picks['avc-tc-result'] = value;
     state.picks['avc-tc-label'] = option ? option.label : value;
-    if (value !== 'sem-sangramento') {
-      delete state.picks['avc-nihss-total'];
-      delete state.picks['avc-nihss-result-html'];
-    }
     persistAvc();
     renderTcResult();
     renderNihss();
     refreshAvcState();
+  });
+
+  root.addEventListener('input', event => {
+    const weightInput = event.target.closest('[data-avc-weight]');
+    if (!weightInput || !root.contains(weightInput)) return;
+    state.picks['avc-weight'] = weightInput.value;
   });
 
   root.addEventListener('submit', event => {
@@ -3575,6 +3643,7 @@ function initEmergAvcTromboliseWorkflow (root, state, persist, protocolId) {
 
   renderTcResult();
   renderNihss();
+  renderAvcDose();
   refreshAvcState();
 
   return () => {
@@ -3585,6 +3654,7 @@ function initEmergAvcTromboliseWorkflow (root, state, persist, protocolId) {
     panels.forEach(panel => { panel.innerHTML = ''; });
     renderTcResult();
     renderNihss();
+    renderAvcDose();
     refreshAvcState();
   };
 }

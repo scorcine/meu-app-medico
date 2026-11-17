@@ -3298,6 +3298,40 @@ body.app-page {
   line-height: 1.35;
 }
 
+.emerg-now-meds {
+  margin: 0 0 0.85rem;
+  padding: 0.85rem 0.9rem;
+  border-radius: 10px;
+  border: 1px solid color-mix(in srgb, var(--state-blocked) 55%, var(--border));
+  background: color-mix(in srgb, var(--state-blocked) 9%, var(--bg-surface-active));
+}
+
+.emerg-now-meds > strong {
+  display: block;
+  margin-bottom: 0.45rem;
+  font-size: 0.98rem;
+  color: var(--text-primary);
+}
+
+.emerg-now-meds .emerg-table {
+  margin: 0.35rem 0;
+}
+
+.emerg-now-meds-hint {
+  margin: 0.45rem 0 0;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+.emerg-avc-dose-now .emerg-stemi-weight {
+  margin: 0.55rem 0 0.4rem;
+}
+
+.emerg-avc-calc-dose {
+  margin: 0.25rem 0 0.35rem;
+}
+
 .emerg-sca-branch {
   display: grid;
   gap: 0.55rem;

@@ -139,18 +139,20 @@ function testScoreEarlyNstemiSepse () {
     showEmergenciaTopic('sca');
     showEmergenciaProtocol('nstemi-ua');
     const pages = [...document.querySelectorAll('.emerg-protocol-page')];
-    const scorePage = pages.findIndex(p => /Classificar com escores|GRACE/i.test(p.querySelector('h4')?.textContent || '') && p.querySelector('form[data-emerg-calc="grace"]'));
-    const drugPage = pages.findIndex(p => /Conduta após a estratificação/i.test(p.textContent));
+    const medsPage = pages.findIndex(p => /medicações agora|Se SCA \\(NSTEMI/i.test(p.textContent));
+    const scorePage = pages.findIndex(p => p.querySelector('form[data-emerg-calc="grace"]'));
     return {
       calcIds: [...document.querySelectorAll('form[data-emerg-calc]')].map(f => f.dataset.emergCalc),
       scorePage,
-      drugPage
+      medsPage,
+      medsOnFirst: /AAS|Ticagrelor|Enoxaparina/i.test(pages[0]?.textContent || '')
     };
   })()`);
 
   if (nstemi.calcIds.includes('grace') && !nstemi.calcIds.includes('timi-ua') &&
-      nstemi.scorePage >= 0 && nstemi.scorePage < nstemi.drugPage) {
-    pass('NSTEMI coloca GRACE antes da anticoagulação e não inventa TIMI');
+      nstemi.medsOnFirst && nstemi.medsPage >= 0 &&
+      (nstemi.scorePage < 0 || nstemi.medsPage <= nstemi.scorePage)) {
+    pass('NSTEMI mostra medicações na 1ª tela e GRACE depois (sem TIMI)');
   } else {
     fail('Ordem NSTEMI incorreta: ' + JSON.stringify(nstemi));
   }
@@ -194,6 +196,8 @@ function testStemiGuidedMedicationFlow () {
     }));
     showEmergenciaTopic('sca');
     showEmergenciaProtocol('stemi');
+    const first = document.querySelector('.emerg-protocol-page')?.textContent || '';
+    const medsNow = /Medicações agora|Dar agora/i.test(first) && /AAS/i.test(first) && /P2Y12/i.test(first);
 
     document.querySelector('[data-stemi-open="contra"]').click();
     const contraItems = document.querySelectorAll('.emerg-stemi-contra-list li').length;
@@ -218,8 +222,14 @@ function testStemiGuidedMedicationFlow () {
     lysisPanel.querySelector('[data-stemi-p2="clopidogrel"]').click();
     const clopidogrel = lysisPanel.querySelector('[data-stemi-result]').textContent;
 
-    return { contraItems, unlocked, tenecteplase, ticagrelor, lysisChoices, clopidogrel };
+    return { medsNow, contraItems, unlocked, tenecteplase, ticagrelor, lysisChoices, clopidogrel };
   })()`);
+
+  if (result.medsNow) {
+    pass('STEMI mostra cartão de medicações na primeira tela');
+  } else {
+    fail('Cartão de medicações STEMI ausente na 1ª tela');
+  }
 
   if (result.contraItems >= 8 && result.unlocked) {
     pass('STEMI exige revisão das contraindicações antes de liberar o fibrinolítico');
@@ -251,13 +261,14 @@ function testGraceStaysEarly () {
     const pages = [...document.querySelectorAll('.emerg-protocol-page')];
     return {
       gracePage: pages.findIndex(p => p.querySelector('form[data-emerg-calc="grace"]')),
+      medsFirst: /medicações agora/i.test(pages[0]?.textContent || ''),
       total: pages.length
     };
   })()`);
-  if (nstemi.gracePage >= 0 && nstemi.gracePage < nstemi.total - 1) {
-    pass('GRACE fica nas etapas iniciais do NSTEMI, nunca como última');
+  if (nstemi.medsFirst && nstemi.gracePage >= 0) {
+    pass('NSTEMI prioriza medicações e mantém GRACE no fluxo (não como inventário solto)');
   } else {
-    fail('GRACE ficou no fim do NSTEMI: ' + JSON.stringify(nstemi));
+    fail('GRACE/medicações NSTEMI incorretos: ' + JSON.stringify(nstemi));
   }
 
   const ecg = ui.run(`(() => {
@@ -512,20 +523,21 @@ function testNstemiRuleOutPath () {
     const content = document.getElementById('emerg-topic-content').textContent;
     const pages = [...document.querySelectorAll('.emerg-protocol-page')];
     const ruleOutPage = pages.findIndex(p => /Descarte seguro/i.test(p.textContent));
-    const drugPage = pages.findIndex(p => /Se SCA \\(NSTEMI|Conduta após a estratificação/i.test(p.textContent));
+    const drugPage = pages.findIndex(p => /medicações agora|Se SCA \\(NSTEMI/i.test(p.textContent));
     document.querySelector('[data-sca-goto="nao-sca"]')?.click();
     return {
       ruleOutPage,
       drugPage,
+      medsOnFirst: /AAS/i.test(pages[0]?.textContent || '') && /Ticagrelor|P2Y12/i.test(pages[0]?.textContent || ''),
       blocksCath: /não.*cateterismo|sem cateterismo|não indique cateterismo/i.test(content),
       needsScaForGrace: /somente.*NSTEMI|só se SCA|somente se NSTEMI/i.test(content),
       classification: sessionStorage.getItem('medhub-chest-classification')
     };
   })()`);
 
-  if (result.ruleOutPage >= 0 && (result.drugPage < 0 || result.ruleOutPage <= result.drugPage) &&
+  if (result.medsOnFirst && result.ruleOutPage >= 0 && result.drugPage >= 0 &&
       result.blocksCath && result.needsScaForGrace) {
-    pass('NSTEMI/sem supra coloca descarte antes da invasão e bloqueia cateterismo sem SCA');
+    pass('NSTEMI/sem supra mostra medicações na 1ª tela e mantém descarte sem forçar cateterismo');
   } else {
     fail('Descarte seguro no sem supra falhou: ' + JSON.stringify(result));
   }
@@ -584,20 +596,25 @@ function testReorderMtpTromboliseDka () {
   const lise = ui.run(`(() => {
     showEmergenciaTopic('avc');
     showEmergenciaProtocol('trombolise');
+    const first = document.querySelector('.emerg-protocol-page')?.textContent || '';
     const trigger = document.querySelector('[data-avc-open="contra"]');
     trigger.click();
     const absItems = document.querySelectorAll('[data-avc-panel="contra"] .emerg-stemi-contra-list li').length;
     document.querySelector('[data-avc-contra="clear"]').click();
-    const pages = [...document.querySelectorAll('.emerg-protocol-page')];
+    document.querySelector('[data-avc-weight]').value = '70';
+    document.querySelector('[data-avc-calc-dose]').click();
+    const doseOut = document.querySelector('[data-avc-dose-out]')?.textContent || '';
     return {
       absItems,
       opened: /Absolutas/i.test(document.querySelector('[data-avc-panel="contra"]').textContent),
       done: trigger.classList.contains('is-done'),
-      dose: pages.findIndex(p => /Dose e monitorização/i.test(p.textContent))
+      doseOnFirst: /0,9 mg\\/kg|Alteplase — dose agora/i.test(first),
+      doseOut
     };
   })()`);
-  if (lise.opened && lise.absItems >= 8 && lise.done && lise.dose >= 0) {
-    pass('Trombólise abre o quadro de ABS/REL antes da dose de alteplase');
+  if (lise.opened && lise.absItems >= 8 && lise.done && lise.doseOnFirst &&
+      /63 mg/i.test(lise.doseOut) && /6,3 mg/i.test(lise.doseOut)) {
+    pass('Trombólise mostra dose na 1ª tela, ABS/REL e cálculo por peso');
   } else {
     fail('Quadro de contraindicações da trombólise falhou: ' + JSON.stringify(lise));
   }
@@ -624,9 +641,7 @@ function testAvcFastIntraHospital () {
     const text = page?.textContent || '';
     const steps = [...document.querySelectorAll('.emerg-flow-step')].map(node => node.textContent.replace(/\\s+/g, ' ').trim());
     const tcOptions = [...document.querySelectorAll('[data-avc-tc]')].map(btn => btn.dataset.avcTc);
-    const locked = document.querySelector('.emerg-avc-locked')?.textContent || '';
-    const nextLabels = [...document.querySelectorAll('.emerg-next-btn')].map(btn => btn.textContent);
-
+    const openLiseBefore = !!document.querySelector('[data-avc-goto="trombolise"]');
     const nihssBefore = !!document.querySelector('[data-avc-nihss-form]');
     document.querySelector('[data-avc-tc="sem-sangramento"]').click();
     const form = document.querySelector('[data-avc-nihss-form]');
@@ -636,34 +651,32 @@ function testAvcFastIntraHospital () {
     form.querySelector('[name="lang"]').value = '1';
     form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
     const nihssResult = document.querySelector('.emerg-avc-nihss-result')?.textContent || '';
-    const openLise = !!document.querySelector('[data-avc-goto="trombolise"]');
+    document.querySelector('[data-avc-goto="trombolise"]').click();
+    const liseTitle = document.getElementById('emerg-topic-title').textContent;
+    const doseVisible = /Alteplase — dose agora|0,9 mg\\/kg/i.test(document.getElementById('emerg-topic-content').textContent);
 
     return {
-      text, steps, tcOptions, locked, nextLabels, nihssBefore,
-      nihssUnlocked: !!form, nihssResult, openLise
+      text, steps, tcOptions, openLiseBefore, nihssBefore,
+      nihssUnlocked: !!form, nihssResult, liseTitle, doseVisible
     };
   })()`);
 
-  if (/intra-hospitalar/i.test(result.text) &&
+  if (/Modo rápido|código AVC/i.test(result.text) &&
       !result.steps.some(step => /SAMU|Transporte direto ao centro/i.test(step))) {
     pass('Admissão AVC remove condutas pré-hospitalares (SAMU/transporte)');
   } else {
     fail('FAST ainda contém condutas pré-hospitalares: ' + JSON.stringify(result.steps));
   }
-  if (result.tcOptions.includes('sem-sangramento') && /TC sem sangramento/i.test(result.locked)) {
-    pass('TC sem sangramento aparece na primeira tela e bloqueia o NIHSS até confirmar');
+  if (result.tcOptions.includes('sem-sangramento') && result.nihssBefore && result.openLiseBefore) {
+    pass('TC, NIHSS e atalho de trombólise aparecem na 1ª tela sem bloquear a dose');
   } else {
-    fail('Confirmação de TC ausente ou NIHSS não bloqueado: ' + JSON.stringify(result));
+    fail('Atalhos da admissão AVC ausentes: ' + JSON.stringify(result));
   }
-  if (!result.nihssBefore && result.nihssUnlocked && /5\/42|Conduta aguda sugerida/i.test(result.nihssResult) && result.openLise) {
-    pass('NIHSS abre campos de pontuação após TC e libera a trombólise');
+  if (/5\/42|Conduta aguda sugerida/i.test(result.nihssResult) &&
+      /Trombólise/i.test(result.liseTitle) && result.doseVisible) {
+    pass('Um toque abre trombólise com dose de alteplase visível');
   } else {
-    fail('Fluxo NIHSS → trombólise falhou: ' + JSON.stringify(result));
-  }
-  if (!result.nextLabels.some(label => /abrir NIHSS/i.test(label))) {
-    pass('NIHSS deixa de ser um protocolo opcional no fim do FAST');
-  } else {
-    fail('NIHSS ainda aparece como próximo protocolo: ' + JSON.stringify(result.nextLabels));
+    fail('Fluxo admissão → trombólise/dose falhou: ' + JSON.stringify(result));
   }
 }
 
@@ -676,7 +689,8 @@ function testAvcTromboliseGuidedFlow () {
     const intro = document.querySelector('.emerg-protocol-page')?.textContent || '';
     const calcForms = [...document.querySelectorAll('form[data-emerg-calc="nihss"]')].length;
     const tcOptions = [...document.querySelectorAll('[data-avc-tc]')].map(btn => btn.dataset.avcTc);
-    const locked = !!document.querySelector('.emerg-avc-locked');
+    const doseCard = !!document.querySelector('[data-avc-calc-dose]');
+    const formBeforeTc = !!document.querySelector('[data-avc-nihss-form]');
 
     document.querySelector('[data-avc-tc="sem-sangramento"]').click();
     const form = document.querySelector('[data-avc-nihss-form]');
@@ -687,23 +701,25 @@ function testAvcTromboliseGuidedFlow () {
     form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
 
     const nihssResult = document.querySelector('.emerg-avc-nihss-result')?.textContent || '';
-    return { intro, calcForms, tcOptions, locked, nihssResult, hasForm: !!form };
+    return { intro, calcForms, tcOptions, doseCard, formBeforeTc, nihssResult, hasForm: !!form };
   })()`);
 
-  if (/intra-hospitalar/i.test(result.intro) && result.tcOptions.includes('sem-sangramento')) {
-    pass('Trombólise mostra confirmação de TC sem sangramento na primeira tela');
+  if (/Dose na 1ª tela|Alteplase — dose agora/i.test(result.intro) &&
+      result.tcOptions.includes('sem-sangramento') && result.doseCard) {
+    pass('Trombólise mostra dose de alteplase e TC na primeira tela');
   } else {
-    fail('Trombólise sem gate de TC visível: ' + JSON.stringify(result));
+    fail('Trombólise sem dose/TC na 1ª tela: ' + JSON.stringify(result));
   }
   if (result.calcForms === 0) {
     pass('NIHSS não duplica calculadora solta — fica no passo interativo');
   } else {
     fail('Trombólise ainda injeta NIHSS duplicado: ' + JSON.stringify(result.calcForms));
   }
-  if (result.locked && result.hasForm && /NIHSS total/i.test(result.nihssResult) && /Conduta aguda sugerida/i.test(result.nihssResult)) {
-    pass('NIHSS só libera após TC e mostra pontos com conduta sugerida');
+  if (result.formBeforeTc && result.hasForm && /NIHSS total/i.test(result.nihssResult) &&
+      /Conduta aguda sugerida/i.test(result.nihssResult)) {
+    pass('NIHSS fica disponível sem bloquear a dose e mostra conduta sugerida');
   } else {
-    fail('Gate TC → NIHSS da trombólise falhou: ' + JSON.stringify(result));
+    fail('NIHSS na trombólise falhou: ' + JSON.stringify(result));
   }
 }
 
